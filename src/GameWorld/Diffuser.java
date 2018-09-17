@@ -1,4 +1,4 @@
-package GameWorld;
+package gameworld;
 
-public class Diffuser {
+public class Diffuser implements Token{
 }

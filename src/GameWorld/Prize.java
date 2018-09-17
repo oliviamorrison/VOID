@@ -1,4 +1,4 @@
-package GameWorld;
+package gameworld;
 
-public class Prize {
+public class Prize implements Token{
 }
