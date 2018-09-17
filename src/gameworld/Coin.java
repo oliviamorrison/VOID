@@ -1,4 +1,4 @@
 package gameworld;
 
-public class Coin {
+public class Coin implements Token{
 }
