@@ -1,4 +1,4 @@
-package GameWorld;
+package gameworld;
 
 public class Bomb {
 }
