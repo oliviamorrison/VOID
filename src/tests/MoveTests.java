@@ -13,7 +13,6 @@ import gameworld.Player;
  */
 public class MoveTests {
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test01_validMove() {
 		Game game = new Game();
