@@ -18,3 +18,4 @@ out/
 *.rar
 *.iml
 
+/bin/
