@@ -1,5 +1,4 @@
-package GameWorld;
+package gameworld;
 
-public interface Tokens {
-
+public interface Token {
 }
