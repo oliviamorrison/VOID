@@ -38,6 +38,10 @@ public class Game {
 	
 		player.move(dx, dy);
 	}
+	
+	public static void pickUpItem() {
+		
+	}
 
 	private static String inputString(String msg) {
 		System.out.print(msg + " ");

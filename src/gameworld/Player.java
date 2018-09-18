@@ -7,14 +7,13 @@ import java.util.List;
 public class Player {
 
 	private Point location;
-
-	private Tile tile;
-	private List<Token> tokens;
+    private Tile tile;
+    private List<Token> inventory;
 
 	
 	public Player(Point location) {
 		this.location = location;
-		this.tokens = new ArrayList<>();
+		this.inventory = new ArrayList<>();
 	}
 
 	/**
@@ -38,5 +37,9 @@ public class Player {
 	
 	public Point getLocation() {
 		return location;
+	}
+	
+	public void pickUp(Token item) {
+		this.inventory.add(item);
 	}
 }
