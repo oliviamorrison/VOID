@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
+
 	private Point location;
+
+	private Tile tile;
 	private List<Token> tokens;
 
 	
@@ -23,6 +26,15 @@ public class Player {
 		location.translate(dx, dy);
 		System.out.println(location.toString());
 	}
+
+	public void moveTile(int dx, int dy){
+	    tile = tile.getRoom().moveTile(tile,dx,dy);
+    }
+
+    public Tile getTile(){
+	    return tile;
+    }
+
 	
 	public Point getLocation() {
 		return location;
