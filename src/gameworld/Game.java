@@ -10,7 +10,7 @@ public class Game {
 
 	public Game(){
 		// start the player in the centre of the room
-		this.player = new Player(new Point (5,5));
+//		this.player = new Player(new Point (5,5));
 	}
 	
 	public Player getPlayer() {

@@ -1,14 +1,17 @@
 package gameworld;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
 	private Point location;
+	private List<Token> tokens;
 
 	
 	public Player(Point location) {
 		this.location = location;
-		
+		this.tokens = new ArrayList<>();
 	}
 
 	/**
