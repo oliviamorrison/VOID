@@ -40,7 +40,16 @@ public class Game {
 	}
 	
 	public static void pickUpItem() {
-		
+		if(player.getTile().hasToken()) {
+			player.pickUp(player.getTile().getToken());
+			player.getTile().setToken(null);
+		}
+	}
+	
+	public static void dropItem() {
+		if(!player.getInventory().isEmpty()) {
+			player.getTile().setToken(player.getInventory().remove(0));
+		}
 	}
 
 	private static String inputString(String msg) {
