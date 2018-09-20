@@ -51,7 +51,7 @@ public class Room {
    * This method creates and prints out the visual
    * representation of the room to the user.
    */
-  public void draw() {
+  public String draw() {
 
     StringBuilder room = new StringBuilder();
 
@@ -83,5 +83,6 @@ public class Room {
       room.append("\n");
     }
     System.out.println(room.toString());
+    return room.toString();
   }
 }

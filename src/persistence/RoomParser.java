@@ -10,11 +10,10 @@ public class RoomParser {
 
   /**
    * This method creates a new room based on the information
-   * passed in from a data file.
-   * (should have a file as an argument)
+   * passed in from a data file. (should have a file as an argument)
    * @return new room as described by the data file
    */
-  public Room createRoom() {
+  public static Room createRoom() {
 
     Room room = new Room();
 

@@ -12,13 +12,16 @@ public class Game {
 
   private static Player player;
   private Room currentRoom;
-  private List<Room> rooms;
+  private List<Room> rooms = new ArrayList<>();
 
   public Game() {
     // start the player in the centre of the room
     // this.player = new Player(new Point (5,5));
-    this.rooms = new ArrayList<>();
-    setupTest();
+    setup();
+  }
+
+  public Game(boolean testing) {
+    setupTestGame();
   }
 
   public static void movePlayer(String direction) {
@@ -45,9 +48,9 @@ public class Game {
     player.moveTile(dx, dy);
   }
 
-  public void setupTest() {
+  public void setup() {
     // create a starting room for testing
-    Room defaultRoom = new RoomParser().createRoom();
+    Room defaultRoom = RoomParser.createRoom();
     currentRoom = defaultRoom;
     rooms.add(defaultRoom);
     AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
@@ -56,15 +59,53 @@ public class Game {
     startGame();
   }
 
+  public void setupTestGame() {
+    Room defaultRoom = RoomParser.createRoom();
+    currentRoom = defaultRoom;
+    rooms.add(defaultRoom);
+    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
+    player = new Player(defaultRoom, startingTile);
+    startingTile.setPlayer(true);
+  }
+
   public void startGame() {
 
     while (true) {
 
       currentRoom.draw();
-      String dir = inputString("Direction: ");
-      movePlayer(dir);
+      startTurn();
 
     }
+  }
+
+  public void startTurn() {
+    String input = inputString("Move:m Pickup:u Drop:d");
+    switch (input) {
+      case "m":
+        movePlayer();
+        break;
+      case "u":
+        pickUpItem();
+        break;
+      case "d":
+        dropItem();
+        break;
+    }
+  }
+
+  // for testing purposes
+  public String drawRoom() {
+    return currentRoom.draw();
+  }
+
+  // for testing purposes
+  public Player getPlayer() {
+    return player;
+  }
+
+  public void movePlayer() {
+    String dir = inputString("Direction: ");
+    movePlayer(dir);
   }
 
   public static void pickUpItem() {
