@@ -48,7 +48,9 @@ public class RoomParser {
           }
         }
         room.setTile(tile, row, col);
+        count++;
       }
+      count = 0;
     }
 
     return room;

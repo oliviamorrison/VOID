@@ -18,6 +18,7 @@ public class Game {
     // start the player in the centre of the room
     // this.player = new Player(new Point (5,5));
     this.rooms = new ArrayList<>();
+    setupTest();
   }
 
   public static void movePlayer(String direction) {
@@ -26,36 +27,44 @@ public class Game {
 
     switch (direction) {
       case "w":
-        dy = -1;
-        break;
-      case "a":
         dx = -1;
         break;
+      case "a":
+        dy = -1;
+        break;
       case "s":
-        dy = 1;
+        dx = 1;
         break;
       case "d":
-        dx = 1;
+        dy = 1;
         break;
       default:
 
     }
 
-    player.move(dx, dy);
+    player.moveTile(dx, dy);
   }
 
   public void setupTest() {
     // create a starting room for testing
     Room defaultRoom = new RoomParser().createRoom();
+    currentRoom = defaultRoom;
     rooms.add(defaultRoom);
+    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
+    player = new Player(defaultRoom, startingTile);
+    startingTile.setPlayer(true);
     startGame();
   }
 
   public void startGame() {
 
+    while (true) {
 
+      currentRoom.draw();
+      String dir = inputString("Direction: ");
+      movePlayer(dir);
 
-
+    }
   }
 
   public static void pickUpItem() {
@@ -88,10 +97,5 @@ public class Game {
 
   public static void main(String[] args) {
     new Game();
-
-//    while (true) {
-//      String dir = inputString("Direction: ");
-//      movePlayer(dir);
-//    }
   }
 }

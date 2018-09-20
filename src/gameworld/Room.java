@@ -47,7 +47,41 @@ public class Room {
     tiles[row][col] = tile;
   }
 
+  /**
+   * This method creates and prints out the visual
+   * representation of the room to the user.
+   */
   public void draw() {
-    
+
+    StringBuilder room = new StringBuilder();
+
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+
+        Tile tile = tiles[row][col];
+
+        if (tile instanceof InaccessibleTile)
+          room.append("X");
+        else if (tile instanceof AccessibleTile) {
+
+          AccessibleTile accessibleTile = (AccessibleTile) tile;
+
+          if (accessibleTile.hasPlayer() && accessibleTile.hasToken())
+            room.append("!");
+          else if (accessibleTile.hasPlayer())
+            room.append("P");
+          else if (accessibleTile.hasToken()) {
+            Token token = accessibleTile.getToken();
+            if (token instanceof Diffuser)
+              room.append("D");
+          } else
+            room.append(" ");
+        }
+        if (col < ROOMSIZE - 1)
+          room.append(" ");
+      }
+      room.append("\n");
+    }
+    System.out.println(room.toString());
   }
 }
