@@ -1,20 +1,23 @@
 package gameworld;
 
+import persistence.RoomParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+
   private static Player player;
+  private Room currentRoom;
+  private List<Room> rooms;
 
   public Game() {
     // start the player in the centre of the room
     // this.player = new Player(new Point (5,5));
-  }
-
-  public Player getPlayer() {
-    return player;
+    this.rooms = new ArrayList<>();
   }
 
   public static void movePlayer(String direction) {
@@ -39,6 +42,20 @@ public class Game {
     }
 
     player.move(dx, dy);
+  }
+
+  public void setupTest() {
+    // create a starting room for testing
+    Room defaultRoom = new RoomParser().createRoom();
+    rooms.add(defaultRoom);
+    startGame();
+  }
+
+  public void startGame() {
+
+
+
+
   }
 
   public static void pickUpItem() {
@@ -72,9 +89,9 @@ public class Game {
   public static void main(String[] args) {
     new Game();
 
-    while (true) {
-      String dir = inputString("Direction: ");
-      movePlayer(dir);
-    }
+//    while (true) {
+//      String dir = inputString("Direction: ");
+//      movePlayer(dir);
+//    }
   }
 }

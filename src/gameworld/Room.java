@@ -1,43 +1,53 @@
 package gameworld;
 
 public class Room {
-    private Tile[][] tiles;
-    private final int ROOMSIZE = 10;
+  private Tile[][] tiles;
+  public static final int ROOMSIZE = 10;
 
+  public Room() {
+    //may need to change this depending on XML
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
 
-    public Room(){
-        //may need to change this depending on XML
-        this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  public Tile moveTile(Tile t, int dx, int dy) {
+    int[] coords = getTileCoordinates(t);
+
+    int x = coords[0];
+    int y = coords[1];
+
+    int newX = x + dx;
+    int newY = y + dy;
+
+    //if the newCoordinates are inbounds and the tile is not inaacessible
+    if (newX < 11 && newY < 11 && !(tiles[newX][newY] instanceof InaccessibleTile)) {
+      return tiles[newX][newY];
     }
 
-    public Tile moveTile(Tile t, int dx, int dy){
-        int[] coords = getCoordsofTile(t);
+    return null;
+  }
 
-        int x = coords[0];
-        int y = coords[1];
+  private int[] getTileCoordinates(Tile t) {
 
-        int newX = x+dx;
-        int newY = y+dy;
+    for (int i = 0; i < ROOMSIZE; i++) {
+      for (int j = 0; j < ROOMSIZE; j++) {
 
-        //if the newCoordinates are inbounds and the tile is not inaacessible
-        if(newX<11 && newY<11 && !(tiles[newX][newY] instanceof InaccessibleTile)){
-            return tiles[newX][newY];
-        }
-
-        return null;
+        //returns coordinates of the tile
+        if (tiles[i][j].equals(t)) return new int[]{i, j};
+      }
     }
 
-    public int[] getCoordsofTile(Tile t){
+    return null;
+  }
 
-        for(int i=0; i<ROOMSIZE; i++){
-            for(int j=0; j<ROOMSIZE; j++){
+  public Tile getTile(int row, int col) {
+    return tiles[row][col];
+  }
 
-                //returns coordinates of the tile
-                if(tiles[i][j].equals(t)) return new int[]{i,j};
-            }
-        }
+  public void setTile(Tile tile, int row, int col) {
+    tiles[row][col] = tile;
+  }
 
-        return null;
-    }
-
+  public void draw() {
+    
+  }
 }
