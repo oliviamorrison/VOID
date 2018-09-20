@@ -43,7 +43,7 @@ public class Game {
 		if(player.getTile().hasToken()) {
 			player.pickUp(player.getTile().getToken());
 			player.getTile().setToken(null);
-		}
+		}// James
 	}
 	
 	public static void dropItem() {
