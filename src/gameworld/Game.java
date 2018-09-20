@@ -1,6 +1,5 @@
 package gameworld;
 
-import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,15 +39,20 @@ public class Game {
 	}
 	
 	public static void pickUpItem() {
-		if(player.getTile().hasToken()) {
-			player.pickUp(player.getTile().getToken());
-			player.getTile().setToken(null);
+		if(player.isOnAccessibleTile()) {
+			AccessibleTile tile = (AccessibleTile) player.getTile();
+			player.pickUp(tile.getToken());
+			tile.setToken(null);
 		}
 	}
 	
 	public static void dropItem() {
+
 		if(!player.getInventory().isEmpty()) {
-			player.getTile().setToken(player.getInventory().remove(0));
+			if(player.isOnAccessibleTile()){
+				AccessibleTile tile = (AccessibleTile) player.getTile();
+				tile.setToken(player.getInventory().remove(0));
+			}
 		}
 	}
 

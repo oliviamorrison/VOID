@@ -1,5 +1,6 @@
 package gameworld;
 
+import javax.management.timer.TimerMBean;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,10 @@ public class Player {
 	    return tile;
     }
 
+    public boolean isOnAccessibleTile(){
+		return !(tile instanceof InaccessibleTile);
+	}
+
 	
 	public Point getLocation() {
 		return location;
@@ -41,5 +46,9 @@ public class Player {
 	
 	public void pickUp(Token item) {
 		this.inventory.add(item);
+	}
+
+	public List<Token> getInventory() {
+		return inventory;
 	}
 }
