@@ -34,7 +34,15 @@ public class Player {
 	    return tile;
     }
 
-	
+    public AccessibleTile getAccessibleTile(){
+		if(tile instanceof InaccessibleTile) return null;
+		else return (AccessibleTile) tile;
+	}
+
+	public List<Token> getInventory() {
+		return inventory;
+	}
+
 	public Point getLocation() {
 		return location;
 	}
