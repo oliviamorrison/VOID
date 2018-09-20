@@ -18,6 +18,24 @@ public class Room {
         tiles[0][0] = new DoorTile(this, this);
     }
 
+    public boolean checkActiveBomb(){
+        for(int i=0; i< ROOMSIZE; i++){
+            for (int j = 0; j < ROOMSIZE; j++) {
+                if(tiles[i][j] instanceof  AccessibleTile){
+                    AccessibleTile tile = (AccessibleTile) tiles[i][j];
+                    if(tile.hasToken() && tile.getToken() instanceof Bomb ){
+                        //Assumes only one bomb in each room
+                        return ((Bomb) tile.getToken()).isActive;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+
     public Tile moveTile(Tile t, int dx, int dy){
         int[] coords = getCoordsofTile(t);
 
