@@ -13,22 +13,9 @@ public class RoomParser {
    * passed in from a data file. (should have a file as an argument)
    * @return new room as described by the data file
    */
-  public static Room createRoom() {
+  public static Room createRoom(String[] data) {
 
     Room room = new Room();
-
-    String file = "X X X X X X X X X X\n"
-        + "X - - - - - - - - X\n"
-        + "X - - - - - - - - X\n"
-        + "X - - - - - - - - X\n"
-        + "X - - - - - - - - X\n"
-        + "X - - - - - - - - X\n"
-        + "X - - - - - D - - X\n"
-        + "X - - - - - - - - X\n"
-        + "X - - - - - - - - X\n"
-        + "X X X X X X X X X X\n";
-
-    String[] data = file.replace(" ", "").split("\n");
     Tile tile;
 
     for (int row = 0, count = 0; row < Room.ROOMSIZE; row++) {
@@ -53,6 +40,27 @@ public class RoomParser {
     }
 
     return room;
+
+  }
+
+  /**
+   * This method creates a default room with a single token.
+   * @return default room information as string[]
+   */
+  public static String[] getDefaultRoom() {
+
+    String file = "X X X X X X X X X X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - D - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X X X X X X X X X X\n";
+
+    return file.replace(" ", "").split("\n");
 
   }
 }

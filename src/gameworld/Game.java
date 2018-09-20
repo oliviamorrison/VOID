@@ -49,16 +49,7 @@ public class Game {
 
   public void setup() {
     // create a starting room for testing
-    Room defaultRoom = RoomParser.createRoom();
-    currentRoom = defaultRoom;
-    rooms.add(defaultRoom);
-    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
-    player = new Player(defaultRoom, startingTile);
-    startingTile.setPlayer(true);
-  }
-
-  public void setupTestGame() {
-    Room defaultRoom = RoomParser.createRoom();
+    Room defaultRoom = RoomParser.createRoom(RoomParser.getDefaultRoom());
     currentRoom = defaultRoom;
     rooms.add(defaultRoom);
     AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
@@ -105,7 +96,7 @@ public class Game {
     movePlayer(dir);
   }
 
-  public static void pickUpItem() {
+  public void pickUpItem() {
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (currentTile.hasToken()) {
       player.pickUp(currentTile.getToken());
@@ -113,7 +104,7 @@ public class Game {
     }
   }
 
-  public static void dropItem() {
+  public void dropItem() {
     List<Token> inventory = player.getInventory();
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (!currentTile.hasToken() && !inventory.isEmpty()) {
