@@ -57,13 +57,21 @@ public class Game {
     startingTile.setPlayer(true);
   }
 
+  public void setupTestGame() {
+    Room defaultRoom = RoomParser.createRoom();
+    currentRoom = defaultRoom;
+    rooms.add(defaultRoom);
+    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
+    player = new Player(defaultRoom, startingTile);
+    startingTile.setPlayer(true);
+  }
+
   public void startGame() {
 
     while (true) {
 
       currentRoom.draw();
       startTurn();
-
     }
   }
 
