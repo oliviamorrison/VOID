@@ -105,7 +105,7 @@ public class Game {
     movePlayer(dir);
   }
 
-  public static void pickUpItem() {
+  public void pickUpItem() {
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (currentTile.hasToken()) {
       player.pickUp(currentTile.getToken());
@@ -113,7 +113,7 @@ public class Game {
     }
   }
 
-  public static void dropItem() {
+  public void dropItem() {
     List<Token> inventory = player.getInventory();
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (!currentTile.hasToken() && !inventory.isEmpty()) {
