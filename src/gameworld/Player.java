@@ -7,13 +7,12 @@ import java.util.List;
 public class Player {
 
 	private Point location;
-    private Tile tile;
-    private List<Token> inventory;
+	private Tile tile;
+	private List<Token> inventory = new ArrayList<>();;
 
 	
 	public Player(Point location) {
 		this.location = location;
-		this.inventory = new ArrayList<>();
 	}
 
 	/**
@@ -30,16 +29,19 @@ public class Player {
 	    tile = tile.getRoom().moveTile(tile,dx,dy);
     }
 
-    public Tile getTile(){
+  public Tile getTile(){
 	    return tile;
     }
 
-	
 	public Point getLocation() {
 		return location;
 	}
-	
-	public void pickUp(Token item) {
+
+  public List<Token> getInventory() {
+    return inventory;
+  }
+
+  public void pickUp(Token item) {
 		this.inventory.add(item);
 	}
 }
