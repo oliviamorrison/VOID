@@ -42,4 +42,16 @@ public class Player {
 	public void pickUp(Token item) {
 		this.inventory.add(item);
 	}
+	
+	public boolean diffuseBomb() {
+		if(!(this.tile instanceof DoorTile)) {
+			return false;
+		}
+		for(Token item : this.inventory) {
+			if(item instanceof Diffuser) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
