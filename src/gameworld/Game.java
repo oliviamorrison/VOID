@@ -12,43 +12,44 @@ public class Game {
 		// start the player in the centre of the room
 //		this.player = new Player(new Point (5,5));
 	}
-	
+
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public static void movePlayer(String direction) {
 		int dx = 0;
 		int dy = 0;
 
 		switch(direction) {
-		case "w": 
-			dy = -1;
-			break;
-		case "a": 
-			dx = -1;
-			break;
-		case "s": 
-			dy = 1;
-			break;
-		case "d": 
-			dx = 1;
-			break;
+			case "w":
+				dy = -1;
+				break;
+			case "a":
+				dx = -1;
+				break;
+			case "s":
+				dy = 1;
+				break;
+			case "d":
+				dx = 1;
+				break;
 		}
-	
+
 		player.move(dx, dy);
 	}
-	
+
 	public static void pickUpItem() {
-		if(player.getTile().hasToken()) {
-			player.pickUp(player.getTile().getToken());
-			player.getTile().setToken(null);
-		}// James
+		if(player.getAccessibleTile() != null && player.getAccessibleTile().hasToken()){
+			player.pickUp(player.getAccessibleTile().getToken());
+			player.getAccessibleTile().setToken(null);
+		}
 	}
-	
+
 	public static void dropItem() {
 		if(!player.getInventory().isEmpty()) {
-			player.getTile().setToken(player.getInventory().remove(0));
+			if(player.getAccessibleTile()!=null){
+				player.getAccessibleTile().setToken(player.getInventory().remove(0));}
 		}
 	}
 
