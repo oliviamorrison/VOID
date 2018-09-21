@@ -9,8 +9,9 @@ public class Game {
 	private static Player player;
 
 	public Game(){
+		Room room = new Room();
 		// start the player in the centre of the room
-//		this.player = new Player(new Point (5,5));
+		this.player = new Player(new Point (5,5), room.getTile(5,5));
 	}
 
 	public Player getPlayer() {
@@ -69,7 +70,7 @@ public class Game {
 		new Game();
 
 		while(true) {
-			String dir = inputString("Direction: ");
+			String dir = inputString("Direction:");
 			movePlayer(dir);
 		}
 	}

@@ -11,8 +11,9 @@ public class Player {
     private List<Token> inventory;
 
 	
-	public Player(Point location) {
+	public Player(Point location, Tile tile) {
 		this.location = location;
+		this.tile = tile;
 		this.inventory = new ArrayList<>();
 	}
 
@@ -22,12 +23,27 @@ public class Player {
 	 * @param dy amount of steps moved in the y direction
 	 */
 	public void move(int dx, int dy) {
+
+
+		if(!moveTile(dx, dy)) {
+			System.out.println("Couldn't move tile");
+			return;
+		}
+		if(tile instanceof DoorTile){
+			//This does nothing for now
+			System.out.println("You are on a door tile. Do you want to go through the door?");
+
+		}
 		location.translate(dx, dy);
+
 		System.out.println(location.toString());
 	}
 
-	public void moveTile(int dx, int dy){
-	    tile = tile.getRoom().moveTile(tile,dx,dy);
+	public boolean moveTile(int dx, int dy){
+	    Tile newTile = tile.getRoom().moveTile(tile,dx,dy);
+	    if(newTile == null) return false;
+	    tile = newTile;
+	    return true;
     }
 
     public Tile getTile(){

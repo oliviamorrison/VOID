@@ -8,6 +8,14 @@ public class Room {
     public Room(){
         //may need to change this depending on XML
         this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+        //For now until we can load in an XML file
+        for(int i = 0; i < ROOMSIZE; i++){
+            for(int j = 0; j < ROOMSIZE; j++){
+                tiles[i][j] = new AccessibleTile(this);
+            }
+        }
+        //Just to test if door checking works
+        tiles[0][0] = new DoorTile(this, this);
     }
 
     public boolean checkActiveBomb(){
@@ -37,8 +45,8 @@ public class Room {
         int newX = x+dx;
         int newY = y+dy;
 
-        //if the newCoordinates are inbounds and the tile is not inacessible
-        if(newX<11 && newY<11 && !(tiles[newX][newY] instanceof InaccessibleTile)){
+        //if the newCoordinates are inbounds and the tile is not inaccessible
+        if(newX<10 && newY<10 && newX >=0 && newY >=0 && !(tiles[newX][newY] instanceof InaccessibleTile)){
             return tiles[newX][newY];
         }
 
@@ -56,6 +64,10 @@ public class Room {
         }
 
         return null;
+    }
+
+    public Tile getTile(int x, int y){
+        return tiles[x][y];
     }
 
 }
