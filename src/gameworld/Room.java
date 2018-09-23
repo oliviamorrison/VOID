@@ -14,8 +14,9 @@ public class Room {
                 tiles[i][j] = new AccessibleTile(this);
             }
         }
-        //Just to test if door checking works
-        tiles[0][0] = new DoorTile(this, this);
+        //This is just to test if door checking works
+        DoorTile door = new DoorTile(null, this);
+        tiles[0][0] = new DoorTile(door, this);
     }
 
     public boolean checkActiveBomb(){
