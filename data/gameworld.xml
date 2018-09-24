@@ -1,0 +1,60 @@
+<game>
+    <rows>3</rows>
+    <cols>3</cols>
+
+    <room>
+        <row>1</row>
+        <col>0</col>
+        <door>right</door>
+        <item>key</item>
+    </room>
+
+    <room>
+        <row>1</row>
+        <col>1</col>
+        <door>left</door>
+        <door>bottom</door>
+        <door>top</door>
+    </room>
+
+    <room>
+        <row>0</row>
+        <col>1</col>
+        <door>bottom</door>
+        <item>bomb</item>
+    </room>
+
+    <room>
+        <row>2</row>
+        <col>1</col>
+        <door>top</door>
+        <item>diffuser</item>
+        <item>key</item>
+    </room>
+
+    <room>
+        <row>0</row>
+        <col>2</col>
+        <door>left</door>
+        <item>prize</item>
+    </room>
+
+    <player>
+        <inventory>
+
+        </inventory>
+    </player>
+
+
+    <COMMENTSTODELETE>
+        Game has a 2D array of rooms with their locations in the board
+        Items in each room will be randomly placed
+        Player will be randomly placed in the room
+
+        DOOR locations will be:
+        static final location DOORLEFT = (x,y)
+        static final location DOORRIGHT = (x,y)
+    </COMMENTSTODELETE>
+</game>
+
+
