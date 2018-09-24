@@ -16,6 +16,9 @@
         <door>
             right
         </door>
+        <door>
+            left
+        </door>
         <item>
             key
         </item>
@@ -88,6 +91,12 @@
     </room>
 
     <player>
+        <roomrow>
+            1
+        </roomrow>
+        <roomcol>
+            0
+        </roomcol>
         <inventory>
 
         </inventory>
