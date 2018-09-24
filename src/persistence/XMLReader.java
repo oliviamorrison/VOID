@@ -20,11 +20,11 @@ public class XMLReader {
                 File f = new File(arg);
                 if (f.exists()) {
                     System.out.println("Parsing '" + f + "'");
-                    Game prog = parseFile(f);
+                    Game game = parseFile(f);
                     System.out.println("Parsing completed ");
-                    if (prog != null) {
+                    if (game != null) {
                         System.out.println("================\nProgram:");
-                        System.out.println(prog);
+                        System.out.println(game);
                     }
                     System.out.println("=================");
                 } else {
@@ -114,6 +114,12 @@ public class XMLReader {
         return game;
     }
 
+    /**
+     * ROOM ::= "<room>" "<row>"NUM"</row>" "<col>"NUM"</col>"
+     *          DOOR+ ITEM+ "</room>"
+     * @param scan scanner
+     * @param board board
+     */
     private static void parseRoom(Scanner scan, Room[][] board) {
         require("<room>", "Expected <room>", scan);
 
@@ -149,12 +155,23 @@ public class XMLReader {
 
     }
 
+    /**
+     * PLAYER ::= INVENTORY
+     * @param scan scanner
+     * @param room room
+     * @return player in room
+     */
     private static Player parsePlayer(Scanner scan, Room room) {
         Player player = new Player(new Point(5,5), room.getTile(5, 5)); //TODO: THIS IS HARD CODED IN THE CENTRE FOR NOW
         if(scan.hasNext("<inventory>")) parseInventory(scan, player);
         return player;
     }
 
+    /**
+     * INVENTORY ::= "<inventory>" ITEM* "</inventory>"
+     * @param scan scanner
+     * @param player player
+     */
     private static void parseInventory(Scanner scan, Player player) {
         require("<inventory>", "Expected <inventory>", scan);
             while (true){
@@ -167,6 +184,11 @@ public class XMLReader {
         require("</inventory>", "Expected </inventory>", scan);
     }
 
+    /**
+     * ITEM ::= "<item>" "diffuser|key|prize|coin|bomb" "</item>"
+     * @param scan scanner
+     * @return item
+     */
     private static Token parseItem(Scanner scan) {
         require("<item>", "Expected <item>", scan);
         Token item = null;
@@ -182,6 +204,11 @@ public class XMLReader {
         return item; //to make compiler happy
     }
 
+    /**
+     * DOOR ::= "<door>" "top|bottom|left|right" "</door>"
+     * @param scan scanner
+     * @param doors map of doors
+     */
     private static void parseDoor(Scanner scan, HashMap<String, DoorTile> doors){
         require("<door>", "Expected <door>", scan);
         String direction = require(DIRPAT, "Expected direction", scan);
