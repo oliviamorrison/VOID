@@ -18,6 +18,7 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
+
     //if the newCoordinates are inbounds and the tile is not inaacessible
     if (newX < 11 && newY < 11 && !(tiles[newX][newY] instanceof InaccessibleTile)) {
       return tiles[newX][newY];
@@ -27,7 +28,6 @@ public class Room {
   }
 
   private int[] getTileCoordinates(Tile t) {
-
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
 
