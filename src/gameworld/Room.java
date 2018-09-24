@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Room {
     private Tile[][] tiles;
+    private List<Token> items;
     private final int ROOMSIZE = 10;
 
     private static final Point TOP = new Point(0,5);
@@ -14,7 +15,7 @@ public class Room {
     private static final Point RIGHT = new Point(5,9);
 
 
-    public Room(HashMap<String, DoorTile> doors){
+    public Room(HashMap<String, DoorTile> doors, List<Token> items){
         //may need to change this depending on XML
         this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
         //For now until we can load in an XML file
@@ -28,7 +29,8 @@ public class Room {
         DoorTile door = new DoorTile(null, this);
         tiles[0][0] = new DoorTile(door, this);
 
-
+        this.items = items;
+        //TODO: Place items randomly around room
 
     }
 

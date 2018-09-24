@@ -7,6 +7,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -132,9 +134,16 @@ public class XMLReader {
             else break;
         }
 
-        board[row][col] = new Room(doors);
+        List<Token> items = new ArrayList<>();
+        while(true){
+            if(scan.hasNext("<item>")){
+                Token item = parseItem(scan);
+                if(item!=null) items.add(item);
+            }
+            else break;
+        }
 
-
+        board[row][col] = new Room(doors, items);
 
         require("</room>", "Expected </room>", scan);
 
@@ -160,13 +169,17 @@ public class XMLReader {
 
     private static Token parseItem(Scanner scan) {
         require("<item>", "Expected <item>", scan);
-        if(checkFor("diffuser", scan)) return new Diffuser();
-        else if(checkFor("key", scan)) return new Key();
-        else if(checkFor("prize", scan)) return new Prize();
-        else fail("Expected item", scan);
+        Token item = null;
+
+        if(checkFor("diffuser", scan)) item =new Diffuser();
+        else if(checkFor("key", scan)) item = new Key();
+        else if(checkFor("prize", scan)) item =new Prize();
+        else if(checkFor("coin", scan)) item =new Coin();
+        else if(checkFor("bomb", scan)) item =new Bomb();
+
         //Can add more items, and change item names later
         require("</item>", "Expected </item>", scan);
-        return null; //to make compiler happy
+        return item; //to make compiler happy
     }
 
     private static void parseDoor(Scanner scan, HashMap<String, DoorTile> doors){
