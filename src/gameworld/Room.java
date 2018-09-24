@@ -1,11 +1,21 @@
 package gameworld;
 
+import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
+
 public class Room {
     private Tile[][] tiles;
+    private List<Token> items;
     private final int ROOMSIZE = 10;
 
+    private static final Point TOP = new Point(0,5);
+    private static final Point BOTTOM = new Point(9,5);
+    private static final Point LEFT = new Point(5,0);
+    private static final Point RIGHT = new Point(5,9);
 
-    public Room(){
+
+    public Room(HashMap<String, DoorTile> doors, List<Token> items){
         //may need to change this depending on XML
         this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
         //For now until we can load in an XML file
@@ -14,8 +24,19 @@ public class Room {
                 tiles[i][j] = new AccessibleTile(this);
             }
         }
-        //Just to test if door checking works
-        tiles[0][0] = new DoorTile(this, this);
+        //TODO: Change walls to be inaccessible, and add doors depending on direction in room
+        //This is just to test if door checking works
+        DoorTile door = new DoorTile(null, this);
+        tiles[0][0] = new DoorTile(door, this);
+
+        this.items = items;
+        //TODO: Place items randomly around room
+
+    }
+
+    public Room(List<DoorTile> doors) {
+
+
     }
 
     public boolean checkActiveBomb(){

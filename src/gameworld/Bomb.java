@@ -1,6 +1,7 @@
 package gameworld;
 
-public class Bomb{
+//TODO: Had to change bomb to implement token just for now
+public class Bomb implements Token{
     boolean isActive;
 
     public Bomb(){

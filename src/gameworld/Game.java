@@ -7,11 +7,11 @@ import java.io.InputStreamReader;
 
 public class Game {
 	private static Player player;
+	private Room[][] board;
 
-	public Game(){
-		Room room = new Room();
-		// start the player in the centre of the room
-		this.player = new Player(new Point (5,5), room.getTile(5,5));
+	public Game(Room[][] board, Player player){
+		this.player = player;
+		this.board = board;
 	}
 
 	public Player getPlayer() {
@@ -67,7 +67,7 @@ public class Game {
 	}
 
 	public static void main(String[] args){
-		new Game();
+//		new Game();
 
 		while(true) {
 			String dir = inputString("Direction:");
