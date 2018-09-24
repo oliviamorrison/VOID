@@ -9,17 +9,19 @@ public class Room {
     private Tile[][] tiles;
     private List<Token> items;
     private final int ROOMSIZE = 10;
+    private List<String> doors;
 
-    private static final Point TOP = new Point(0,5);
-    private static final Point BOTTOM = new Point(9,5);
-    private static final Point LEFT = new Point(5,0);
-    private static final Point RIGHT = new Point(5,9);
+    public static final Point TOP = new Point(0,5);
+    public static final Point BOTTOM = new Point(9,5);
+    public static final Point LEFT = new Point(5,0);
+    public static final Point RIGHT = new Point(5,9);
 
 
     public Room(List<String> doors, List<Token> items){
         //may need to change this depending on XML
         this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
         this.items = items;
+        this.doors = doors;
 
         //For now until we can load in an XML file
         for(int i = 0; i < ROOMSIZE; i++){
@@ -29,14 +31,14 @@ public class Room {
             }
         }
 
-        for(String direction : doors){
-            switch(direction){
-                case "left": tiles[LEFT.x][LEFT.y] = new DoorTile(null, this); break; //TODO: Fix the doors pointing to other doors
-                case "right": tiles[RIGHT.x][RIGHT.y] = new DoorTile(null, this); break;
-                case "top": tiles[TOP.x][TOP.y] = new DoorTile(null, this); break;
-                case "bottom": tiles[BOTTOM.x][BOTTOM.y] = new DoorTile(null, this); break;
-            }
-        }
+//        for(String direction : doors){
+//            switch(direction){
+//                case "left": tiles[LEFT.x][LEFT.y] = new DoorTile(null, this); break; //TODO: Fix the doors pointing to other doors
+//                case "right": tiles[RIGHT.x][RIGHT.y] = new DoorTile(null, this); break;
+//                case "top": tiles[TOP.x][TOP.y] = new DoorTile(null, this); break;
+//                case "bottom": tiles[BOTTOM.x][BOTTOM.y] = new DoorTile(null, this); break;
+//            }
+//        }
 
         for(Token item : this.items){
             boolean itemPlaced = false;
@@ -54,6 +56,11 @@ public class Room {
         }
 
 
+    }
+
+
+    public List<String> getDoors() {
+        return doors;
     }
 
     public Tile moveTile(Tile t, int dx, int dy) {

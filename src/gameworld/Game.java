@@ -10,16 +10,16 @@ import java.util.List;
 
 public class Game {
 
-	private Room[][] board;
-    private static Player player;
-    private Room currentRoom;
-    private List<Room> rooms = new ArrayList<>();
+  private Room[][] board;
+  private static Player player;
+  private Room currentRoom;
+  private List<Room> rooms = new ArrayList<>();
 
-	public Game(Room[][] board, Player player){
-		this.player = player;
-		this.board = board;
-		this.currentRoom = player.getRoom();
-	}
+  public Game(Room[][] board, Player player){
+    this.player = player;
+    this.board = board;
+    this.currentRoom = player.getRoom();
+  }
 //
 //  public Game() {
 //    setup();
@@ -65,6 +65,7 @@ public class Game {
 //  }
 
   public void startGame() {
+    intialiseDoors();
     while (true) {
       currentRoom.draw();
       startTurn();
@@ -119,7 +120,7 @@ public class Game {
       currentTile.setToken(player.getInventory().remove(0));
     }
   }
-  
+
   public void diffuseBomb() {
     AccessibleTile t = (AccessibleTile) player.getTile();
     if(!t.hasBomb()) {
@@ -152,8 +153,25 @@ public class Game {
     }
   }
 
-  public static void main(String[] args) {
-//    new Game();
+  //TODO: Clean this up
+  private void intialiseDoors(){
+    for(int i = 0; i < board.length; i++){
+      for(int j = 0; j < board[i].length; j++){
+        if(board[i][j]!=null){ //TODO: fix null rooms
+            for(String dir: board[i][j].getDoors()){
+              switch(dir){
+                case "left": board[i][j].setTile(new DoorTile(board[i-1][j],board[i][j]), Room.LEFT.x, Room.LEFT.y); break;
+                case "right": board[i][j].setTile(new DoorTile(board[i+1][j],board[i][j]), Room.RIGHT.x, Room.RIGHT.y); break;
+                case "top": board[i][j].setTile(new DoorTile(board[i][j-1],board[i][j]), Room.TOP.x, Room.TOP.y); break;
+                case "bottom": board[i][j].setTile(new DoorTile(board[i][j+1],board[i][j]), Room.BOTTOM.x, Room.BOTTOM.y); break;
+              }
+            }
+
+
+        }
+      }
+    }
+
   }
 
 }

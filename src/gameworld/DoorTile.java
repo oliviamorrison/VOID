@@ -1,14 +1,14 @@
 package gameworld;
 
 public class DoorTile extends Tile{
-    private DoorTile toDoor;
+    private Room toRoom;
 
-    public DoorTile(DoorTile toDoor, Room room){
+    public DoorTile(Room toRoom, Room room){
         super(room);
-        this.toDoor = toDoor;
+        this.toRoom = toRoom;
     }
 
-    public DoorTile getToDoor() {
-        return toDoor;
+    public Room getToRoom() {
+        return toRoom;
     }
 }
