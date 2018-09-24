@@ -3,10 +3,8 @@ package persistence;
 import gameworld.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -14,39 +12,23 @@ import java.util.regex.Pattern;
 
 public class XMLReader {
 
-    public static void main(String[] args) {
-        if (args.length > 0) {
-            for (String arg : args) {
-                File f = new File(arg);
-                if (f.exists()) {
-                    System.out.println("Parsing '" + f + "'");
-                    Game game = parseFile(f);
-                    System.out.println("Parsing completed ");
-                    if (game != null) {
-                        System.out.println("================\nProgram:");
-                        System.out.println(game);
-                    }
-                    System.out.println("=================");
-                } else {
-                    System.out.println("Can't find file '" + f + "'");
-                }
+    public static Game parseGame() {
+        while (true) {
+            JFileChooser chooser = new JFileChooser(".");// System.getProperty("user.dir"));
+            int res = chooser.showOpenDialog(null);
+            if (res != JFileChooser.APPROVE_OPTION) {
+                break;
             }
-        } else {
-            while (true) {
-                JFileChooser chooser = new JFileChooser(".");// System.getProperty("user.dir"));
-                int res = chooser.showOpenDialog(null);
-                if (res != JFileChooser.APPROVE_OPTION) {
-                    break;
-                }
-                Game game = parseFile(chooser.getSelectedFile());
-                System.out.println("Parsing completed");
-                if (game != null) {
-                    System.out.println("game parsed");
-                }
-                System.out.println("=================");
+            Game game = parseFile(chooser.getSelectedFile());
+            System.out.println("Parsing completed");
+            if (game != null) {
+                System.out.println("game parsed");
+                return game;
             }
+            System.out.println("=================");
         }
         System.out.println("Done");
+        return null;
     }
 
     /**
@@ -61,10 +43,10 @@ public class XMLReader {
             // when one of them is one of (){},;
             scan.useDelimiter("\\s+|(?=[{}(),;])|(?<=[{}(),;])");
 
-            Game n = parseGame(scan); // You need to implement this!!!
+            Game game = parseGame(scan); // You need to implement this!!!
 
             scan.close();
-            return n;
+            return game;
         } catch (FileNotFoundException e) {
             System.out.println("RobotParser.Robot program source file not found");
         }
@@ -104,7 +86,7 @@ public class XMLReader {
         }
 
         require("<player>", "Expected <player>", scan);
-        Player player = parsePlayer(scan, board[0][1]); //TODO: This is hardcoded for now
+        Player player = parsePlayer(scan, board); //TODO: This is hardcoded for now
         require("</player>", "Expected </player>", scan);
 
 
@@ -132,7 +114,7 @@ public class XMLReader {
         require("</col>", "Expected </col>", scan);
 
 
-        HashMap<String,DoorTile> doors = new HashMap<>();
+        List<String> doors = new ArrayList<>();
         while(true){
             if(scan.hasNext("<door>")){
                 parseDoor(scan, doors);
@@ -158,11 +140,22 @@ public class XMLReader {
     /**
      * PLAYER ::= INVENTORY
      * @param scan scanner
-     * @param room room
      * @return player in room
      */
-    private static Player parsePlayer(Scanner scan, Room room) {
+    private static Player parsePlayer(Scanner scan, Room[][] board) {
+        require("<roomrow>", "Expected <roomrow>", scan);
+        int roomrow = requireInt(NUMPAT, "Expected number", scan);
+        require("</roomrow>", "Expected </roomrow>", scan);
+
+        require("<roomcol>", "Expected <roomcol>", scan);
+        int roomcol = requireInt(NUMPAT, "Expected number", scan);
+        require("</roomcol>", "Expected </roomcol>", scan);
+
+        Room room = board[roomrow][roomcol];
+
         Player player = new Player(room, (AccessibleTile) room.getTile(5, 5)); //TODO: THIS IS HARD CODED IN THE CENTRE FOR NOW
+        ((AccessibleTile) room.getTile(5,5)).setPlayer(true);
+
         if(scan.hasNext("<inventory>")) parseInventory(scan, player);
         return player;
     }
@@ -174,13 +167,13 @@ public class XMLReader {
      */
     private static void parseInventory(Scanner scan, Player player) {
         require("<inventory>", "Expected <inventory>", scan);
-            while (true){
-                if(scan.hasNext("<item>")){
-                    Token item = parseItem(scan);
-                    player.getInventory().add(item);
-                }
-                else break;
+        while (true){
+            if(scan.hasNext("<item>")){
+                Token item = parseItem(scan);
+                player.getInventory().add(item);
             }
+            else break;
+        }
         require("</inventory>", "Expected </inventory>", scan);
     }
 
@@ -209,12 +202,11 @@ public class XMLReader {
      * @param scan scanner
      * @param doors map of doors
      */
-    private static void parseDoor(Scanner scan, HashMap<String, DoorTile> doors){
+    private static void parseDoor(Scanner scan, List<String> doors){
         require("<door>", "Expected <door>", scan);
         String direction = require(DIRPAT, "Expected direction", scan);
-        DoorTile door = new DoorTile(null, null); //TODO: Figure out how to make doors point to each other
         require("</door>", "Expected </door>", scan);
-        doors.put(direction, door);
+        doors.add(direction);
     }
 
     /**

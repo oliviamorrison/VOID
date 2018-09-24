@@ -1,3 +1,4 @@
+/*
 package persistence;
 
 import gameworld.AccessibleTile;
@@ -9,11 +10,13 @@ import gameworld.Tile;
 
 public class RoomParser {
 
-  /**
+  */
+/**
    * This method creates a new room based on the information
    * passed in from a data file. (should have a file as an argument)
    * @return new room as described by the data file
-   */
+   *//*
+
   public static Room createRoom(String[] data) {
 
     Room room = new Room();
@@ -49,10 +52,12 @@ public class RoomParser {
 
   }
 
-  /**
+  */
+/**
    * This method creates a default room with a single token.
    * @return default room information as string[]
-   */
+   *//*
+
   public static String[] getDefaultRoom() {
 
     String file = "X X X X X X X X X X\n"
@@ -86,3 +91,4 @@ public class RoomParser {
 
   }
 }
+*/
