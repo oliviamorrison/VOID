@@ -1,6 +1,6 @@
 package gameworld;
 
-import persistence.RoomParser;
+//import persistence.RoomParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,16 +18,17 @@ public class Game {
 	public Game(Room[][] board, Player player){
 		this.player = player;
 		this.board = board;
+		this.currentRoom = player.getRoom();
 	}
-
-  public Game() {
-    setup();
-    startGame();
-  }
-
-  public Game(boolean testing) {
-    setup();
-  }
+//
+//  public Game() {
+//    setup();
+//    startGame();
+//  }
+//
+//  public Game(boolean testing) {
+//    setup();
+//  }
 
   public static void movePlayer(String direction) {
     int dx = 0;
@@ -53,15 +54,15 @@ public class Game {
     player.moveTile(dx, dy);
   }
 
-  public void setup() {
-    // create a starting room for testing
-    Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
-    currentRoom = defaultRoom;
-    rooms.add(defaultRoom);
-    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
-    player = new Player(defaultRoom, startingTile);
-    startingTile.setPlayer(true);
-  }
+//  public void setup() {
+//    // create a starting room for testing
+//    Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
+//    currentRoom = defaultRoom;
+//    rooms.add(defaultRoom);
+//    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
+//    player = new Player(defaultRoom, startingTile);
+//    startingTile.setPlayer(true);
+//  }
 
   public void startGame() {
 
@@ -154,7 +155,7 @@ public class Game {
   }
 
   public static void main(String[] args) {
-    new Game();
+//    new Game();
   }
 
 }

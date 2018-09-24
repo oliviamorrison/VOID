@@ -15,6 +15,9 @@ public class Player {
         this.inventory = new ArrayList<>();
     }
 
+    public Room getRoom() {
+        return room;
+    }
 //	/**
 //	 * Updates the player's current position on the board.
 //	 * @param dx amount of steps moved in the x direction
