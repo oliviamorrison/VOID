@@ -18,19 +18,45 @@ public class Room {
     public Room(HashMap<String, DoorTile> doors, List<Token> items){
         //may need to change this depending on XML
         this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+        this.items = items;
+
         //For now until we can load in an XML file
         for(int i = 0; i < ROOMSIZE; i++){
             for(int j = 0; j < ROOMSIZE; j++){
-                tiles[i][j] = new AccessibleTile(this);
+                if(i == 0 || j == 0 || j == ROOMSIZE-1 || i == ROOMSIZE-1) tiles[i][j] = new InaccessibleTile(this);
+                else tiles[i][j] = new AccessibleTile(this);
             }
         }
-        //TODO: Change walls to be inaccessible, and add doors depending on direction in room
+
+        for(String direction : doors.keySet()){
+            switch(direction){
+                case "left": tiles[LEFT.y][LEFT.x] = new DoorTile(null, this); //null for now
+                case "right": tiles[RIGHT.y][RIGHT.x] = new DoorTile(null, this); //null for now
+                case "top": tiles[TOP.y][TOP.x] = new DoorTile(null, this); //null for now
+                case "bottom": tiles[BOTTOM.y][BOTTOM.x] = new DoorTile(null, this); //null for now
+            }
+        }
+
+        for(Token item : this.items){
+            boolean itemPlaced = false;
+            while(!itemPlaced){
+                int randomX = (int)(Math.random() * 8)+1;
+                int randomY = (int)(Math.random() * 8)+1;
+                if (tiles[randomY][randomX] instanceof AccessibleTile ) {
+                    AccessibleTile tile = (AccessibleTile)tiles[randomY][randomX];
+                    if(!tile.hasToken()){
+                        tile.setToken(item);
+                        itemPlaced = true;
+                    }
+                }
+            }
+        }
+
+        //TODO: and add doors depending on direction in room
         //This is just to test if door checking works
         DoorTile door = new DoorTile(null, this);
         tiles[0][0] = new DoorTile(door, this);
 
-        this.items = items;
-        //TODO: Place items randomly around room
 
     }
 
