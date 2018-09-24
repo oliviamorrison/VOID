@@ -1,6 +1,7 @@
 package persistence;
 
 import gameworld.AccessibleTile;
+import gameworld.Bomb;
 import gameworld.Diffuser;
 import gameworld.InaccessibleTile;
 import gameworld.Room;
@@ -32,6 +33,11 @@ public class RoomParser {
             AccessibleTile accessibleTile = (AccessibleTile) tile;
             accessibleTile.setToken(diffuser);
           }
+          else if(character == 'B') {
+        	  Bomb bomb = new Bomb();
+        	  AccessibleTile accessibleTile = (AccessibleTile) tile;
+              accessibleTile.setBomb(bomb);
+          }
         }
         room.setTile(tile, row, col);
         count++;
@@ -56,6 +62,22 @@ public class RoomParser {
         + "X - - - - - - - - X\n"
         + "X - - - - - - - - X\n"
         + "X - - - - - D - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X X X X X X X X X X\n";
+
+    return file.replace(" ", "").split("\n");
+
+  }
+  public static String[] getBombRoom() {
+
+    String file = "X X X X X X X X X X\n"
+        + "X - - - - - - - - X\n"
+        + "X D - - B - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
+        + "X - - - - - - - - X\n"
         + "X - - - - - - - - X\n"
         + "X - - - - - - - - X\n"
         + "X X X X X X X X X X\n";

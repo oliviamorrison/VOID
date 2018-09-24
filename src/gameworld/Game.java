@@ -49,7 +49,7 @@ public class Game {
 
   public void setup() {
     // create a starting room for testing
-    Room defaultRoom = RoomParser.createRoom(RoomParser.getDefaultRoom());
+    Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
     currentRoom = defaultRoom;
     rooms.add(defaultRoom);
     AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
@@ -67,7 +67,7 @@ public class Game {
   }
 
   public void startTurn() {
-    String input = inputString("Move:m Pickup:u Drop:d");
+    String input = inputString("Move:m Pickup:u Drop:d Diffuse: f");
     switch (input) {
       case "m":
         movePlayer();
@@ -77,6 +77,9 @@ public class Game {
         break;
       case "d":
         dropItem();
+        break;
+      case "f":
+        diffuseBomb();
         break;
     }
   }
@@ -110,6 +113,26 @@ public class Game {
     if (!currentTile.hasToken() && !inventory.isEmpty()) {
       currentTile.setToken(player.getInventory().remove(0));
     }
+  }
+  
+  public void diffuseBomb() {
+    AccessibleTile t = (AccessibleTile) player.getTile();
+    if(!t.hasBomb()) {
+      System.out.println("No Bomb here.");
+      return;
+    }
+    List<Token> inventory = player.getInventory();
+    Boolean hasdiffuser = false;
+    for(Token token : inventory) {
+      if(token instanceof Diffuser)
+        hasdiffuser = true;
+    }
+    if(!hasdiffuser) {
+      System.out.println("You need a diffuser to diffuse the bomb.");
+      return;
+    }
+    System.out.println("You diffused the bomb." + t.getBomb().isActive());
+    t.getBomb().setActive(false);
   }
 
   private static String inputString(String msg) {

@@ -2,6 +2,7 @@ package gameworld;
 
 public class AccessibleTile extends Tile {
   private Token token;
+  private Bomb bomb;
   private boolean player = false;
 
   public AccessibleTile(Room room) {
@@ -18,6 +19,18 @@ public class AccessibleTile extends Tile {
 
   public boolean hasToken() {
     return this.token != null;
+  }
+  
+  public void setBomb(Bomb b) {
+    this.bomb = b;
+  }
+  
+  public Bomb getBomb() {
+    return this.bomb;
+  }
+  
+  public boolean hasBomb() {
+    return this.bomb != null;
   }
 
   public void setPlayer(boolean player) {

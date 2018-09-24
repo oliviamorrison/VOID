@@ -74,6 +74,8 @@ public class Room {
             Token token = accessibleTile.getToken();
             if (token instanceof Diffuser)
               room.append("D");
+          } else if(accessibleTile.hasBomb()) {
+            room.append("B");
           } else
             room.append(" ");
         }
