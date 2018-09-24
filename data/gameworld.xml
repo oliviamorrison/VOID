@@ -1,0 +1,100 @@
+<game>
+    <rows>
+        3
+    </rows>
+    <cols>
+        3
+    </cols>
+
+    <room>
+        <row>
+            1
+        </row>
+        <col>
+            0
+        </col>
+        <door>
+            right
+        </door>
+        <item>
+            key
+        </item>
+    </room>
+
+    <room>
+        <row>
+            1
+        </row>
+        <col>
+            1
+        </col>
+        <door>
+            left
+        </door>
+        <door>
+            bottom
+        </door>
+        <door>
+            top
+        </door>
+    </room>
+
+    <room>
+        <row>
+            0
+        </row>
+        <col>
+            1
+        </col>
+        <door>
+            bottom
+        </door>
+        <item>
+            bomb
+        </item>
+    </room>
+
+    <room>
+        <row>
+            2
+        </row>
+        <col>
+            1
+        </col>
+        <door>
+            top
+        </door>
+        <item>
+            diffuser
+        </item>
+        <item>
+            key
+        </item>
+    </room>
+
+    <room>
+        <row>
+            0
+        </row>
+        <col>
+            2
+        </col>
+        <door>
+            left
+        </door>
+        <item>
+            prize
+        </item>
+    </room>
+
+    <player>
+        <inventory>
+
+        </inventory>
+    </player>
+
+
+
+</game>
+
+

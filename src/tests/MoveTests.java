@@ -13,17 +13,17 @@ import gameworld.Player;
  */
 public class MoveTests {
 
-	@Test
-	public void test01_validMove() {
-		Game game = new Game();
-		Player player = game.getPlayer();
-		
-		// translate the player up one step north
-		game.movePlayer("w");
-
-		assertEquals(5.0, player.getLocation().getX(), 0);
-		assertEquals(4.0, player.getLocation().getY(), 0);
-	}
-	
+//	@Test
+//	public void test01_validMove() {
+//		Game game = new Game();
+//		Player player = game.getPlayer();
+//
+//		// translate the player up one step north
+//		game.movePlayer("w");
+//
+//		assertEquals(5.0, player.getLocation().getX(), 0);
+//		assertEquals(4.0, player.getLocation().getY(), 0);
+//	}
+//
 }
 	
