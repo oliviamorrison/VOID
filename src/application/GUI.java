@@ -88,8 +88,8 @@ public class GUI extends Application {
         //set ratios
         this.game.setPrefSize(WINDOW_WIDTH*0.7, WINDOW_HEIGHT);
         this.inventory.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.5);
-        this.options.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.2);
-        this.map.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.3);
+        this.options.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.1);
+        this.map.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.4);
     }
 
 	public GridPane setGame() {
@@ -121,20 +121,18 @@ public class GUI extends Application {
 
 	public AnchorPane setOptions() {
 		AnchorPane options = new AnchorPane();
-		Button buttonSave = new Button("Pick Up");
-		Button buttonCancel = new Button("Drop");
-
-
+		Button pickupButton = new Button("Pick Up");
+		Button dropButton = new Button("Drop");
+        Button diffuseButton = new Button("Diffuse");
+        Button unlockButton = new Button("Unlock");
 
 		HBox hb = new HBox();
-		hb.setPrefWidth(170);
-		hb.setPadding(new Insets(0, 10, 10, 10));
+		hb.setPadding(new Insets( 20,0,20,20));
 		hb.setSpacing(10);
-		hb.getChildren().addAll(buttonSave, buttonCancel);
+		hb.getChildren().addAll(pickupButton, dropButton, diffuseButton, unlockButton);
 		options.setStyle("-fx-background-color: green;");
 
 		options.getChildren().add(hb);
-		AnchorPane.setTopAnchor(hb, 1.0);
 		return options;
 	}
 
