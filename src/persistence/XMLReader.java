@@ -162,7 +162,7 @@ public class XMLReader {
      * @return player in room
      */
     private static Player parsePlayer(Scanner scan, Room room) {
-        Player player = new Player(new Point(5,5), room.getTile(5, 5)); //TODO: THIS IS HARD CODED IN THE CENTRE FOR NOW
+        Player player = new Player(room, (AccessibleTile) room.getTile(5, 5)); //TODO: THIS IS HARD CODED IN THE CENTRE FOR NOW
         if(scan.hasNext("<inventory>")) parseInventory(scan, player);
         return player;
     }
