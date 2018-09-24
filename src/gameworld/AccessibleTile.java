@@ -18,4 +18,9 @@ public class AccessibleTile extends Tile{
     public boolean hasToken() {
     	return this.token != null;
     }
+
+    @Override
+    public String toString(){
+        return "X";
+    }
 }
