@@ -3,6 +3,8 @@ package application;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -18,48 +20,64 @@ public class GUI extends Application {
 	private GridPane map;
 
 	@Override public void start(Stage stage) {
+		
+		// create the menu bar
+		MenuBar menuBar = new MenuBar();
+		menuBar.prefWidthProperty().bind(stage.widthProperty());
+		VBox vBox = new VBox(menuBar);
+		
+		// menu bar items
+		Menu newGame = new Menu("New Game");
+		menuBar.getMenus().add(newGame);
+		
+		Menu quitGame = new Menu("Quit");
+		menuBar.getMenus().add(quitGame);
 
+		// initialise the game panes
 		this.game = setGame();
 		this.inventory = setInventory();
 		this.options = setOptions();
 		this.map = setMap();
 
 		FlowPane stack = new FlowPane();
-
 		stack.getChildren().addAll(inventory, options, map);
 		
 		stack.setPadding(new Insets(1,1,1,1));
 		stack.setVgap(4);
 		stack.setHgap(4);
-		stack.setPrefWrapLength(50); // preferred width allows for two columns
+		stack.setPrefWrapLength(50); 
 
 		HBox hb = new HBox();
-	
 		hb.setSpacing(10);
 		hb.getChildren().add(stack);
 		HBox.setHgrow(stack, Priority.ALWAYS);
 		
+		// Set the alignment of the menu bar to the top
+		GridPane.setValignment(vBox, VPos.TOP);
+	
+		
 		// Set the alignment of the game to centre
 		GridPane.setHalignment(this.game, HPos.CENTER);
 
-		// Set the alignment of the the side panel to the right
+		// Set the alignment of the side panel to the right
 		GridPane.setHalignment(hb, HPos.RIGHT);
+		
+		//vBox.setAlignment(Pos.TOP_CENTER);
 		GridPane grid = new GridPane();
+		
 		grid.add(game, 0,0);
 		grid.add(hb, 20, 0);
+		grid.add(vBox, 0, 0);
+		
+		
 
-		// Set the Size of the VBox
+		// Set the size of the window
 		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);		
-		// Set the Style-properties of the BorderPane
-		grid.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 2;" +
-				"-fx-border-insets: 5;" +
-				"-fx-border-radius: 5;" +
-				"-fx-border-color: blue;");
-
+		
 		// Create the Scene
 		Scene scene = new Scene(grid);
+		
+	
 		// Add the scene to the Stage
 		stage.setScene(scene);
 		// Set the title of the Stage
@@ -73,6 +91,7 @@ public class GUI extends Application {
 		Text name = new Text("game");
 		grid.add(name, 0, 0);
 		grid.setStyle("-fx-background-color: red;");
+	
 		return grid;
 	}
 
