@@ -24,9 +24,9 @@ public class GUI extends Application {
 		
 		// create the menu bar
 		MenuBar menuBar = new MenuBar();
-		menuBar.prefWidthProperty().bind(stage.widthProperty());
-		VBox vBox = new VBox(menuBar);
-		
+		HBox hBox = new HBox(menuBar);
+		menuBar.setPrefWidth(WINDOW_WIDTH);
+	
 		// menu bar items
 		Menu newGame = new Menu("New Game");
 		menuBar.getMenus().add(newGame);
@@ -40,7 +40,6 @@ public class GUI extends Application {
 		this.options = setOptions();
 		this.map = setMap();
 
-
 		FlowPane stack = new FlowPane();
 		stack.getChildren().addAll(inventory, options, map);
 
@@ -48,34 +47,22 @@ public class GUI extends Application {
 		stack.setPrefWrapLength(WINDOW_WIDTH*0.3); // preferred width allows for two columns
 
 		HBox hb = new HBox();
-
 		hb.getChildren().add(stack);
 		
-		// Set the alignment of the menu bar to the top
-		GridPane.setValignment(vBox, VPos.TOP);
-	
-		
-		// Set the alignment of the game to centre
-		GridPane.setHalignment(this.game, HPos.CENTER);
-
-		// Set the alignment of the side panel to the right
-		GridPane.setHalignment(hb, HPos.RIGHT);
 		GridPane grid = new GridPane();
 		
 		grid.add(game, 0, 1);
 		grid.add(hb, 1, 1);
-		grid.add(vBox, 0, 0);
+		grid.add(hBox, 0, 0);
 		
 		setWindowRatio();
 
 		// Set the size of the window
 		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);		
 		
-
 		// Create the Scene
 		Scene scene = new Scene(grid);
 		
-	
 		// Add the scene to the Stage
 		stage.setScene(scene);
 		// Set the title of the Stage
