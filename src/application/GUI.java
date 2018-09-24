@@ -17,6 +17,7 @@ public class GUI extends Application {
 	private AnchorPane options;
 	private GridPane map;
 
+
 	@Override public void start(Stage stage) {
 
 		this.game = setGame();
@@ -24,39 +25,32 @@ public class GUI extends Application {
 		this.options = setOptions();
 		this.map = setMap();
 
+
 		FlowPane stack = new FlowPane();
 
 		stack.getChildren().addAll(inventory, options, map);
-		
-		stack.setPadding(new Insets(1,1,1,1));
-		stack.setVgap(4);
+
 		stack.setHgap(4);
-		stack.setPrefWrapLength(50); // preferred width allows for two columns
+		stack.setPrefWrapLength(WINDOW_WIDTH*0.3); // preferred width allows for two columns
 
 		HBox hb = new HBox();
-	
-		hb.setSpacing(10);
+
 		hb.getChildren().add(stack);
-		HBox.setHgrow(stack, Priority.ALWAYS);
 		
 		// Set the alignment of the game to centre
 		GridPane.setHalignment(this.game, HPos.CENTER);
 
 		// Set the alignment of the the side panel to the right
 		GridPane.setHalignment(hb, HPos.RIGHT);
+
 		GridPane grid = new GridPane();
 		grid.add(game, 0,0);
-		grid.add(hb, 20, 0);
+		grid.add(hb, 1, 0);
+
+		setWindowRatio();
 
 		// Set the Size of the VBox
-		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);		
-		// Set the Style-properties of the BorderPane
-		grid.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 2;" +
-				"-fx-border-insets: 5;" +
-				"-fx-border-radius: 5;" +
-				"-fx-border-color: blue;");
+		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		// Create the Scene
 		Scene scene = new Scene(grid);
@@ -67,6 +61,14 @@ public class GUI extends Application {
 		// Display the Stage
 		stage.show();		
 	}
+
+	public void setWindowRatio(){
+        //set ratios
+        this.game.setPrefSize(WINDOW_WIDTH*0.7, WINDOW_HEIGHT);
+        this.inventory.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.5);
+        this.options.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.2);
+        this.map.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.3);
+    }
 
 	public GridPane setGame() {
 		GridPane grid = new GridPane();
@@ -83,7 +85,7 @@ public class GUI extends Application {
 		flow.setPadding(new Insets(1,1,1,1));
 		flow.setVgap(4);
 		flow.setHgap(4);
-		flow.setPrefWrapLength(170); // preferred width allows for two columns
+		flow.setPrefWrapLength(WINDOW_WIDTH*0.15); // preferred width allows for two columns
 
 		Text pages[] = new Text[8];
 		for (int i=0; i<8; i++) {
@@ -96,8 +98,9 @@ public class GUI extends Application {
 
 	public AnchorPane setOptions() {
 		AnchorPane options = new AnchorPane();
-		Button buttonSave = new Button("Save");
-		Button buttonCancel = new Button("Cancel");
+		Button buttonSave = new Button("Pick Up");
+		Button buttonCancel = new Button("Drop");
+
 
 
 		HBox hb = new HBox();
@@ -118,14 +121,6 @@ public class GUI extends Application {
 		grid.add(name, 0, 0);
 		grid.setStyle("-fx-background-color: orange;");
 		grid.setPrefWidth(170);
-		return grid;
-	}
-
-	public GridPane setMove() {
-		GridPane grid = new GridPane();
-		Text name = new Text("move");
-		grid.add(name, 0, 0);
-		grid.setStyle("-fx-background-color: yellow;");
 		return grid;
 	}
 
