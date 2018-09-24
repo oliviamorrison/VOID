@@ -3,10 +3,8 @@ package persistence;
 import gameworld.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -14,41 +12,23 @@ import java.util.regex.Pattern;
 
 public class XMLReader {
 
-    public static void main(String[] args) {
-        if (args.length > 0) {
-            for (String arg : args) {
-                File f = new File(arg);
-                if (f.exists()) {
-                    System.out.println("Parsing '" + f + "'");
-                    Game game = parseFile(f);
-                    System.out.println("Parsing completed ");
-                    if (game != null) {
-                        System.out.println("================\nProgram:");
-                        System.out.println(game);
-                        game.drawRoom();
-                    }
-                    System.out.println("=================");
-                } else {
-                    System.out.println("Can't find file '" + f + "'");
-                }
+    public static Game parseGame() {
+        while (true) {
+            JFileChooser chooser = new JFileChooser(".");// System.getProperty("user.dir"));
+            int res = chooser.showOpenDialog(null);
+            if (res != JFileChooser.APPROVE_OPTION) {
+                break;
             }
-        } else {
-            while (true) {
-                JFileChooser chooser = new JFileChooser(".");// System.getProperty("user.dir"));
-                int res = chooser.showOpenDialog(null);
-                if (res != JFileChooser.APPROVE_OPTION) {
-                    break;
-                }
-                Game game = parseFile(chooser.getSelectedFile());
-                System.out.println("Parsing completed");
-                if (game != null) {
-                    System.out.println("game parsed");
-                    game.drawRoom();
-                }
-                System.out.println("=================");
+            Game game = parseFile(chooser.getSelectedFile());
+            System.out.println("Parsing completed");
+            if (game != null) {
+                System.out.println("game parsed");
+                return game;
             }
+            System.out.println("=================");
         }
         System.out.println("Done");
+        return null;
     }
 
     /**
@@ -134,7 +114,7 @@ public class XMLReader {
         require("</col>", "Expected </col>", scan);
 
 
-       List<String> doors = new ArrayList<>();
+        List<String> doors = new ArrayList<>();
         while(true){
             if(scan.hasNext("<door>")){
                 parseDoor(scan, doors);
@@ -187,13 +167,13 @@ public class XMLReader {
      */
     private static void parseInventory(Scanner scan, Player player) {
         require("<inventory>", "Expected <inventory>", scan);
-            while (true){
-                if(scan.hasNext("<item>")){
-                    Token item = parseItem(scan);
-                    player.getInventory().add(item);
-                }
-                else break;
+        while (true){
+            if(scan.hasNext("<item>")){
+                Token item = parseItem(scan);
+                player.getInventory().add(item);
             }
+            else break;
+        }
         require("</inventory>", "Expected </inventory>", scan);
     }
 
