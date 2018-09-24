@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Room {
+
     private Tile[][] tiles;
     private List<Token> items;
     private final int ROOMSIZE = 10;
@@ -60,61 +61,82 @@ public class Room {
 
     }
 
-    public Room(List<DoorTile> doors) {
+  public Tile moveTile(Tile t, int dx, int dy) {
+    int[] coords = getTileCoordinates(t);
+
+    int x = coords[0];
+    int y = coords[1];
+
+    int newX = x + dx;
+    int newY = y + dy;
 
 
+    //if the newCoordinates are inbounds and the tile is not inaacessible
+    if (newX < 11 && newY < 11 && !(tiles[newX][newY] instanceof InaccessibleTile)) {
+      return tiles[newX][newY];
     }
 
-    public boolean checkActiveBomb(){
-        for(int i=0; i< ROOMSIZE; i++){
-            for (int j = 0; j < ROOMSIZE; j++) {
-                if(tiles[i][j] instanceof  AccessibleTile){
-                    AccessibleTile tile = (AccessibleTile) tiles[i][j];
-                    if(tile.hasToken() && tile.getToken() instanceof Bomb ){
-                        //Assumes only one bomb in each room
-                        return ((Bomb) tile.getToken()).isActive;
-                    }
-                }
-            }
+    return null;
+  }
+
+  private int[] getTileCoordinates(Tile t) {
+    for (int i = 0; i < ROOMSIZE; i++) {
+      for (int j = 0; j < ROOMSIZE; j++) {
+
+        //returns coordinates of the tile
+        if (tiles[i][j].equals(t)) return new int[]{i, j};
+      }
+    }
+
+    return null;
+  }
+
+  public Tile getTile(int row, int col) {
+    return tiles[row][col];
+  }
+
+  public void setTile(Tile tile, int row, int col) {
+    tiles[row][col] = tile;
+  }
+
+  /**
+   * This method creates and prints out the visual
+   * representation of the room to the user.
+   */
+  public String draw() {
+
+    StringBuilder room = new StringBuilder();
+
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+
+        Tile tile = tiles[row][col];
+
+        if (tile instanceof InaccessibleTile)
+          room.append("X");
+        else if (tile instanceof AccessibleTile) {
+
+          AccessibleTile accessibleTile = (AccessibleTile) tile;
+
+          if (accessibleTile.hasPlayer() && accessibleTile.hasToken())
+            room.append("!");
+          else if (accessibleTile.hasPlayer())
+            room.append("P");
+          else if (accessibleTile.hasToken()) {
+            Token token = accessibleTile.getToken();
+            if (token instanceof Diffuser)
+              room.append("D");
+          } else if(accessibleTile.hasBomb()) {
+            room.append("B");
+          } else
+            room.append(" ");
         }
-
-        return false;
+        if (col < ROOMSIZE - 1)
+          room.append(" ");
+      }
+      room.append("\n");
     }
-
-
-
-    public Tile moveTile(Tile t, int dx, int dy){
-        int[] coords = getCoordsofTile(t);
-
-        int x = coords[0];
-        int y = coords[1];
-
-        int newX = x+dx;
-        int newY = y+dy;
-
-        //if the newCoordinates are inbounds and the tile is not inaccessible
-        if(newX<10 && newY<10 && newX >=0 && newY >=0 && !(tiles[newX][newY] instanceof InaccessibleTile)){
-            return tiles[newX][newY];
-        }
-
-        return null;
-    }
-
-    public int[] getCoordsofTile(Tile t){
-
-        for(int i=0; i<ROOMSIZE; i++){
-            for(int j=0; j<ROOMSIZE; j++){
-
-                //returns coordinates of the tile
-                if(tiles[i][j].equals(t)) return new int[]{i,j};
-            }
-        }
-
-        return null;
-    }
-
-    public Tile getTile(int x, int y){
-        return tiles[x][y];
-    }
-
+    System.out.println(room.toString());
+    return room.toString();
+  }
 }
