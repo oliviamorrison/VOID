@@ -16,9 +16,6 @@
         <door>
             right
         </door>
-        <door>
-            left
-        </door>
         <item>
             key
         </item>
@@ -40,6 +37,9 @@
         <door>
             top
         </door>
+        <item>
+            prize
+        </item>
     </room>
 
     <room>
@@ -72,21 +72,6 @@
         </item>
         <item>
             key
-        </item>
-    </room>
-
-    <room>
-        <row>
-            0
-        </row>
-        <col>
-            2
-        </col>
-        <door>
-            left
-        </door>
-        <item>
-            prize
         </item>
     </room>
 
