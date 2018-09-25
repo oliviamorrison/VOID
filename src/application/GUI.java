@@ -1,12 +1,15 @@
 package application;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -92,16 +95,30 @@ public class GUI extends Application {
 		FlowPane flow = new FlowPane();
 		flow.setStyle("-fx-background-color: blue;");
 		
-		flow.setPadding(new Insets(1,1,1,1));
+		flow.setPadding(new Insets(8,1,1,8));
 		flow.setVgap(4);
 		flow.setHgap(4);
 		flow.setPrefWrapLength(WINDOW_WIDTH*0.15); // preferred width allows for two columns
 
-		Text pages[] = new Text[8];
-		for (int i=0; i<8; i++) {
-			pages[i] = new Text("inventory");
-			flow.getChildren().addAll(pages[i]);
-		}
+        ToggleButton btn;
+        ToggleGroup group = new ToggleGroup();
+
+        String[] images = new String[]{"key.png","green-key.png", "red-key.png","unlit-bomb.png","two-coins.png","two-coins.png"};
+
+        for (int i = 0; i < 6; i++) {
+
+            btn = new ToggleButton();
+            Image image = new Image(getClass().getResourceAsStream(images[i]));
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(80);
+            imageView.setFitWidth(80);
+            btn.setGraphic(imageView);
+            btn.setToggleGroup(group);
+            btn.setPrefSize(WINDOW_WIDTH*0.14, WINDOW_HEIGHT*0.5*0.23);
+            flow.getChildren().add(btn);
+
+        }
+
 		return flow;
 
 	}
