@@ -53,7 +53,7 @@ public class GUI extends Application {
 		hb.getChildren().add(stack);
 		
 		GridPane grid = new GridPane();
-		
+
 		grid.add(game, 0, 1);
 		grid.add(hb, 1, 1);
 		grid.add(hBox, 0, 0);
