@@ -41,21 +41,18 @@ public class XMLParser {
             Document doc = dBuilder.parse("data/gameworld.xml");
             doc.getDocumentElement().normalize();
 
-            Node rowsNode = doc.getElementsByTagName("rows").item(0);
-            int rows = parseInt(rowsNode.getTextContent());
-            System.out.println("rows = " + rows);
+            //parse rows and cols
+            int rows = parseInteger("rows", doc.getDocumentElement());
+            int cols = parseInteger("cols", doc.getDocumentElement());
 
-            Node colsNode = doc.getElementsByTagName("cols").item(0);
-            int cols = parseInt(colsNode.getTextContent());
-            System.out.println("cols = " + cols);
-
+            //create new board array
             Room[][] board = new Room[rows][cols];
 
+            //parse rooms
             NodeList roomList = doc.getElementsByTagName("room");
-            for(int i = 0; i < roomList.getLength(); i++){
-                parseRoom(roomList.item(i), board);
-            }
+            for(int i = 0; i < roomList.getLength(); i++) parseRoom(roomList.item(i), board);
 
+            //parse player
             Node playerNode = doc.getElementsByTagName("player").item(0);
             Player player = parsePlayer(playerNode, board);
 
@@ -71,73 +68,52 @@ public class XMLParser {
     }
 
     private static void parseRoom(Node room, Room[][] board) {
-        NodeList nodeList = room.getChildNodes();
-        int row = -1;
-        int col = -1;
         List<String> doors = new ArrayList<>();
         List<Token> tokens = new ArrayList<>();
 
-        for(int i = 0; i < nodeList.getLength(); i++){
-            Node n = nodeList.item(i);
-            if(n.getNodeName().equals("row")){
-                row = parseInt(n.getTextContent());
-                System.out.println("row = " + row);
-            }
-            else if(n.getNodeName().equals("col")){
-                col = parseInt(n.getTextContent());
-                System.out.println("col = " + col);
-            }
-            else if(n.getNodeName().equals("door")){
-                String door = n.getTextContent();
-                System.out.println("door = " + door);
-                doors.add(door);
-            }
-            else if(n.getNodeName().equals("items")){
-               parseItems(n.getChildNodes(), tokens);
-            }
+        Element roomElement = (Element) room;
+
+        //parse row and col
+        int row = parseInteger("row", roomElement);
+        int col = parseInteger("col", roomElement);
+
+        //parse doors
+        NodeList doorList = roomElement.getElementsByTagName("door");
+        for(int i = 0; i< doorList.getLength(); i++){
+            String door = doorList.item(i).getTextContent();
+            doors.add(door);
         }
 
-        assert(row!=-1);
-        assert(col!=-1);
-        assert(!doors.isEmpty());
+        //parse items
+        NodeList itemList = roomElement.getElementsByTagName("items");
+        parseItems(itemList, tokens);
 
         Room newRoom = new Room(doors, tokens);
         board[row][col] = newRoom;
     }
 
     private static Player parsePlayer(Node playerNode, Room[][] board) {
-        NodeList nodeList = playerNode.getChildNodes();
-        int row = -1;
-        int col = -1;
-        for(int i = 0; i < nodeList.getLength(); i++){
-            if(nodeList.item(i).getNodeName().equals("playerRow")){
-                row = parseInt(nodeList.item(i).getTextContent());
-                System.out.println("Player row = " + row);
-            }
-            else if (nodeList.item(i).getNodeName().equals("playerCol")) {
-                col = parseInt(nodeList.item(i).getTextContent());
-                System.out.println("Player col = " + col);
-            }
-        }
-
-        assert(row!=-1);
-        assert(col!=-1);
+        Element playerElement = (Element) playerNode;
+        int row = parseInteger("playerRow", playerElement);
+        int col = parseInteger("playerCol", playerElement);
 
         Room playerRoom = board[row][col];
         Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(5,5)); //TODO: Hard coded for now
 
-        Element playerElement = (Element) playerNode;
         NodeList inventory = playerElement.getElementsByTagName("inventory");
-
         parseItems(inventory, player.getInventory());
 
         return player;
     }
 
+    private static int parseInteger(String tagName, Element element){
+        return parseInt(element.getElementsByTagName(tagName).item(0).getTextContent());
+    }
+
     private static void parseItems(NodeList items, List<Token> tokens) {
         for(int i = 0; i< items.getLength(); i++){
-            assert(items.item(i).getNodeName().equals("item"));
-            String token = items.item(i).getTextContent();
+            String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
+            System.out.println(token);
             switch(token){
                 case "key": tokens.add(new Key()); break;
                 case "prize": tokens.add(new Prize()); break;
