@@ -20,7 +20,7 @@ public class XMLReader {
                 break;
             }
             Game game = parseFile(chooser.getSelectedFile());
-            System.out.println("Parsing completed");
+//            System.out.println("Parsing completed");
             if (game != null) {
                 System.out.println("game parsed");
                 return game;
@@ -45,7 +45,7 @@ public class XMLReader {
 
             Game game = parseGame(scan); // You need to implement this!!!
 
-            scan.close();
+//            scan.close();
             return game;
         } catch (FileNotFoundException e) {
             System.out.println("RobotParser.Robot program source file not found");

@@ -65,7 +65,7 @@ public class Game {
 //  }
 
   public void startGame() {
-    intialiseDoors();
+//    intialiseDoors();
     while (true) {
       currentRoom.draw();
       startTurn();
