@@ -1,5 +1,6 @@
 package gameworld;
 
+
 import java.awt.*;
 import java.util.List;
 
@@ -7,7 +8,7 @@ public class Room {
 
   private Tile[][] tiles;
   private List<Token> items;
-  private final int ROOMSIZE = 10;
+  public static final int ROOMSIZE = 10;
   private List<String> doors;
 
   public static final Point TOP = new Point(0, 5);
@@ -202,5 +203,6 @@ public class Room {
         return null;
     }
   }
+
 
 }
