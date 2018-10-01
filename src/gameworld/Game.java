@@ -174,4 +174,7 @@ public class Game {
 
   }
 
+  public Room[][] getBoard() {
+    return board;
+  }
 }
