@@ -66,7 +66,7 @@ public class renderer {
 
                 poly.setStroke(Color.BLACK);
                 poly.setStrokeWidth(1);
-            }
+            }//Testing
         }
     }
 
