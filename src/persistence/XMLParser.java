@@ -5,10 +5,7 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.xml.parsers.*;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
@@ -20,7 +17,7 @@ import static java.lang.Integer.parseInt;
 public class XMLParser {
 
     public static boolean saveGame(Game game){
-        //j dialogue box enter name of file
+        //TODO: j dialogue box to enter name of file
 
         String fileName = "temp.xml";
 
@@ -42,7 +39,7 @@ public class XMLParser {
 
             //cols element
             Element cols = document.createElement("cols");
-            rows.appendChild(document.createTextNode(board[0].length+""));
+            cols.appendChild(document.createTextNode(board[0].length+""));
             root.appendChild(cols);
 
             for(int i = 0; i < board.length; i++){
@@ -74,16 +71,28 @@ public class XMLParser {
                             items.appendChild(item);
                         }
                         roomElement.appendChild(items);
+
+                        //Add room
+                        root.appendChild(roomElement);
                     }
                 }
             }
 
+            Element player = document.createElement("player");
 
+            //TODO: Get room of player (with row and col)
+            //TODO: Get tile of player (and add it to the XML parser instead of it being hardcoded)
+
+            root.appendChild(player);
 
 
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
+            //Add line breaks and indentation
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(document);
            // StreamResult result = new StreamResult(new File(fileName));
 
@@ -99,7 +108,6 @@ public class XMLParser {
         }
 
         return false;
-
     }
 
 
