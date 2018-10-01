@@ -3,6 +3,9 @@ package renderer;
 import gameworld.AccessibleTile;
 import gameworld.Player;
 import gameworld.Room;
+import gameworld.Tile;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
@@ -13,10 +16,21 @@ public class renderer {
 
     private Player player;
     private Room room;
+    private List<Polygon> tilePolygons;
 
     public renderer(Player player, Room room){
         this.player = player;
         this.room = room;
+    }
+
+    public void draw(){
+        setTilePolygons();
+        tilesToPolygonList();
+        twoDToIso();
+        setPlayerPos();
+        Group root = new Group();
+        root.getChildren().addAll(this.tilePolygons);
+        root.getChildren().add(this.player.getEllipse());
     }
 
     public void setTilePolygons() {
@@ -50,7 +64,7 @@ public class renderer {
 
                 Polygon poly = new Polygon();
                 poly.getPoints().addAll(points);
-                //this.room.getTile(row, col).setTilePolygon(poly);
+                this.room.getTile(row, col).setTilePolygon(poly);
                 if (this.room.getTile(row, col) instanceof AccessibleTile) {
                     AccessibleTile tile = (AccessibleTile) this.room.getTile(row, col);
                     if (tile.hasToken()) {
@@ -66,9 +80,34 @@ public class renderer {
 
                 poly.setStroke(Color.BLACK);
                 poly.setStrokeWidth(1);
-            }//Testing
+            }
+        }
+    }
+    public void tilesToPolygonList() {
+        this.tilePolygons = new ArrayList<Polygon>();
+        for (int row = 0; row < Room.ROOMSIZE; row++) {
+            for (int col = 0; col < Room.ROOMSIZE; col++) {
+                this.tilePolygons.add(this.room.getTile(row, col).getTilePolygon());
+            }
         }
     }
 
+    public void twoDToIso() {
+        for (Polygon p : this.tilePolygons) {
+            for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
+                double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
+                double y = (p.getPoints().get(i) + p.getPoints().get(i + 1)) / 2;
 
+                p.getPoints().set(i, x + 300);
+                p.getPoints().set(i + 1, y);
+            }
+        }
+    }
+    public void setPlayerPos() {
+        Point2D p = this.room.getPlayerTile().getCenter();
+        this.player.getEllipse().setCenterX(p.getX());
+        this.player.getEllipse().setCenterY(p.getY() - 13);
+        System.out.println("AGAIN");
+    }
 }
+

@@ -204,5 +204,19 @@ public class Room {
     }
   }
 
+  public AccessibleTile getPlayerTile() {
+    for(int row = 0; row < ROOMSIZE; row++) {
+      for(int col = 0; col < ROOMSIZE; col++) {
+        if(this.tiles[row][col] instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
+          if(tile.hasPlayer()) {
+            return tile;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
 
 }
