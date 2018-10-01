@@ -58,6 +58,9 @@ public class Room {
 
     }
 
+    public List<Token> getItems() {
+        return items;
+    }
 
     public List<String> getDoors() {
         return doors;

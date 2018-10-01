@@ -38,18 +38,47 @@ public class XMLParser {
             // rows element
             Element rows = document.createElement("rows");
             rows.appendChild(document.createTextNode(board.length+""));
-            document.appendChild(rows);
+            root.appendChild(rows);
 
             //cols element
             Element cols = document.createElement("cols");
             rows.appendChild(document.createTextNode(board[0].length+""));
-            document.appendChild(cols);
+            root.appendChild(cols);
 
             for(int i = 0; i < board.length; i++){
                 for(int j = 0; j < board[i].length; j++){
+                    if(board[i][j]!=null){ //This is a bit messy
+                        Room room = board[i][j];
 
+                        Element roomElement = document.createElement("room");
+
+                        //row
+                        Element row = document.createElement("row");
+                        row.appendChild(document.createTextNode(i+""));
+                        roomElement.appendChild(row);
+                        //col
+                        Element col = document.createElement("col");
+                        col.appendChild(document.createTextNode(j+""));
+                        roomElement.appendChild(col);
+
+                        for(String direction: room.getDoors()){
+                            Element door = document.createElement("door");
+                            door.appendChild((document.createTextNode(direction)));
+                            roomElement.appendChild(door);
+                        }
+
+                        Element items = document.createElement("items");
+                        for(Token token: room.getItems()){
+                            Element item = document.createElement("item");
+                            item.appendChild(document.createTextNode(token.toString()));
+                            items.appendChild(item);
+                        }
+                        roomElement.appendChild(items);
+                    }
                 }
             }
+
+
 
 
 
