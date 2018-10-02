@@ -103,6 +103,7 @@ public class renderer {
             }
         }
     }
+
     public void setPlayerPos() {
         Point2D p = this.room.getPlayerTile().getCenter();
         this.player.getEllipse().setCenterX(p.getX());

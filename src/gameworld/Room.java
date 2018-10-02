@@ -218,5 +218,18 @@ public class Room {
     return null;
   }
 
+  public void rotateRoomClockwise(){
+    int x = ROOMSIZE/2;
+    int y = ROOMSIZE - 1;
+    for(int i = 0; i < x; i++){
+      for(int j = i; j < y - i; j++){
+        Tile value = this.tiles[i][j];
+        this.tiles[i][j] = this.tiles[y - j][i];
+        this.tiles[y - j][i] = this.tiles[y - i][y - j];
+        this.tiles[y - i][y - j] = this.tiles[j][y - i];
+        this.tiles[j][y - i] = value;
+      }
+    }
+  }
 
 }
