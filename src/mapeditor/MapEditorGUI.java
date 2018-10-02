@@ -20,10 +20,11 @@ public class MapEditorGUI extends Application{
 
     @Override
     public void start(Stage stage) {
-        setUpMenu();
 
         grid = new GridPane();
         grid.setPrefSize(WINDOW_WIDTH,WINDOW_HEIGHT);
+        setUpMenu();
+        setUpMap();
 
         // Create the Scene
         Scene scene = new Scene(grid);
@@ -33,6 +34,16 @@ public class MapEditorGUI extends Application{
         stage.setTitle("Map Editor");
         // Display the Stage
         stage.show();
+
+    }
+
+    public void setUpMap(){
+        GridPane mapGrid = new GridPane();
+
+        mapGrid.add(addKeyRoom(),0,0);
+        mapGrid.setStyle("-fx-background-color: red;");
+
+        grid.add(mapGrid, 0,1);
 
     }
 
@@ -51,10 +62,10 @@ public class MapEditorGUI extends Application{
         grid.add(hBox, 0, 0);
     }
 
-    public void addKeyRoom(int x, int y){
-        HBox hBox = new HBox();
-        hBox.setStyle("-fx-background-color: lightpink;");
-        grid.add(hBox,x,y);
+    public HBox addKeyRoom(){
+        HBox keyRoom = new HBox();
+        keyRoom.setStyle("-fx-background-color: lightpink;");
+        return keyRoom;
     }
 
     public void addBombRoom(int x, int y){
