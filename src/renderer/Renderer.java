@@ -19,7 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import persistence.RoomParser;
 
-public class renderer extends Application {
+public class Renderer extends Application {
 
     private static List<Polygon> poly;
     private static Player player;
