@@ -1,40 +1,150 @@
 package renderer;
 
-import gameworld.AccessibleTile;
-import gameworld.Player;
-import gameworld.Room;
-import gameworld.Tile;
+import gameworld.*;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class renderer {
+import static javafx.application.Application.launch;
 
-    private Player player;
-    private Room room;
-    private List<Polygon> tilePolygons;
 
-    public renderer(Player player, Room room){
-        this.player = player;
-        this.room = room;
-    }
+///
+import java.util.ArrayList;
+import java.util.List;
 
-    public void draw(){
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+///
+public class renderer extends Application{
+
+    private static List<Polygon> poly;
+    private static Player player;
+    private static Room currentRoom;
+    private static List<Room> rooms = new ArrayList<>();
+    private static Scene scene;
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        // TODO Auto-generated method stub
+        setup();
         setTilePolygons();
         tilesToPolygonList();
         twoDToIso();
         setPlayerPos();
+
         Group root = new Group();
-        root.getChildren().addAll(this.tilePolygons);
+        root.getChildren().addAll(this.poly);
         root.getChildren().add(this.player.getEllipse());
+        scene = new Scene(root, 600, 600);
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                int dx = 0;
+                int dy = 0;
+                switch (event.getCode()) {
+                    case W:
+                        dx = -1;
+                        break;
+                    case A:
+                        dy = -1;
+                        break;
+                    case S:
+                        dx = 1;
+                        break;
+                    case D:
+                        dy = 1;
+                        break;
+                    case R:
+                        rotate();
+                        break;
+                    case P:
+                        AccessibleTile currentTile1 = (AccessibleTile) player.getTile();
+                        System.out.println("Pick up: " +currentTile1.hasToken());
+                        pickUpItem();
+                        poly.clear();
+                        setTilePolygons();
+                        tilesToPolygonList();
+                        twoDToIso();
+                        System.out.println("Pick up: " +currentTile1.hasToken());
+                        break;
+
+                    case L:
+                        AccessibleTile currentTile2 = (AccessibleTile) player.getTile();
+                        System.out.println("Drop: " + currentTile2.hasToken());
+                        dropItem();
+                        poly.clear();
+                        setTilePolygons();
+                        tilesToPolygonList();
+                        twoDToIso();
+                        System.out.println("Drop: " + currentTile2.hasToken());
+                        break;
+                    default:
+
+                }
+                player.moveTile(dx, dy);
+                setPlayerPos();
+            }
+        });
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void pickUpItem() {
+        AccessibleTile currentTile = (AccessibleTile) player.getTile();
+        if (currentTile.hasToken()) {
+            player.pickUp(currentTile.getToken());
+            currentTile.setToken(null);
+        }
+    }
+
+    public void dropItem() {
+        List<Token> inventory = player.getInventory();
+        AccessibleTile currentTile = (AccessibleTile) player.getTile();
+        if (!currentTile.hasToken() && !inventory.isEmpty()) {
+            currentTile.setToken(player.getInventory().remove(0));
+        }
+    }
+
+
+    public void rotate() {
+        poly.clear();
+        currentRoom.rotateRoomClockwise();
+        setTilePolygons();
+        tilesToPolygonList();
+        twoDToIso();
+    }
+
+    public void setup() {
+        // create a starting room for testing
+        Room defaultRoom = persistence.RoomParser.createRoom(persistence.RoomParser.getBombRoom());
+        currentRoom = defaultRoom;
+        rooms.add(defaultRoom);
+        AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
+        player = new Player(defaultRoom, startingTile);
+        startingTile.setPlayer(true);
     }
 
     public void setTilePolygons() {
-        int size = 10;
         double polySize = 20;
         double top = 100;
         double left = 100;
@@ -64,9 +174,9 @@ public class renderer {
 
                 Polygon poly = new Polygon();
                 poly.getPoints().addAll(points);
-                this.room.getTile(row, col).setTilePolygon(poly);
-                if (this.room.getTile(row, col) instanceof AccessibleTile) {
-                    AccessibleTile tile = (AccessibleTile) this.room.getTile(row, col);
+                this.currentRoom.getTile(row, col).setTilePolygon(poly);
+                if (this.currentRoom.getTile(row, col) instanceof AccessibleTile) {
+                    AccessibleTile tile = (AccessibleTile) this.currentRoom.getTile(row, col);
                     if (tile.hasToken()) {
                         poly.setFill(Color.BLUE);
                     } else if (tile.hasBomb()) {
@@ -83,17 +193,24 @@ public class renderer {
             }
         }
     }
+
     public void tilesToPolygonList() {
-        this.tilePolygons = new ArrayList<Polygon>();
+        poly = new ArrayList<Polygon>();
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
-                this.tilePolygons.add(this.room.getTile(row, col).getTilePolygon());
+                poly.add(currentRoom.getTile(row, col).getTilePolygon());
             }
         }
     }
 
+    public void setPlayerPos() {
+        Point2D p = currentRoom.getPlayerTile().getCenter();
+        this.player.getEllipse().setCenterX(p.getX());
+        this.player.getEllipse().setCenterY(p.getY() - 13);
+    }
+
     public void twoDToIso() {
-        for (Polygon p : this.tilePolygons) {
+        for (Polygon p : this.poly) {
             for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
                 double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
                 double y = (p.getPoints().get(i) + p.getPoints().get(i + 1)) / 2;
@@ -104,11 +221,8 @@ public class renderer {
         }
     }
 
-    public void setPlayerPos() {
-        Point2D p = this.room.getPlayerTile().getCenter();
-        this.player.getEllipse().setCenterX(p.getX());
-        this.player.getEllipse().setCenterY(p.getY() - 13);
-        System.out.println("AGAIN");
-    }
+    public static void main(String args[]) {
+        launch(args);
+    }// Testing
 }
 

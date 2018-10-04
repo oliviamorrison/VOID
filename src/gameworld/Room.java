@@ -16,6 +16,11 @@ public class Room {
   public static final Point LEFT = new Point(5, 0);
   public static final Point RIGHT = new Point(5, 9);
 
+  public Room() {
+    //may need to change this depending on XML
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
+
   public Room(List<String> doors, List<Token> items) {
     //may need to change this depending on XML
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
