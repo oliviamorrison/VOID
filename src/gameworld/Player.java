@@ -1,5 +1,6 @@
 package gameworld;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
 
@@ -17,6 +18,12 @@ public class Player {
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
+
+    this.ellipse = new Ellipse();
+    this.ellipse.setFill(Color.ORANGE);
+    this.ellipse.setRadiusX(8);
+    this.ellipse.setRadiusY(15);
+
   }
 
   public Room getRoom() {

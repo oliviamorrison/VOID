@@ -1,25 +1,10 @@
-package renderer;
-
-import gameworld.*;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
-import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static javafx.application.Application.launch;
-
-
-///
-import java.util.ArrayList;
-import java.util.List;
-
+import gameworld.AccessibleTile;
+import gameworld.Player;
+import gameworld.Room;
+import gameworld.Token;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -31,9 +16,9 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import persistence.RoomParser;
 
-///
-public class renderer extends Application{
+public class renderer extends Application {
 
     private static List<Polygon> poly;
     private static Player player;
@@ -136,7 +121,7 @@ public class renderer extends Application{
 
     public void setup() {
         // create a starting room for testing
-        Room defaultRoom = persistence.RoomParser.createRoom(persistence.RoomParser.getBombRoom());
+        Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
         currentRoom = defaultRoom;
         rooms.add(defaultRoom);
         AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
@@ -223,6 +208,6 @@ public class renderer extends Application{
 
     public static void main(String args[]) {
         launch(args);
-    }// Testing
-}
+    }
 
+}
