@@ -1,5 +1,6 @@
 package gameworld;
 
+
 import java.awt.*;
 import java.util.List;
 
@@ -7,13 +8,18 @@ public class Room {
 
   private Tile[][] tiles;
   private List<Token> items;
-  private final int ROOMSIZE = 10;
+  public static final int ROOMSIZE = 10;
   private List<String> doors;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
   public static final Point LEFT = new Point(5, 0);
   public static final Point RIGHT = new Point(5, 9);
+
+  public Room() {
+    //may need to change this depending on XML
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
 
   public Room(List<String> doors, List<Token> items) {
     //may need to change this depending on XML
@@ -200,6 +206,34 @@ public class Room {
         return TOP;
       default:
         return null;
+    }
+  }
+
+  public AccessibleTile getPlayerTile() {
+    for(int row = 0; row < ROOMSIZE; row++) {
+      for(int col = 0; col < ROOMSIZE; col++) {
+        if(this.tiles[row][col] instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
+          if(tile.hasPlayer()) {
+            return tile;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  public void rotateRoomClockwise(){
+    int x = ROOMSIZE/2;
+    int y = ROOMSIZE - 1;
+    for(int i = 0; i < x; i++){
+      for(int j = i; j < y - i; j++){
+        Tile value = this.tiles[i][j];
+        this.tiles[i][j] = this.tiles[y - j][i];
+        this.tiles[y - j][i] = this.tiles[y - i][y - j];
+        this.tiles[y - i][y - j] = this.tiles[j][y - i];
+        this.tiles[j][y - i] = value;
+      }
     }
   }
 

@@ -1,5 +1,9 @@
 package gameworld;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Polygon;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +12,18 @@ public class Player {
   private AccessibleTile tile;
   private List<Token> inventory = new ArrayList<>();
   private Room room;
+  private Ellipse ellipse;
 
   public Player(Room room, AccessibleTile tile) {
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
+
+    this.ellipse = new Ellipse();
+    this.ellipse.setFill(Color.ORANGE);
+    this.ellipse.setRadiusX(8);
+    this.ellipse.setRadiusY(15);
+
   }
 
   public Room getRoom() {
@@ -74,6 +85,14 @@ public class Player {
 
   public void pickUp(Token item) {
     this.inventory.add(item);
+  }
+
+  public Ellipse getEllipse(){
+    return this.ellipse;
+  }
+
+  public void setEllipse(Ellipse e){
+    this.ellipse = e;
   }
 
 }
