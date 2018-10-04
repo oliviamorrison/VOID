@@ -16,15 +16,12 @@ import static java.lang.Integer.parseInt;
 
 public class XMLParser {
 
-    public static boolean saveGame(Game game){
+    public static void saveGame(Game game){
 
         JFileChooser fileChooser = new JFileChooser("./data/");
         fileChooser.showSaveDialog(null);
-
         String fileName = fileChooser.getSelectedFile().getName();
-        if(!fileName.endsWith(".xml")) {
-            fileName = fileName + ".xml";
-        }
+        if(!fileName.endsWith(".xml")) fileName = fileName + ".xml";
 
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -137,8 +134,6 @@ public class XMLParser {
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
-
-        return false;
     }
 
 

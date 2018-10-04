@@ -14,9 +14,9 @@ public class Game {
   private static Player player;
   private Room currentRoom;
 
-    public Game(boolean testing) {
-        setup();
-    }
+//    public Game(boolean testing) {
+//        setup();
+//    }
   public Game(Room[][] board, Player player){
     this.player = player;
     this.board = board;
