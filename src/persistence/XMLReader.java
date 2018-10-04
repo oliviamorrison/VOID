@@ -131,7 +131,7 @@ public class XMLReader {
             else break;
         }
 
-        board[row][col] = new Room(doors, items);
+        board[row][col] = new Room(row, col, doors, items);
 
         require("</room>", "Expected </room>", scan);
 

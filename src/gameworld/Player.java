@@ -18,6 +18,7 @@ public class Player {
     public Room getRoom() {
         return room;
     }
+
 //	/**
 //	 * Updates the player's current position on the board.
 //	 * @param dx amount of steps moved in the x direction
@@ -38,7 +39,7 @@ public class Player {
 //				System.out.println("The room you are moving to has a bomb, you must get a bomb diffuser before you can enter the room");
 //			}
 //			else {
-//				//TODO: Edit this so that the player changes which room it's in and it's location accordingly
+//				//TODO: Edit this so that the player changes which room it's in and its location accordingly
 //				location.translate(dx, dy);
 //				return;
 //			}

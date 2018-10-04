@@ -13,7 +13,6 @@ public class Game {
   private Room[][] board;
   private static Player player;
   private Room currentRoom;
-  private List<Room> rooms = new ArrayList<>();
 
   public Game(Room[][] board, Player player){
     this.player = player;
@@ -160,10 +159,10 @@ public class Game {
         if(board[i][j]!=null){ //TODO: fix null rooms
             for(String dir: board[i][j].getDoors()){
               switch(dir){
-                case "left": board[i][j].setTile(new DoorTile(board[i-1][j],board[i][j]), Room.LEFT.x, Room.LEFT.y); break;
-                case "right": board[i][j].setTile(new DoorTile(board[i+1][j],board[i][j]), Room.RIGHT.x, Room.RIGHT.y); break;
-                case "top": board[i][j].setTile(new DoorTile(board[i][j-1],board[i][j]), Room.TOP.x, Room.TOP.y); break;
-                case "bottom": board[i][j].setTile(new DoorTile(board[i][j+1],board[i][j]), Room.BOTTOM.x, Room.BOTTOM.y); break;
+                case "left": board[i][j].setTile(new DoorTile(board[i-1][j],board[i][j], i, j), Room.LEFT.x, Room.LEFT.y); break;
+                case "right": board[i][j].setTile(new DoorTile(board[i+1][j],board[i][j], i, j), Room.RIGHT.x, Room.RIGHT.y); break;
+                case "top": board[i][j].setTile(new DoorTile(board[i][j-1],board[i][j], i, j), Room.TOP.x, Room.TOP.y); break;
+                case "bottom": board[i][j].setTile(new DoorTile(board[i][j+1],board[i][j], i, j), Room.BOTTOM.x, Room.BOTTOM.y); break;
               }
             }
 

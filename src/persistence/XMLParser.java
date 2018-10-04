@@ -80,12 +80,39 @@ public class XMLParser {
 
             Element player = document.createElement("player");
 
-            //TODO: Get room of player (with row and col)
-            //TODO: Get tile of player (and add it to the XML parser instead of it being hardcoded)
+            //room coordinates
+            int roomX = game.getPlayer().getRoom().getRow();
+            int roomY = game.getPlayer().getRoom().getCol();
+            Element roomRow = document.createElement("roomRow");
+            roomRow.appendChild(document.createTextNode(roomX+""));
+            Element roomCol = document.createElement("roomCol");
+            roomCol.appendChild(document.createTextNode(roomY+""));
+
+            player.appendChild(roomRow);
+            player.appendChild(roomCol);
+
+            //tile coordinates
+            int tileX = game.getPlayer().getTile().getX();
+            int tileY = game.getPlayer().getTile().getY();
+            Element tileRow = document.createElement("tileRow");
+            tileRow.appendChild(document.createTextNode(tileX+""));
+            Element tileCol = document.createElement("tileCol");
+            tileCol.appendChild(document.createTextNode(tileY+""));
+
+            player.appendChild(tileRow);
+            player.appendChild(tileCol);
+
+            //inventory
+            Element inventory = document.createElement("inventory");
+            for(Token token: game.getPlayer().getInventory()){
+                Element item = document.createElement("item");
+                item.appendChild(document.createTextNode(token.toString()));
+                inventory.appendChild(item);
+            }
+            player.appendChild(inventory);
+
 
             root.appendChild(player);
-
-
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -186,18 +213,22 @@ public class XMLParser {
         NodeList itemList = roomElement.getElementsByTagName("items");
         parseItems(itemList, tokens);
 
-        Room newRoom = new Room(doors, tokens);
+        Room newRoom = new Room(row, col, doors, tokens);
         board[row][col] = newRoom;
     }
 
     private static Player parsePlayer(Node playerNode, Room[][] board) {
         Element playerElement = (Element) playerNode;
-        int row = parseInteger("playerRow", playerElement);
-        int col = parseInteger("playerCol", playerElement);
+        int roomRow = parseInteger("roomRow", playerElement);
+        int roomCol = parseInteger("roomCol", playerElement);
 
-        Room playerRoom = board[row][col];
-        Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(5,5)); //TODO: Hard coded for now
-        ((AccessibleTile) playerRoom.getTile(5,5)).setPlayer(true);
+        Room playerRoom = board[roomRow][roomCol];
+
+        int tileRow = parseInteger("tileRow", playerElement);
+        int tileCol = parseInteger("tileCol", playerElement);
+
+        Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(tileRow,tileCol));
+        ((AccessibleTile) playerRoom.getTile(tileRow, tileCol)).setPlayer(true);
 
         NodeList inventory = playerElement.getElementsByTagName("inventory");
         parseItems(inventory, player.getInventory());
@@ -206,7 +237,8 @@ public class XMLParser {
     }
 
     private static int parseInteger(String tagName, Element element){
-        return parseInt(element.getElementsByTagName(tagName).item(0).getTextContent());
+        NodeList n = element.getElementsByTagName(tagName);
+        return parseInt(n.item(0).getTextContent());
     }
 
     private static void parseItems(NodeList items, List<Token> tokens) {

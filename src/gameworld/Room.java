@@ -1,11 +1,12 @@
 package gameworld;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.List;
 
 public class Room {
 
+    private int row;
+    private int col;
     private Tile[][] tiles;
     private List<Token> items;
     private final int ROOMSIZE = 10;
@@ -17,17 +18,18 @@ public class Room {
     public static final Point RIGHT = new Point(5,9);
 
 
-    public Room(List<String> doors, List<Token> items){
-        //may need to change this depending on XML
-        this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+    public Room(int row, int col, List<String> doors, List<Token> items){
+        this.row = row;
+        this.col = col;
         this.items = items;
         this.doors = doors;
+        this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
 
         //For now until we can load in an XML file
         for(int i = 0; i < ROOMSIZE; i++){
             for(int j = 0; j < ROOMSIZE; j++){
-                if(i == 0 || j == 0 || j == ROOMSIZE-1 || i == ROOMSIZE-1) tiles[i][j] = new InaccessibleTile(this);
-                else tiles[i][j] = new AccessibleTile(this);
+                if(i == 0 || j == 0 || j == ROOMSIZE-1 || i == ROOMSIZE-1) tiles[i][j] = new InaccessibleTile(this, i, j);
+                else tiles[i][j] = new AccessibleTile(this, i, j);
             }
         }
 
@@ -56,6 +58,14 @@ public class Room {
         }
 
 
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public List<Token> getItems() {

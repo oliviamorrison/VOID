@@ -5,8 +5,8 @@ public class AccessibleTile extends Tile {
     private Bomb bomb;
     private boolean player = false;
 
-    public AccessibleTile(Room room) {
-        super(room);
+    public AccessibleTile(Room room, int x, int y) {
+        super(room, x, y);
     }
 
     public void setToken(Token token) {

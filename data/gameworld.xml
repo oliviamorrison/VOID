@@ -44,8 +44,10 @@
         </items>
     </room>
     <player>
-        <playerRow>1</playerRow>
-        <playerCol>0</playerCol>
-        <inventory></inventory>
+        <roomRow>1</roomRow>
+        <roomCol>0</roomCol>
+        <tileRow>5</tileRow>
+        <tileCol>5</tileCol>
+        <inventory/>
     </player>
 </game>
