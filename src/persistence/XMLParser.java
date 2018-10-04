@@ -17,9 +17,14 @@ import static java.lang.Integer.parseInt;
 public class XMLParser {
 
     public static boolean saveGame(Game game){
-        //TODO: j dialogue box to enter name of file
 
-        String fileName = "temp.xml";
+        JFileChooser fileChooser = new JFileChooser("./data/");
+        fileChooser.showSaveDialog(null);
+
+        String fileName = fileChooser.getSelectedFile().getName();
+        if(!fileName.endsWith(".xml")) {
+            fileName = fileName + ".xml";
+        }
 
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -121,12 +126,11 @@ public class XMLParser {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(document);
-           // StreamResult result = new StreamResult(new File(fileName));
+             StreamResult result = new StreamResult(new File("./data/"+fileName));
 
-            StreamResult result = new StreamResult(System.out);
+//            StreamResult result = new StreamResult(System.out);
 
             transformer.transform(source, result);
-
             System.out.println("File saved!");
 
 
