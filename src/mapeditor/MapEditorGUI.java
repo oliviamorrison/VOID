@@ -2,9 +2,16 @@ package mapeditor;
 
 import gameworld.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -26,6 +33,8 @@ public class MapEditorGUI extends Application{
         setUpMenu();
         setUpMap();
 
+        //grid.setStyle("-fx-background-color: blue;");
+
         // Create the Scene
         Scene scene = new Scene(grid);
         // Add the scene to the Stage
@@ -38,12 +47,60 @@ public class MapEditorGUI extends Application{
     }
 
     public void setUpMap(){
-        GridPane mapGrid = new GridPane();
 
-        mapGrid.add(addKeyRoom(),0,0);
-        mapGrid.setStyle("-fx-background-color: red;");
+        GridPane startRoom = new GridPane();
+        startRoom.add(addStartRoom(), 0, 0);
+        startRoom.setStyle("-fx-background-color: darkorange;");
+        startRoom.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(startRoom, 0, 0);
 
-        grid.add(mapGrid, 0,1);
+        GridPane yellowKeyRoom = new GridPane();
+        yellowKeyRoom.add(addYellowKeyRoom(), 0, 0);
+        yellowKeyRoom.setStyle("-fx-background-color: yellow;");
+        yellowKeyRoom.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(yellowKeyRoom, 1, 0);
+
+        GridPane blankRoom1 = new GridPane();
+        blankRoom1.add(addBlankRoom(), 0, 0);
+        blankRoom1.setStyle("-fx-background-color: gray;");
+        blankRoom1.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(blankRoom1, 2, 0);
+
+        GridPane greenKeyRoom = new GridPane();
+        greenKeyRoom.add(addGreenKeyRoom(), 0, 0);
+        greenKeyRoom.setStyle("-fx-background-color: green;");
+        greenKeyRoom.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(greenKeyRoom, 0, 1);
+
+        GridPane blankRoom2 = new GridPane();
+        blankRoom2.add(addBlankRoom(), 0, 0);
+        blankRoom2.setStyle("-fx-background-color: gray;");
+        blankRoom2.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(blankRoom2, 1, 1);
+
+        GridPane redKeyRoom = new GridPane();
+        redKeyRoom.add(addRedKeyRoom(), 0, 0);
+        redKeyRoom.setStyle("-fx-background-color: red;");
+        redKeyRoom.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(redKeyRoom, 2, 1);
+
+        GridPane blankRoom3 = new GridPane();
+        blankRoom3.add(addBlankRoom(), 0, 0);
+        blankRoom3.setStyle("-fx-background-color: gray;");
+        blankRoom3.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(blankRoom3, 0, 2);
+
+        GridPane bombRoom = new GridPane();
+        bombRoom.add(addBombRoom(), 0, 0);
+        bombRoom.setStyle("-fx-background-color: lightpink;");
+        bombRoom.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(bombRoom, 1, 2);
+
+        GridPane endRoom = new GridPane();
+        endRoom.add(addEndRoom(), 0, 0);
+        endRoom.setStyle("-fx-background-color: cadetblue;");
+        endRoom.setPrefSize(WINDOW_WIDTH / 3, WINDOW_HEIGHT / 3);
+        grid.add(endRoom, 2, 2);
 
     }
 
@@ -51,7 +108,7 @@ public class MapEditorGUI extends Application{
         // create the menu bar
         MenuBar menuBar = new MenuBar();
         HBox hBox = new HBox(menuBar);
-        menuBar.setPrefWidth(WINDOW_WIDTH);
+//        menuBar.setPrefWidth(WINDOW_WIDTH);
 
         // menu bar items
         Menu newGame = new Menu("Play Game");
@@ -62,28 +119,103 @@ public class MapEditorGUI extends Application{
         grid.add(hBox, 0, 0);
     }
 
-    public HBox addKeyRoom(){
+    public HBox addBlankRoom(){
+        HBox blankRoom = new HBox();
+        blankRoom.setStyle("-fx-background-color: lightpink;");
+        return blankRoom;
+    }
+
+    public HBox addRedKeyRoom(){
         HBox keyRoom = new HBox();
-        keyRoom.setStyle("-fx-background-color: lightpink;");
+        Image image = new Image(getClass().getResourceAsStream("red-key.png"));
+        ImageView iv1 = new ImageView();
+        iv1.setImage(image);
+        iv1.setFitHeight(WINDOW_HEIGHT/3*0.3);
+        iv1.setFitWidth(WINDOW_WIDTH/3*0.3);
+
+        ImageView iv2 = new ImageView();
+        iv2.setImage(image);
+        iv2.setPreserveRatio(true);
+        iv2.setSmooth(true);
+        iv2.setCache(true);
+        keyRoom.getChildren().add(iv1);
         return keyRoom;
     }
 
-    public void addBombRoom(int x, int y){
-        HBox hBox = new HBox();
-        hBox.setStyle("-fx-background-color: darkorange;");
-        grid.add(hBox,x,y);
+    public HBox addGreenKeyRoom(){
+        HBox keyRoom = new HBox();
+        Image image = new Image(getClass().getResourceAsStream("green-key.png"));
+        ImageView iv1 = new ImageView();
+        iv1.setImage(image);
+        iv1.setFitHeight(WINDOW_HEIGHT/3*0.3);
+        iv1.setFitWidth(WINDOW_WIDTH/3*0.3);
+
+        ImageView iv2 = new ImageView();
+        iv2.setImage(image);
+        iv2.setPreserveRatio(true);
+        iv2.setSmooth(true);
+        iv2.setCache(true);
+
+        iv2.setOnDragDetected(new EventHandler<MouseEvent>() {
+                                  public void handle(MouseEvent event) {
+                                      Dragboard db = iv2.startDragAndDrop(TransferMode.ANY);
+
+        /* Put a image on a dragboard */
+                                      ClipboardContent content = new ClipboardContent();
+                                      content.putImage(iv2.getImage());
+                                      db.setContent(content);
+
+                                      event.consume();
+                                  }
+                              });
+
+        keyRoom.getChildren().add(iv1);
+        return keyRoom;
     }
 
-    public void addGoalRoom(int x, int y){
-        HBox hBox = new HBox();
-        hBox.setStyle("-fx-background-color: cadetblue;");
-        grid.add(hBox,x,y);
+    public HBox addYellowKeyRoom(){
+        HBox keyRoom = new HBox();
+        Image image = new Image(getClass().getResourceAsStream("key.png"));
+        ImageView iv1 = new ImageView();
+        iv1.setImage(image);
+        iv1.setFitHeight(WINDOW_HEIGHT/3*0.3);
+        iv1.setFitWidth(WINDOW_WIDTH/3*0.3);
+
+        ImageView iv2 = new ImageView();
+        iv2.setImage(image);
+        iv2.setPreserveRatio(true);
+        iv2.setSmooth(true);
+        iv2.setCache(true);
+        keyRoom.getChildren().add(iv1);
+        return keyRoom;
     }
 
-    public void addStartRoom(int x, int y){
-        HBox hBox = new HBox();
-        hBox.setStyle("-fx-background-color: indianred;");
-        grid.add(hBox,x,y);
+    public HBox addBombRoom(){
+        HBox bombRoom = new HBox();
+        Image image = new Image(getClass().getResourceAsStream("unlit-bomb.png"));
+        ImageView iv1 = new ImageView();
+        iv1.setImage(image);
+        iv1.setFitHeight(WINDOW_HEIGHT/3*0.3);
+        iv1.setFitWidth(WINDOW_WIDTH/3*0.3);
+
+        ImageView iv2 = new ImageView();
+        iv2.setImage(image);
+        iv2.setPreserveRatio(true);
+        iv2.setSmooth(true);
+        iv2.setCache(true);
+        bombRoom.getChildren().add(iv1);
+        return bombRoom;
+    }
+
+    public HBox addEndRoom(){
+        HBox endRoom = new HBox();
+        return endRoom;
+    }
+
+    public HBox addStartRoom(){
+        HBox startRoom = new HBox();
+
+        return startRoom;
     }
 
     public static void main(String[] args) {

@@ -89,6 +89,7 @@ public class GUI extends Application {
 	}
 
 	public void setWindowRatio(){
+
 		//set ratios
 		this.game.setPrefSize(WINDOW_WIDTH*0.7, WINDOW_HEIGHT);
 		this.inventory.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.5);
