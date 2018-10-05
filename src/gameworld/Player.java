@@ -18,7 +18,6 @@ public class Player {
     public Room getRoom() {
         return room;
     }
-
 //	/**
 //	 * Updates the player's current position on the board.
 //	 * @param dx amount of steps moved in the x direction
@@ -39,7 +38,7 @@ public class Player {
 //				System.out.println("The room you are moving to has a bomb, you must get a bomb diffuser before you can enter the room");
 //			}
 //			else {
-//				//TODO: Edit this so that the player changes which room it's in and its location accordingly
+//				//TODO: Edit this so that the player changes which room it's in and it's location accordingly
 //				location.translate(dx, dy);
 //				return;
 //			}
@@ -50,33 +49,31 @@ public class Player {
 //		System.out.println(location.toString());
 //	}
 
-	/**
-	 * Updates the player's current position on the board.
-	 */
-//	public void move(int dx, int dy) {
-//		location.translate(dx, dy);
-//		System.out.println(location.toString());
-//	}
+  public void moveTile(int dx, int dy) {
+//    AccessibleTile tile = (AccessibleTile) this.tile;
+    tile.setPlayer(false);
+    tile = (AccessibleTile) room.moveTile(tile, dx, dy);
+    tile.setPlayer(true);
+  }
 
-//	public void moveTile(int dx, int dy){
-//	    tile = tile.getRoom().moveTile(tile,dx,dy);
-//    }
-    public void moveTile(int dx, int dy) {
-        tile.setPlayer(false);
-        tile = (AccessibleTile) room.moveTile(tile, dx, dy);
-        tile.setPlayer(true);
-    }
+  public Tile getTile() {
+    return tile;
+  }
 
-    public Tile getTile() {
-        return tile;
-    }
+  public void setTile(AccessibleTile tile) {
+    this.tile = tile;
+  }
 
-    public List<Token> getInventory() {
-        return inventory;
-    }
+  public void setRoom(Room room) {
+    this.room = room;
+  }
 
-    public void pickUp(Token item) {
-        this.inventory.add(item);
-    }
+  public List<Token> getInventory() {
+    return inventory;
+  }
+
+  public void pickUp(Token item) {
+    this.inventory.add(item);
+  }
 
 }
