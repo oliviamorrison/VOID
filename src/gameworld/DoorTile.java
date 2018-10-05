@@ -4,11 +4,11 @@ public class DoorTile extends AccessibleTile {
   private Room toRoom;
   private Direction direction;
 
-  public DoorTile(Room toRoom, Room room, Direction direction) {
-    super(room);
-    this.toRoom = toRoom;
-    this.direction = direction;
-  }
+    public DoorTile(Room room, Room toRoom, int x, int y, Direction direction) {
+        super(room, x, y);
+        this.toRoom = toRoom;
+        this.direction = direction;
+    }
 
   public Room getToRoom() {
     return toRoom;

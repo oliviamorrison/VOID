@@ -5,19 +5,19 @@ import java.util.List;
 
 public class Player {
 
-  private AccessibleTile tile;
-  private List<Token> inventory = new ArrayList<>();
-  private Room room;
+    private AccessibleTile tile;
+    private List<Token> inventory;
+    private Room room;
 
-  public Player(Room room, AccessibleTile tile) {
-    this.room = room;
-    this.tile = tile;
-    this.inventory = new ArrayList<>();
-  }
+    public Player(Room room, AccessibleTile tile) {
+        this.room = room;
+        this.tile = tile;
+        this.inventory = new ArrayList<>();
+    }
 
-  public Room getRoom() {
-    return room;
-  }
+    public Room getRoom() {
+        return room;
+    }
 //	/**
 //	 * Updates the player's current position on the board.
 //	 * @param dx amount of steps moved in the x direction

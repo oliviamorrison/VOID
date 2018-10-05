@@ -13,7 +13,6 @@ public class Game {
   private Room[][] board;
   private static Player player;
   private Room currentRoom;
-  private List<Room> rooms = new ArrayList<>();
 
   public Game(Room[][] board, Player player) {
     this.player = player;
@@ -30,29 +29,29 @@ public class Game {
 //    setup();
 //  }
 
-  public static void movePlayer(String direction) {
-    int dx = 0;
-    int dy = 0;
+    public static void movePlayer(String direction) {
+        int dx = 0;
+        int dy = 0;
 
-    switch (direction) {
-      case "w":
-        dx = -1;
-        break;
-      case "a":
-        dy = -1;
-        break;
-      case "s":
-        dx = 1;
-        break;
-      case "d":
-        dy = 1;
-        break;
-      default:
+        switch (direction) {
+            case "w":
+                dx = -1;
+                break;
+            case "a":
+                dy = -1;
+                break;
+            case "s":
+                dx = 1;
+                break;
+            case "d":
+                dy = 1;
+                break;
+            default:
 
+        }
+
+        player.moveTile(dx, dy);
     }
-
-    player.moveTile(dx, dy);
-  }
 
 //  public void setup() {
 //    // create a starting room for testing
@@ -71,7 +70,6 @@ public class Game {
       currentRoom.draw();
       startTurn();
     }
-
   }
 
   public void startTurn() {
@@ -251,4 +249,8 @@ public class Game {
     }
   }
 
+  public Room[][] getBoard() {
+    return board;
+  }
 }
+
