@@ -32,24 +32,6 @@ public class Room {
                 else tiles[i][j] = new AccessibleTile(this, i, j);
             }
         }
-
-//    for (String direction : doors) {
-//      switch (direction) {
-//        case "left":
-//          tiles[LEFT.x][LEFT.y] = new DoorTile(null, this, Direction.Left);
-//          break;
-// case "right":
-//          tiles[RIGHT.x][RIGHT.y] = new DoorTile(null, this, Direction.Right);
-//          break;
-//        case "top":
-//          tiles[TOP.x][TOP.y] = new DoorTile(null, this, Direction.Top);
-//          break;
-//        case "bottom":
-//          tiles[BOTTOM.x][BOTTOM.y] = new DoorTile(null, this, Direction.Bottom);
-//          break;
-//      }
-//    }
-
     for (Token item : this.items) {
       boolean itemPlaced = false;
       while (!itemPlaced) {
@@ -218,5 +200,32 @@ public class Room {
     }
   }
 
+  public AccessibleTile getPlayerTile() {
+    for(int row = 0; row < ROOMSIZE; row++) {
+      for(int col = 0; col < ROOMSIZE; col++) {
+        if(this.tiles[row][col] instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
+          if(tile.hasPlayer()) {
+            return tile;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  public void rotateRoomClockwise(){
+    int x = ROOMSIZE/2;
+    int y = ROOMSIZE - 1;
+    for(int i = 0; i < x; i++){
+      for(int j = i; j < y - i; j++){
+        Tile value = this.tiles[i][j];
+        this.tiles[i][j] = this.tiles[y - j][i];
+        this.tiles[y - j][i] = this.tiles[y - i][y - j];
+        this.tiles[y - i][y - j] = this.tiles[j][y - i];
+        this.tiles[j][y - i] = value;
+      }
+    }
+  }
 
 }
