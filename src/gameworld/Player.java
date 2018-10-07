@@ -10,7 +10,7 @@ import java.util.List;
 public class Player {
 
   private AccessibleTile tile;
-  private List<Token> inventory = new ArrayList<>();
+  private List<Token> inventory;
   private Room room;
   private Ellipse ellipse;
 

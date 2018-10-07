@@ -11,4 +11,9 @@ public class Bomb implements Token{
   public void setActive(boolean active) {
     isActive = active;
   }
+
+  @Override
+  public String toString(){
+    return "bomb";
+  }
 }

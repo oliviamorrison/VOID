@@ -1,94 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <game>
-    <rows>
-        3
-    </rows>
-    <cols>
-        3
-    </cols>
-
+    <rows>3</rows>
+    <cols>3</cols>
     <room>
-        <row>
-            1
-        </row>
-        <col>
-            0
-        </col>
-        <door>
-            right
-        </door>
-        <item>
-            key
-        </item>
+        <row>1</row>
+        <col>0</col>
+        <door>right</door>
+        <door>left</door>
+        <items>
+            <item>key</item>
+        </items>
     </room>
-
     <room>
-        <row>
-            1
-        </row>
-        <col>
-            1
-        </col>
-        <door>
-            left
-        </door>
-        <door>
-            bottom
-        </door>
-        <door>
-            top
-        </door>
-        <item>
-            prize
-        </item>
+        <row>1</row>
+        <col>1</col>
+        <door>left</door>
+        <door>bottom</door>
+        <door>top</door>
     </room>
-
     <room>
-        <row>
-            0
-        </row>
-        <col>
-            1
-        </col>
-        <door>
-            bottom
-        </door>
-        <item>
-            bomb
-        </item>
+        <row>0</row>
+        <col>1</col>
+        <door>bottom</door>
+        <items>
+            <item>bomb</item>
+        </items>
     </room>
-
     <room>
-        <row>
-            2
-        </row>
-        <col>
-            1
-        </col>
-        <door>
-            top
-        </door>
-        <item>
-            diffuser
-        </item>
-        <item>
-            key
-        </item>
+        <row>2</row>
+        <col>1</col>
+        <door>top</door>
+        <items>
+            <item>diffuser</item>
+            <item>key</item>
+        </items>
     </room>
-
+    <room>
+        <row>0</row>
+        <col>2</col>
+        <door>left</door>
+        <items>
+            <item>prize</item>
+        </items>
+    </room>
     <player>
-        <roomrow>
-            1
-        </roomrow>
-        <roomcol>
-            0
-        </roomcol>
-        <inventory>
-
-        </inventory>
+        <roomRow>1</roomRow>
+        <roomCol>0</roomCol>
+        <tileRow>5</tileRow>
+        <tileCol>5</tileCol>
+        <inventory/>
     </player>
-
-
-
 </game>
-
-
