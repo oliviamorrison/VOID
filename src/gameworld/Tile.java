@@ -20,5 +20,6 @@ public abstract class Tile {
 
     public void setTilePolygon(Polygon poly) {
         this.polygon = poly;
+        System.out.println("YES");
     }
 }

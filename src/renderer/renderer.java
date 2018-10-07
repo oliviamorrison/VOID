@@ -113,11 +113,15 @@ public class renderer extends Application {
 
 
     public void rotate() {
-        poly.clear();
+        if(!this.poly.isEmpty()) {
+            poly.clear();
+            System.out.println(poly.size());
+        }
         currentRoom.rotateRoomClockwise();
         setTilePolygons();
         tilesToPolygonList();
         twoDToIso();
+        System.out.println("");
     }
 
     public void setup() {
@@ -131,6 +135,7 @@ public class renderer extends Application {
     }
 
     public void setTilePolygons() {
+        System.out.println("setTilePolygons");
         double polySize = 20;
         double top = 100;
         double left = 100;
@@ -181,6 +186,7 @@ public class renderer extends Application {
     }
 
     public void tilesToPolygonList() {
+        System.out.println("tilesToPolygonList");
         poly = new ArrayList<Polygon>();
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
@@ -196,6 +202,7 @@ public class renderer extends Application {
     }
 
     public void twoDToIso() {
+        System.out.println("twoDToIso");
         for (Polygon p : this.poly) {
             for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
                 double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
