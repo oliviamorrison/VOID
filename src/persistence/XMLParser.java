@@ -30,90 +30,24 @@ public class XMLParser {
 
             Room[][] board = game.getBoard();
 
-            // root element
-            Element root = document.createElement("game");
+            //load game
+            Element root = loadGame(document, board);
             document.appendChild(root);
 
-            // rows element
-            Element rows = document.createElement("rows");
-            rows.appendChild(document.createTextNode(board.length+""));
-            root.appendChild(rows);
-
-            //cols element
-            Element cols = document.createElement("cols");
-            cols.appendChild(document.createTextNode(board[0].length+""));
-            root.appendChild(cols);
-
+            //load room
             for(int i = 0; i < board.length; i++){
                 for(int j = 0; j < board[i].length; j++){
-                    if(board[i][j]!=null){ //This is a bit messy
+                    if(board[i][j]!=null){
                         Room room = board[i][j];
-
-                        Element roomElement = document.createElement("room");
-
-                        //row
-                        Element row = document.createElement("row");
-                        row.appendChild(document.createTextNode(i+""));
-                        roomElement.appendChild(row);
-                        //col
-                        Element col = document.createElement("col");
-                        col.appendChild(document.createTextNode(j+""));
-                        roomElement.appendChild(col);
-
-                        for(String direction: room.getDoors()){
-                            Element door = document.createElement("door");
-                            door.appendChild((document.createTextNode(direction)));
-                            roomElement.appendChild(door);
-                        }
-
-                        Element items = document.createElement("items");
-                        for(Token token: room.getItems()){
-                            Element item = document.createElement("item");
-                            item.appendChild(document.createTextNode(token.toString()));
-                            items.appendChild(item);
-                        }
-                        roomElement.appendChild(items);
-
+                        Element roomElement = loadRoom(document, i, j, room);
                         //Add room
                         root.appendChild(roomElement);
                     }
                 }
             }
 
-            Element player = document.createElement("player");
-
-            //room coordinates
-            int roomX = game.getPlayer().getRoom().getRow();
-            int roomY = game.getPlayer().getRoom().getCol();
-            Element roomRow = document.createElement("roomRow");
-            roomRow.appendChild(document.createTextNode(roomX+""));
-            Element roomCol = document.createElement("roomCol");
-            roomCol.appendChild(document.createTextNode(roomY+""));
-
-            player.appendChild(roomRow);
-            player.appendChild(roomCol);
-
-            //tile coordinates
-            int tileX = game.getPlayer().getTile().getX();
-            int tileY = game.getPlayer().getTile().getY();
-            Element tileRow = document.createElement("tileRow");
-            tileRow.appendChild(document.createTextNode(tileX+""));
-            Element tileCol = document.createElement("tileCol");
-            tileCol.appendChild(document.createTextNode(tileY+""));
-
-            player.appendChild(tileRow);
-            player.appendChild(tileCol);
-
-            //inventory
-            Element inventory = document.createElement("inventory");
-            for(Token token: game.getPlayer().getInventory()){
-                Element item = document.createElement("item");
-                item.appendChild(document.createTextNode(token.toString()));
-                inventory.appendChild(item);
-            }
-            player.appendChild(inventory);
-
-
+            //load player
+            Element player = loadPlayer(game, document);
             root.appendChild(player);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -130,10 +64,89 @@ public class XMLParser {
             transformer.transform(source, result);
             System.out.println("File saved!");
 
-
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
+    }
+
+    private static Element loadGame(Document document, Room[][] board) {
+        // root element
+        Element root = document.createElement("game");
+
+        // rows element
+        Element rows = document.createElement("rows");
+        rows.appendChild(document.createTextNode(board.length+""));
+        root.appendChild(rows);
+
+        //cols element
+        Element cols = document.createElement("cols");
+        cols.appendChild(document.createTextNode(board[0].length+""));
+        root.appendChild(cols);
+        return root;
+    }
+
+    private static Element loadRoom(Document document, int i, int j, Room room) {
+        Element roomElement = document.createElement("room");
+
+        //row
+        Element row = document.createElement("row");
+        row.appendChild(document.createTextNode(i+""));
+        roomElement.appendChild(row);
+        //col
+        Element col = document.createElement("col");
+        col.appendChild(document.createTextNode(j+""));
+        roomElement.appendChild(col);
+
+        for(String direction: room.getDoors()){
+            Element door = document.createElement("door");
+            door.appendChild((document.createTextNode(direction)));
+            roomElement.appendChild(door);
+        }
+
+        Element items = document.createElement("items");
+        for(Token token: room.getItems()){
+            Element item = document.createElement("item");
+            item.appendChild(document.createTextNode(token.toString()));
+            items.appendChild(item);
+        }
+        roomElement.appendChild(items);
+        return roomElement;
+    }
+
+    private static Element loadPlayer(Game game, Document document) {
+        Element player = document.createElement("player");
+
+        //room coordinates
+        int roomX = game.getPlayer().getRoom().getRow();
+        int roomY = game.getPlayer().getRoom().getCol();
+        Element roomRow = document.createElement("roomRow");
+        roomRow.appendChild(document.createTextNode(roomX+""));
+        Element roomCol = document.createElement("roomCol");
+        roomCol.appendChild(document.createTextNode(roomY+""));
+
+        player.appendChild(roomRow);
+        player.appendChild(roomCol);
+
+        //tile coordinates
+        int tileX = game.getPlayer().getTile().getX();
+        int tileY = game.getPlayer().getTile().getY();
+        Element tileRow = document.createElement("tileRow");
+        tileRow.appendChild(document.createTextNode(tileX+""));
+        Element tileCol = document.createElement("tileCol");
+        tileCol.appendChild(document.createTextNode(tileY+""));
+
+        player.appendChild(tileRow);
+        player.appendChild(tileCol);
+
+        //inventory
+        Element inventory = document.createElement("inventory");
+        for(Token token: game.getPlayer().getInventory()){
+            Element item = document.createElement("item");
+            item.appendChild(document.createTextNode(token.toString()));
+            inventory.appendChild(item);
+        }
+        player.appendChild(inventory);
+        return player;
     }
 
 
