@@ -18,7 +18,7 @@
     <door>bottom</door>
     <items/>
     <challenges>
-      <challenge>bomb bottom</challenge>
+      <challenge door="bottom">bomb</challenge>
     </challenges>
   </room>
   <room>
@@ -45,11 +45,10 @@
   </room>
   <room>
     <row>2</row>
-    <col>2</col>
-    <door>top</door>
-    <door>left</door>
+    <col>0</col>
+    <door>right</door>
     <items>
-      <item>coin</item>
+      <item>antidote</item>
     </items>
     <challenges/>
   </room>
@@ -61,15 +60,16 @@
     <door>right</door>
     <items/>
     <challenges>
-      <challenge>guard</challenge>
+      <challenge door="left">guard</challenge>
     </challenges>
   </room>
   <room>
     <row>2</row>
-    <col>0</col>
-    <door>right</door>
+    <col>2</col>
+    <door>top</door>
+    <door>left</door>
     <items>
-      <item>antidote</item>
+      <item>coin</item>
     </items>
     <challenges/>
   </room>

@@ -3,7 +3,6 @@ package renderer;
 import gameworld.AccessibleTile;
 import gameworld.Player;
 import gameworld.Room;
-import gameworld.Token;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -39,21 +38,6 @@ public class Renderer {
         return root;
     }
 
-    public void pickUpItem() {
-        AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (currentTile.hasToken()) {
-            player.pickUp(currentTile.getToken());
-            currentTile.setToken(null);
-        }
-    }
-
-    public void dropItem() {
-        List<Item> inventory = player.getInventory();
-        AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (!currentTile.hasToken() && !inventory.isEmpty()) {
-            currentTile.setItem(player.getInventory().remove(0));
-        }
-    }
 
     public void rotate() {
         if (!poly.isEmpty()) {

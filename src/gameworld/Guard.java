@@ -7,4 +7,9 @@ public class Guard implements Challenge {
 
   }
 
+  @Override
+  public String toString(){
+    return "guard";
+  }
+
 }

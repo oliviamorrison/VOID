@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Diffuser implements Item {
+public class Diffuser implements Item{
     public Diffuser(){
         super();
     }
@@ -8,5 +8,10 @@ public class Diffuser implements Item {
     @Override
     public String toString(){
         return "diffuser";
+    }
+
+    @Override
+    public void use() {
+
     }
 }

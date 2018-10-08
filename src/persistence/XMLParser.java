@@ -2,8 +2,6 @@ package persistence;
 import gameworld.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
-import javax.swing.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -16,13 +14,7 @@ import static java.lang.Integer.parseInt;
 
 public class XMLParser {
 
-    public static void saveFile(Game game){
-
-        JFileChooser fileChooser = new JFileChooser("./data/");
-        fileChooser.showSaveDialog(null);
-        String fileName = fileChooser.getSelectedFile().getName();
-        if(!fileName.endsWith(".xml")) fileName = fileName + ".xml";
-
+    public static void saveFile(File file, Game game){
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
@@ -57,9 +49,7 @@ public class XMLParser {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(document);
-             StreamResult result = new StreamResult(new File("./data/"+fileName));
-
-//            StreamResult result = new StreamResult(System.out);
+            StreamResult result = new StreamResult(file);
 
             transformer.transform(source, result);
             System.out.println("File saved!");
@@ -117,7 +107,7 @@ public class XMLParser {
             challenge.appendChild(document.createTextNode(challengeItem.toString()));
             challenges.appendChild(challenge);
         }
-        roomElement.appendChild(items);
+        roomElement.appendChild(challenges);
         return roomElement;
     }
 
@@ -158,26 +148,9 @@ public class XMLParser {
     }
 
 
-    public static Game loadFile() {
-        while (true) {
-            JFileChooser chooser = new JFileChooser(".");
-            int res = chooser.showOpenDialog(null);
-            if (res != JFileChooser.APPROVE_OPTION) {
-                break;
-            }
-            Game game = parseGame(chooser.getSelectedFile());
-            System.out.println("Parsing completed");
-            if (game != null) {
-                System.out.println("game parsed");
-                return game;
-            }
-            System.out.println("=================");
-        }
-        System.out.println("Done");
-        return null;
-    }
 
-        public static Game parseGame(File file) {
+
+    public static Game parseGame(File file) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -239,7 +212,7 @@ public class XMLParser {
         NodeList challengeList = roomElement.getElementsByTagName("challenges");
         parseChallenges(challengeList, challenges);
 
-        Room newRoom = new Room(row, col, doors, items);
+        Room newRoom = new Room(row, col, doors, items, challenges);
         board[row][col] = newRoom;
     }
 
@@ -271,11 +244,11 @@ public class XMLParser {
         for(int i = 0; i< items.getLength(); i++){
             String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
             switch(token){
-                case "antidote": tokens.add(new Key()); break;
-                case "beer": tokens.add(new Prize()); break;
+                case "antidote": tokens.add(new Antidote()); break;
+                case "beer": tokens.add(new Beer()); break;
                 case "diffuser": tokens.add(new Diffuser()); break;
                 case "coin": tokens.add(new Coin()); break;
-                case "boltcutter": tokens.add(new Coin()); break;
+                case "boltcutter": tokens.add(new BoltCutter()); break;
             }
         }
     }
@@ -284,9 +257,9 @@ public class XMLParser {
         for(int i = 0; i< items.getLength(); i++){
             String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
             switch(token){
-                case "bomb": challenges.add(null); break;
-                case "guard": challenges.add(null); break;
-                case "vendingmachine": challenges.add(null); break; //TODO: Null for now
+                case "bomb": challenges.add(new Bomb()); break; //TODO: Give bomb and guard a door using attribute
+                case "guard": challenges.add(new Guard()); break;
+                case "vendingmachine": challenges.add(new VendingMachine()); break;
             }
         }
     }

@@ -1,12 +1,7 @@
 
 package persistence;
 
-import gameworld.AccessibleTile;
-import gameworld.Bomb;
-import gameworld.Diffuser;
-import gameworld.InaccessibleTile;
-import gameworld.Room;
-import gameworld.Tile;
+import gameworld.*;
 
 public class RoomParser {
 

@@ -1,10 +1,15 @@
 package application;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
+import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -18,8 +23,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import persistence.XMLParser;
 import renderer.Renderer;
+
+import javax.swing.*;
 
 public class GUI extends Application {
 	public static final int WINDOW_WIDTH = 1000;
@@ -29,6 +38,7 @@ public class GUI extends Application {
 	private AnchorPane options;
 	private GridPane map;
 	private Renderer renderer;
+	private static Game currentGame;
 
 
 	@Override public void start(Stage stage) {
@@ -48,6 +58,9 @@ public class GUI extends Application {
 		MenuItem loadGame = new MenuItem("Load Game");
 		MenuItem saveGame = new MenuItem("Save Game");
 		file.getItems().addAll(newGame, editMap, loadGame, saveGame);
+
+		loadGame.setOnAction(Event -> loadFile(stage));
+		saveGame.setOnAction(Event -> saveFile(stage));
 
 		// quit
 		Label quit = new Label("Quit");
@@ -79,48 +92,87 @@ public class GUI extends Application {
 		setWindowRatio();
 
 		// Set the size of the window
-		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);		
+		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		// Create the Scene
 		Scene scene = new Scene(grid);
 
 		//TODO: fix this
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                int dx = 0;
-                int dy = 0;
-                switch (event.getCode()) {
-                    case W:
-                        dx = -1;
-                        break;
-                    case A:
-                        dy = -1;
-                        break;
-                    case S:
-                        dx = 1;
-                        break;
-                    case D:
-                        dy = 1;
-                        break;
-                    case R:
-                        renderer.rotate();
-                        break;
-                    default:
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				int dx = 0;
+				int dy = 0;
+				switch (event.getCode()) {
+					case W:
+						dx = -1;
+						break;
+					case A:
+						dy = -1;
+						break;
+					case S:
+						dx = 1;
+						break;
+					case D:
+						dy = 1;
+						break;
+					case R:
+						renderer.rotate();
+						break;
+					default:
 
-                }
-                renderer.player.moveTile(dx, dy);
-                renderer.setPlayerPos();
-            }
-        });
+				}
+				renderer.player.moveTile(dx, dy);
+				renderer.setPlayerPos();
+			}
+		});
 
 		// Add the scene to the Stage
 		stage.setScene(scene);
 		// Set the title of the Stage
 		stage.setTitle("An Adventure Game");
 		// Display the Stage
-		stage.show();		
+		stage.show();
 	}
+
+	public static void loadFile(Stage stage) {
+		FileChooser chooser = new FileChooser();
+		configureFileChooser(chooser);
+		chooser.setTitle("Open Game XML File");
+		File file = chooser.showOpenDialog(stage);
+
+		if(file != null) {
+			currentGame = XMLParser.parseGame(file);
+			System.out.println("Parsing completed");
+			System.out.println("=================");
+		}
+	}
+
+	public static void saveFile(Stage stage){
+		FileChooser fileChooser = new FileChooser();
+		configureFileChooser(fileChooser);
+
+		//Show save file dialog
+		File file = fileChooser.showSaveDialog(stage);
+
+		if (file != null) {
+			XMLParser.saveFile(file, currentGame);
+		}
+	}
+
+	/**
+	 * A class to configure the loading and saving of files to open in the current directory,
+	 * and only load/save files in XML format
+	 * @param fileChooser
+	 */
+	private static void configureFileChooser(final FileChooser fileChooser) {
+		fileChooser.setTitle("Open XML file");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+		fileChooser.getExtensionFilters().add(extFilter);
+	}
+
 
 	public void setWindowRatio(){
 
@@ -132,13 +184,13 @@ public class GUI extends Application {
 	}
 
 	public GridPane setGame() {
-        renderer = new Renderer();
-        GridPane grid = new GridPane();
-        Text name = new Text("game");
-        grid.add(name, 0, 0);
-        grid.add(renderer.getRoot(), 0, 1);
+		renderer = new Renderer();
+		GridPane grid = new GridPane();
+		Text name = new Text("game");
+		grid.add(name, 0, 0);
+		grid.add(renderer.getRoot(), 0, 1);
 //		grid.setStyle("-fx-background-color: red;");
-        return grid;
+		return grid;
 	}
 
 	public FlowPane setInventory() {
@@ -198,7 +250,7 @@ public class GUI extends Application {
 		grid.setPrefWidth(170);
 		return grid;
 	}
-	
+
 	public void confirmExit() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Quit Game");
@@ -214,8 +266,8 @@ public class GUI extends Application {
 	}
 
 
-	public static void main(String[] args) { 
-		Application.launch(args); 
+	public static void main(String[] args) {
+		Application.launch(args);
 	}
 
 }

@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Coin implements Item {
+public class Coin implements Item{
     public Coin(){
         super();
     }
@@ -8,5 +8,10 @@ public class Coin implements Item {
     @Override
     public String toString(){
         return "coin";
+    }
+
+    @Override
+    public void use() {
+
     }
 }

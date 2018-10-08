@@ -7,4 +7,9 @@ public class VendingMachine implements Challenge {
 
   }
 
+  @Override
+  public String toString(){
+    return "vendingmachine";
+  }
+
 }

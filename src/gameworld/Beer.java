@@ -1,10 +1,15 @@
 package gameworld;
 
-public class Beer implements Token {
+public class Beer implements Item {
 
   @Override
   public void use() {
 
+  }
+
+  @Override
+  public String toString(){
+    return "beer";
   }
 
 }
