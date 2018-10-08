@@ -97,7 +97,7 @@ public class Game {
             if (nextRoom == null)
                 return;
 
-            DoorTile nextTile = nextRoom.getNextDoorTile(currentTile.getOppoositeDirection(currentTile.getDirection()));
+            DoorTile nextTile = nextRoom.getNextDoorTile(currentTile.getOppositeDirection(currentTile.getDirection()));
             nextTile.setPlayer(true);
             currentTile.setPlayer(false);
             currentRoom = nextRoom;

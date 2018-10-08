@@ -61,6 +61,7 @@ public class Player {
 //	}
 
   public void moveTile(int dx, int dy) {
+
     if(room.moveTile(tile, dx, dy) == null){
       return;
     }

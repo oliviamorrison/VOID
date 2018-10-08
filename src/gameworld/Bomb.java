@@ -1,7 +1,7 @@
 package gameworld;
 
-//TODO: Had to change bomb to implement token just for now
-public class Bomb implements Token{
+public class Bomb implements Challenge {
+
   boolean isActive = false;
 
   public boolean isActive() {
@@ -15,5 +15,10 @@ public class Bomb implements Token{
   @Override
   public String toString(){
     return "bomb";
+  }
+
+  @Override
+  public void interact() {
+
   }
 }
