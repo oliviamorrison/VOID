@@ -80,7 +80,7 @@ public class Room {
 
 
     //if the newCoordinates are inbounds and the tile is not inaacessible
-    if (newX < 11 && newY < 11 && !(tiles[newX][newY] instanceof InaccessibleTile)) {
+    if (newX < 10 && newY < 10 && newX >= 0 && newY >= 0 && !(tiles[newX][newY] instanceof InaccessibleTile)) {
       return tiles[newX][newY];
     }
 
