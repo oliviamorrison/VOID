@@ -18,7 +18,7 @@ public class DoorTile extends AccessibleTile {
     return direction;
   }
 
-  public Direction getOppoositeDirection(Direction dir) {
+  public Direction getOppositeDirection(Direction dir) {
 
     switch (dir) {
       case Top:
