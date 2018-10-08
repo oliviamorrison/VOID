@@ -16,7 +16,7 @@ import static java.lang.Integer.parseInt;
 
 public class XMLParser {
 
-    public static void saveGame(Game game){
+    public static void saveFile(Game game){
 
         JFileChooser fileChooser = new JFileChooser("./data/");
         fileChooser.showSaveDialog(null);
@@ -31,7 +31,7 @@ public class XMLParser {
             Room[][] board = game.getBoard();
 
             //load game
-            Element root = loadGame(document, board);
+            Element root = saveGame(document, board);
             document.appendChild(root);
 
             //load room
@@ -39,7 +39,7 @@ public class XMLParser {
                 for(int j = 0; j < board[i].length; j++){
                     if(board[i][j]!=null){
                         Room room = board[i][j];
-                        Element roomElement = loadRoom(document, i, j, room);
+                        Element roomElement = saveRoom(document, i, j, room);
                         //Add room
                         root.appendChild(roomElement);
                     }
@@ -47,7 +47,7 @@ public class XMLParser {
             }
 
             //load player
-            Element player = loadPlayer(game, document);
+            Element player = savePlayer(game, document);
             root.appendChild(player);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -69,7 +69,7 @@ public class XMLParser {
         }
     }
 
-    private static Element loadGame(Document document, Room[][] board) {
+    private static Element saveGame(Document document, Room[][] board) {
         // root element
         Element root = document.createElement("game");
 
@@ -85,7 +85,7 @@ public class XMLParser {
         return root;
     }
 
-    private static Element loadRoom(Document document, int i, int j, Room room) {
+    private static Element saveRoom(Document document, int i, int j, Room room) {
         Element roomElement = document.createElement("room");
 
         //row
@@ -104,16 +104,24 @@ public class XMLParser {
         }
 
         Element items = document.createElement("items");
-        for(Token token: room.getItems()){
+        for(Item token: room.getItems()){
             Element item = document.createElement("item");
             item.appendChild(document.createTextNode(token.toString()));
             items.appendChild(item);
         }
         roomElement.appendChild(items);
+
+        Element challenges = document.createElement("challenges");
+        for(Challenge challengeItem: room.getChallenges()){
+            Element challenge = document.createElement("challenge");
+            challenge.appendChild(document.createTextNode(challengeItem.toString()));
+            challenges.appendChild(challenge);
+        }
+        roomElement.appendChild(items);
         return roomElement;
     }
 
-    private static Element loadPlayer(Game game, Document document) {
+    private static Element savePlayer(Game game, Document document) {
         Element player = document.createElement("player");
 
         //room coordinates
@@ -140,7 +148,7 @@ public class XMLParser {
 
         //inventory
         Element inventory = document.createElement("inventory");
-        for(Token token: game.getPlayer().getInventory()){
+        for(Item token: game.getPlayer().getInventory()){
             Element item = document.createElement("item");
             item.appendChild(document.createTextNode(token.toString()));
             inventory.appendChild(item);
@@ -150,15 +158,14 @@ public class XMLParser {
     }
 
 
-    public static Game loadGame() {
+    public static Game loadFile() {
         while (true) {
-            JFileChooser chooser = new JFileChooser(".");// System.getProperty("user.dir"));
+            JFileChooser chooser = new JFileChooser(".");
             int res = chooser.showOpenDialog(null);
             if (res != JFileChooser.APPROVE_OPTION) {
                 break;
             }
-//            Game game = parseGame(chooser.getSelectedFile());
-            Game game = parseGame(); //for now
+            Game game = parseGame(chooser.getSelectedFile());
             System.out.println("Parsing completed");
             if (game != null) {
                 System.out.println("game parsed");
@@ -170,13 +177,15 @@ public class XMLParser {
         return null;
     }
 
-    public static Game parseGame() { //for now
-//        public static Game parseGame(File file) {
+        public static Game parseGame(File file) {
         try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//            Document doc = dBuilder.parse(file);
-            Document doc = dBuilder.parse("data/gameworld.xml"); //for now
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+            factory.setValidating(false);
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                    "http://www.w3.org/2001/XMLSchema");
+            DocumentBuilder dBuilder = factory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
 
             //parse rows and cols
@@ -206,7 +215,8 @@ public class XMLParser {
 
     private static void parseRoom(Node room, Room[][] board) {
         List<String> doors = new ArrayList<>();
-        List<Token> tokens = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
+        List<Challenge> challenges = new ArrayList<>();
 
         Element roomElement = (Element) room;
 
@@ -223,9 +233,13 @@ public class XMLParser {
 
         //parse items
         NodeList itemList = roomElement.getElementsByTagName("items");
-        parseItems(itemList, tokens);
+        parseItems(itemList, items);
 
-        Room newRoom = new Room(row, col, doors, tokens);
+        //parse challenges
+        NodeList challengeList = roomElement.getElementsByTagName("challenges");
+        parseChallenges(challengeList, challenges);
+
+        Room newRoom = new Room(row, col, doors, items);
         board[row][col] = newRoom;
     }
 
@@ -253,16 +267,26 @@ public class XMLParser {
         return parseInt(n.item(0).getTextContent());
     }
 
-    private static void parseItems(NodeList items, List<Token> tokens) {
+    private static void parseItems(NodeList items, List<Item> tokens) {
         for(int i = 0; i< items.getLength(); i++){
             String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
-            //System.out.println(token);
             switch(token){
-                case "key": tokens.add(new Key()); break;
-                case "prize": tokens.add(new Prize()); break;
+                case "antidote": tokens.add(new Key()); break;
+                case "beer": tokens.add(new Prize()); break;
                 case "diffuser": tokens.add(new Diffuser()); break;
-                case "bomb": tokens.add(new Bomb()); break;
                 case "coin": tokens.add(new Coin()); break;
+                case "boltcutter": tokens.add(new Coin()); break;
+            }
+        }
+    }
+
+    private static void parseChallenges(NodeList items, List<Challenge> challenges) {
+        for(int i = 0; i< items.getLength(); i++){
+            String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
+            switch(token){
+                case "bomb": challenges.add(null); break;
+                case "guard": challenges.add(null); break;
+                case "vendingmachine": challenges.add(null); break; //TODO: Null for now
             }
         }
     }

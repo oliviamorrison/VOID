@@ -4,7 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Polygon;
 
 public class AccessibleTile extends Tile {
-    private Token token;
+    private Item item;
     private Bomb bomb;
     private boolean player = false;
 
@@ -12,16 +12,16 @@ public class AccessibleTile extends Tile {
         super(room, x, y);
     }
 
-    public void setToken(Token token) {
-        this.token = token;
+    public void setItem(Item item) {
+        this.item = item;
     }
 
-    public Token getToken() {
-        return this.token;
+    public Item getItem() {
+        return this.item;
     }
 
     public boolean hasToken() {
-        return this.token != null;
+        return this.item != null;
     }
 
     public void setBomb(Bomb b) {

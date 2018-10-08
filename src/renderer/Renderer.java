@@ -48,10 +48,10 @@ public class Renderer {
     }
 
     public void dropItem() {
-        List<Token> inventory = player.getInventory();
+        List<Item> inventory = player.getInventory();
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
         if (!currentTile.hasToken() && !inventory.isEmpty()) {
-            currentTile.setToken(player.getInventory().remove(0));
+            currentTile.setItem(player.getInventory().remove(0));
         }
     }
 

@@ -7,10 +7,10 @@ import persistence.XMLReader;
 public class Application {
 
     public static void main(String[] args){
-        Game game = XMLParser.parseGame();
+        Game game = XMLParser.loadFile();
 //        if(game!=null){
 //            game.startGame();
 //        }
-        XMLParser.saveGame(game);
+        XMLParser.saveFile(game);
     }
 }
