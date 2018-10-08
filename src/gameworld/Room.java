@@ -17,6 +17,9 @@ public class Room {
   public static final Point RIGHT = new Point(5, 9);
   public static final int ROOMSIZE = 10;
 
+  public Room() {
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
 
     public Room(int row, int col, List<String> doors, List<Token> items){
         this.row = row;
