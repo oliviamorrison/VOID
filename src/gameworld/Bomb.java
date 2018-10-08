@@ -1,6 +1,7 @@
 package gameworld;
 
 public class Bomb implements Challenge {
+
   boolean isActive = false;
 
   public boolean isActive() {
@@ -14,5 +15,10 @@ public class Bomb implements Challenge {
   @Override
   public String toString(){
     return "bomb";
+  }
+
+  @Override
+  public void interact() {
+
   }
 }

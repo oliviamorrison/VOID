@@ -17,6 +17,10 @@ public class Room {
   public static final Point RIGHT = new Point(5, 9);
   public static final int ROOMSIZE = 10;
 
+  public Room() {
+    //TODO: Used for testing
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
 
     public Room(int row, int col, List<String> doors, List<Item> items){
         this.row = row;
@@ -48,7 +52,7 @@ public class Room {
     }
 
 
-    }
+  }
 
   public Room() {
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
@@ -66,18 +70,18 @@ public class Room {
         return items;
     }
 
-    public List<String> getDoors() {
-        return doors;
-    }
+  public List<String> getDoors() {
+    return doors;
+  }
 
-    public Tile moveTile(Tile t, int dx, int dy) {
-        int[] coords = getTileCoordinates(t);
+  public Tile moveTile(Tile t, int dx, int dy) {
+    int[] coords = getTileCoordinates(t);
 
-        int x = coords[0];
-        int y = coords[1];
+    int x = coords[0];
+    int y = coords[1];
 
-        int newX = x + dx;
-        int newY = y + dy;
+    int newX = x + dx;
+    int newY = y + dy;
 
 
     //if the newCoordinates are inbounds and the tile is not inaacessible
@@ -146,16 +150,14 @@ public class Room {
             Item item = accessibleTile.getItem();
             if (item instanceof Diffuser)
               room.append("D");
-            if (item instanceof Key)
-              room.append("K");
+            if (item instanceof Antidote)
+              room.append("A");
             if (item instanceof Coin)
-              room.append("C");
-            if (item instanceof Prize)
-              room.append("Z");
+              room.append("X");
+            if (item instanceof Beer)
+              room.append("R");
             if (item instanceof Bomb)
               room.append("B");
-//          } else if (accessibleTile.hasBomb()) {
-//            room.append("B");
           } else
             room.append(" ");
         }

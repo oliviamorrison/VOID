@@ -1,4 +1,7 @@
 package gameworld;
 
-public interface Item {
+public interface Token {
+
+  void use();
+
 }

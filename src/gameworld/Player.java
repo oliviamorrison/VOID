@@ -60,7 +60,10 @@ public class Player {
 //	}
 
   public void moveTile(int dx, int dy) {
-//    AccessibleTile tile = (AccessibleTile) this.tile;
+
+    if(room.moveTile(tile, dx, dy) == null){
+      return;
+    }
     tile.setPlayer(false);
     tile = (AccessibleTile) room.moveTile(tile, dx, dy);
     tile.setPlayer(true);

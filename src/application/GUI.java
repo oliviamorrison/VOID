@@ -19,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import renderer.Renderer;
 
 public class GUI extends Application {
 	public static final int WINDOW_WIDTH = 1000;
@@ -27,6 +28,7 @@ public class GUI extends Application {
 	private FlowPane inventory;
 	private AnchorPane options;
 	private GridPane map;
+	private Renderer renderer;
 
 
 	@Override public void start(Stage stage) {
@@ -101,11 +103,14 @@ public class GUI extends Application {
                     case D:
                         dy = 1;
                         break;
+                    case R:
+                        renderer.rotate();
+                        break;
                     default:
 
                 }
-//                player.moveTile(dx, dy);
-//                setPlayerPos();
+                renderer.player.moveTile(dx, dy);
+                renderer.setPlayerPos();
             }
         });
 
@@ -127,11 +132,13 @@ public class GUI extends Application {
 	}
 
 	public GridPane setGame() {
-		GridPane grid = new GridPane();
-		Text name = new Text("game");
-		grid.add(name, 0, 0);
-		grid.setStyle("-fx-background-color: red;");
-		return grid;
+        renderer = new Renderer();
+        GridPane grid = new GridPane();
+        Text name = new Text("game");
+        grid.add(name, 0, 0);
+        grid.add(renderer.getRoot(), 0, 1);
+//		grid.setStyle("-fx-background-color: red;");
+        return grid;
 	}
 
 	public FlowPane setInventory() {
