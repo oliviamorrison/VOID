@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Diffuser implements Token{
+public class Diffuser implements Item {
     public Diffuser(){
         super();
     }

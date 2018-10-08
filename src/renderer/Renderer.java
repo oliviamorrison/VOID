@@ -5,7 +5,7 @@ import java.util.List;
 import gameworld.AccessibleTile;
 import gameworld.Player;
 import gameworld.Room;
-import gameworld.Token;
+import gameworld.Item;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -13,9 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import persistence.RoomParser;
 
@@ -98,16 +96,16 @@ public class Renderer extends Application {
     public void pickUpItem() {
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
         if (currentTile.hasToken()) {
-            player.pickUp(currentTile.getToken());
-            currentTile.setToken(null);
+            player.pickUp(currentTile.getItem());
+            currentTile.setItem(null);
         }
     }
 
     public void dropItem() {
-        List<Token> inventory = player.getInventory();
+        List<Item> inventory = player.getInventory();
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
         if (!currentTile.hasToken() && !inventory.isEmpty()) {
-            currentTile.setToken(player.getInventory().remove(0));
+            currentTile.setItem(player.getInventory().remove(0));
         }
     }
 

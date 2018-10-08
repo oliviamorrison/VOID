@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Key implements Token{
+public class Key implements Item {
     public Key(){
         super();
     }

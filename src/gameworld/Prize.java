@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Prize implements Token{
+public class Prize implements Item {
     public Prize(){
         super();
     }

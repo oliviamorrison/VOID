@@ -122,10 +122,10 @@ public class XMLReader {
             else break;
         }
 
-        List<Token> items = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
         while(true){
             if(scan.hasNext("<item>")){
-                Token item = parseItem(scan);
+                Item item = parseItem(scan);
                 if(item!=null) items.add(item);
             }
             else break;
@@ -169,7 +169,7 @@ public class XMLReader {
         require("<inventory>", "Expected <inventory>", scan);
         while (true){
             if(scan.hasNext("<item>")){
-                Token item = parseItem(scan);
+                Item item = parseItem(scan);
                 player.getInventory().add(item);
             }
             else break;
@@ -182,9 +182,9 @@ public class XMLReader {
      * @param scan scanner
      * @return item
      */
-    private static Token parseItem(Scanner scan) {
+    private static Item parseItem(Scanner scan) {
         require("<item>", "Expected <item>", scan);
-        Token item = null;
+        Item item = null;
 
         if(checkFor("diffuser", scan)) item =new Diffuser();
         else if(checkFor("key", scan)) item = new Key();

@@ -125,16 +125,16 @@ public class Game {
     public void pickUpItem() {
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
         if (currentTile.hasToken()) {
-            player.pickUp(currentTile.getToken());
-            currentTile.setToken(null);
+            player.pickUp(currentTile.getItem());
+            currentTile.setItem(null);
         }
     }
 
     public void dropItem() {
-        List<Token> inventory = player.getInventory();
+        List<Item> inventory = player.getInventory();
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
         if (!currentTile.hasToken() && !inventory.isEmpty()) {
-            currentTile.setToken(player.getInventory().remove(0));
+            currentTile.setItem(player.getInventory().remove(0));
         }
     }
 
@@ -144,10 +144,10 @@ public class Game {
             System.out.println("No Bomb here.");
             return;
         }
-        List<Token> inventory = player.getInventory();
+        List<Item> inventory = player.getInventory();
         Boolean hasDiffuser = false;
-        for (Token token : inventory) {
-            if (token instanceof Diffuser)
+        for (Item item : inventory) {
+            if (item instanceof Diffuser)
                 hasDiffuser = true;
         }
         if (!hasDiffuser) {

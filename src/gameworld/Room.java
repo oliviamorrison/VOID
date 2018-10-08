@@ -8,7 +8,7 @@ public class Room {
     private int row;
     private int col;
     private Tile[][] tiles;
-    private List<Token> items;
+    private List<Item> items;
     private List<String> doors;
 
   public static final Point TOP = new Point(0, 5);
@@ -18,7 +18,7 @@ public class Room {
   public static final int ROOMSIZE = 10;
 
 
-    public Room(int row, int col, List<String> doors, List<Token> items){
+    public Room(int row, int col, List<String> doors, List<Item> items){
         this.row = row;
         this.col = col;
         this.items = items;
@@ -32,7 +32,7 @@ public class Room {
                 else tiles[i][j] = new AccessibleTile(this, i, j);
             }
         }
-    for (Token item : this.items) {
+    for (Item item : this.items) {
       boolean itemPlaced = false;
       while (!itemPlaced) {
         int randomX = (int) (Math.random() * 8) + 1;
@@ -40,7 +40,7 @@ public class Room {
         if (tiles[randomY][randomX] instanceof AccessibleTile) {
           AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
           if (!tile.hasToken()) {
-            tile.setToken(item);
+            tile.setItem(item);
             itemPlaced = true;
           }
         }
@@ -50,7 +50,11 @@ public class Room {
 
     }
 
-    public int getRow() {
+  public Room() {
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
+
+  public int getRow() {
         return row;
     }
 
@@ -58,7 +62,7 @@ public class Room {
         return col;
     }
 
-    public List<Token> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
@@ -139,16 +143,16 @@ public class Room {
           else if (accessibleTile.hasPlayer())
             room.append("P");
           else if (accessibleTile.hasToken()) {
-            Token token = accessibleTile.getToken();
-            if (token instanceof Diffuser)
+            Item item = accessibleTile.getItem();
+            if (item instanceof Diffuser)
               room.append("D");
-            if (token instanceof Key)
+            if (item instanceof Key)
               room.append("K");
-            if (token instanceof Coin)
+            if (item instanceof Coin)
               room.append("C");
-            if (token instanceof Prize)
+            if (item instanceof Prize)
               room.append("Z");
-            if (token instanceof Bomb)
+            if (item instanceof Bomb)
               room.append("B");
 //          } else if (accessibleTile.hasBomb()) {
 //            room.append("B");

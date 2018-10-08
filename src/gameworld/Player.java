@@ -2,7 +2,6 @@ package gameworld;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 public class Player {
 
   private AccessibleTile tile;
-  private List<Token> inventory;
+  private List<Item> inventory;
   private Room room;
   private Ellipse ellipse;
 
@@ -79,11 +78,11 @@ public class Player {
     this.room = room;
   }
 
-  public List<Token> getInventory() {
+  public List<Item> getInventory() {
     return inventory;
   }
 
-  public void pickUp(Token item) {
+  public void pickUp(Item item) {
     this.inventory.add(item);
   }
 
