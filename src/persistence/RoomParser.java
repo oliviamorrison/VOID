@@ -28,9 +28,9 @@ public class RoomParser {
         Character character = data[row].charAt(count);
 
         if (character == 'X') {
-          tile = new InaccessibleTile(room);
+          tile = new InaccessibleTile(room, col, row);
         } else {
-          tile = new AccessibleTile(room);
+          tile = new AccessibleTile(room, col, row);
           if (character == 'D') {
             Diffuser diffuser = new Diffuser();
             AccessibleTile accessibleTile = (AccessibleTile) tile;
