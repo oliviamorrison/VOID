@@ -5,6 +5,7 @@ import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -80,6 +82,33 @@ public class GUI extends Application {
 		// Create the Scene
 		Scene scene = new Scene(grid);
 
+		//TODO: fix this
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                int dx = 0;
+                int dy = 0;
+                switch (event.getCode()) {
+                    case W:
+                        dx = -1;
+                        break;
+                    case A:
+                        dy = -1;
+                        break;
+                    case S:
+                        dx = 1;
+                        break;
+                    case D:
+                        dy = 1;
+                        break;
+                    default:
+
+                }
+//                player.moveTile(dx, dy);
+//                setPlayerPos();
+            }
+        });
+
 		// Add the scene to the Stage
 		stage.setScene(scene);
 		// Set the title of the Stage
@@ -102,7 +131,6 @@ public class GUI extends Application {
 		Text name = new Text("game");
 		grid.add(name, 0, 0);
 		grid.setStyle("-fx-background-color: red;");
-
 		return grid;
 	}
 

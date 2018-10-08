@@ -43,7 +43,6 @@ public class MapEditorGUI extends Application{
         stage.setTitle("Map Editor");
         // Display the Stage
         stage.show();
-
     }
 
     public void setUpMap(){
