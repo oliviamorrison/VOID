@@ -1,6 +1,6 @@
 package gameworld;
 
-public class BoltCutter implements Token {
+public class Antidote implements Token {
 
   @Override
   public void use() {

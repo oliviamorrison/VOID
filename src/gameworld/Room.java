@@ -145,16 +145,14 @@ public class Room {
             Token token = accessibleTile.getToken();
             if (token instanceof Diffuser)
               room.append("D");
-            if (token instanceof Key)
-              room.append("K");
+            if (token instanceof Antidote)
+              room.append("A");
             if (token instanceof Coin)
-              room.append("C");
-            if (token instanceof Prize)
-              room.append("Z");
+              room.append("X");
+            if (token instanceof Beer)
+              room.append("R");
             if (token instanceof Bomb)
               room.append("B");
-//          } else if (accessibleTile.hasBomb()) {
-//            room.append("B");
           } else
             room.append(" ");
         }
