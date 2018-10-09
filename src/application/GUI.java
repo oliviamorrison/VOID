@@ -21,7 +21,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import renderer.Renderer;
 
-public class GUI extends Application {
+public class GUI extends Application implements EventHandler<KeyEvent> {
 	public static final int WINDOW_WIDTH = 1000;
 	public static final int WINDOW_HEIGHT = 800;
 	private GridPane game;
@@ -32,7 +32,6 @@ public class GUI extends Application {
 
 
 	@Override public void start(Stage stage) {
-
 		// create the menu bar
 		MenuBar menuBar = new MenuBar();
 		HBox hBox = new HBox(menuBar);
@@ -84,35 +83,8 @@ public class GUI extends Application {
 		// Create the Scene
 		Scene scene = new Scene(grid);
 
-		//TODO: fix this
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                int dx = 0;
-                int dy = 0;
-                switch (event.getCode()) {
-                    case W:
-                        dx = -1;
-                        break;
-                    case A:
-                        dy = -1;
-                        break;
-                    case S:
-                        dx = 1;
-                        break;
-                    case D:
-                        dy = 1;
-                        break;
-                    case R:
-                        renderer.rotate();
-                        break;
-                    default:
 
-                }
-                renderer.player.moveTile(dx, dy);
-                renderer.setPlayerPos();
-            }
-        });
+        scene.setOnKeyPressed(this);
 
 		// Add the scene to the Stage
 		stage.setScene(scene);
@@ -123,7 +95,6 @@ public class GUI extends Application {
 	}
 
 	public void setWindowRatio(){
-
 		//set ratios
 		this.game.setPrefSize(WINDOW_WIDTH*0.7, WINDOW_HEIGHT);
 		this.inventory.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.5);
@@ -132,12 +103,11 @@ public class GUI extends Application {
 	}
 
 	public GridPane setGame() {
-        renderer = new Renderer();
+		renderer = new Renderer();
         GridPane grid = new GridPane();
         Text name = new Text("game");
         grid.add(name, 0, 0);
         grid.add(renderer.getRoot(), 0, 1);
-//		grid.setStyle("-fx-background-color: red;");
         return grid;
 	}
 
@@ -213,9 +183,35 @@ public class GUI extends Application {
 		}
 	}
 
+	@Override
+	public void handle(KeyEvent event) {
+		int dx = 0;
+		int dy = 0;
+		switch (event.getCode()) {
+			case W:
+				dx = -1;
+				break;
+			case A:
+				dy = -1;
+				break;
+			case S:
+				dx = 1;
+				break;
+			case D:
+				dy = 1;
+				break;
+			case R:
+				renderer.rotate();
+				break;
+			default:
 
-	public static void main(String[] args) { 
-		Application.launch(args); 
+		}
+		renderer.player.moveTile(dx, dy);
+		renderer.setPlayerPos();
+	}
+
+	public static void main(String[] args) {
+		Application.launch(args);
 	}
 
 }
