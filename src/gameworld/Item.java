@@ -1,7 +1,7 @@
 package gameworld;
 
-public interface Token {
+public enum Item {
 
-  void use();
+  Antidote, Beer, BoltCutter, Coin, Diffuser, HealthPack
 
 }

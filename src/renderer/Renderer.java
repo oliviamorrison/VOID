@@ -3,7 +3,7 @@ package renderer;
 import gameworld.AccessibleTile;
 import gameworld.Player;
 import gameworld.Room;
-import gameworld.Token;
+import gameworld.Item;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -41,16 +41,16 @@ public class Renderer {
 
     public void pickUpItem() {
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (currentTile.hasToken()) {
-            player.pickUp(currentTile.getToken());
-            currentTile.setToken(null);
+        if (currentTile.hasItem()) {
+            player.pickUp(currentTile.getItem());
+            currentTile.setItem(null);
         }
     }
 
     public void dropItem() {
         List<Item> inventory = player.getInventory();
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (!currentTile.hasToken() && !inventory.isEmpty()) {
+        if (!currentTile.hasItem() && !inventory.isEmpty()) {
             currentTile.setItem(player.getInventory().remove(0));
         }
     }
@@ -105,10 +105,8 @@ public class Renderer {
                 currentRoom.getTile(row, col).setTilePolygon(poly);
                 if (currentRoom.getTile(row, col) instanceof AccessibleTile) {
                     AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
-                    if (tile.hasToken()) {
+                    if (tile.hasItem()) {
                         poly.setFill(Color.BLUE);
-                    } else if (tile.hasBomb()) {
-                        poly.setFill(Color.RED);
                     } else {
                         poly.setFill(Color.TRANSPARENT);
                     }

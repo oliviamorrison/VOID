@@ -1,24 +1,10 @@
 package gameworld;
 
-public class Bomb implements Challenge {
-
-  boolean isActive = false;
-
-  public boolean isActive() {
-    return isActive;
-  }
-
-  public void setActive(boolean active) {
-    isActive = active;
-  }
+public class Bomb extends Challenge {
 
   @Override
-  public String toString(){
+  public String toString() {
     return "bomb";
   }
 
-  @Override
-  public void interact() {
-
-  }
 }

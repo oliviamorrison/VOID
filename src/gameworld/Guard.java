@@ -1,10 +1,10 @@
 package gameworld;
 
-public class Guard implements Challenge {
+public class Guard extends Challenge {
 
   @Override
-  public void interact() {
-
+  public String toString() {
+    return "guard";
   }
 
 }

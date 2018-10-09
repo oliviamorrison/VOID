@@ -11,39 +11,40 @@ import java.util.List;
  */
 public class Game {
 
-    private Room[][] board;
-    private static Player player;
-    private Room currentRoom;
+  private Room[][] board;
+  private static Player player;
+  private Room currentRoom;
+  private int health = 100;
 
-    public Game(Room[][] board, Player player) {
-        Game.player = player;
-        this.board = board;
-        this.currentRoom = player.getRoom();
+  public Game(Room[][] board, Player player) {
+    Game.player = player;
+    this.board = board;
+    this.currentRoom = player.getRoom();
+  }
+
+  private static void movePlayer(String direction) {
+    int dx = 0;
+    int dy = 0;
+
+    switch (direction) {
+      case "w":
+        dx = -1;
+        break;
+      case "a":
+        dy = -1;
+        break;
+      case "s":
+        dx = 1;
+        break;
+      case "d":
+        dy = 1;
+        break;
+      default:
+
     }
 
-    private static void movePlayer(String direction) {
-        int dx = 0;
-        int dy = 0;
-
-        switch (direction) {
-            case "w":
-                dx = -1;
-                break;
-            case "a":
-                dy = -1;
-                break;
-            case "s":
-                dx = 1;
-                break;
-            case "d":
-                dy = 1;
-                break;
-            default:
-
-        }
-
-        player.moveTile(dx, dy);
-    }
+    player.moveTile(dx, dy);
+  }
 
 //  public void setup() {
 //    // create a starting room for testing
@@ -55,194 +56,319 @@ public class Game {
 //    startingTile.setPlayer(true);
 //  }
 
-    public void startGame() {
+  public void startGame() {
 
-        connectRooms();
-        while (true) {
-            currentRoom.draw();
-            startTurn();
+    connectRooms();
+    while (true) {
+      if (player.getTile().hasItem()) {
+        if (player.getTile().getItem().equals(Item.Antidote)) {
+          System.out.println("you win");
+          return;
         }
+      }
+      currentRoom.draw();
+      startTurn();
     }
+  }
 
-    private void startTurn() {
-        String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Use Door:r");
-        switch (input) {
-            case "m":
-                movePlayer();
-                break;
-            case "u":
-                pickUpItem();
-                break;
-            case "d":
-                dropItem();
-                break;
-            case "f":
-                diffuseBomb();
-                break;
-            case "r":
-                moveRoom();
-                break;
-            default:
+  private void startTurn() {
+    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
+    switch (input) {
+      case "m":
+        movePlayer();
+        break;
+      case "u":
+        pickUpItem();
+        break;
+      case "d":
+        dropItem();
+        break;
+      case "f":
+        diffuseBomb();
+        break;
+      case "t":
+        unlockVendingMachine();
+        break;
+      case "v":
+        useVendingMachine();
+        break;
+      case "r":
+        moveRoom();
+        break;
+      case "b":
+        bribeGuard();
+        break;
+      default:
 
+    }
+  }
+
+  private void moveRoom() {
+
+    if (player.getTile() instanceof DoorTile) {
+
+      DoorTile currentTile = (DoorTile) player.getTile();
+      Room nextRoom = findNextRoom(currentTile);
+
+      if (nextRoom == null)
+        return;
+
+      DoorTile nextTile = nextRoom.getNextDoorTile(currentTile.getOppositeDirection(currentTile.getDirection()));
+      nextTile.setPlayer(true);
+      currentTile.setPlayer(false);
+      currentRoom = nextRoom;
+      player.setRoom(currentRoom);
+      player.setTile(nextTile);
+
+    }
+  }
+
+  public void unlockVendingMachine() {
+
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    if (challenge instanceof VendingMachine) {
+      VendingMachine v = (VendingMachine) challenge;
+
+      if (!v.isUnlocked()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item.equals(Item.BoltCutter)) {
+            v.setUnlocked(true);
+            System.out.println("Chains are removed from Vending machine");
+            System.out.println("Vending machine is available for use");
+          }
         }
+      }
     }
 
-    private void moveRoom() {
+  }
 
-        if (player.getTile() instanceof DoorTile) {
+  public void useVendingMachine() {
 
-            DoorTile currentTile = (DoorTile) player.getTile();
-            Room nextRoom = findNextRoom(currentTile);
+    AccessibleTile t = (AccessibleTile) player.getTile();
 
-            if (nextRoom == null)
-                return;
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
 
-            DoorTile nextTile = nextRoom.getNextDoorTile(currentTile.getOppositeDirection(currentTile.getDirection()));
-            nextTile.setPlayer(true);
-            currentTile.setPlayer(false);
-            currentRoom = nextRoom;
-            player.setRoom(currentRoom);
-            player.setTile(nextTile);
+    if (challengeTile == null)
+      return;
 
+    Challenge challenge = challengeTile.getChallenge();
+
+    Item coin = null;
+
+    if (challenge instanceof VendingMachine) {
+      VendingMachine v = (VendingMachine) challenge;
+
+      if (v.isUnlocked()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item.equals(Item.Coin)) {
+            coin = item;
+          }
         }
+      }
     }
 
-    // for testing purposes
-    public String drawRoom() {
-        return currentRoom.draw();
+    if (coin != null) {
+      player.removeItem(coin);
+      player.addItem(Item.Beer);
+      System.out.println("Placed coin into vending machine...");
+      System.out.println("Pick up the beer that is dispensed");
     }
 
-    // for testing purposes
-    public Player getPlayer() {
-        return player;
-    }
+  }
 
-    public void movePlayer() {
-        String dir = inputString("Direction: ");
-        movePlayer(dir);
-    }
+  public void bribeGuard() {
 
-    public void pickUpItem() {
-        AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (currentTile.hasToken()) {
-            player.pickUp(currentTile.getItem());
-            currentTile.setItem(null);
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    Item beer = null;
+    Guard g = null;
+
+    if (challenge instanceof Guard) {
+      g = (Guard) challenge;
+
+      if (!g.isNavigable()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item.equals(Item.Beer)) {
+            beer = item;
+          }
         }
+      }
     }
 
-    public void dropItem() {
-        List<Item> inventory = player.getInventory();
-        AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (!currentTile.hasToken() && !inventory.isEmpty()) {
-            currentTile.setItem(player.getInventory().remove(0));
-        }
+    if (beer != null) {
+      player.removeItem(beer);
+      g.setNavigable(true);
+      System.out.println("Guard bribed with beer");
     }
 
-    public void diffuseBomb() {
-        AccessibleTile t = (AccessibleTile) player.getTile();
-        if (!t.hasBomb()) {
-            System.out.println("No Bomb here.");
-            return;
+  }
+
+  // for testing purposes
+  public String drawRoom() {
+    return currentRoom.draw();
+  }
+
+  // for testing purposes
+  public Player getPlayer() {
+    return player;
+  }
+
+  public void movePlayer() {
+    String dir = inputString("Direction: ");
+    movePlayer(dir);
+  }
+
+  public void pickUpItem() {
+    AccessibleTile currentTile = (AccessibleTile) player.getTile();
+    if (currentTile.hasItem()) {
+      Item item = currentTile.getItem();
+      player.pickUp(item);
+      currentTile.setItem(null);
+      System.out.println("Player picked up " + item.toString());
+    }
+  }
+
+  public void dropItem() {
+    List<Item> inventory = player.getInventory();
+    AccessibleTile currentTile = (AccessibleTile) player.getTile();
+    if (!currentTile.hasItem() && !inventory.isEmpty()) {
+      Item item = player.getInventory().remove(0);
+      currentTile.setItem(item);
+      System.out.println("Player dropped " + item.toString());
+    }
+  }
+
+  public void diffuseBomb() {
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    if (challenge instanceof Bomb) {
+      Bomb b = (Bomb) challenge;
+      if (!b.isNavigable()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item.equals(Item.Diffuser)) {
+            b.setNavigable(true);
+            System.out.println("Bomb diffused with " + item.toString());
+          }
         }
-        List<Item> inventory = player.getInventory();
-        Boolean hasDiffuser = false;
-        for (Item item : inventory) {
-            if (item instanceof Diffuser)
-                hasDiffuser = true;
+      }
+    }
+  }
+
+  private static String inputString(String msg) {
+    System.out.print(msg + " ");
+    while (true) {
+      BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+      try {
+        return input.readLine();
+      } catch (IOException e) {
+        System.out.println("I/O Error ... please try again!");
+      }
+    }
+  }
+
+  private Room findNextRoom(DoorTile tile) {
+
+    Direction direction = tile.getDirection();
+
+    int roomRow = 0;
+    int roomCol = 0;
+
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+
+        if (currentRoom.equals(board[i][j])) {
+          roomRow = i;
+          roomCol = j;
+          break;
         }
-        if (!hasDiffuser) {
-            System.out.println("You need a diffuser to diffuse the bomb.");
-            return;
-        }
-        System.out.println("You diffused the bomb." + t.getBomb().isActive());
-        t.getBomb().setActive(false);
+      }
     }
 
-    private static String inputString(String msg) {
-        System.out.print(msg + " ");
-        while (true) {
-            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-            try {
-                return input.readLine();
-            } catch (IOException e) {
-                System.out.println("I/O Error ... please try again!");
-            }
-        }
+    switch (direction) {
+      case Top:
+        roomRow -= 1;
+        break;
+      case Bottom:
+        roomRow += 1;
+        break;
+      case Left:
+        roomCol -= 1;
+        break;
+      case Right:
+        roomCol += 1;
+        break;
     }
 
-    private Room findNextRoom(DoorTile tile) {
+    if (roomCol < 0 || roomCol >= board.length || roomRow < 0 || roomRow >= board[0].length)
+      return null;
 
-        Direction direction = tile.getDirection();
+    return board[roomRow][roomCol];
 
-        int roomRow = 0;
-        int roomCol = 0;
+  }
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-
-                if (currentRoom.equals(board[i][j])) {
-                    roomRow = i;
-                    roomCol = j;
-                    break;
+  private void connectRooms() {
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        Room room = board[i][j];
+        if (room != null) {
+          for (String dir : room.getDoors()) {
+            switch (dir) {
+              // flip that shit to make it work
+              case "left":
+                if (j > 0) {
+                  room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.Left), Room.LEFT.x, Room.LEFT.y);
+                  break;
+                }
+              case "right":
+                if (j < board.length - 1) {
+                  room.setTile(new DoorTile(board[i][j + 1], room, i, j, Direction.Right), Room.RIGHT.x, Room.RIGHT.y);
+                  break;
+                }
+              case "top":
+                if (i > 0) {
+                  room.setTile(new DoorTile(board[i - 1][j], room, i, j, Direction.Top), Room.TOP.x, Room.TOP.y);
+                  break;
+                }
+              case "bottom":
+                if (i < board[i].length - 1) {
+                  room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.Bottom), Room.BOTTOM.x, Room.BOTTOM.y);
+                  break;
                 }
             }
+          }
         }
-
-        switch (direction) {
-            case Top:
-                roomRow -= 1;
-                break;
-            case Bottom:
-                roomRow += 1;
-            case Left:
-                roomCol -= 1;
-            case Right:
-                roomCol += 1;
-        }
-
-        if (roomCol < 0 || roomCol >= board.length || roomRow < 0 || roomRow >= board[0].length)
-            return null;
-
-        return board[roomRow][roomCol];
-
+      }
     }
+  }
 
-    private void connectRooms() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                Room room = board[i][j];
-                if (room != null) {
-                    for (String dir : room.getDoors()) {
-                        switch (dir) {
-                            case "left":
-                                if (i > 0) {
-                                    room.setTile(new DoorTile(board[i - 1][j], room, i, j, Direction.Left), Room.LEFT.x, Room.LEFT.y);
-                                    break;
-                                }
-                            case "right":
-                                if (i < board.length) {
-                                    room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.Right), Room.RIGHT.x, Room.RIGHT.y);
-                                    break;
-                                }
-                            case "top":
-                                if (j > 0) {
-                                    room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.Top), Room.TOP.x, Room.TOP.y);
-                                    break;
-                                }
-                            case "bottom":
-                                if (j < board[i].length) {
-                                    room.setTile(new DoorTile(board[i][j + 1], room, i, j, Direction.Bottom), Room.BOTTOM.x, Room.BOTTOM.y);
-                                    break;
-                                }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public Room[][] getBoard() {
-        return board;
-    }
+  public Room[][] getBoard() {
+    return board;
+  }
 }
 
