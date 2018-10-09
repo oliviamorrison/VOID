@@ -1,15 +1,19 @@
 package gameworld;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import renderer.PolygonBlock;
 
 public class AccessibleTile extends Tile {
   private Item item;
   private Challenge challenge;
   private boolean player = false;
+  private final static Color color = Color.rgb(226, 209, 206);
+  private final static double height = 0;
 
   public AccessibleTile(Room room, int x, int y) {
-    super(room, x, y);
+    super(room, x, y, color, height);
   }
 
   public void setItem(Item item) {
@@ -51,7 +55,7 @@ public class AccessibleTile extends Tile {
   }
 
   public Point2D getCenter() {
-    Polygon p = super.getTilePolygon();
+    Polygon p = super.getTilePolygon().getPolygons().get(0);
     double minX = Double.MAX_VALUE;
     double maxX = Double.MIN_VALUE;
     double minY = Double.MAX_VALUE;

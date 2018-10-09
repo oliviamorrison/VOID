@@ -257,7 +257,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 		}
 		renderer.player.moveTile(dx, dy);
-		renderer.setPlayerPos();
+		renderer.redraw();
 	}
 
 	public static void main(String[] args) {
