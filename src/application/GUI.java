@@ -261,6 +261,30 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			case R:
 				renderer.rotate();
 				break;
+//			case M:
+//				currentGame.movePlayer();
+//				break;
+			case U:
+				currentGame.pickUpItem();
+				break;
+			case I:
+				currentGame.dropItem();
+				break;
+			case F:
+				currentGame.diffuseBomb();
+				break;
+			case T:
+				currentGame.unlockVendingMachine();
+				break;
+			case V:
+				currentGame.useVendingMachine();
+				break;
+			case L:
+				currentGame.moveRoom();
+				break;
+			case B:
+				currentGame.bribeGuard();
+				break;
 			default:
 
 		}
