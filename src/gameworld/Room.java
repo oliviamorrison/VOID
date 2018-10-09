@@ -319,6 +319,7 @@ public class Room {
         this.tiles[j][y - i] = value;
       }
     }
+    this.tiles = temparray;
   }
 
 }
