@@ -2,9 +2,7 @@ package gameworld;
 
 public abstract class Challenge {
 
-  private boolean accessible;
-
-  abstract void interact();
+  private boolean accessible = false;
 
   public boolean isAccessible() { return accessible; }
 

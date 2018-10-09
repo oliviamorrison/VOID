@@ -3,8 +3,7 @@ package gameworld;
 public class VendingMachine extends Challenge {
 
   @Override
-  public void interact() {
-
+  public String toString(){
+    return "vending machine";
   }
-
 }

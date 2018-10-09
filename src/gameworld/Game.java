@@ -77,8 +77,8 @@ public class Game {
         dropItem();
         break;
       case "f":
-//                diffuseBomb();
-//                break;
+        diffuseBomb();
+        break;
       case "r":
         moveRoom();
         break;
@@ -138,25 +138,30 @@ public class Game {
     }
   }
 
-//    public void diffuseBomb() {
-//        AccessibleTile t = (AccessibleTile) player.getTile();
-//        if (!t.hasBomb()) {
-//            System.out.println("No Bomb here.");
-//            return;
-//        }
-//        List<Item> inventory = player.getInventory();
-//        Boolean hasDiffuser = false;
-//        for (Item item : inventory) {
-//            if (item instanceof Diffuser)
-//                hasDiffuser = true;
-//        }
-//        if (!hasDiffuser) {
-//            System.out.println("You need a diffuser to diffuse the bomb.");
-//            return;
-//        }
-//        System.out.println("You diffused the bomb." + t.getBomb().isActive());
-//        t.getBomb().setActive(false);
-//    }
+  public void diffuseBomb() {
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    if (challenge instanceof Bomb) {
+      Bomb b = (Bomb) challenge;
+      if (!b.isAccessible()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item instanceof Diffuser) {
+            challenge.setAccessible(true);
+          }
+        }
+      }
+    }
+  }
+
+
 
   private static String inputString(String msg) {
     System.out.print(msg + " ");

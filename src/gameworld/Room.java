@@ -39,6 +39,14 @@ public class Room {
       }
     }
 
+    if (row == 0 && col == 1) {
+      Tile t = tiles[8][5];
+      if (t instanceof AccessibleTile) {
+        AccessibleTile a = (AccessibleTile) t;
+        a.setChallenge(new Bomb());
+      }
+    }
+
     for (Item item : this.items) {
       boolean itemPlaced = false;
       while (!itemPlaced) {
@@ -80,10 +88,26 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
+    Tile tile = tiles[newX][newY];
+
+
+    // cannot move onto bomb until disabled
+    if (tile instanceof AccessibleTile) {
+      AccessibleTile at = (AccessibleTile) tile;
+      if (at.hasChallenge()) {
+        Challenge c = at.getChallenge();
+        if (c instanceof Bomb) {
+          Bomb b = (Bomb) c;
+          if (!b.isAccessible()) {
+            return null;
+          }
+        }
+      }
+    }
 
     //if the newCoordinates are inbounds and the tile is not inaacessible
-    if (newX < 11 && newY < 11 && !(tiles[newX][newY] instanceof InaccessibleTile)) {
-      return tiles[newX][newY];
+    if (newX < 11 && newY < 11 && !(tile instanceof InaccessibleTile)) {
+      return tile;
     }
 
     return null;
@@ -110,8 +134,45 @@ public class Room {
   }
 
   public Tile getNeighbour() {
+    return null;
+  }
+
+  public AccessibleTile checkChallengeNearby(AccessibleTile tile) {
+
+
+    Tile t;
+
+    for (Direction direction : Direction.values()) {
+
+      int row = tile.getX();
+      int col = tile.getY();
+
+      switch (direction) {
+        case Left:
+          col -= 1;
+          break;
+        case Right:
+          col += 1;
+          break;
+        case Top:
+          row -= 1;
+          break;
+        case Bottom:
+          row += 1;
+          break;
+      }
+
+      t = tiles[row][col];
+      if (t instanceof InaccessibleTile || t instanceof DoorTile) {
+      } else {
+        AccessibleTile a = (AccessibleTile) t;
+        if (a.hasChallenge())
+          return a;
+      }
+    }
 
     return null;
+
   }
 
   /**
@@ -155,6 +216,12 @@ public class Room {
               room.append("R");
             if (item instanceof BoltCutter)
               room.append("Z");
+            if (item instanceof HealthPack)
+              room.append("H");
+          } else if (accessibleTile.hasChallenge()) {
+            Challenge challenge = accessibleTile.getChallenge();
+            if (challenge instanceof Bomb)
+              room.append("B");
           } else
             room.append(" ");
         }
@@ -183,8 +250,6 @@ public class Room {
     }
 
     assert point != null;
-
-    String s = tiles[point.x][point.y].toString();
 
     return (DoorTile) (tiles[point.x][point.y]);
 
