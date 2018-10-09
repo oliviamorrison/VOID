@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Bomb implements Challenge {
+public class Bomb extends Challenge {
   private String direction;
   boolean isActive = false;
 
@@ -22,7 +22,7 @@ public class Bomb implements Challenge {
 
   @Override
   public String toString(){
-    return "bomb";
+    return "Bomb";
   }
 
 }

@@ -41,7 +41,7 @@ public class Room {
       Tile t = tiles[8][5];
       if (t instanceof AccessibleTile) {
         AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Bomb());
+        a.setChallenge(new Bomb("bottom"));
       }
     }
     if (row == 1 && col == 2) {
@@ -62,7 +62,7 @@ public class Room {
       Tile t = tiles[5][1];
       if (t instanceof AccessibleTile) {
         AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Guard());
+        a.setChallenge(new Guard("right"));
       }
     }
 

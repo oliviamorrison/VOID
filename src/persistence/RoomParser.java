@@ -28,12 +28,12 @@ public class RoomParser {
           tile = new AccessibleTile(room, row, col);
           if (character == 'D') {
             AccessibleTile accessibleTile = (AccessibleTile) tile;
-            accessibleTile.setItem(diffuser);
+            accessibleTile.setItem(Item.Diffuser);
           }
           else if(character == 'B') {
         	  Bomb bomb = new Bomb("");
         	  AccessibleTile accessibleTile = (AccessibleTile) tile;
-              accessibleTile.setBomb(bomb);
+//              accessibleTile.setBomb(bomb);
           }
         }
         room.setTile(tile, row, col);

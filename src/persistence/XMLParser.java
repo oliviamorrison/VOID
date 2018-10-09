@@ -256,11 +256,11 @@ public class XMLParser {
         for(int i = 0; i< items.getLength(); i++){
             String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
             switch(token){
-                case "antidote": tokens.add(Item.Antidote); break;
-                case "beer": tokens.add(Item.Beer); break;
-                case "diffuser": tokens.add(Item.Diffuser); break;
-                case "coin": tokens.add(Item.Coin); break;
-                case "boltcutter": tokens.add(Item.BoltCutter); break;
+                case "Antidote": tokens.add(Item.Antidote); break;
+                case "Beer": tokens.add(Item.Beer); break;
+                case "Diffuser": tokens.add(Item.Diffuser); break;
+                case "Coin": tokens.add(Item.Coin); break;
+                case "BoltCutter": tokens.add(Item.BoltCutter); break;
             }
         }
     }
@@ -270,19 +270,19 @@ public class XMLParser {
             //TODO: Figure out why when there are more than 1 item it doesn't trim it
             Node node = items.item(i);
             switch(node.getTextContent().trim()){
-                case "bomb":
+                case "Bomb":
                     Element elem = (Element) node;
                     String direction = elem.getAttribute("door");
                     System.out.println("bomb direction = " + direction);
                     challenges.add(new Bomb(direction));
                     break;
-                case "guard":
+                case "Guard":
                     elem = (Element) node;
                     direction = elem.getAttribute("door");
                     System.out.println("guard direction = " + direction);
                     challenges.add(new Guard(direction));
                     break;
-                case "vendingmachine": challenges.add(new VendingMachine()); break;
+                case "VendingMachine": challenges.add(new VendingMachine()); break;
             }
         }
     }

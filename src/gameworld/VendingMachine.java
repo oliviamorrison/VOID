@@ -14,7 +14,7 @@ public class VendingMachine extends Challenge {
 
   @Override
   public String toString(){
-    return "vendingmachine";
+    return "VendingMachine";
   }
 
 }
