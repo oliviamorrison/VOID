@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//Using javax.xml.parsers library
+
 import static java.lang.Integer.parseInt;
 
 public class XMLParser {
@@ -104,6 +106,16 @@ public class XMLParser {
         Element challenges = document.createElement("challenges");
         for(Challenge challengeItem: room.getChallenges()){
             Element challenge = document.createElement("challenge");
+
+            if(challengeItem instanceof Bomb) {
+                Bomb bomb = (Bomb) challengeItem;
+                challenge.setAttribute("door", bomb.getDirection());
+            }
+            else if(challengeItem instanceof Guard){
+                Guard guard = (Guard) challengeItem;
+                challenge.setAttribute("door", guard.getDirection());
+            }
+
             challenge.appendChild(document.createTextNode(challengeItem.toString()));
             challenges.appendChild(challenge);
         }
@@ -255,10 +267,21 @@ public class XMLParser {
 
     private static void parseChallenges(NodeList items, List<Challenge> challenges) {
         for(int i = 0; i< items.getLength(); i++){
-            String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
-            switch(token){
-                case "bomb": challenges.add(new Bomb()); break; //TODO: Give bomb and guard a door using attribute
-                case "guard": challenges.add(new Guard()); break;
+            //TODO: Figure out why when there are more than 1 item it doesn't trim it
+            Node node = items.item(i);
+            switch(node.getTextContent().trim()){
+                case "bomb":
+                    Element elem = (Element) node;
+                    String direction = elem.getAttribute("door");
+                    System.out.println("bomb direction = " + direction);
+                    challenges.add(new Bomb(direction));
+                    break;
+                case "guard":
+                    elem = (Element) node;
+                    direction = elem.getAttribute("door");
+                    System.out.println("guard direction = " + direction);
+                    challenges.add(new Guard(direction));
+                    break;
                 case "vendingmachine": challenges.add(new VendingMachine()); break;
             }
         }

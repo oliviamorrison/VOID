@@ -32,7 +32,7 @@ public class RoomParser {
             accessibleTile.setItem(diffuser);
           }
           else if(character == 'B') {
-        	  Bomb bomb = new Bomb();
+        	  Bomb bomb = new Bomb("");
         	  AccessibleTile accessibleTile = (AccessibleTile) tile;
               accessibleTile.setBomb(bomb);
           }
