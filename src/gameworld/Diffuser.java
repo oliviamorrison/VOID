@@ -9,4 +9,9 @@ public class Diffuser implements Item {
     public String toString(){
         return "diffuser";
     }
+
+    @Override
+    public void use() {
+
+    }
 }

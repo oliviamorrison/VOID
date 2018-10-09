@@ -1,7 +1,13 @@
 package gameworld;
 
-public interface Challenge {
+public abstract class Challenge {
 
-  void interact();
+  private boolean accessible;
+
+  abstract void interact();
+
+  public boolean isAccessible() { return accessible; }
+
+  public void setAccessible(boolean accessible) { this.accessible = accessible; }
 
 }

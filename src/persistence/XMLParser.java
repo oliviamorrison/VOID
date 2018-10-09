@@ -112,11 +112,11 @@ public class XMLParser {
         roomElement.appendChild(items);
 
         Element challenges = document.createElement("challenges");
-        for(Challenge challengeItem: room.getChallenges()){
-            Element challenge = document.createElement("challenge");
-            challenge.appendChild(document.createTextNode(challengeItem.toString()));
-            challenges.appendChild(challenge);
-        }
+//        for(Challenge challengeItem: room.getChallenges()){
+//            Element challenge = document.createElement("challenge");
+//            challenge.appendChild(document.createTextNode(challengeItem.toString()));
+//            challenges.appendChild(challenge);
+//        }
         roomElement.appendChild(items);
         return roomElement;
     }
@@ -271,11 +271,11 @@ public class XMLParser {
         for(int i = 0; i< items.getLength(); i++){
             String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
             switch(token){
-                case "antidote": tokens.add(new Key()); break;
-                case "beer": tokens.add(new Prize()); break;
+                case "antidote": tokens.add(new Antidote()); break;
+                case "beer": tokens.add(new Beer()); break;
                 case "diffuser": tokens.add(new Diffuser()); break;
                 case "coin": tokens.add(new Coin()); break;
-                case "boltcutter": tokens.add(new Coin()); break;
+                case "boltcutter": tokens.add(new BoltCutter()); break;
             }
         }
     }

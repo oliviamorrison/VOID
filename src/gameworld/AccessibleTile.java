@@ -5,7 +5,7 @@ import javafx.scene.shape.Polygon;
 
 public class AccessibleTile extends Tile {
     private Item item;
-    private Bomb bomb;
+    private Challenge challenge;
     private boolean player = false;
 
     public AccessibleTile(Room room, int x, int y) {
@@ -24,18 +24,6 @@ public class AccessibleTile extends Tile {
         return this.item != null;
     }
 
-    public void setBomb(Bomb b) {
-        this.bomb = b;
-    }
-
-    public Bomb getBomb() {
-        return this.bomb;
-    }
-
-    public boolean hasBomb() {
-        return this.bomb != null;
-    }
-
     public void setPlayer(boolean player) {
         this.player = player;
     }
@@ -44,9 +32,22 @@ public class AccessibleTile extends Tile {
         return player;
     }
 
+    public boolean hasChallenge() {
+        return this.challenge != null;
+    }
+
+    public void setChallenge(Challenge challenge) {
+        this.challenge = challenge;
+    }
+
+    public Challenge getChallenge() {
+        return this.challenge;
+    }
+
+
     @Override
     public String toString() {
-        return "X";
+        return " ";
     }
 
     public Point2D getCenter() {

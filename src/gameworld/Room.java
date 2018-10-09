@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Room {
 
-    private int row;
-    private int col;
-    private Tile[][] tiles;
-    private List<Item> items;
-    private List<String> doors;
+  private int row;
+  private int col;
+  private Tile[][] tiles;
+  private List<Item> items;
+  private List<String> doors;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
@@ -22,20 +22,23 @@ public class Room {
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
   }
 
-    public Room(int row, int col, List<String> doors, List<Item> items){
-        this.row = row;
-        this.col = col;
-        this.items = items;
-        this.doors = doors;
-        this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  public Room(int row, int col, List<String> doors, List<Item> items) {
 
-        //For now until we can load in an XML file
-        for(int i = 0; i < ROOMSIZE; i++){
-            for(int j = 0; j < ROOMSIZE; j++){
-                if(i == 0 || j == 0 || j == ROOMSIZE-1 || i == ROOMSIZE-1) tiles[i][j] = new InaccessibleTile(this, i, j);
-                else tiles[i][j] = new AccessibleTile(this, i, j);
-            }
-        }
+    this.row = row;
+    this.col = col;
+    this.items = items;
+    this.doors = doors;
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+
+    //For now until we can load in an XML file
+    for (int i = 0; i < ROOMSIZE; i++) {
+      for (int j = 0; j < ROOMSIZE; j++) {
+        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
+          tiles[i][j] = new InaccessibleTile(this, i, j);
+        else tiles[i][j] = new AccessibleTile(this, i, j);
+      }
+    }
+
     for (Item item : this.items) {
       boolean itemPlaced = false;
       while (!itemPlaced) {
@@ -50,25 +53,19 @@ public class Room {
         }
       }
     }
-
-
-  }
-
-  public Room() {
-    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
   }
 
   public int getRow() {
-        return row;
-    }
+    return row;
+  }
 
-    public int getCol() {
-        return col;
-    }
+  public int getCol() {
+    return col;
+  }
 
-    public List<Item> getItems() {
-        return items;
-    }
+  public List<Item> getItems() {
+    return items;
+  }
 
   public List<String> getDoors() {
     return doors;
@@ -153,11 +150,11 @@ public class Room {
             if (item instanceof Antidote)
               room.append("A");
             if (item instanceof Coin)
-              room.append("X");
+              room.append("C");
             if (item instanceof Beer)
               room.append("R");
-            if (item instanceof Bomb)
-              room.append("B");
+            if (item instanceof BoltCutter)
+              room.append("Z");
           } else
             room.append(" ");
         }
@@ -187,6 +184,8 @@ public class Room {
 
     assert point != null;
 
+    String s = tiles[point.x][point.y].toString();
+
     return (DoorTile) (tiles[point.x][point.y]);
 
   }
@@ -199,7 +198,7 @@ public class Room {
         return RIGHT;
       case "bottom":
         return BOTTOM;
-      case "top" :
+      case "top":
         return TOP;
       default:
         return null;
@@ -207,11 +206,11 @@ public class Room {
   }
 
   public AccessibleTile getPlayerTile() {
-    for(int row = 0; row < ROOMSIZE; row++) {
-      for(int col = 0; col < ROOMSIZE; col++) {
-        if(this.tiles[row][col] instanceof AccessibleTile) {
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+        if (this.tiles[row][col] instanceof AccessibleTile) {
           AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
-          if(tile.hasPlayer()) {
+          if (tile.hasPlayer()) {
             return tile;
           }
         }
@@ -220,11 +219,11 @@ public class Room {
     return null;
   }
 
-  public void rotateRoomClockwise(){
-    int x = ROOMSIZE/2;
+  public void rotateRoomClockwise() {
+    int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;
-    for(int i = 0; i < x; i++){
-      for(int j = i; j < y - i; j++){
+    for (int i = 0; i < x; i++) {
+      for (int j = i; j < y - i; j++) {
         Tile value = this.tiles[i][j];
         this.tiles[i][j] = this.tiles[y - j][i];
         this.tiles[y - j][i] = this.tiles[y - i][y - j];

@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Guard implements Challenge {
+public class Guard extends Challenge {
 
   @Override
   public void interact() {

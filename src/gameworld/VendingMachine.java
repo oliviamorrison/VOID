@@ -1,6 +1,6 @@
 package gameworld;
 
-public class VendingMachine implements Challenge {
+public class VendingMachine extends Challenge {
 
   @Override
   public void interact() {

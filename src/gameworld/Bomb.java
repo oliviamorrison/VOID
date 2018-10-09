@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Bomb implements Challenge {
+public class Bomb extends Challenge {
 
   boolean isActive = false;
 

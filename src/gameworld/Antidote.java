@@ -1,6 +1,6 @@
 package gameworld;
 
-public class Antidote implements Token {
+public class Antidote implements Item {
 
   @Override
   public void use() {
