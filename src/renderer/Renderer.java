@@ -56,17 +56,6 @@ public class Renderer {
     }
 
     public void rotate() {
-<<<<<<< src/renderer/Renderer.java
-        if(!this.poly.isEmpty()) {
-            poly.clear();
-            System.out.println(poly.size());
-        }
-        currentRoom.rotateRoomClockwise();
-        setTilePolygons();
-        tilesToPolygonList();
-        twoDToIso();
-        System.out.println("");
-=======
         if (!poly.isEmpty()) {
             poly.clear();
         }
@@ -74,7 +63,6 @@ public class Renderer {
         createPolygons();
         polygonsToList();
 		twoDToIso();
->>>>>>> src/renderer/Renderer.java
     }
 
     public void setUpGame() {
@@ -87,15 +75,7 @@ public class Renderer {
         startingTile.setPlayer(true);
     }
 
-<<<<<<< src/renderer/Renderer.java
-    public void setTilePolygons() {
-        System.out.println("setTilePolygons");
-        double polySize = 20;
-        double top = 100;
-        double left = 100;
-=======
     public void createPolygons() {
->>>>>>> src/renderer/Renderer.java
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
                 List<Double> points = new ArrayList<Double>();
@@ -140,12 +120,7 @@ public class Renderer {
         }
     }
 
-<<<<<<< src/renderer/Renderer.java
-    public void tilesToPolygonList() {
-        System.out.println("tilesToPolygonList");
-=======
     public void polygonsToList() {
->>>>>>> src/renderer/Renderer.java
         poly = new ArrayList<Polygon>();
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
@@ -161,12 +136,7 @@ public class Renderer {
     }
 
     public void twoDToIso() {
-<<<<<<< src/renderer/Renderer.java
-        System.out.println("twoDToIso");
-        for (Polygon p : this.poly) {
-=======
         for (Polygon p : poly) {
->>>>>>> src/renderer/Renderer.java
             for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
                 double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
                 double y = (p.getPoints().get(i) + p.getPoints().get(i + 1)) / 2;
