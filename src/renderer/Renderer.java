@@ -75,6 +75,7 @@ public class Renderer {
         startingTile.setPlayer(true);
     }
 
+
     public void createPolygons() {
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
@@ -120,6 +121,7 @@ public class Renderer {
         }
     }
 
+
     public void polygonsToList() {
         poly = new ArrayList<Polygon>();
         for (int row = 0; row < Room.ROOMSIZE; row++) {
@@ -135,7 +137,7 @@ public class Renderer {
         player.getEllipse().setCenterY(p.getY() - 13);
     }
 
-    public void twoDToIso() {
+    public void twoDToIso(){
         for (Polygon p : poly) {
             for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
                 double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
@@ -146,9 +148,7 @@ public class Renderer {
             }
         }
     }
-
-    public void drawWalls() {
-
     }
 
-}
+
+
