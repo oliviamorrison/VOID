@@ -2,7 +2,6 @@ package gameworld;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 public class Player {
 
   private AccessibleTile tile;
-  private List<Token> inventory = new ArrayList<>();
+  private List<Item> inventory;
   private Room room;
   private Ellipse ellipse;
 
@@ -61,13 +60,16 @@ public class Player {
 //	}
 
   public void moveTile(int dx, int dy) {
-//    AccessibleTile tile = (AccessibleTile) this.tile;
+
+    if (room.moveTile(tile, dx, dy) == null) {
+      return;
+    }
     tile.setPlayer(false);
     tile = (AccessibleTile) room.moveTile(tile, dx, dy);
     tile.setPlayer(true);
   }
 
-  public Tile getTile() {
+  public AccessibleTile getTile() {
     return tile;
   }
 
@@ -79,19 +81,27 @@ public class Player {
     this.room = room;
   }
 
-  public List<Token> getInventory() {
+  public List<Item> getInventory() {
     return inventory;
   }
 
-  public void pickUp(Token item) {
+  public void removeItem(Item item) {
+    inventory.remove(item);
+  }
+
+  public void addItem(Item item) {
+    inventory.add(item);
+  }
+
+  public void pickUp(Item item) {
     this.inventory.add(item);
   }
 
-  public Ellipse getEllipse(){
+  public Ellipse getEllipse() {
     return this.ellipse;
   }
 
-  public void setEllipse(Ellipse e){
+  public void setEllipse(Ellipse e) {
     this.ellipse = e;
   }
 

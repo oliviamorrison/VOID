@@ -1,10 +1,10 @@
 package gameworld;
 
-public class Bomb extends Challenge {
+public class Guard extends Challenge {
 
   @Override
   public String toString() {
-    return "bomb";
+    return "guard";
   }
 
 }

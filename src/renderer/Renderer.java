@@ -1,118 +1,62 @@
 package renderer;
-import java.util.ArrayList;
-import java.util.List;
 
 import gameworld.AccessibleTile;
 import gameworld.Player;
 import gameworld.Room;
-import gameworld.Token;
-import javafx.application.Application;
-import javafx.event.EventHandler;
+import gameworld.Item;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import persistence.RoomParser;
 
-public class Renderer extends Application {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Renderer {
 
     private static List<Polygon> poly;
-    private static Player player;
+    public static Player player;
     private static Room currentRoom;
     private static List<Room> rooms = new ArrayList<>();
-    private static Scene scene;
+    private static Group root;
+    private static final double POLYSIZE = 40;
+    private static final double TOP = 0;
+    private static final double LEFT = 0;
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        // TODO Auto-generated method stub
-        setup();
-        setTilePolygons();
-        tilesToPolygonList();
-        twoDToIso();
+    public Renderer() {
+        setUpGame();
+        createPolygons();
+        polygonsToList();
+		twoDToIso();
         setPlayerPos();
+        root = new Group();
+        root.getChildren().addAll(poly);
+        root.getChildren().add(player.getEllipse());
+    }
 
-        Group root = new Group();
-        root.getChildren().addAll(this.poly);
-        root.getChildren().add(this.player.getEllipse());
-        scene = new Scene(root, 600, 600);
-
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                int dx = 0;
-                int dy = 0;
-                switch (event.getCode()) {
-                    case W:
-                        dx = -1;
-                        break;
-                    case A:
-                        dy = -1;
-                        break;
-                    case S:
-                        dx = 1;
-                        break;
-                    case D:
-                        dy = 1;
-                        break;
-                    case R:
-                        rotate();
-                        break;
-                    case P:
-                        AccessibleTile currentTile1 = (AccessibleTile) player.getTile();
-                        System.out.println("Pick up: " +currentTile1.hasToken());
-                        pickUpItem();
-                        poly.clear();
-                        setTilePolygons();
-                        tilesToPolygonList();
-                        twoDToIso();
-                        System.out.println("Pick up: " +currentTile1.hasToken());
-                        break;
-
-                    case L:
-                        AccessibleTile currentTile2 = (AccessibleTile) player.getTile();
-                        System.out.println("Drop: " + currentTile2.hasToken());
-                        dropItem();
-                        poly.clear();
-                        setTilePolygons();
-                        tilesToPolygonList();
-                        twoDToIso();
-                        System.out.println("Drop: " + currentTile2.hasToken());
-                        break;
-                    default:
-
-                }
-                player.moveTile(dx, dy);
-                setPlayerPos();
-            }
-        });
-
-        stage.setScene(scene);
-        stage.show();
+    public Group getRoot() {
+        return root;
     }
 
     public void pickUpItem() {
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (currentTile.hasToken()) {
-            player.pickUp(currentTile.getToken());
-            currentTile.setToken(null);
+        if (currentTile.hasItem()) {
+            player.pickUp(currentTile.getItem());
+            currentTile.setItem(null);
         }
     }
 
     public void dropItem() {
-        List<Token> inventory = player.getInventory();
+        List<Item> inventory = player.getInventory();
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (!currentTile.hasToken() && !inventory.isEmpty()) {
-            currentTile.setToken(player.getInventory().remove(0));
+        if (!currentTile.hasItem() && !inventory.isEmpty()) {
+            currentTile.setItem(player.getInventory().remove(0));
         }
     }
 
-
     public void rotate() {
+<<<<<<< src/renderer/Renderer.java
         if(!this.poly.isEmpty()) {
             poly.clear();
             System.out.println(poly.size());
@@ -122,9 +66,18 @@ public class Renderer extends Application {
         tilesToPolygonList();
         twoDToIso();
         System.out.println("");
+=======
+        if (!poly.isEmpty()) {
+            poly.clear();
+        }
+        currentRoom.rotateRoomClockwise();
+        createPolygons();
+        polygonsToList();
+		twoDToIso();
+>>>>>>> src/renderer/Renderer.java
     }
 
-    public void setup() {
+    public void setUpGame() {
         // create a starting room for testing
         Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
         currentRoom = defaultRoom;
@@ -134,25 +87,29 @@ public class Renderer extends Application {
         startingTile.setPlayer(true);
     }
 
+<<<<<<< src/renderer/Renderer.java
     public void setTilePolygons() {
         System.out.println("setTilePolygons");
         double polySize = 20;
         double top = 100;
         double left = 100;
+=======
+    public void createPolygons() {
+>>>>>>> src/renderer/Renderer.java
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
                 List<Double> points = new ArrayList<Double>();
-                double p1y = top + (row * polySize);
-                double p1x = left + (col * polySize);
+                double p1y = TOP + (row * POLYSIZE);
+                double p1x = LEFT + (col * POLYSIZE);
 
-                double p2y = top + (row * polySize);
-                double p2x = left + (col * polySize) + polySize;
+                double p2y = TOP + (row * POLYSIZE);
+                double p2x = LEFT + (col * POLYSIZE) + POLYSIZE;
 
-                double p3y = top + (row * polySize) + polySize;
-                double p3x = left + (col * polySize) + polySize;
+                double p3y = TOP + (row * POLYSIZE) + POLYSIZE;
+                double p3x = LEFT + (col * POLYSIZE) + POLYSIZE;
 
-                double p4y = top + (row * polySize) + polySize;
-                double p4x = left + (col * polySize);
+                double p4y = TOP + (row * POLYSIZE) + POLYSIZE;
+                double p4x = LEFT + (col * POLYSIZE);
 
                 points.add(p1x);
                 points.add(p1y);
@@ -165,13 +122,11 @@ public class Renderer extends Application {
 
                 Polygon poly = new Polygon();
                 poly.getPoints().addAll(points);
-                this.currentRoom.getTile(row, col).setTilePolygon(poly);
-                if (this.currentRoom.getTile(row, col) instanceof AccessibleTile) {
-                    AccessibleTile tile = (AccessibleTile) this.currentRoom.getTile(row, col);
-                    if (tile.hasToken()) {
+                currentRoom.getTile(row, col).setTilePolygon(poly);
+                if (currentRoom.getTile(row, col) instanceof AccessibleTile) {
+                    AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
+                    if (tile.hasItem()) {
                         poly.setFill(Color.BLUE);
-                    } else if (tile.hasBomb()) {
-                        poly.setFill(Color.RED);
                     } else {
                         poly.setFill(Color.TRANSPARENT);
                     }
@@ -185,8 +140,12 @@ public class Renderer extends Application {
         }
     }
 
+<<<<<<< src/renderer/Renderer.java
     public void tilesToPolygonList() {
         System.out.println("tilesToPolygonList");
+=======
+    public void polygonsToList() {
+>>>>>>> src/renderer/Renderer.java
         poly = new ArrayList<Polygon>();
         for (int row = 0; row < Room.ROOMSIZE; row++) {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
@@ -197,25 +156,29 @@ public class Renderer extends Application {
 
     public void setPlayerPos() {
         Point2D p = currentRoom.getPlayerTile().getCenter();
-        this.player.getEllipse().setCenterX(p.getX());
-        this.player.getEllipse().setCenterY(p.getY() - 13);
+        player.getEllipse().setCenterX(p.getX());
+        player.getEllipse().setCenterY(p.getY() - 13);
     }
 
     public void twoDToIso() {
+<<<<<<< src/renderer/Renderer.java
         System.out.println("twoDToIso");
         for (Polygon p : this.poly) {
+=======
+        for (Polygon p : poly) {
+>>>>>>> src/renderer/Renderer.java
             for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
                 double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
                 double y = (p.getPoints().get(i) + p.getPoints().get(i + 1)) / 2;
 
-                p.getPoints().set(i, x + 300);
+                p.getPoints().set(i, x+300);
                 p.getPoints().set(i + 1, y);
             }
         }
     }
 
-    public static void main(String args[]) {
-        launch(args);
+    public void drawWalls() {
+
     }
 
 }

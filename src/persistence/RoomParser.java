@@ -1,12 +1,7 @@
 
 package persistence;
 
-import gameworld.AccessibleTile;
-import gameworld.Bomb;
-import gameworld.Diffuser;
-import gameworld.InaccessibleTile;
-import gameworld.Room;
-import gameworld.Tile;
+import gameworld.*;
 
 public class RoomParser {
 
@@ -28,18 +23,12 @@ public class RoomParser {
         Character character = data[row].charAt(count);
 
         if (character == 'X') {
-          tile = new InaccessibleTile(room);
+          tile = new InaccessibleTile(room, row, col);
         } else {
-          tile = new AccessibleTile(room);
+          tile = new AccessibleTile(room, row, col);
           if (character == 'D') {
-            Diffuser diffuser = new Diffuser();
             AccessibleTile accessibleTile = (AccessibleTile) tile;
-            accessibleTile.setToken(diffuser);
-          }
-          else if(character == 'B') {
-        	  Bomb bomb = new Bomb();
-        	  AccessibleTile accessibleTile = (AccessibleTile) tile;
-              accessibleTile.setBomb(bomb);
+            accessibleTile.setItem(Item.Diffuser);
           }
         }
         room.setTile(tile, row, col);
