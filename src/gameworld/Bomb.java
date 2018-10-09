@@ -25,8 +25,4 @@ public class Bomb implements Challenge {
     return "bomb";
   }
 
-  @Override
-  public void interact() {
-
-  }
 }

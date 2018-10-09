@@ -27,7 +27,6 @@ public class RoomParser {
         } else {
           tile = new AccessibleTile(room, row, col);
           if (character == 'D') {
-            Diffuser diffuser = new Diffuser();
             AccessibleTile accessibleTile = (AccessibleTile) tile;
             accessibleTile.setItem(diffuser);
           }

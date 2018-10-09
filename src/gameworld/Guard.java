@@ -1,6 +1,7 @@
 package gameworld;
 
-public class Guard implements Challenge {
+
+public class Guard extends Challenge {
     private String direction;
 
     public Guard(String direction) {
@@ -11,10 +12,6 @@ public class Guard implements Challenge {
         return direction;
     }
 
-    @Override
-  public void interact() {
-
-  }
 
   @Override
   public String toString(){

@@ -256,11 +256,11 @@ public class XMLParser {
         for(int i = 0; i< items.getLength(); i++){
             String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
             switch(token){
-                case "antidote": tokens.add(new Antidote()); break;
-                case "beer": tokens.add(new Beer()); break;
-                case "diffuser": tokens.add(new Diffuser()); break;
-                case "coin": tokens.add(new Coin()); break;
-                case "boltcutter": tokens.add(new BoltCutter()); break;
+                case "antidote": tokens.add(Item.Antidote); break;
+                case "beer": tokens.add(Item.Beer); break;
+                case "diffuser": tokens.add(Item.Diffuser); break;
+                case "coin": tokens.add(Item.Coin); break;
+                case "boltcutter": tokens.add(Item.BoltCutter); break;
             }
         }
     }

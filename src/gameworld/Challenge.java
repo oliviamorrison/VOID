@@ -1,7 +1,15 @@
 package gameworld;
 
-public interface Challenge {
+public abstract class Challenge {
 
-  void interact();
+  private boolean navigable = false;
+
+  public boolean isNavigable() {
+    return navigable;
+  }
+
+  public void setNavigable(boolean navigable) {
+    this.navigable = navigable;
+  }
 
 }
