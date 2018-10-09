@@ -3,8 +3,7 @@ package gameworld;
 public class BoltCutter implements Item {
 
   @Override
-  public void use() {
-
+  public String toString() {
+    return "bolt cutter";
   }
-
 }

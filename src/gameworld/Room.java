@@ -46,6 +46,27 @@ public class Room {
         a.setChallenge(new Bomb());
       }
     }
+    if (row == 1 && col == 2) {
+      boolean itemPlaced = false;
+      while (!itemPlaced) {
+        int randomX = (int) (Math.random() * 8) + 1;
+        int randomY = (int) (Math.random() * 8) + 1;
+        if (tiles[randomY][randomX] instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
+          if (!tile.hasItem()) {
+            tile.setChallenge(new VendingMachine());
+            itemPlaced = true;
+          }
+        }
+      }
+    }
+    if (row == 2 && col == 1) {
+      Tile t = tiles[5][1];
+      if (t instanceof AccessibleTile) {
+        AccessibleTile a = (AccessibleTile) t;
+        a.setChallenge(new Guard());
+      }
+    }
 
     for (Item item : this.items) {
       boolean itemPlaced = false;
@@ -54,7 +75,7 @@ public class Room {
         int randomY = (int) (Math.random() * 8) + 1;
         if (tiles[randomY][randomX] instanceof AccessibleTile) {
           AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-          if (!tile.hasToken()) {
+          if (!tile.hasItem()) {
             tile.setItem(item);
             itemPlaced = true;
           }
@@ -96,11 +117,8 @@ public class Room {
       AccessibleTile at = (AccessibleTile) tile;
       if (at.hasChallenge()) {
         Challenge c = at.getChallenge();
-        if (c instanceof Bomb) {
-          Bomb b = (Bomb) c;
-          if (!b.isAccessible()) {
-            return null;
-          }
+        if (!c.isNavigable()) {
+          return null;
         }
       }
     }
@@ -200,11 +218,11 @@ public class Room {
         } else if (tile instanceof AccessibleTile) {
           AccessibleTile accessibleTile = (AccessibleTile) tile;
 
-          if (accessibleTile.hasPlayer() && accessibleTile.hasToken())
+          if (accessibleTile.hasPlayer() && accessibleTile.hasItem())
             room.append("!");
           else if (accessibleTile.hasPlayer())
             room.append("P");
-          else if (accessibleTile.hasToken()) {
+          else if (accessibleTile.hasItem()) {
             Item item = accessibleTile.getItem();
             if (item instanceof Diffuser)
               room.append("D");
@@ -222,6 +240,10 @@ public class Room {
             Challenge challenge = accessibleTile.getChallenge();
             if (challenge instanceof Bomb)
               room.append("B");
+            if (challenge instanceof VendingMachine)
+              room.append("V");
+            if (challenge instanceof Guard)
+              room.append("G");
           } else
             room.append(" ");
         }

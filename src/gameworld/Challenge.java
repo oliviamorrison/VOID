@@ -2,10 +2,10 @@ package gameworld;
 
 public abstract class Challenge {
 
-  private boolean accessible = false;
+  private boolean navigable = false;
 
-  public boolean isAccessible() { return accessible; }
+  public boolean isNavigable() { return navigable; }
 
-  public void setAccessible(boolean accessible) { this.accessible = accessible; }
+  public void setNavigable(boolean navigable) { this.navigable = navigable; }
 
 }

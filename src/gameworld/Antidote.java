@@ -3,8 +3,7 @@ package gameworld;
 public class Antidote implements Item {
 
   @Override
-  public void use() {
-
+  public String toString() {
+    return "antidote";
   }
-
 }

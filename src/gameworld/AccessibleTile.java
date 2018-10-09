@@ -20,7 +20,7 @@ public class AccessibleTile extends Tile {
         return this.item;
     }
 
-    public boolean hasToken() {
+    public boolean hasItem() {
         return this.item != null;
     }
 

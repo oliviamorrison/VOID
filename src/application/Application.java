@@ -10,6 +10,6 @@ public class Application {
         if(game!=null){
             game.startGame();
         }
-        XMLParser.saveFile(game);
+//        XMLParser.saveFile(game);
     }
 }

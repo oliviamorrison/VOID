@@ -41,7 +41,7 @@ public class Renderer {
 
     public void pickUpItem() {
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (currentTile.hasToken()) {
+        if (currentTile.hasItem()) {
             player.pickUp(currentTile.getItem());
             currentTile.setItem(null);
         }
@@ -50,7 +50,7 @@ public class Renderer {
     public void dropItem() {
         List<Item> inventory = player.getInventory();
         AccessibleTile currentTile = (AccessibleTile) player.getTile();
-        if (!currentTile.hasToken() && !inventory.isEmpty()) {
+        if (!currentTile.hasItem() && !inventory.isEmpty()) {
             currentTile.setItem(player.getInventory().remove(0));
         }
     }
@@ -105,7 +105,7 @@ public class Renderer {
                 currentRoom.getTile(row, col).setTilePolygon(poly);
                 if (currentRoom.getTile(row, col) instanceof AccessibleTile) {
                     AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
-                    if (tile.hasToken()) {
+                    if (tile.hasItem()) {
                         poly.setFill(Color.BLUE);
                     } else {
                         poly.setFill(Color.TRANSPARENT);

@@ -69,7 +69,7 @@ public class Player {
     tile.setPlayer(true);
   }
 
-  public Tile getTile() {
+  public AccessibleTile getTile() {
     return tile;
   }
 
@@ -83,6 +83,14 @@ public class Player {
 
   public List<Item> getInventory() {
     return inventory;
+  }
+
+  public void removeItem(Item item) {
+    inventory.remove(item);
+  }
+
+  public void addItem(Item item) {
+    inventory.add(item);
   }
 
   public void pickUp(Item item) {

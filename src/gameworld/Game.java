@@ -59,13 +59,19 @@ public class Game {
 
     connectRooms();
     while (true) {
+      if (player.getTile().hasItem()) {
+        if (player.getTile().getItem() instanceof Antidote) {
+          System.out.println("you win");
+          return;
+        }
+      }
       currentRoom.draw();
       startTurn();
     }
   }
 
   private void startTurn() {
-    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Use Door:r");
+    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r");
     switch (input) {
       case "m":
         movePlayer();
@@ -79,8 +85,17 @@ public class Game {
       case "f":
         diffuseBomb();
         break;
+      case "t":
+        unlockVendingMachine();
+        break;
+      case "v":
+        useVendingMachine();
+        break;
       case "r":
         moveRoom();
+        break;
+      case "b":
+        bribeGuard();
         break;
       default:
 
@@ -107,6 +122,99 @@ public class Game {
     }
   }
 
+  public void unlockVendingMachine() {
+
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    if (challenge instanceof VendingMachine) {
+      VendingMachine v = (VendingMachine) challenge;
+
+      if (!v.isUnlocked()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item instanceof BoltCutter) {
+            v.setUnlocked(true);
+          }
+        }
+      }
+    }
+
+  }
+
+  public void useVendingMachine() {
+
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    Coin coin = null;
+
+    if (challenge instanceof VendingMachine) {
+      VendingMachine v = (VendingMachine) challenge;
+
+      if (v.isUnlocked()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item instanceof Coin) {
+            coin = (Coin) item;
+          }
+        }
+      }
+    }
+
+    if (coin != null) {
+      player.removeItem(coin);
+      player.addItem(new Beer());
+    }
+
+  }
+
+  public void bribeGuard() {
+
+    AccessibleTile t = (AccessibleTile) player.getTile();
+
+    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+
+    if (challengeTile == null)
+      return;
+
+    Challenge challenge = challengeTile.getChallenge();
+
+    Beer beer = null;
+    Guard g = null;
+
+    if (challenge instanceof Guard) {
+       g = (Guard) challenge;
+
+      if (!g.isNavigable()) {
+        List<Item> pack = player.getInventory();
+        for (Item item : pack) {
+          if (item instanceof Beer) {
+            beer = (Beer) item;
+          }
+        }
+      }
+    }
+
+    if (beer != null) {
+      player.removeItem(beer);
+      g.setNavigable(true);
+    }
+
+  }
+
   // for testing purposes
   public String drawRoom() {
     return currentRoom.draw();
@@ -124,7 +232,7 @@ public class Game {
 
   public void pickUpItem() {
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
-    if (currentTile.hasToken()) {
+    if (currentTile.hasItem()) {
       player.pickUp(currentTile.getItem());
       currentTile.setItem(null);
     }
@@ -133,7 +241,7 @@ public class Game {
   public void dropItem() {
     List<Item> inventory = player.getInventory();
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
-    if (!currentTile.hasToken() && !inventory.isEmpty()) {
+    if (!currentTile.hasItem() && !inventory.isEmpty()) {
       currentTile.setItem(player.getInventory().remove(0));
     }
   }
@@ -150,18 +258,16 @@ public class Game {
 
     if (challenge instanceof Bomb) {
       Bomb b = (Bomb) challenge;
-      if (!b.isAccessible()) {
+      if (!b.isNavigable()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
           if (item instanceof Diffuser) {
-            challenge.setAccessible(true);
+            b.setNavigable(true);
           }
         }
       }
     }
   }
-
-
 
   private static String inputString(String msg) {
     System.out.print(msg + " ");
