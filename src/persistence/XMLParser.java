@@ -49,7 +49,7 @@ public class XMLParser {
             //Add line breaks and indentation
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             DOMSource source = new DOMSource(document);
             StreamResult result = new StreamResult(file);
 
@@ -95,15 +95,12 @@ public class XMLParser {
             roomElement.appendChild(door);
         }
 
-        Element items = document.createElement("items");
         for(Item token: room.getItems()){
             Element item = document.createElement("item");
             item.appendChild(document.createTextNode(token.toString()));
-            items.appendChild(item);
+            roomElement.appendChild(item);
         }
-        roomElement.appendChild(items);
 
-        Element challenges = document.createElement("challenges");
         for(Challenge challengeItem: room.getChallenges()){
             Element challenge = document.createElement("challenge");
 
@@ -117,9 +114,9 @@ public class XMLParser {
             }
 
             challenge.appendChild(document.createTextNode(challengeItem.toString()));
-            challenges.appendChild(challenge);
+            roomElement.appendChild(challenge);
         }
-        roomElement.appendChild(challenges);
+
         return roomElement;
     }
 
@@ -217,11 +214,11 @@ public class XMLParser {
         }
 
         //parse items
-        NodeList itemList = roomElement.getElementsByTagName("items");
+        NodeList itemList = roomElement.getElementsByTagName("item");
         parseItems(itemList, items);
 
         //parse challenges
-        NodeList challengeList = roomElement.getElementsByTagName("challenges");
+        NodeList challengeList = roomElement.getElementsByTagName("challenge");
         parseChallenges(challengeList, challenges);
 
         Room newRoom = new Room(row, col, doors, items, challenges);
@@ -266,20 +263,18 @@ public class XMLParser {
     }
 
     private static void parseChallenges(NodeList items, List<Challenge> challenges) {
+
         for(int i = 0; i< items.getLength(); i++){
-            //TODO: Figure out why when there are more than 1 item it doesn't trim it
             Node node = items.item(i);
             switch(node.getTextContent().trim()){
                 case "Bomb":
                     Element elem = (Element) node;
                     String direction = elem.getAttribute("door");
-                    System.out.println("bomb direction = " + direction);
                     challenges.add(new Bomb(direction));
                     break;
                 case "Guard":
                     elem = (Element) node;
                     direction = elem.getAttribute("door");
-                    System.out.println("guard direction = " + direction);
                     challenges.add(new Guard(direction));
                     break;
                 case "VendingMachine": challenges.add(new VendingMachine()); break;
