@@ -201,7 +201,7 @@ public class Game {
     Guard g = null;
 
     if (challenge instanceof Guard) {
-       g = (Guard) challenge;
+      g = (Guard) challenge;
 
       if (!g.isNavigable()) {
         List<Item> pack = player.getInventory();

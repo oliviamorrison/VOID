@@ -3,34 +3,36 @@ package gameworld;
 import javafx.scene.shape.Polygon;
 
 public abstract class Tile {
-    private Room room;
-    private Polygon polygon;
-    private int x;
-    private int y;
 
-    public Tile(Room r, int x, int y){
-        this.x = x;
-        this.y = y;
-        this.room = r;
-    }
+  private Room room;
+  private Polygon polygon;
+  private int x;
+  private int y;
 
-    public int getX() {
-        return x;
-    }
+  public Tile(Room r, int x, int y) {
+    this.x = x;
+    this.y = y;
+    this.room = r;
+  }
 
-    public int getY() {
-        return y;
-    }
+  public int getX() {
+    return x;
+  }
 
-    public Room getRoom() {
-        return room;
-    }
+  public int getY() {
+    return y;
+  }
 
-    public Polygon getTilePolygon() {
-        return this.polygon;
-    }
+  public Room getRoom() {
+    return room;
+  }
 
-    public void setTilePolygon(Polygon poly) {
-        this.polygon = poly;
-    }
+  public Polygon getTilePolygon() {
+    return this.polygon;
+  }
+
+  public void setTilePolygon(Polygon poly) {
+    this.polygon = poly;
+  }
+
 }

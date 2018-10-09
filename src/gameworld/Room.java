@@ -266,9 +266,9 @@ public class Room {
 
       assert d != null;
 
-      if (d.equals(direction)) {
-        point = getNextPoint(d);
-      }
+      if (d.equals(direction))
+        point = getNextPoint(dir);
+
     }
 
     assert point != null;
@@ -277,15 +277,16 @@ public class Room {
 
   }
 
-  public Point getNextPoint(String direction) {
+  public Point getNextPoint(Direction direction) {
+
     switch (direction) {
-      case "left":
+      case Left:
         return LEFT;
-      case "right":
+      case Right:
         return RIGHT;
-      case "bottom":
+      case Bottom:
         return BOTTOM;
-      case "top":
+      case Top:
         return TOP;
       default:
         return null;

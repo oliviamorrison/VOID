@@ -61,7 +61,7 @@ public class Player {
 
   public void moveTile(int dx, int dy) {
 
-    if(room.moveTile(tile, dx, dy) == null){
+    if (room.moveTile(tile, dx, dy) == null) {
       return;
     }
     tile.setPlayer(false);
@@ -97,11 +97,11 @@ public class Player {
     this.inventory.add(item);
   }
 
-  public Ellipse getEllipse(){
+  public Ellipse getEllipse() {
     return this.ellipse;
   }
 
-  public void setEllipse(Ellipse e){
+  public void setEllipse(Ellipse e) {
     this.ellipse = e;
   }
 
