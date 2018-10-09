@@ -161,12 +161,7 @@ public class Renderer {
     }
 
     public void twoDToIso() {
-<<<<<<< src/renderer/Renderer.java
-        System.out.println("twoDToIso");
-        for (Polygon p : this.poly) {
-=======
         for (Polygon p : poly) {
->>>>>>> src/renderer/Renderer.java
             for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
                 double x = p.getPoints().get(i) - p.getPoints().get(i + 1);
                 double y = (p.getPoints().get(i) + p.getPoints().get(i + 1)) / 2;
@@ -177,8 +172,5 @@ public class Renderer {
         }
     }
 
-    public void drawWalls() {
-
-    }
 
 }
