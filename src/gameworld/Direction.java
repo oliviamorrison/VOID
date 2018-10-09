@@ -9,14 +9,15 @@ public enum Direction {
     switch (this) {
       case Left:
         return "left";
-      case Right :
+      case Right:
         return "right";
-      case Top :
+      case Top:
         return "top";
-      case Bottom :
+      case Bottom:
         return "bottom";
       default:
-          return null;
+        return null;
     }
   }
+  
 }

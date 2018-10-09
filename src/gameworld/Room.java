@@ -224,17 +224,17 @@ public class Room {
             room.append("P");
           else if (accessibleTile.hasItem()) {
             Item item = accessibleTile.getItem();
-            if (item instanceof Diffuser)
+            if (item.equals(Item.Diffuser))
               room.append("D");
-            if (item instanceof Antidote)
+            if (item.equals(Item.Antidote))
               room.append("A");
-            if (item instanceof Coin)
+            if (item.equals(Item.Coin))
               room.append("C");
-            if (item instanceof Beer)
+            if (item.equals(Item.Beer))
               room.append("R");
-            if (item instanceof BoltCutter)
+            if (item.equals(Item.BoltCutter))
               room.append("Z");
-            if (item instanceof HealthPack)
+            if (item.equals(Item.HealthPack))
               room.append("H");
           } else if (accessibleTile.hasChallenge()) {
             Challenge challenge = accessibleTile.getChallenge();

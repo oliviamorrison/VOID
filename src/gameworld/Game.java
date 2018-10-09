@@ -14,6 +14,7 @@ public class Game {
   private Room[][] board;
   private static Player player;
   private Room currentRoom;
+  private int health = 100;
 
   public Game(Room[][] board, Player player) {
     Game.player = player;
@@ -60,7 +61,7 @@ public class Game {
     connectRooms();
     while (true) {
       if (player.getTile().hasItem()) {
-        if (player.getTile().getItem() instanceof Antidote) {
+        if (player.getTile().getItem().equals(Item.Antidote)) {
           System.out.println("you win");
           return;
         }
@@ -71,7 +72,7 @@ public class Game {
   }
 
   private void startTurn() {
-    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r");
+    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
     switch (input) {
       case "m":
         movePlayer();
@@ -139,8 +140,10 @@ public class Game {
       if (!v.isUnlocked()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item instanceof BoltCutter) {
+          if (item.equals(Item.BoltCutter)) {
             v.setUnlocked(true);
+            System.out.println("Chains are removed from Vending machine");
+            System.out.println("Vending machine is available for use");
           }
         }
       }
@@ -159,7 +162,7 @@ public class Game {
 
     Challenge challenge = challengeTile.getChallenge();
 
-    Coin coin = null;
+    Item coin = null;
 
     if (challenge instanceof VendingMachine) {
       VendingMachine v = (VendingMachine) challenge;
@@ -167,8 +170,8 @@ public class Game {
       if (v.isUnlocked()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item instanceof Coin) {
-            coin = (Coin) item;
+          if (item.equals(Item.Coin)) {
+            coin = item;
           }
         }
       }
@@ -176,7 +179,9 @@ public class Game {
 
     if (coin != null) {
       player.removeItem(coin);
-      player.addItem(new Beer());
+      player.addItem(Item.Beer);
+      System.out.println("Placed coin into vending machine...");
+      System.out.println("Pick up the beer that is dispensed");
     }
 
   }
@@ -192,7 +197,7 @@ public class Game {
 
     Challenge challenge = challengeTile.getChallenge();
 
-    Beer beer = null;
+    Item beer = null;
     Guard g = null;
 
     if (challenge instanceof Guard) {
@@ -201,8 +206,8 @@ public class Game {
       if (!g.isNavigable()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item instanceof Beer) {
-            beer = (Beer) item;
+          if (item.equals(Item.Beer)) {
+            beer = item;
           }
         }
       }
@@ -211,6 +216,7 @@ public class Game {
     if (beer != null) {
       player.removeItem(beer);
       g.setNavigable(true);
+      System.out.println("Guard bribed with beer");
     }
 
   }
@@ -233,8 +239,10 @@ public class Game {
   public void pickUpItem() {
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (currentTile.hasItem()) {
-      player.pickUp(currentTile.getItem());
+      Item item = currentTile.getItem();
+      player.pickUp(item);
       currentTile.setItem(null);
+      System.out.println("Player picked up " + item.toString());
     }
   }
 
@@ -242,7 +250,9 @@ public class Game {
     List<Item> inventory = player.getInventory();
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (!currentTile.hasItem() && !inventory.isEmpty()) {
-      currentTile.setItem(player.getInventory().remove(0));
+      Item item = player.getInventory().remove(0);
+      currentTile.setItem(item);
+      System.out.println("Player dropped " + item.toString());
     }
   }
 
@@ -261,8 +271,9 @@ public class Game {
       if (!b.isNavigable()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item instanceof Diffuser) {
+          if (item.equals(Item.Diffuser)) {
             b.setNavigable(true);
+            System.out.println("Bomb diffused with " + item.toString());
           }
         }
       }
