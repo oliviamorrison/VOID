@@ -30,6 +30,11 @@ public class RoomParser {
             AccessibleTile accessibleTile = (AccessibleTile) tile;
             accessibleTile.setItem(Item.Diffuser);
           }
+          else if(character == 'B') {
+        	  Bomb bomb = new Bomb("");
+        	  AccessibleTile accessibleTile = (AccessibleTile) tile;
+//              accessibleTile.setBomb(bomb);
+          }
         }
         room.setTile(tile, row, col);
         count++;

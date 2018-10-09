@@ -10,6 +10,7 @@ public class Room {
   private Tile[][] tiles;
   private List<Item> items;
   private List<String> doors;
+  private List<Challenge> challenges;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
@@ -17,17 +18,14 @@ public class Room {
   public static final Point RIGHT = new Point(5, 9);
   public static final int ROOMSIZE = 10;
 
-  public Room() {
-    //TODO: Used for testing
-    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
-  }
 
-  public Room(int row, int col, List<String> doors, List<Item> items) {
+  public Room(int row, int col, List<String> doors, List<Item> items, List<Challenge> challenges) {
 
     this.row = row;
     this.col = col;
     this.items = items;
     this.doors = doors;
+    this.challenges = challenges;
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
 
     //For now until we can load in an XML file
@@ -43,7 +41,7 @@ public class Room {
       Tile t = tiles[8][5];
       if (t instanceof AccessibleTile) {
         AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Bomb());
+        a.setChallenge(new Bomb("bottom"));
       }
     }
     if (row == 1 && col == 2) {
@@ -64,7 +62,7 @@ public class Room {
       Tile t = tiles[5][1];
       if (t instanceof AccessibleTile) {
         AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Guard());
+        a.setChallenge(new Guard("right"));
       }
     }
 
@@ -83,6 +81,14 @@ public class Room {
       }
     }
   }
+
+    public List<Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public Room() {
+        this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+    }
 
   public int getRow() {
     return row;

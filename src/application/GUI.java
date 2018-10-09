@@ -1,10 +1,15 @@
 package application;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
+import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -18,7 +23,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import persistence.XMLParser;
 import renderer.Renderer;
 
 public class GUI extends Application implements EventHandler<KeyEvent> {
@@ -29,6 +36,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	private AnchorPane options;
 	private GridPane map;
 	private Renderer renderer;
+	private static Game currentGame;
 
 
 	@Override public void start(Stage stage) {
@@ -47,6 +55,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		MenuItem loadGame = new MenuItem("Load Game");
 		MenuItem saveGame = new MenuItem("Save Game");
 		file.getItems().addAll(newGame, editMap, loadGame, saveGame);
+
+		loadGame.setOnAction(Event -> loadFile(stage));
+		saveGame.setOnAction(Event -> saveFile(stage));
 
 		// quit
 		Label quit = new Label("Quit");
@@ -93,6 +104,45 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		// Display the Stage
 		stage.show();		
 	}
+
+	public static void loadFile(Stage stage) {
+		FileChooser chooser = new FileChooser();
+		configureFileChooser(chooser);
+		chooser.setTitle("Open Game XML File");
+		File file = chooser.showOpenDialog(stage);
+
+		if(file != null) {
+			currentGame = XMLParser.parseGame(file);
+			System.out.println("Parsing completed");
+			System.out.println("=================");
+		}
+	}
+
+	public static void saveFile(Stage stage){
+		FileChooser fileChooser = new FileChooser();
+		configureFileChooser(fileChooser);
+
+		//Show save file dialog
+		File file = fileChooser.showSaveDialog(stage);
+
+		if (file != null) {
+			XMLParser.saveFile(file, currentGame);
+		}
+	}
+
+	/**
+	 * A class to configure the loading and saving of files to open in the current directory,
+	 * and only load/save files in XML format
+	 * @param fileChooser
+	 */
+	private static void configureFileChooser(final FileChooser fileChooser) {
+		fileChooser.setTitle("Open XML file");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+		fileChooser.getExtensionFilters().add(extFilter);
+	}
+
 
 	public void setWindowRatio(){
 		//set ratios
@@ -168,7 +218,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		grid.setPrefWidth(170);
 		return grid;
 	}
-	
+
 	public void confirmExit() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Quit Game");
