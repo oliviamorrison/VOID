@@ -1,21 +1,22 @@
 package renderer;
 
-import gameworld.AccessibleTile;
-import gameworld.Player;
-import gameworld.Room;
-import gameworld.Tile;
+import gameworld.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import persistence.RoomParser;
 
 public class Renderer {
+    Game game;
     public static Player player;
     private static Room currentRoom;
     private static Group root;
 
-    public Renderer() {
-        setUpGame();
+    public Renderer(Game game) {
+        this.game = game;
+        this.player = game.getPlayer();
+        this.currentRoom = player.getRoom();
+//        setUpGame();
         root = new Group();
         drawFloor();
         drawUpperWall();
