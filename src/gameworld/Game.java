@@ -23,6 +23,7 @@ public class Game {
   }
 
   private static void movePlayer(String direction) {
+    System.out.println("You are moving");
     int dx = 0;
     int dy = 0;
 
@@ -57,7 +58,6 @@ public class Game {
 //  }
 
   public void startGame() {
-
     connectRooms();
     while (true) {
       if (player.getTile().hasItem()) {
@@ -103,7 +103,7 @@ public class Game {
     }
   }
 
-  private void moveRoom() {
+  public void moveRoom() {
 
     if (player.getTile() instanceof DoorTile) {
 
