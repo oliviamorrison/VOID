@@ -7,16 +7,15 @@ import javafx.scene.paint.Color;
 import persistence.RoomParser;
 
 public class Renderer {
-    Game game;
-    public static Player player;
+    private Game game;
+    private static Player player;
     private static Room currentRoom;
     private static Group root;
 
     public Renderer(Game game) {
         this.game = game;
-        this.player = game.getPlayer();
-        this.currentRoom = player.getRoom();
-//        setUpGame();
+        player = game.getPlayer();
+        currentRoom = player.getRoom();
         root = new Group();
         drawFloor();
         drawUpperWall();

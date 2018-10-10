@@ -20,6 +20,7 @@ public class Game {
     Game.player = player;
     this.board = board;
     this.currentRoom = player.getRoom();
+    connectRooms();
   }
 
   private static void movePlayer(String direction) {
@@ -47,32 +48,7 @@ public class Game {
     player.moveTile(dx, dy);
   }
 
-//  public void setup() {
-//    // create a starting room for testing
-//    Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
-//    currentRoom = defaultRoom;
-//    rooms.add(defaultRoom);
-//    AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
-//    player = new Player(defaultRoom, startingTile);
-//    startingTile.setPlayer(true);
-//  }
-
-  public void startGame() {
-    connectRooms();
-    while (true) {
-      if (player.getTile().hasItem()) {
-        if (player.getTile().getItem().equals(Item.Antidote)) {
-          System.out.println("you win");
-          return;
-        }
-      }
-      currentRoom.draw();
-      startTurn();
-    }
-  }
-
-  private void startTurn() {
-    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
+  public void startTurn(String input) {
     switch (input) {
       case "m":
         movePlayer();
