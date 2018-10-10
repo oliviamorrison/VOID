@@ -4,6 +4,7 @@ import gameworld.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import persistence.RoomParser;
 
 public class Renderer {
@@ -155,6 +156,12 @@ public class Renderer {
         if(currentRoom.getPlayerTile().equals(tile) ){
             drawPlayer();
         }
+    }
+
+    public void drawHealthBar(){
+        Rectangle healthBar =  new Rectangle();
+        healthBar.setX(20);
+        healthBar.setY(20);
     }
 
 }
