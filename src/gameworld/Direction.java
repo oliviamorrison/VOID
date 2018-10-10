@@ -2,6 +2,6 @@ package gameworld;
 
 public enum Direction {
 
-  Top, Bottom, Left, Right;
+  top, bottom, left, right
   
 }
