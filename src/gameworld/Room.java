@@ -41,7 +41,7 @@ public class Room {
       Tile t = tiles[8][5];
       if (t instanceof AccessibleTile) {
         AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Bomb("bottom"));
+        a.setChallenge(new Bomb("Bottom"));
       }
     }
     if (row == 1 && col == 2) {
@@ -62,7 +62,7 @@ public class Room {
       Tile t = tiles[5][1];
       if (t instanceof AccessibleTile) {
         AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Guard("right"));
+        a.setChallenge(new Guard("Right"));
       }
     }
 
@@ -172,16 +172,16 @@ public class Room {
       int col = tile.getY();
 
       switch (direction) {
-        case left:
+        case Left:
           col -= 1;
           break;
-        case right:
+        case Right:
           col += 1;
           break;
-        case top:
+        case Top:
           row -= 1;
           break;
-        case bottom:
+        case Bottom:
           row += 1;
           break;
       }
@@ -284,13 +284,13 @@ public class Room {
   public Point getNextPoint(Direction direction) {
 
     switch (direction) {
-      case left:
+      case Left:
         return LEFT;
-      case right:
+      case Right:
         return RIGHT;
-      case bottom:
+      case Bottom:
         return BOTTOM;
-      case top:
+      case Top:
         return TOP;
       default:
         return null;
