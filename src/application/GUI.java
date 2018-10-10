@@ -241,7 +241,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		int dy = 0;
 		//TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
 //		currentGame.startTurn(event.getCode().getName());
-
+		//testing
 		switch (event.getCode()) {
 			case W:
 				dx = -1;
