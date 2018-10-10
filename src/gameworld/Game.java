@@ -290,12 +290,6 @@ public class Game {
 
   }
 
-  // for testing purposes
-  public String drawRoom() {
-    return currentRoom.draw();
-  }
-
-  // for testing purposes
   public Player getPlayer() {
     return player;
   }
@@ -324,6 +318,7 @@ public class Game {
       System.out.println("Player dropped " + item.toString());
     }
   }
+
 
   public void diffuseBomb() {
     AccessibleTile t = (AccessibleTile) player.getTile();

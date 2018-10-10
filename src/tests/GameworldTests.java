@@ -1,9 +1,6 @@
 package tests;
 
-import gameworld.AccessibleTile;
-import gameworld.Game;
-import gameworld.Player;
-import gameworld.Room;
+import gameworld.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,6 +23,8 @@ public class GameworldTests {
     }
     player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5));
 
+    ((AccessibleTile) board[0][0].getTile(6,5)).setItem(Item.Diffuser);
+
     game = new Game(board, player);
 
   }
@@ -39,10 +38,25 @@ public class GameworldTests {
     game.movePlayer("w");
 
     //player should be at 4,5
-    assertEquals(player.getTile().getX(), 4);
+    assertEquals(player.getTile().getX(), 4); //TODO: is this right ???
     assertEquals(player.getTile().getY(), 5);
 
+    //move player right
+    game.movePlayer("d");
+
+    //player should be at 4,6
+    assertEquals(player.getTile().getX(), 4);
+    assertEquals(player.getTile().getY(), 6);
   }
+
+  @Test
+  public void pickUpItem(){
+    game.movePlayer("s");
+
+    game.pickUpItem();
+    assertEquals(player.getInventory().get(0), Item.Diffuser);
+  }
+
 
 
 
