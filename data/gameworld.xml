@@ -5,51 +5,51 @@
     <room>
         <row>0</row>
         <col>0</col>
-        <door>right</door>
+        <door>Right</door>
         <item>Diffuser</item>
     </room>
     <room>
         <row>0</row>
         <col>1</col>
-        <door>left</door>
-        <door>bottom</door>
-        <challenge door="bottom">Bomb</challenge>
+        <door>Left</door>
+        <door>Bottom</door>
+        <challenge door="Bottom">Bomb</challenge>
     </room>
     <room>
         <row>1</row>
         <col>1</col>
-        <door>right</door>
-        <door>left</door>
-        <door>top</door>
-        <door>bottom</door>
+        <door>Right</door>
+        <door>Left</door>
+        <door>Top</door>
+        <door>Bottom</door>
         <item>BoltCutter</item>
     </room>
     <room>
         <row>1</row>
         <col>2</col>
-        <door>left</door>
-        <door>bottom</door>
+        <door>Left</door>
+        <door>Bottom</door>
         <challenge>VendingMachine</challenge>
     </room>
     <room>
         <row>2</row>
         <col>0</col>
-        <door>right</door>
+        <door>Right</door>
         <item>Antidote</item>
     </room>
     <room>
         <row>2</row>
         <col>1</col>
-        <door>top</door>
-        <door>left</door>
-        <door>right</door>
-        <challenge door="left">Guard</challenge>
+        <door>Top</door>
+        <door>Left</door>
+        <door>Right</door>
+        <challenge door="Left">Guard</challenge>
     </room>
     <room>
         <row>2</row>
         <col>2</col>
-        <door>top</door>
-        <door>left</door>
+        <door>Top</door>
+        <door>Left</door>
         <item>Coin</item>
     </room>
     <player>

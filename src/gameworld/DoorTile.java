@@ -22,23 +22,6 @@ public class DoorTile extends AccessibleTile {
     return direction;
   }
 
-  public Direction getOppositeDirection(Direction dir) {
-
-    switch (dir) {
-      case top:
-        return Direction.bottom;
-      case bottom:
-        return Direction.top;
-      case left:
-        return Direction.right;
-      case right:
-        return Direction.left;
-      default:
-        return null;
-    }
-
-  }
-
   @Override
   public String toString() {
     return "0";
