@@ -23,7 +23,6 @@ public class Game {
   }
 
   private static void movePlayer(String direction) {
-    System.out.println("You are moving");
     int dx = 0;
     int dy = 0;
 
@@ -125,6 +124,7 @@ public class Game {
 
   public void unlockVendingMachine() {
 
+    System.out.println("You are unlocking");
     AccessibleTile t = (AccessibleTile) player.getTile();
 
     AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
