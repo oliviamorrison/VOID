@@ -17,10 +17,11 @@ public class Renderer {
         player = game.getPlayer();
         currentRoom = player.getRoom();
         root = new Group();
-        drawFloor();
-        drawUpperWall();
-        drawPlayer();
-        drawLowerWall();
+//        drawFloor();
+//        drawUpperWall();
+//        drawPlayer();
+//        drawLowerWall();
+        draw();
     }
 
     public Group getRoot() {
@@ -102,15 +103,58 @@ public class Renderer {
 
     public void redraw() {
         root.getChildren().clear();
-        drawFloor();
-        drawUpperWall();
-        drawPlayer();
-        drawLowerWall();
+//        drawFloor();
+//        drawUpperWall();
+//        drawPlayer();
+//        drawLowerWall();
+        draw();
     }
 
     public void rotate() {
         currentRoom.rotateRoomClockwise();
         redraw();
+    }
+
+    public void draw(){
+        int w = 10;
+        int h = 10;
+        for (int k = 0; k <= w + h - 2; k++) {
+            for (int col = 0; col <= k; col++) {
+                int row = k - col;
+                if (row < h && col < w) {
+                    drawPolygonBlock(row, col);
+                }
+            }
+        }
+    }
+
+    public void drawPolygonBlock(int row, int col){
+        Tile tile = currentRoom.getTile(row, col);
+        Color color = Color.BLACK;
+        if(tile instanceof  AccessibleTile){
+            AccessibleTile AT = (AccessibleTile) tile;
+            color = AT.getColor();
+            if(AT.hasItem()){
+                color = Color.BLUE;
+            } else if(AT.hasChallenge()){
+                color = Color.RED;
+            }
+        } else if (tile instanceof InaccessibleTile){
+            InaccessibleTile IT = (InaccessibleTile) tile;
+            color = IT.getColor();
+        }
+        if(tile instanceof DoorTile){
+            System.out.println("DOOR");
+            DoorTile DT = (DoorTile) tile;
+            color = Color.GRAY;
+        }
+
+        PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
+        tile.setTilePolygon(poly);
+        root.getChildren().addAll(poly.getPolygons());
+        if(currentRoom.getPlayerTile().equals(tile) ){
+            drawPlayer();
+        }
     }
 
 }
