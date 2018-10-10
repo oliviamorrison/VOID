@@ -20,7 +20,22 @@ public class Game {
     Game.player = player;
     this.board = board;
     this.currentRoom = player.getRoom();
+//    connectRooms();
+  }
+
+  public void startGame() {
+
     connectRooms();
+    while (true) {
+      if (player.getTile().hasItem()) {
+        if (player.getTile().getItem().equals(Item.Antidote)) {
+          System.out.println("you win");
+          return;
+        }
+      }
+      currentRoom.draw();
+      startTurn();
+    }
   }
 
   private static void movePlayer(String direction) {
@@ -45,6 +60,38 @@ public class Game {
     }
 
     player.moveTile(dx, dy);
+  }
+
+  private void startTurn() {
+    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
+    switch (input) {
+      case "m":
+        movePlayer();
+        break;
+      case "u":
+        pickUpItem();
+        break;
+      case "d":
+        dropItem();
+        break;
+      case "f":
+        diffuseBomb();
+        break;
+      case "t":
+        unlockVendingMachine();
+        break;
+      case "v":
+        useVendingMachine();
+        break;
+      case "r":
+        moveRoom();
+        break;
+      case "b":
+        bribeGuard();
+        break;
+      default:
+
+    }
   }
 
   public void startTurn(String input) {
@@ -287,16 +334,16 @@ public class Game {
     }
 
     switch (direction) {
-      case Top:
+      case top:
         roomRow -= 1;
         break;
-      case Bottom:
+      case bottom:
         roomRow += 1;
         break;
-      case Left:
+      case left:
         roomCol -= 1;
         break;
-      case Right:
+      case right:
         roomCol += 1;
         break;
     }
@@ -318,22 +365,22 @@ public class Game {
               // flip that shit to make it work
               case "left":
                 if (j > 0) {
-                  room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.Left), Room.LEFT.x, Room.LEFT.y);
+                  room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.left), Room.LEFT.x, Room.LEFT.y);
                   break;
                 }
               case "right":
                 if (j < board.length - 1) {
-                  room.setTile(new DoorTile(board[i][j + 1], room, i, j, Direction.Right), Room.RIGHT.x, Room.RIGHT.y);
+                  room.setTile(new DoorTile(board[i][j + 1], room, i, j, Direction.right), Room.RIGHT.x, Room.RIGHT.y);
                   break;
                 }
               case "top":
                 if (i > 0) {
-                  room.setTile(new DoorTile(board[i - 1][j], room, i, j, Direction.Top), Room.TOP.x, Room.TOP.y);
+                  room.setTile(new DoorTile(board[i - 1][j], room, i, j, Direction.top), Room.TOP.x, Room.TOP.y);
                   break;
                 }
               case "bottom":
                 if (i < board[i].length - 1) {
-                  room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.Bottom), Room.BOTTOM.x, Room.BOTTOM.y);
+                  room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.bottom), Room.BOTTOM.x, Room.BOTTOM.y);
                   break;
                 }
             }

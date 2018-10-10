@@ -172,16 +172,16 @@ public class Room {
       int col = tile.getY();
 
       switch (direction) {
-        case Left:
+        case left:
           col -= 1;
           break;
-        case Right:
+        case right:
           col += 1;
           break;
-        case Top:
+        case top:
           row -= 1;
           break;
-        case Bottom:
+        case bottom:
           row += 1;
           break;
       }
@@ -270,8 +270,6 @@ public class Room {
 
       String d = dir.toString();
 
-      assert d != null;
-
       if (d.equals(direction))
         point = getNextPoint(dir);
 
@@ -286,13 +284,13 @@ public class Room {
   public Point getNextPoint(Direction direction) {
 
     switch (direction) {
-      case Left:
+      case left:
         return LEFT;
-      case Right:
+      case right:
         return RIGHT;
-      case Bottom:
+      case bottom:
         return BOTTOM;
-      case Top:
+      case top:
         return TOP;
       default:
         return null;
