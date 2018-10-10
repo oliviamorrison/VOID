@@ -250,7 +250,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	}
 
 	public void displayHelp() {
-	    
+
     }
 
 	@Override
