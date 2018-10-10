@@ -41,11 +41,13 @@ public class Renderer {
             for (int col = 1; col < Room.ROOMSIZE - 1; col++) {
                 AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
                 Color color = tile.getColor();
-//                if(tile.hasToken()) {
-//                    color = Color.BLUE;
-//                } else if(tile.hasBomb()) {
-//                    color = Color.RED;
-//                }
+                if(tile.hasItem()) {
+                    color = Color.BLUE;
+                } else if(tile.hasChallenge()) {
+                    color = Color.RED;
+                } if(tile instanceof  DoorTile){
+                    color = Color.ORANGE;
+                }
                 PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
                 tile.setTilePolygon(poly);
                 root.getChildren().addAll(poly.getPolygons());
@@ -69,7 +71,11 @@ public class Renderer {
             for (int col = 0; col < Room.ROOMSIZE - 1; col++) {
                 if (row == 0 || col == 0) {
                     Tile tile = currentRoom.getTile(row, col);
-                    PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), tile.getColor());
+                    Color color = tile.getColor();
+                    if(tile instanceof DoorTile){
+                        color = Color.ORANGE;
+                    }
+                    PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
                     tile.setTilePolygon(poly);
                     root.getChildren().addAll(poly.getPolygons());
                 }
@@ -82,7 +88,11 @@ public class Renderer {
             for (int col = 0; col < Room.ROOMSIZE; col++) {
                 if (row == Room.ROOMSIZE - 1 || col == Room.ROOMSIZE - 1) {
                     Tile tile = currentRoom.getTile(row, col);
-                    PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), tile.getColor());
+                    Color color = tile.getColor();
+                    if(tile instanceof DoorTile){
+                        color = Color.ORANGE;
+                    }
+                    PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
                     tile.setTilePolygon(poly);
                     root.getChildren().addAll(poly.getPolygons());
                 }
