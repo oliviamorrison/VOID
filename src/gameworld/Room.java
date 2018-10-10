@@ -11,6 +11,7 @@ public class Room {
   private List<Item> items;
   private List<String> doors;
   private List<Challenge> challenges;
+  private boolean hasHealthPack = false;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
@@ -34,14 +35,6 @@ public class Room {
         if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
           tiles[i][j] = new InaccessibleTile(this, i, j);
         else tiles[i][j] = new AccessibleTile(this, i, j);
-      }
-    }
-
-    if (row == 0 && col == 0) {
-      Tile t = tiles[2][2];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setItem(Item.HealthPack);
       }
     }
 
@@ -323,6 +316,31 @@ public class Room {
       }
     }
     return null;
+  }
+
+  public void addHealthPack() {
+
+    boolean itemPlaced = false;
+    while (!itemPlaced) {
+      int randomX = (int) (Math.random() * 8) + 1;
+      int randomY = (int) (Math.random() * 8) + 1;
+      if (tiles[randomY][randomX] instanceof AccessibleTile) {
+        AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
+        if (!tile.hasItem()) {
+          tile.setItem(Item.HealthPack);
+          itemPlaced = true;
+        }
+      }
+    }
+
+  }
+
+  public boolean hasHealthPack() {
+    return hasHealthPack;
+  }
+
+  public void setHasHealthPack(boolean hasHealthPack) {
+    this.hasHealthPack = hasHealthPack;
   }
 
   public void rotateRoomClockwise() {

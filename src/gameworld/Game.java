@@ -28,6 +28,7 @@ public class Game {
     this.board = board;
     this.currentRoom = player.getRoom();
     connectRooms();
+    distributeHealthPacks();
   }
 
   public void startGame() {
@@ -45,8 +46,7 @@ public class Game {
         if (item.equals(Item.Antidote)) {
           System.out.println("you win");
           return;
-        }
-        else if (item.equals(Item.HealthPack)) {
+        } else if (item.equals(Item.HealthPack)) {
           currentTile.setItem(null);
           applyHealthBoost();
           System.out.printf("Health pack found: health boosted %d\n", HEALTH_BOOST);
@@ -55,11 +55,14 @@ public class Game {
       currentRoom.draw();
       if (health == 0) {
         System.out.println("You died from poisoning");
-        return;
+        timer.cancel();
+        timer.purge();
+        break;
       }
       notifyHealth();
       startTurn();
     }
+
   }
 
   public void applyHealthBoost() {
@@ -68,6 +71,29 @@ public class Game {
 
     if (health > MAX_HEALTH)
       health = MAX_HEALTH;
+
+  }
+
+  public void distributeHealthPacks() {
+
+    int healthPacks = 2, randomX, randomY;
+
+    while (healthPacks > 0) {
+
+      randomX = (int) (Math.random() * 3);
+      randomY = (int) (Math.random() * 3);
+
+      Room randomRoom = board[randomY][randomX];
+
+      if (randomRoom != null)
+        if (!randomRoom.hasHealthPack()) {
+          randomRoom.addHealthPack();
+          randomRoom.setHasHealthPack(true);
+        }
+
+      healthPacks--;
+
+    }
 
   }
 
