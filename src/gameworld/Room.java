@@ -37,6 +37,14 @@ public class Room {
       }
     }
 
+    if (row == 0 && col == 0) {
+      Tile t = tiles[2][2];
+      if (t instanceof AccessibleTile) {
+        AccessibleTile a = (AccessibleTile) t;
+        a.setItem(Item.HealthPack);
+      }
+    }
+
     if (row == 0 && col == 1) {
       Tile t = tiles[8][5];
       if (t instanceof AccessibleTile) {
@@ -65,6 +73,7 @@ public class Room {
         a.setChallenge(new Guard("Right"));
       }
     }
+
 
     for (Item item : this.items) {
       boolean itemPlaced = false;
@@ -107,16 +116,21 @@ public class Room {
   }
 
   public Tile moveTile(Tile t, int dx, int dy) {
-    int[] coords = getTileCoordinates(t);
 
-    int x = coords[0];
-    int y = coords[1];
+    int[] coordinates = getTileCoordinates(t);
+
+    assert coordinates != null;
+
+    int x = coordinates[0];
+    int y = coordinates[1];
 
     int newX = x + dx;
     int newY = y + dy;
 
-    Tile tile = tiles[newX][newY];
+    if (newX >= 10 || newY >= 10)
+      return null;
 
+    Tile tile = tiles[newX][newY];
 
     // cannot move onto bomb until disabled
     if (tile instanceof AccessibleTile) {
@@ -130,7 +144,7 @@ public class Room {
     }
 
     //if the newCoordinates are inbounds and the tile is not inaacessible
-    if (newX < 11 && newY < 11 && !(tile instanceof InaccessibleTile)) {
+    if (!(tile instanceof InaccessibleTile)) {
       return tile;
     }
 

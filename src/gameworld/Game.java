@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This is the main class the contains the logic for game play. It also connects the rooms va their doors
@@ -11,13 +13,18 @@ import java.util.List;
  */
 public class Game {
 
+  private static final int HEALTH_BOOST = 20;
+  private static final int MAX_HEALTH = 100;
+
   private Room[][] board;
-  private static Player player;
+  private Player player;
   private Room currentRoom;
-  private int health = 100;
+  private Timer timer;
+  private int health = MAX_HEALTH;
 
   public Game(Room[][] board, Player player) {
-    Game.player = player;
+
+    this.player = player;
     this.board = board;
     this.currentRoom = player.getRoom();
     connectRooms();
@@ -25,19 +32,60 @@ public class Game {
 
   public void startGame() {
 
+    setupTimer();
+
     while (true) {
-      if (player.getTile().hasItem()) {
-        if (player.getTile().getItem().equals(Item.Antidote)) {
+
+      AccessibleTile currentTile = player.getTile();
+
+      if (currentTile.hasItem()) {
+
+        Item item = currentTile.getItem();
+
+        if (item.equals(Item.Antidote)) {
           System.out.println("you win");
           return;
         }
+        else if (item.equals(Item.HealthPack)) {
+          currentTile.setItem(null);
+          applyHealthBoost();
+          System.out.printf("Health pack found: health boosted %d\n", HEALTH_BOOST);
+        }
       }
       currentRoom.draw();
+      if (health == 0) {
+        System.out.println("You died from poisoning");
+        return;
+      }
+      notifyHealth();
       startTurn();
     }
   }
 
-  private static void movePlayer(String direction) {
+  public void applyHealthBoost() {
+
+    health += HEALTH_BOOST;
+
+    if (health > MAX_HEALTH)
+      health = MAX_HEALTH;
+
+  }
+
+  public void setupTimer() {
+
+    timer = new Timer();
+    timer.schedule(new HealthLossTimer(), 0, 1000);
+
+  }
+
+  public void notifyHealth() {
+
+    // degrade health over time
+    System.out.println("Health: " + health);
+
+  }
+
+  private void movePlayer(String direction) {
     int dx = 0;
     int dy = 0;
 
@@ -393,5 +441,15 @@ public class Game {
   public Room[][] getBoard() {
     return board;
   }
+
+  class HealthLossTimer extends TimerTask {
+    public void run() {
+      if (health > 0)
+        health--;
+      else
+        health = 0;
+    }
+  }
+
 }
 
