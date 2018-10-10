@@ -1,15 +1,11 @@
 package application;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.*;
@@ -92,7 +88,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		// Create the Scene
 		Scene scene = new Scene(grid);
 
-
 		scene.setOnKeyPressed(this);
 
 		// Add the scene to the Stage
@@ -129,7 +124,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 		if (file != null) {
 			XMLParser.saveFile(file, currentGame);
-			setGame(stage);
 		}
 	}
 
@@ -158,8 +152,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	public GridPane setGame(Stage stage) {
 		if(currentGame == null) {
 			System.out.println("Load a game or start a new game first!");
+			//TODO: For now until we can get a start menu
 			loadFile(stage);
-//			return null;
 		}
 		renderer = new Renderer(currentGame);
 		GridPane grid = new GridPane();
@@ -245,6 +239,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	public void handle(KeyEvent event) {
 		int dx = 0;
 		int dy = 0;
+		//TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
+//		currentGame.startTurn(event.getCode().getName());
+
 		switch (event.getCode()) {
 			case W:
 				dx = -1;
@@ -288,7 +285,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			default:
 
 		}
-		renderer.player.moveTile(dx, dy);
+		currentGame.getPlayer().moveTile(dx, dy);
 		renderer.redraw();
 	}
 
