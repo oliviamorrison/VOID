@@ -31,6 +31,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	private Renderer renderer;
 	private static Game currentGame;
 
+	private Stage mainStage;
+	private Stage helpStage;
+
 
 	@Override public void start(Stage stage) {
 		// create the menu bar
@@ -58,6 +61,12 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		quit.setOnMouseClicked(mouseEvent->{ confirmExit(); });
 		Menu quitGame = new Menu("", quit);
 		menuBar.getMenus().add(quitGame);
+
+        // help
+        Label help = new Label("Help");
+        help.setOnMouseClicked(mouseEvent->{ confirmExit(); });
+        Menu helpMenu = new Menu("", help);
+        menuBar.getMenus().add(helpMenu);
 
 		// initialise the game panes
 		this.game = setGame(stage);
@@ -180,6 +189,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		for (int i = 0; i < 6; i++) {
 
 			btn = new ToggleButton();
+			btn.setFocusTraversable(false); // disables key control
 			Image image = new Image(getClass().getResourceAsStream(images[i]));
 			ImageView imageView = new ImageView(image);
 			imageView.setFitHeight(80);
@@ -202,7 +212,13 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		Button diffuseButton = new Button("Diffuse");
 		Button unlockButton = new Button("Unlock");
 
-		HBox hb = new HBox();
+        // disables key control
+        pickupButton.setFocusTraversable(false);
+        dropButton.setFocusTraversable(false);
+        diffuseButton.setFocusTraversable(false);
+        unlockButton.setFocusTraversable(false);
+
+        HBox hb = new HBox();
 		hb.setPadding(new Insets( 20,0,20,20));
 		hb.setSpacing(10);
 		hb.getChildren().addAll(pickupButton, dropButton, diffuseButton, unlockButton);
@@ -235,6 +251,10 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		}
 	}
 
+	public void displayHelp() {
+
+    }
+
 	@Override
 	public void handle(KeyEvent event) {
 		int dx = 0;
@@ -243,40 +263,37 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 //		currentGame.startTurn(event.getCode().getName());
 		//testing
 		switch (event.getCode()) {
-			case W:
+			case UP:
 				dx = -1;
 				break;
-			case A:
+			case LEFT:
 				dy = -1;
 				break;
-			case S:
+			case DOWN:
 				dx = 1;
 				break;
-			case D:
+			case RIGHT:
 				dy = 1;
 				break;
-			case R:
+			case SPACE:
 				renderer.rotate();
 				break;
-//			case M:
-//				currentGame.movePlayer();
-//				break;
-			case U:
+			case P:
 				currentGame.pickUpItem();
 				break;
-			case I:
+			case D:
 				currentGame.dropItem();
 				break;
 			case F:
 				currentGame.diffuseBomb();
 				break;
-			case T:
+			case U:
 				currentGame.unlockVendingMachine();
 				break;
 			case V:
 				currentGame.useVendingMachine();
 				break;
-			case L:
+			case R:
 				currentGame.moveRoom();
 				break;
 			case B:
@@ -289,7 +306,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		renderer.redraw();
 	}
 
-	public static void main(String[] args) {
+
+
+
+
+    public static void main(String[] args) {
 		Application.launch(args);
 	}
 
