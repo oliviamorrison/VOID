@@ -1,20 +1,13 @@
 package application;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -59,6 +52,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		MenuItem saveGame = new MenuItem("Save Game");
 		file.getItems().addAll(newGame, editMap, loadGame, saveGame);
 
+		newGame.setOnAction(Event -> startNewGame(stage));
 		loadGame.setOnAction(Event -> loadFile(stage));
 		saveGame.setOnAction(Event -> saveFile(stage));
 
@@ -75,7 +69,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         menuBar.getMenus().add(helpMenu);
 
 		// initialise the game panes
-		this.game = setGame();
+		this.game = setGame(stage);
 		this.inventory = setInventory();
 		this.options = setOptions();
 		this.map = setMap();
@@ -98,23 +92,27 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		setWindowRatio();
 
 		// Set the size of the window
-		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);		
+		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		// Create the Scene
 		Scene scene = new Scene(grid);
 
-		// Key Listener
-        scene.setOnKeyPressed(this);
+		scene.setOnKeyPressed(this);
 
 		// Add the scene to the Stage
 		stage.setScene(scene);
 		// Set the title of the Stage
 		stage.setTitle("An Adventure Game");
 		// Display the Stage
-		stage.show();		
+		stage.show();
 	}
 
-	public static void loadFile(Stage stage) {
+	private void startNewGame(Stage stage) {
+		currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
+		setGame(stage);
+	}
+
+	public void loadFile(Stage stage) {
 		FileChooser chooser = new FileChooser();
 		configureFileChooser(chooser);
 		chooser.setTitle("Open Game XML File");
@@ -122,12 +120,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 		if(file != null) {
 			currentGame = XMLParser.parseGame(file);
-			System.out.println("Parsing completed");
-			System.out.println("=================");
+			setGame(stage);
 		}
 	}
 
-	public static void saveFile(Stage stage){
+	public void saveFile(Stage stage){
 		FileChooser fileChooser = new FileChooser();
 		configureFileChooser(fileChooser);
 
@@ -161,13 +158,18 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		this.map.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.4);
 	}
 
-	public GridPane setGame() {
-		renderer = new Renderer();
-        GridPane grid = new GridPane();
-        Text name = new Text("game");
-        grid.add(name, 0, 0);
-        grid.add(renderer.getRoot(), 0, 1);
-        return grid;
+	public GridPane setGame(Stage stage) {
+		if(currentGame == null) {
+			System.out.println("Load a game or start a new game first!");
+			//TODO: For now until we can get a start menu
+			loadFile(stage);
+		}
+		renderer = new Renderer(currentGame);
+		GridPane grid = new GridPane();
+		Text name = new Text("game");
+		grid.add(name, 0, 0);
+		grid.add(renderer.getRoot(), 0, 1);
+		return grid;
 	}
 
 	public FlowPane setInventory() {
@@ -257,6 +259,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	public void handle(KeyEvent event) {
 		int dx = 0;
 		int dy = 0;
+		//TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
+//		currentGame.startTurn(event.getCode().getName());
+		//testing
 		switch (event.getCode()) {
 			case UP:
 				dx = -1;
@@ -300,7 +305,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			default:
 
 		}
-		renderer.player.moveTile(dx, dy);
+		currentGame.getPlayer().moveTile(dx, dy);
 		renderer.redraw();
 	}
 

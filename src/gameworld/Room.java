@@ -82,13 +82,13 @@ public class Room {
     }
   }
 
-    public List<Challenge> getChallenges() {
-        return challenges;
-    }
+  public List<Challenge> getChallenges() {
+    return challenges;
+  }
 
-    public Room() {
-        this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
-    }
+  public Room() {
+    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+  }
 
   public int getRow() {
     return row;
