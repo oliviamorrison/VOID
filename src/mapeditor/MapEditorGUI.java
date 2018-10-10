@@ -33,7 +33,7 @@ public class MapEditorGUI extends Application{
         setUpMenu();
         setUpMap();
 
-        //grid.setStyle("-fx-background-color: blue;");
+        grid.setStyle("-fx-background-color: blue;");
 
         // Create the Scene
         Scene scene = new Scene(grid);
@@ -119,8 +119,8 @@ public class MapEditorGUI extends Application{
         grid.add(hBox, 0, 0);
     }
 
-    public HBox addBlankRoom(){
-        HBox blankRoom = new HBox();
+    public GridPane addBlankRoom(){
+        GridPane blankRoom = new GridPane();
         blankRoom.setStyle("-fx-background-color: lightpink;");
         return blankRoom;
     }
@@ -142,8 +142,8 @@ public class MapEditorGUI extends Application{
         return keyRoom;
     }
 
-    public HBox addGreenKeyRoom(){
-        HBox keyRoom = new HBox();
+    public GridPane addGreenKeyRoom(){
+        GridPane keyRoom = new GridPane();
         Image image = new Image(getClass().getResourceAsStream("green-key.png"));
         ImageView iv1 = new ImageView();
         iv1.setImage(image);
@@ -155,20 +155,6 @@ public class MapEditorGUI extends Application{
         iv2.setPreserveRatio(true);
         iv2.setSmooth(true);
         iv2.setCache(true);
-
-        iv2.setOnDragDetected(new EventHandler<MouseEvent>() {
-                                  public void handle(MouseEvent event) {
-                                      Dragboard db = iv2.startDragAndDrop(TransferMode.ANY);
-
-        /* Put a image on a dragboard */
-                                      ClipboardContent content = new ClipboardContent();
-                                      content.putImage(iv2.getImage());
-                                      db.setContent(content);
-
-                                      event.consume();
-                                  }
-                              });
-
         keyRoom.getChildren().add(iv1);
         return keyRoom;
     }
