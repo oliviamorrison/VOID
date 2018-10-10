@@ -278,9 +278,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			case SPACE:
 				renderer.rotate();
 				break;
-//			case M:
-//				currentGame.movePlayer();
-//				break;
 			case P:
 				currentGame.pickUpItem();
 				break;
