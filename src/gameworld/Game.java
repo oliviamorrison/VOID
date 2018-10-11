@@ -29,6 +29,7 @@ public class Game {
     connectRooms();
     distributeHealthPacks();
     setupTimer();
+
   }
 
   /**
@@ -36,7 +37,6 @@ public class Game {
    */
 
   public void startGame() {
-
 
     while (true) {
 
@@ -92,27 +92,27 @@ public class Game {
         if (!randomRoom.hasHealthPack()) {
           randomRoom.addHealthPack();
           randomRoom.setHasHealthPack(true);
+          healthPacks--;
         }
-
-      healthPacks--;
 
     }
 
   }
 
-  public int getHealth() {
-    return health;
-  }
-
-  public void setHealth(int health) {
-    this.health = health;
-  }
-
   public void setupTimer() {
 
     timer = new Timer();
-//    timer.schedule(new HealthLossTimer(), 0, 1000);
-    timer.schedule(new HealthLossTimer(), 0, 1000);
+    timer.schedule(new TimerTask() {
+
+      @Override
+      public void run() {
+        if (health > 0)
+          health--;
+        else
+          health = 0;
+      }
+
+    }, 0, 1000);
 
   }
 
@@ -311,6 +311,10 @@ public class Game {
   public void pickUpItem() {
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
     if (currentTile.hasItem()) {
+      if (!player.getInventory().isEmpty()) {
+        System.out.println("Player can only have one item at a time");
+        return;
+      }
       Item item = currentTile.getItem();
       player.pickUp(item);
       currentTile.setItem(null);
@@ -321,6 +325,9 @@ public class Game {
   public void dropItem() {
     List<Item> inventory = player.getInventory();
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
+    if (currentTile instanceof DoorTile) {
+      return;
+    }
     if (!currentTile.hasItem() && !inventory.isEmpty()) {
       Item item = player.getInventory().remove(0);
       currentTile.setItem(item);
@@ -440,17 +447,12 @@ public class Game {
     }
   }
 
-  public Room[][] getBoard() {
-    return board;
+  public int getHealth() {
+    return health;
   }
 
-  class HealthLossTimer extends TimerTask {
-    public void run() {
-      if (health > 0)
-        health--;
-      else
-        health = 0;
-    }
+  public Room[][] getBoard() {
+    return board;
   }
 
 }
