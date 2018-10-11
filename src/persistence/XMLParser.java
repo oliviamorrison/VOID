@@ -168,7 +168,7 @@ public class XMLParser {
   }
 
 
-  public static Game parseGame(File file) {
+  public static Game parseGame(File file) throws ParseError {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = factory.newDocumentBuilder();
@@ -207,7 +207,7 @@ public class XMLParser {
     }
   }
 
-  public static class ParseError extends Error{
+  public static class ParseError extends Exception{
     ParseError(String message){
       super(message);
     }
