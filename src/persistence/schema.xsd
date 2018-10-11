@@ -37,7 +37,7 @@
                         <xs:sequence>
                             <xs:element type="xs:byte" name="roomRow"/>
                             <xs:element type="xs:byte" name="roomCol"/>
-                            <xs:element name="inventor0y">
+                            <xs:element name="inventory">
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element type="xs:string" name="item" minOccurs="0"/>
@@ -46,6 +46,7 @@
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute type="xs:byte" name="col" use="required"/>
+                        <xs:attribute type="xs:string" name="direction" use="required"/>
                         <xs:attribute type="xs:byte" name="health" use="required"/>
                         <xs:attribute type="xs:byte" name="row" use="required"/>
                     </xs:complexType>

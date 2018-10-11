@@ -134,23 +134,13 @@ public class XMLParser {
     return roomElement;
   }
 
-
-//    for(String direction: room.getDoors()){
-//      Element door = document.createElement("door");
-//      door.appendChild((document.createTextNode(direction)));
-//      roomElement.appendChild(door);
-//    }
-//
-//    saveItems(document, room.getItems(), roomElement, false);
-//    saveChallenges(document, room.getChallenges(), roomElement);
-
-
   private static Element savePlayer(Game game, Document document) {
     Element player = document.createElement("player");
     //Get position of player and add as attribute to player element
     player.setAttribute("row", game.getPlayer().getTile().getX()+"");
     player.setAttribute("col", game.getPlayer().getTile().getY()+"");
     player.setAttribute("health", game.getPlayer().getHealth()+"");
+    player.setAttribute("direction", game.getPlayer().getPlayerDir().toString());
 
     //Add coordinates of the room the player is in to the player element
     Element roomRow = document.createElement("roomRow");
@@ -168,54 +158,10 @@ public class XMLParser {
       inventory.appendChild(itemElement);
     }
 
-//    saveItems(document, game.getPlayer().getInventory(), inventory, true);
     player.appendChild(inventory);
 
     return player;
   }
-
-/*
-  private static void saveItems(Document document, List<Item> items, Element itemCollector, boolean isInventory){
-    for(Item token: items){
-      Element item = document.createElement("item");
-      if((token.getX() == -1 || token.getY() == -1) && !isInventory) return;
-      else if(!isInventory){
-        item.setAttribute("row", token.getX()+"");
-        item.setAttribute("col", token.getY()+"");
-      }
-      item.appendChild(document.createTextNode(token.toString()));
-      itemCollector.appendChild(item);
-    }
-  }
-
-  private static void saveChallenges(Document document, List<Challenge> challenges, Element challengeCollector){
-    for(Challenge challengeItem: challenges){
-      Element challenge = document.createElement("challenge");
-
-      if(challengeItem instanceof Bomb) {
-        Bomb bomb = (Bomb) challengeItem;
-        challenge.setAttribute("row", bomb.getX()+"");
-        challenge.setAttribute("col", bomb.getY()+"");
-        challenge.setAttribute("state", bomb.isNavigable()+"");
-      }
-      else if(challengeItem instanceof Guard){
-        Guard guard = (Guard) challengeItem;
-        challenge.setAttribute("row", guard.getX()+"");
-        challenge.setAttribute("col", guard.getY()+"");
-        challenge.setAttribute("state", guard.isNavigable()+"");
-      }
-      else{
-        VendingMachine vm = (VendingMachine) challengeItem;
-        challenge.setAttribute("row", vm.getX()+"");
-        challenge.setAttribute("col", vm.getY()+"");
-        challenge.setAttribute("state", vm.isNavigable()+"");
-      }
-
-      challenge.appendChild(document.createTextNode(challengeItem.toString()));
-      challengeCollector.appendChild(challenge);
-    }
-  }*/
-
 
   public static Game parseGame(File file) throws ParseError {
     try {
@@ -303,8 +249,10 @@ public class XMLParser {
     int[] rowCol = getRowCol(playerElement);
     if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
     int health = parseInt(playerElement.getAttribute("health"));
+    if(playerElement.getAttribute("direction").equals("")) throw new ParseError("Player needs direction attribute");
+    String direction = playerElement.getAttribute("direction");
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, Direction.Top);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, direction);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
@@ -323,8 +271,7 @@ public class XMLParser {
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
-
-        Item item = null;
+        Item item;
         switch(token){
           case "Antidote":
             item = Item.Antidote;break;
@@ -343,18 +290,19 @@ public class XMLParser {
           case "HealthPack":
             item = Item.HealthPack;
             break;
+          default:
+            throw new ParseError("Incorrect item name");
         }
 
-        if(item!=null && tiles!=null){
+        if(tiles!=null){
           int[] rowCol = getRowCol(elem);
           item.setX(rowCol[0]);
           item.setY(rowCol[1]);
           ((AccessibleTile) tiles[rowCol[0]][rowCol[1]]).setItem(item);
         }
-        else if(item!=null && p!=null){
+        else if(p!=null){
           p.getInventory().add(item);
         }
-
 
       }
     }

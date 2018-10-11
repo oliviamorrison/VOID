@@ -18,17 +18,30 @@ public class Player {
   private int health;
   private Direction playerDir;
 
-  public Player(Room room, AccessibleTile tile, int health, Direction direction) {
+  public Player(Room room, AccessibleTile tile, int health, String direction) {
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
     this.health = (health > 0) ? health : MAX_HEALTH;
-    this.playerDir = direction;
+    this.playerDir = directionFromString(direction);
 
     this.ellipse = new Ellipse();
     this.ellipse.setFill(Color.ORANGE);
     this.ellipse.setRadiusX(8);
     this.ellipse.setRadiusY(15);
+  }
+
+  public Direction directionFromString (String direction){
+    switch(direction){
+      case "Top":
+        return Direction.Top;
+      case "Left":
+        return Direction.Left;
+      case "Bottom":
+        return Direction.Bottom;
+      default:
+        return Direction.Right;
+    }
   }
 
   public Direction getPlayerDir() {

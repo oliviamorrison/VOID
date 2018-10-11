@@ -14,6 +14,7 @@
         <door>Top</door>
         <door>Bottom</door>
         <item row="1" col="4">BoltCutter</item>
+        <item row="7" col="2">HealthPack</item>
     </room>
     <room row="1" col="2">
         <door>Left</door>
@@ -33,9 +34,10 @@
     <room row="2" col="2">
         <door>Top</door>
         <door>Left</door>
-        <item row="7" col="7">Coin</item>
+        <item row="7" col="4">Coin</item>
+        <item row="8" col="1">HealthPack</item>
     </room>
-    <player row="1" col="1" health="100">
+    <player row="1" col="1" health="100" direction="Right">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
         <inventory/>
