@@ -18,7 +18,7 @@ public class Room {
   public static final Point RIGHT = new Point(5, 9);
   public static final int ROOMSIZE = 10;
 
-  public Room(int row, int col, Tile[][] tiles, List<String> doors){
+  public Room(int row, int col, Tile[][] tiles, List<String> doors) {
     this.row = row;
     this.col = col;
     this.tiles = tiles;
@@ -106,38 +106,35 @@ public class Room {
     tiles[row][col] = tile;
   }
 
-  public AccessibleTile checkChallengeNearby(AccessibleTile tile) {
-
+  public AccessibleTile checkFacingChallenge(AccessibleTile tile, Direction playerDirection) {
 
     Tile t;
 
-    for (Direction direction : Direction.values()) {
+    int row = tile.getX();
+    int col = tile.getY();
 
-      int row = tile.getX();
-      int col = tile.getY();
+    switch (playerDirection) {
+      case Left:
+        col -= 1;
+        break;
+      case Right:
+        col += 1;
+        break;
+      case Top:
+        row -= 1;
+        break;
+      case Bottom:
+        row += 1;
+        break;
+    }
 
-      switch (direction) {
-        case Left:
-          col -= 1;
-          break;
-        case Right:
-          col += 1;
-          break;
-        case Top:
-          row -= 1;
-          break;
-        case Bottom:
-          row += 1;
-          break;
-      }
+    t = tiles[row][col];
 
-      t = tiles[row][col];
-      if (t instanceof InaccessibleTile || t instanceof DoorTile) {
-      } else {
-        AccessibleTile a = (AccessibleTile) t;
-        if (a.hasChallenge())
-          return a;
-      }
+    if (t instanceof InaccessibleTile || t instanceof DoorTile) {
+    } else {
+      AccessibleTile a = (AccessibleTile) t;
+      if (a.hasChallenge())
+        return a;
     }
 
     return null;
@@ -270,10 +267,10 @@ public class Room {
     }
   }
 
-  public void rotateRoomClockwise(){
+  public void rotateRoomClockwise() {
     Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
-    for(int row = 0; row < ROOMSIZE; row++){
-      for(int col = 0; col < ROOMSIZE; col++){
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
         tempArray[ROOMSIZE - col - 1][row] = this.tiles[row][col];
       }
     }

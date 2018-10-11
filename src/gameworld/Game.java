@@ -24,7 +24,6 @@ public class Game {
     this.board = board;
     this.currentRoom = player.getRoom();
     connectRooms();
-//    distributeHealthPacks();
     setupTimer();
 
   }
@@ -168,7 +167,7 @@ public class Game {
     System.out.println("You are unlocking");
     AccessibleTile t = player.getTile();
 
-    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+    AccessibleTile challengeTile = this.currentRoom.checkFacingChallenge(t, player.getPlayerDir());
 
     if (challengeTile == null)
       return;
@@ -196,7 +195,7 @@ public class Game {
 
     AccessibleTile t = (AccessibleTile) player.getTile();
 
-    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+    AccessibleTile challengeTile = this.currentRoom.checkFacingChallenge(t, player.getPlayerDir());
 
     if (challengeTile == null)
       return;
@@ -231,7 +230,7 @@ public class Game {
 
     AccessibleTile t = (AccessibleTile) player.getTile();
 
-    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+    AccessibleTile challengeTile = this.currentRoom.checkFacingChallenge(t, player.getPlayerDir());
 
     if (challengeTile == null)
       return;
@@ -306,7 +305,7 @@ public class Game {
   public void diffuseBomb() {
     AccessibleTile t = (AccessibleTile) player.getTile();
 
-    AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
+    AccessibleTile challengeTile = this.currentRoom.checkFacingChallenge(t, player.getPlayerDir());
 
     if (challengeTile == null)
       return;
