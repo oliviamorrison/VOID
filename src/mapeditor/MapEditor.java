@@ -7,7 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -86,6 +86,7 @@ public class MapEditor extends Application {
 
         Button pickupButton = new Button("Pick Up");
         Button dropButton = new Button("Drop");
+        Button makeGame = new Button("Make Game");
 
         pickupButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
@@ -120,6 +121,7 @@ public class MapEditor extends Application {
 
         items.add(pickupButton,0,4);
         items.add(dropButton,1,4);
+        items.add(makeGame, 2,4);
 
         return items;
     }
