@@ -9,11 +9,10 @@ public class AccessibleTile extends Tile {
   private Item item;
   private Challenge challenge;
   private boolean player = false;
-  private final static Color color = Color.rgb(226, 209, 206);
-  private final static double height = 0;
+
 
   public AccessibleTile(Room room, int x, int y) {
-    super(room, x, y, color, height);
+    super(room, x, y);
   }
 
   public void setItem(Item item) {
