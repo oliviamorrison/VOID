@@ -10,15 +10,11 @@ public abstract class Tile {
   private PolygonBlock polygon;
   private int x;
   private int y;
-  private Color color;
-  private double height;
 
-  public Tile(Room r, int x, int y, Color c, double h) {
+  public Tile(Room r, int x, int y) {
     this.x = x;
     this.y = y;
     this.room = r;
-    this.color = c;
-    this.height = h;
   }
 
   public int getX() {
@@ -39,14 +35,6 @@ public abstract class Tile {
 
   public void setTilePolygon(PolygonBlock poly) {
     this.polygon = poly;
-  }
-
-  public Color getColor(){
-    return this.color;
-  }
-
-  public double getHeight(){
-    return this.height;
   }
 
 }

@@ -2,11 +2,11 @@ package mapeditor;
 
 import javafx.scene.image.Image;
 
-public class Item {
+public class MapItem {
     private Image image;
     private String imageName;
 
-    public Item(String n, Image i){
+    public MapItem(String n, Image i){
         imageName = n;
         image = i;
     }
