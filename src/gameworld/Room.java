@@ -43,32 +43,6 @@ public class Room {
       tile.setItem(item);
     }
 
-/*    for (Challenge challenge : challenges) {
-      String dir = challenge.getDirection();
-      if (challenge instanceof Bomb || challenge instanceof Guard) {
-        switch (dir) {
-          case "Left":
-            ((AccessibleTile) tiles[LEFT.x][LEFT.y + 1]).setChallenge(challenge);
-            break;
-          case "Right":
-            ((AccessibleTile) tiles[RIGHT.x][RIGHT.y - 1]).setChallenge(challenge);
-            break;
-          case "Top":
-            ((AccessibleTile) tiles[TOP.x + 1][TOP.y]).setChallenge(challenge);
-            break;
-          case "Bottom":
-            ((AccessibleTile) tiles[BOTTOM.x - 1][BOTTOM.y]).setChallenge(challenge);
-            break;
-          default:
-        }
-      }
-      if (challenge instanceof VendingMachine) {
-        AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
-        tile.setChallenge(challenge);
-      }
-
-    }*/
-
     for (Challenge challenge : challenges) {
       AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
       tile.setChallenge(challenge);
@@ -79,48 +53,6 @@ public class Room {
   public List<Challenge> getChallenges() {
     return challenges;
   }
-
-//  public boolean checkWallsNearby(AccessibleTile tile) {
-//
-//    boolean nearbyWalls = false;
-//
-//    Tile t;
-//
-//    for (Direction direction : Direction.values()) {
-//
-//      int row = tile.getX();
-//      int col = tile.getY();
-//
-//      switch (direction) {
-//        case Left:
-//          col -= 1;
-//          break;
-//        case Right:
-//          col += 1;
-//          break;
-//        case Top:
-//          row -= 1;
-//          break;
-//        case Bottom:
-//          row += 1;
-//          break;
-//      }
-//
-//      if (row == 5 || col == 5) {
-//        return false;
-//      }
-//
-//      t = tiles[row][col];
-//
-//      if (t instanceof InaccessibleTile) {
-//        nearbyWalls = true;
-//      }
-//
-//    }
-//
-//    return nearbyWalls;
-//
-//  }
 
   public Room() {
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];

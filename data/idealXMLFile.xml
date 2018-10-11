@@ -7,7 +7,7 @@
     <room row="0" col="1">
         <door>Left</door>
         <door>Bottom</door>
-        <challenge row="8" col="5">Bomb</challenge>
+        <challenge row="8" col="5" state="false">Bomb</challenge>
     </room>
     <room row="1" col="1">
         <door>Right</door>
@@ -18,7 +18,7 @@
     <room row="1" col="2">
         <door>Left</door>
         <door>Bottom</door>
-        <challenge row="6" col="3">VendingMachine</challenge>
+        <challenge row="6" col="3" state="false">VendingMachine</challenge>
     </room>
     <room row="2" col="0">
         <door>Right</door>
@@ -28,7 +28,7 @@
         <door>Top</door>
         <door>Left</door>
         <door>Right</door>
-        <challenge row="1" col="5">Guard</challenge>
+        <challenge row="1" col="5" state="false">Guard</challenge>
     </room>
     <room row="2" col="2">
         <door>Top</door>
@@ -38,6 +38,8 @@
     <player row="1" col="1">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
-        <inventory/>
+        <inventory>
+            <item>item</item>
+        </inventory>
     </player>
 </game>

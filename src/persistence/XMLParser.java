@@ -24,11 +24,15 @@ import static java.lang.Integer.parseInt;
  * Schema is in schema.xsd
  */
 //TODO: Make default new game file ineditable
-  //TODO: If we have time, add different difficulty levels for easy/medium/hard
-  //TODO: Add README
-  //TODO: Add tests
-  //TODO: UML Diagram
+//TODO: If we have time, add different difficulty levels for easy/medium/hard
+//TODO: Add README
+//TODO: Add tests
+//TODO: UML Diagram
 
+
+//TODO: Test player inventory parsing
+//TODO: Remove item from list of items in room when picked up
+//TODO: Change doortile to portal
 public class XMLParser {
   private static Schema schema;
 
@@ -120,12 +124,12 @@ public class XMLParser {
   private static void saveItems(Document document, List<Item> items, Element itemCollector){
     for(Item token: items){
       Element item = document.createElement("item");
+      if(token.getX() == -1 || token.getY() == -1) return;
       item.setAttribute("row", token.getX()+"");
       item.setAttribute("col", token.getY()+"");
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
     }
-    //TODO: Health packs
   }
 
   private static void saveChallenges(Document document, List<Challenge> challenges, Element challengeCollector){
@@ -136,16 +140,19 @@ public class XMLParser {
         Bomb bomb = (Bomb) challengeItem;
         challenge.setAttribute("row", bomb.getX()+"");
         challenge.setAttribute("col", bomb.getY()+"");
+        challenge.setAttribute("state", bomb.isNavigable()+"");
       }
       else if(challengeItem instanceof Guard){
         Guard guard = (Guard) challengeItem;
         challenge.setAttribute("row", guard.getX()+"");
         challenge.setAttribute("col", guard.getY()+"");
+        challenge.setAttribute("state", guard.isNavigable()+"");
       }
       else{
         VendingMachine vm = (VendingMachine) challengeItem;
         challenge.setAttribute("row", vm.getX()+"");
         challenge.setAttribute("col", vm.getY()+"");
+        challenge.setAttribute("state", vm.isNavigable()+"");
       }
 
       challenge.appendChild(document.createTextNode(challengeItem.toString()));
@@ -217,7 +224,7 @@ public class XMLParser {
 
     //parse items
     NodeList itemList = roomElement.getElementsByTagName("item");
-    parseItems(itemList, items);
+    parseItems(itemList, items, false);
 
     //parse challenges
     NodeList challengeList = roomElement.getElementsByTagName("challenge");
@@ -239,7 +246,7 @@ public class XMLParser {
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
-    parseItems(inventory, player.getInventory());
+    parseItems(inventory, player.getInventory(), true);
 
     return player;
   }
@@ -249,50 +256,41 @@ public class XMLParser {
     return parseInt(n.item(0).getTextContent());
   }
 
-  private static void parseItems(NodeList items, List<Item> tokens) {
+  private static void parseItems(NodeList items, List<Item> tokens, boolean isInventory) {
     for(int i = 0; i< items.getLength(); i++){
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
-        int[] rowCol = getRowCol(elem);
-        Item item;
+
+        Item item = null;
         switch(token){
           case "Antidote":
-            item = Item.Antidote;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item); break;
+            item = Item.Antidote;break;
           case "Beer":
             item = Item.Beer;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "BoltCutter":
             item = Item.BoltCutter;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "Coin":
             item = Item.Coin;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "Diffuser":
             item = Item.Diffuser;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "HealthPack":
             item = Item.HealthPack;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
         }
+
+        if(item!=null && !isInventory){
+          int[] rowCol = getRowCol(elem);
+          item.setX(rowCol[0]);
+          item.setY(rowCol[1]);
+          tokens.add(item);
+        }
+        else if(item!=null)tokens.add(item);
+
       }
     }
   }
@@ -303,15 +301,22 @@ public class XMLParser {
       Node node = items.item(i);
       Element elem = (Element) node;
       int[] rowCol = getRowCol(elem);
+      String state = elem.getAttribute("state");
       switch(node.getTextContent().trim()){
         case "Bomb":
-          challenges.add(new Bomb(rowCol[0], rowCol[1]));
+          Bomb bomb = new Bomb(rowCol[0], rowCol[1]);
+          bomb.setNavigable(Boolean.parseBoolean(state));
+          challenges.add(bomb);
           break;
         case "Guard":
-          challenges.add(new Guard(rowCol[0], rowCol[1]));
+          Guard guard = new Guard(rowCol[0], rowCol[1]);
+          guard.setNavigable(Boolean.parseBoolean(state));
+          challenges.add(guard);
           break;
         case "VendingMachine":
-          challenges.add(new VendingMachine(rowCol[0], rowCol[1]));
+          VendingMachine vm = new VendingMachine(rowCol[0], rowCol[1]);
+          vm.setUnlocked(Boolean.parseBoolean(state));
+          challenges.add(vm);
           break;
       }
     }
@@ -334,6 +339,4 @@ public class XMLParser {
   }
 
   //TODO: Save and load players health
-  //TODO: Save and load health packs
-
 }

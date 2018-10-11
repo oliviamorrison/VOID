@@ -2,16 +2,13 @@ package gameworld;
 
 public abstract class Challenge {
 
-  private String direction;
   private boolean navigable = false;
   private int x;
   private int y;
 
   public Challenge(int x, int y) {
-
     this.x = x;
     this.y = y;
-
   }
 
   public boolean isNavigable() {
