@@ -29,8 +29,6 @@ import static java.lang.Integer.parseInt;
 //TODO: Add tests
 //TODO: UML Diagram
 
-
-//TODO: Test player inventory parsing
 //TODO: Remove item from list of items in room when picked up
 //TODO: Change doortile to portal
 public class XMLParser {
@@ -92,7 +90,7 @@ public class XMLParser {
       roomElement.appendChild(door);
     }
 
-    saveItems(document, room.getItems(), roomElement);
+    saveItems(document, room.getItems(), roomElement, false);
     saveChallenges(document, room.getChallenges(), roomElement);
 
     return roomElement;
@@ -114,19 +112,21 @@ public class XMLParser {
 
     //save inventory
     Element inventory = document.createElement("inventory");
-    saveItems(document, game.getPlayer().getInventory(), inventory); //TODO: Change this bc inventory items don't have X and Y
+    saveItems(document, game.getPlayer().getInventory(), inventory, true);
     player.appendChild(inventory);
 
     return player;
   }
 
 
-  private static void saveItems(Document document, List<Item> items, Element itemCollector){
+  private static void saveItems(Document document, List<Item> items, Element itemCollector, boolean isInventory){
     for(Item token: items){
       Element item = document.createElement("item");
-      if(token.getX() == -1 || token.getY() == -1) return;
-      item.setAttribute("row", token.getX()+"");
-      item.setAttribute("col", token.getY()+"");
+      if((token.getX() == -1 || token.getY() == -1) && !isInventory) return;
+      else if(!isInventory){
+        item.setAttribute("row", token.getX()+"");
+        item.setAttribute("col", token.getY()+"");
+      }
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
     }
