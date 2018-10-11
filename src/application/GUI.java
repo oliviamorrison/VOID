@@ -170,10 +170,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	private void startNewGame(Stage stage) {
     try {
       currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
+      window.setScene(createGameScene(stage));
     } catch (XMLParser.ParseError parseError) {
       parseError.printStackTrace();
     }
-    setGame(stage);
+   // setGame(stage);
 	}
 
 
