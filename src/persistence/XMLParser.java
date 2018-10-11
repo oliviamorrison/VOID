@@ -23,8 +23,6 @@ import static java.lang.Integer.parseInt;
  * Using javax.xml.parsers library
  * Schema is in schema.xsd
  */
-//TODO: Generate new schema, check if players inventory can be saved, loaded and passed to the GUI
-
 //TODO: Make default new game file ineditable
   //TODO: If we have time, add different difficulty levels for easy/medium/hard
   //TODO: Add README
@@ -299,5 +297,8 @@ public class XMLParser {
     int col = parseInt(elem.getAttribute("col"));
     return new int[]{row, col};
   }
+
+  //TODO: Save and load players health
+  //TODO: Save and load health packs
 
 }
