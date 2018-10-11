@@ -19,7 +19,6 @@
         <row>1</row>
         <col>1</col>
         <door>Right</door>
-        <door>Left</door>
         <door>Top</door>
         <door>Bottom</door>
         <item>BoltCutter</item>
