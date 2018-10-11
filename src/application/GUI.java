@@ -344,25 +344,28 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			case RIGHT:
 				dy = 1;
 				break;
-			case SPACE:
-				renderer.rotate();
-				break;
-			case P:
-				currentGame.pickUpItem();
+			case A:
+				currentGame.rotateRoomAnticlockwise();
 				break;
 			case D:
+				currentGame.rotateRoomClockwise();
+				break;
+			case Z:
+				currentGame.pickUpItem();
+				break;
+			case X:
 				currentGame.dropItem();
 				break;
 			case F:
 				currentGame.diffuseBomb();
 				break;
-			case U:
+			case C:
 				currentGame.unlockVendingMachine();
 				break;
 			case V:
 				currentGame.useVendingMachine();
 				break;
-			case R:
+			case SPACE:
 				currentGame.moveRoom();
 				renderer.newRoom();
 				break;
@@ -375,9 +378,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		currentGame.getPlayer().moveTile(dx, dy);
 		renderer.draw();
 	}
-
-
-
 
 
     public static void main(String[] args) {
