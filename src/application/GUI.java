@@ -372,10 +372,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			default:
 
 		}
-		if(!currentGame.getPlayer().moveTile(dx, dy)){
-			//Return if player is out of bounds
-			return;
-		}
+		currentGame.getPlayer().moveTile(dx, dy);
 		renderer.draw();
 	}
 

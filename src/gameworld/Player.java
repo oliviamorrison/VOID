@@ -59,15 +59,14 @@ public class Player {
     return room;
   }
 
-  public boolean moveTile(int dx, int dy) {
+  public void moveTile(int dx, int dy) {
 
     if (room.moveTile(tile, dx, dy) == null) {
-      return false;
+      return;
     }
     tile.setPlayer(false);
     tile = (AccessibleTile) room.moveTile(tile, dx, dy);
     tile.setPlayer(true);
-    return true;
   }
 
   public AccessibleTile getTile() {
