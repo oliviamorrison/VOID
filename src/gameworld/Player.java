@@ -8,20 +8,51 @@ import java.util.List;
 
 public class Player {
 
+  private static final int HEALTH_BOOST = 20;
+  private static final int MAX_HEALTH = 100;
+
   private AccessibleTile tile;
   private List<Item> inventory;
   private Room room;
   private Ellipse ellipse;
+  private int health;
 
-  public Player(Room room, AccessibleTile tile) {
+  public Player(Room room, AccessibleTile tile, int health) {
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
+    this.health = (health > 0) ? health : MAX_HEALTH;
 
     this.ellipse = new Ellipse();
     this.ellipse.setFill(Color.ORANGE);
     this.ellipse.setRadiusX(8);
     this.ellipse.setRadiusY(15);
+  }
+
+  public int getHealth() {
+    return health;
+  }
+
+  public void setHealth(int health) {
+    this.health = health;
+  }
+
+  public void boostHealth() {
+
+    health += HEALTH_BOOST;
+
+    if (health > MAX_HEALTH)
+      health = MAX_HEALTH;
+
+  }
+
+  public void loseHealth() {
+
+    if (health > 0)
+      health--;
+    else
+      health = 0;
+
   }
 
   public Room getRoom() {

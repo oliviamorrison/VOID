@@ -187,7 +187,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       try {
         currentGame = XMLParser.parseGame(file);
       } catch (XMLParser.ParseError parseError) {
-        //TODO: Get user to load  a new file
+        //TODO: Open dialogue box that says it was an invalid XML file and to please try again
+        System.out.println("Invalid file");
 
       }
       setGame(stage);
@@ -230,7 +231,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 	public GridPane setGame(Stage stage) {
 		if(currentGame == null) {
-			System.out.println("Load a game or start a new game first!");
+//			System.out.println("Load a game or start a new game first!");
 			//TODO: For now until we can get a start menu
 			loadFile(stage);
 		}

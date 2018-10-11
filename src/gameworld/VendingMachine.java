@@ -4,6 +4,10 @@ public class VendingMachine extends Challenge {
 
   private boolean unlocked = false;
 
+  public VendingMachine(int x, int y) {
+    super(x, y);
+  }
+
   public boolean isUnlocked() {
     return unlocked;
   }
@@ -13,7 +17,7 @@ public class VendingMachine extends Challenge {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return "VendingMachine";
   }
 

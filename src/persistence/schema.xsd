@@ -2,25 +2,36 @@
     <xs:element name="game">
         <xs:complexType>
             <xs:sequence>
-                <xs:element type="xs:byte" name="rows"/>
-                <xs:element type="xs:byte" name="cols"/>
                 <xs:element name="room" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element type="xs:byte" name="row"/>
-                            <xs:element type="xs:byte" name="col"/>
+                            <xs:element type="xs:byte" name="row" minOccurs="0"/>
+                            <xs:element type="xs:byte" name="col" minOccurs="0"/>
                             <xs:element type="xs:string" name="door" maxOccurs="unbounded" minOccurs="0"/>
-                            <xs:element type="xs:string" name="item" minOccurs="0"/>
-                            <xs:element name="challenge" minOccurs="0">
+                            <xs:element name="item" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="row" use="optional"/>
+                                            <xs:attribute type="xs:byte" name="col" use="optional"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="challenge" maxOccurs="unbounded" minOccurs="0">
                                 <xs:complexType>
                                     <xs:simpleContent>
                                         <xs:extension base="xs:string">
                                             <xs:attribute type="xs:string" name="door" use="optional"/>
+                                            <xs:attribute type="xs:byte" name="row" use="optional"/>
+                                            <xs:attribute type="xs:byte" name="col" use="optional"/>
                                         </xs:extension>
                                     </xs:simpleContent>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
+                        <xs:attribute type="xs:byte" name="row" use="optional"/>
+                        <xs:attribute type="xs:byte" name="col" use="optional"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="player">
@@ -28,13 +39,21 @@
                         <xs:sequence>
                             <xs:element type="xs:byte" name="roomRow"/>
                             <xs:element type="xs:byte" name="roomCol"/>
-                            <xs:element type="xs:byte" name="tileRow"/>
-                            <xs:element type="xs:byte" name="tileCol"/>
-                            <xs:element type="xs:string" name="inventory"/>
+                            <xs:element name="inventory">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="item" maxOccurs="unbounded" minOccurs="0"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
+                        <xs:attribute type="xs:byte" name="row"/>
+                        <xs:attribute type="xs:byte" name="col"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
+            <xs:attribute type="xs:byte" name="row"/>
+            <xs:attribute type="xs:byte" name="col"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

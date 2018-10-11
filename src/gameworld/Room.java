@@ -38,55 +38,93 @@ public class Room {
       }
     }
 
-    if (row == 0 && col == 1) {
-      Tile t = tiles[8][5];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Bomb("Bottom"));
-      }
-    }
-    if (row == 1 && col == 2) {
-      boolean itemPlaced = false;
-      while (!itemPlaced) {
-        int randomX = (int) (Math.random() * 8) + 1;
-        int randomY = (int) (Math.random() * 8) + 1;
-        if (tiles[randomY][randomX] instanceof AccessibleTile) {
-          AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-          if (!tile.hasItem()) {
-            tile.setChallenge(new VendingMachine());
-            itemPlaced = true;
-          }
-        }
-      }
-    }
-    if (row == 2 && col == 1) {
-      Tile t = tiles[5][1];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Guard("Right"));
-      }
+    for (Item item : items) {
+
+      AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
+      tile.setItem(item);
+
     }
 
+    for (Challenge challenge : challenges) {
 
-    for (Item item : this.items) {
-      boolean itemPlaced = false;
-      while (!itemPlaced) {
-        int randomX = (int) (Math.random() * 8) + 1;
-        int randomY = (int) (Math.random() * 8) + 1;
-        if (tiles[randomY][randomX] instanceof AccessibleTile) {
-          AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-          if (!tile.hasItem()) {
-            tile.setItem(item);
-            itemPlaced = true;
-          }
+      String dir = challenge.getDirection();
+
+      if (challenge instanceof Bomb || challenge instanceof Guard) {
+
+        switch (dir) {
+          case "Left":
+            ((AccessibleTile) tiles[LEFT.x][LEFT.y + 1]).setChallenge(challenge);
+            break;
+          case "Right":
+            ((AccessibleTile) tiles[RIGHT.x][RIGHT.y - 1]).setChallenge(challenge);
+            break;
+          case "Top":
+            ((AccessibleTile) tiles[TOP.x + 1][TOP.y]).setChallenge(challenge);
+            break;
+          case "Bottom":
+            ((AccessibleTile) tiles[BOTTOM.x - 1][BOTTOM.y]).setChallenge(challenge);
+            break;
+          default:
+
         }
       }
+
+      if (challenge instanceof VendingMachine) {
+
+        AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
+        tile.setChallenge(challenge);
+
+      }
+
     }
+
   }
 
   public List<Challenge> getChallenges() {
     return challenges;
   }
+
+//  public boolean checkWallsNearby(AccessibleTile tile) {
+//
+//    boolean nearbyWalls = false;
+//
+//    Tile t;
+//
+//    for (Direction direction : Direction.values()) {
+//
+//      int row = tile.getX();
+//      int col = tile.getY();
+//
+//      switch (direction) {
+//        case Left:
+//          col -= 1;
+//          break;
+//        case Right:
+//          col += 1;
+//          break;
+//        case Top:
+//          row -= 1;
+//          break;
+//        case Bottom:
+//          row += 1;
+//          break;
+//      }
+//
+//      if (row == 5 || col == 5) {
+//        return false;
+//      }
+//
+//      t = tiles[row][col];
+//
+//      if (t instanceof InaccessibleTile) {
+//        nearbyWalls = true;
+//      }
+//
+//    }
+//
+//    return nearbyWalls;
+//
+//  }
 
   public Room() {
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
@@ -172,10 +210,6 @@ public class Room {
 
   public void setTile(Tile tile, int row, int col) {
     tiles[row][col] = tile;
-  }
-
-  public Tile getNeighbour() {
-    return null;
   }
 
   public AccessibleTile checkChallengeNearby(AccessibleTile tile) {
@@ -336,7 +370,7 @@ public class Room {
       int randomY = (int) (Math.random() * 8) + 1;
       if (tiles[randomY][randomX] instanceof AccessibleTile) {
         AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-        if (!tile.hasItem()) {
+        if (!tile.hasItem() && !tile.hasChallenge()) {
           tile.setItem(Item.HealthPack);
           itemPlaced = true;
         }

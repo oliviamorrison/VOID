@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<game row="3" col="3">
+    <room row="0" col="0">
+        <door>Right</door>
+        <item row="0" col="0">Diffuser</item>
+    </room>
+    <room row="0" col="1">
+        <door>Left</door>
+        <door>Bottom</door>
+        <challenge door="Bottom" row="0" col="0">Bomb</challenge>
+    </room>
+    <room row="1" col="1">
+        <door>Right</door>
+        <door>Top</door>
+        <door>Bottom</door>
+        <item row="0" col="0">BoltCutter</item>
+    </room>
+    <room row="1" col="2">
+        <door>Left</door>
+        <door>Bottom</door>
+        <challenge row="0" col="0">VendingMachine</challenge>
+    </room>
+    <room row="2" col="0">
+        <row>2</row>
+        <col>0</col>
+        <door>Right</door>
+        <item row="0" col="0">Antidote</item>
+    </room>
+    <room row="2" col="1">
+        <door>Top</door>
+        <door>Left</door>
+        <door>Right</door>
+        <challenge door="Left" row="0" col="0">Guard</challenge>
+    </room>
+    <room row="2" col="2">
+        <door>Top</door>
+        <door>Left</door>
+        <item row="0" col="0">Coin</item>
+    </room>
+    <player row="1" col="1">
+        <roomRow>0</roomRow>
+        <roomCol>0</roomCol>
+        <inventory/>
+    </player>
+</game>

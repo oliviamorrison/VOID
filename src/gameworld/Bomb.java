@@ -1,27 +1,16 @@
 package gameworld;
 
 public class Bomb extends Challenge {
-  private String direction;
-  boolean isActive = false;
 
-  public Bomb(String direction) {
-    this.direction = direction;
-  }
+  public Bomb(int x, int y, String direction) {
 
-  public String getDirection() {
-    return direction;
-  }
+    super(x, y);
+    setDirection(direction);
 
-  public boolean isActive() {
-    return isActive;
-  }
-
-  public void setActive(boolean active) {
-    isActive = active;
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return "Bomb";
   }
 

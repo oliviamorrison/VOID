@@ -2,19 +2,16 @@ package gameworld;
 
 
 public class Guard extends Challenge {
-    private String direction;
 
-    public Guard(String direction) {
-        this.direction = direction;
-    }
+  public Guard(int x, int y, String direction) {
 
-    public String getDirection() {
-        return direction;
-    }
-
+    super(x, y);
+    setDirection(direction);
+    
+  }
 
   @Override
-  public String toString(){
+  public String toString() {
     return "Guard";
   }
 
