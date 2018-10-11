@@ -38,6 +38,15 @@ public class Room {
       }
     }
 
+    while (!challenges.isEmpty()) {
+      Challenge challenge = challenges.get(0);
+
+      if (challenge instanceof Bomb) {
+
+      }
+      challenges.remove(challenge);
+    }
+
     if (row == 0 && col == 1) {
       Tile t = tiles[8][5];
       if (t instanceof AccessibleTile) {
