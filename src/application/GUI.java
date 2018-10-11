@@ -1,15 +1,12 @@
 package application;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Optional;
-
 import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,42 +18,45 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import persistence.XMLParser;
 import renderer.Renderer;
 
 public class GUI extends Application implements EventHandler<KeyEvent> {
-	public static final int WINDOW_WIDTH = 1000;
-	public static final int WINDOW_HEIGHT = 800;
-	private GridPane game;
-	private FlowPane inventory;
-	private AnchorPane options;
-	private GridPane map;
-	private Renderer renderer;
-	private static Game currentGame;
+    public static final int WINDOW_WIDTH = 1000;
+    public static final int WINDOW_HEIGHT = 800;
+    private GridPane game;
+    private FlowPane inventory;
+    private AnchorPane options;
+    private GridPane map;
+    private Renderer renderer;
+    private static Game currentGame;
 
-	private Stage window;
-	private Scene startScene, gameScene;
+    private Stage window;
+    private Scene startScene, gameScene;
 
 
-	@Override public void start(Stage stage) {
-	    window = stage;
+    @Override public void start(Stage stage) {
+        window = stage;
 
         // display the start menu first
         window.setScene(createStartScene(stage));
-        window.setTitle("An Adventure Game");
+        window.setTitle("Void");
         window.show();
-	}
+    }
 
     private Scene createStartScene(Stage stage) {
-
-	    // title
+        // title
         Image image = null;
         try {
             image = new Image(new FileInputStream("src/application/title.png"));
@@ -78,7 +78,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         // edit map
         Button editMap = new Button("Edit Map");
         //TODO link up map editor gui
-       // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
+        // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
 
         // quit
         Button quit = new Button("Quit");
@@ -99,7 +99,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 
     public Scene createGameScene(Stage stage) {
-	    // create the menu bar
+        // create the menu bar
         MenuBar menuBar = new MenuBar();
         HBox hBox = new HBox(menuBar);
         menuBar.setPrefWidth(WINDOW_WIDTH);
@@ -120,8 +120,13 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
             currentGame = null;
             window.setScene(createGameScene(stage));
         });
-       // loadGame.setOnAction(Event -> loadFile(stage));
         saveGame.setOnAction(Event -> saveFile(stage));
+
+        // help
+        Label help = new Label("Help");
+        help.setOnMouseClicked(mouseEvent->{ displayHelp(); });
+        Menu helpMenu = new Menu("", help);
+        menuBar.getMenus().add(helpMenu);
 
         // quit
         Label quit = new Label("Quit");
@@ -129,11 +134,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         Menu quitGame = new Menu("", quit);
         menuBar.getMenus().add(quitGame);
 
-        // help
-        Label help = new Label("Help");
-        help.setOnMouseClicked(mouseEvent->{ confirmExit(); });
-        Menu helpMenu = new Menu("", help);
-        menuBar.getMenus().add(helpMenu);
 
         // disables key control
         menuBar.setFocusTraversable(false);
@@ -170,119 +170,118 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         return gameScene;
     }
 
-	private void startNewGame(Stage stage) {
-    try {
-      currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
-      window.setScene(createGameScene(stage));
-    } catch (XMLParser.ParseError parseError) {
-      parseError.printStackTrace();
+    private void startNewGame(Stage stage) {
+        try {
+            currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
+            window.setScene(createGameScene(stage));
+        } catch (XMLParser.ParseError parseError) {
+            parseError.printStackTrace();
+        }
     }
-	}
 
 
-	public void loadFile(Stage stage) {
-		FileChooser chooser = new FileChooser();
-		configureFileChooser(chooser);
-		chooser.setTitle("Open Game XML File");
-		File file = chooser.showOpenDialog(stage);
+    public void loadFile(Stage stage) {
+        FileChooser chooser = new FileChooser();
+        configureFileChooser(chooser);
+        chooser.setTitle("Open Game XML File");
+        File file = chooser.showOpenDialog(stage);
 
-		if(file != null) {
-      try {
-        currentGame = XMLParser.parseGame(file);
-      } catch (XMLParser.ParseError parseError) {
-        //TODO: Open dialogue box that says it was an invalid XML file and to please try again
-        System.out.println("Invalid file");
+        if(file != null) {
+            try {
+                currentGame = XMLParser.parseGame(file);
+            } catch (XMLParser.ParseError parseError) {
+                //TODO: Open dialogue box that says it was an invalid XML file and to please try again
+                System.out.println("Invalid file");
 
-      }
-      setGame(stage);
-		}
-	}
+            }
+            setGame(stage);
+        }
+    }
 
-	public void saveFile(Stage stage){
-		FileChooser fileChooser = new FileChooser();
-		configureFileChooser(fileChooser);
+    public void saveFile(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        configureFileChooser(fileChooser);
 
-		//Show save file dialog
-		File file = fileChooser.showSaveDialog(stage);
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(stage);
 
-		if (file != null) {
-			XMLParser.saveFile(file, currentGame);
-		}
-	}
+        if (file != null) {
+            XMLParser.saveFile(file, currentGame);
+        }
+    }
 
-	/**
-	 * A class to configure the loading and saving of files to open in the current directory,
-	 * and only load/save files in XML format
-	 * @param fileChooser
-	 */
-	private static void configureFileChooser(final FileChooser fileChooser) {
-		fileChooser.setTitle("Open XML file");
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+    /**
+     * A class to configure the loading and saving of files to open in the current directory,
+     * and only load/save files in XML format
+     * @param fileChooser
+     */
+    private static void configureFileChooser(final FileChooser fileChooser) {
+        fileChooser.setTitle("Open XML file");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
-		fileChooser.getExtensionFilters().add(extFilter);
-	}
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+    }
 
 
-	public void setWindowRatio(){
-		//set ratios
-		this.game.setPrefSize(WINDOW_WIDTH*0.7, WINDOW_HEIGHT);
-		this.inventory.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.5);
-		this.options.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.1);
-		this.map.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.4);
-	}
+    public void setWindowRatio(){
+        //set ratios
+        this.game.setPrefSize(WINDOW_WIDTH*0.7, WINDOW_HEIGHT);
+        this.inventory.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.5);
+        this.options.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.1);
+        this.map.setPrefSize(WINDOW_WIDTH*0.3,WINDOW_HEIGHT*0.4);
+    }
 
-	public GridPane setGame(Stage stage) {
-		if(currentGame == null) {
+    public GridPane setGame(Stage stage) {
+        if(currentGame == null) {
 //			System.out.println("Load a game or start a new game first!");
-			//TODO: For now until we can get a start menu
-			loadFile(stage);
-		}
-		renderer = new Renderer(currentGame);
-		GridPane grid = new GridPane();
-		grid.add(renderer.getRoot(), 0, 1);
-		return grid;
-	}
+            //TODO: For now until we can get a start menu
+            loadFile(stage);
+        }
+        renderer = new Renderer(currentGame);
+        GridPane grid = new GridPane();
+        grid.add(renderer.getRoot(), 0, 1);
+        return grid;
+    }
 
-	public FlowPane setInventory() {
-		FlowPane flow = new FlowPane();
-		flow.setStyle("-fx-background-color: blue;");
+    public FlowPane setInventory() {
+        FlowPane flow = new FlowPane();
+        flow.setStyle("-fx-background-color: blue;");
 
-		flow.setPadding(new Insets(8,1,1,8));
-		flow.setVgap(4);
-		flow.setHgap(4);
-		flow.setPrefWrapLength(WINDOW_WIDTH*0.15); // preferred width allows for two columns
+        flow.setPadding(new Insets(8,1,1,8));
+        flow.setVgap(4);
+        flow.setHgap(4);
+        flow.setPrefWrapLength(WINDOW_WIDTH*0.15); // preferred width allows for two columns
 
-		ToggleButton btn;
-		ToggleGroup group = new ToggleGroup();
+        ToggleButton btn;
+        ToggleGroup group = new ToggleGroup();
 
-		String[] images = new String[]{"key.png","green-key.png", "red-key.png","unlit-bomb.png","two-coins.png","two-coins.png"};
+        String[] images = new String[]{"key.png","green-key.png", "red-key.png","unlit-bomb.png","two-coins.png","two-coins.png"};
 
-		for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
+            btn = new ToggleButton();
+            btn.setFocusTraversable(false); // disables key control
+            Image image = new Image(getClass().getResourceAsStream(images[i]));
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(80);
+            imageView.setFitWidth(80);
+            btn.setGraphic(imageView);
+            btn.setToggleGroup(group);
+            btn.setPrefSize(WINDOW_WIDTH*0.14, WINDOW_HEIGHT*0.5*0.23);
+            flow.getChildren().add(btn);
 
-			btn = new ToggleButton();
-			btn.setFocusTraversable(false); // disables key control
-			Image image = new Image(getClass().getResourceAsStream(images[i]));
-			ImageView imageView = new ImageView(image);
-			imageView.setFitHeight(80);
-			imageView.setFitWidth(80);
-			btn.setGraphic(imageView);
-			btn.setToggleGroup(group);
-			btn.setPrefSize(WINDOW_WIDTH*0.14, WINDOW_HEIGHT*0.5*0.23);
-			flow.getChildren().add(btn);
+        }
 
-		}
+        return flow;
 
-		return flow;
+    }
 
-	}
-
-	public AnchorPane setOptions() {
-		AnchorPane options = new AnchorPane();
-		Button pickupButton = new Button("Pick Up");
-		Button dropButton = new Button("Drop");
-		Button diffuseButton = new Button("Diffuse");
-		Button unlockButton = new Button("Unlock");
+    public AnchorPane setOptions() {
+        AnchorPane options = new AnchorPane();
+        Button pickupButton = new Button("Pick Up");
+        Button dropButton = new Button("Drop");
+        Button diffuseButton = new Button("Diffuse");
+        Button unlockButton = new Button("Unlock");
 
         // disables key control
         pickupButton.setFocusTraversable(false);
@@ -310,103 +309,133 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 
         HBox hb = new HBox();
-		hb.setPadding(new Insets( 20,0,20,20));
-		hb.setSpacing(10);
-		hb.getChildren().addAll(pickupButton, dropButton, diffuseButton, unlockButton);
-		options.setStyle("-fx-background-color: green;");
+        hb.setPadding(new Insets( 20,0,20,20));
+        hb.setSpacing(10);
+        hb.getChildren().addAll(pickupButton, dropButton, diffuseButton, unlockButton);
+        options.setStyle("-fx-background-color: green;");
 
-		options.getChildren().add(hb);
-		return options;
-	}
+        options.getChildren().add(hb);
+        return options;
+    }
 
-	public GridPane setMap() {
-		GridPane grid = new GridPane();
-		Text name = new Text("map");
-		grid.add(name, 0, 0);
-		grid.setStyle("-fx-background-color: orange;");
-		grid.setPrefWidth(170);
-		return grid;
-	}
+    public GridPane setMap() {
+        GridPane grid = new GridPane();
+        Text name = new Text("map");
+        grid.add(name, 0, 0);
+        grid.setStyle("-fx-background-color: orange;");
+        grid.setPrefWidth(170);
+        return grid;
+    }
 
-	public void confirmExit() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Quit Game");
-		alert.setHeaderText("Are you sure?");
+    public void confirmExit() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Quit Game");
+        alert.setHeaderText("Are you sure?");
 
-		Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = alert.showAndWait();
 
-		if (result.get() == ButtonType.OK){
-			Platform.exit(); // exit application
-		} else  {
-			//do nothing..
-		}
-	}
+        if (result.get() == ButtonType.OK){
+            Platform.exit(); // exit application
+        } else  {
+            //do nothing..
+        }
+    }
 
-	public void displayHelp() {
+    public void displayHelp() {
+        // blur the GUI
+        game.setEffect(new GaussianBlur());
+        inventory.setEffect(new GaussianBlur());
+        options.setEffect(new GaussianBlur());
+        map.setEffect(new GaussianBlur());
+
+        VBox pauseRoot = new VBox(5);
+        pauseRoot.setPrefSize(500,200);
+
+        pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+        pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
+        pauseRoot.setPadding(new Insets(20));
+
+        Button resume = new Button("Resume");
+        pauseRoot.getChildren().add(resume);
+
+        Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
+        helpDialog.initOwner(window);
+        helpDialog.initModality(Modality.APPLICATION_MODAL);
+        helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
+
+
+        resume.setOnAction(event -> {
+            game.setEffect(null);
+            inventory.setEffect(null);
+            options.setEffect(null);
+            map.setEffect(null);
+            helpDialog.hide();
+        });
+
+        helpDialog.show();
+
+
 
     }
 
-	@Override
-	public void handle(KeyEvent event) {
-		int dx = 0;
-		int dy = 0;
-		//TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
+    @Override
+    public void handle(KeyEvent event) {
+        int dx = 0;
+        int dy = 0;
+        //TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
 //		currentGame.startTurn(event.getCode().getName());
-		//testing
-		switch (event.getCode()) {
-			case UP:
-				dx = -1;
-				break;
-			case LEFT:
-				dy = -1;
-				break;
-			case DOWN:
-				dx = 1;
-				break;
-			case RIGHT:
-				dy = 1;
-				break;
-			case SPACE:
-				renderer.rotate();
-				break;
-			case P:
-				currentGame.pickUpItem();
-				break;
-			case D:
-				currentGame.dropItem();
-				break;
-			case F:
-				currentGame.diffuseBomb();
-				break;
-			case U:
-				currentGame.unlockVendingMachine();
-				break;
-			case V:
-				currentGame.useVendingMachine();
-				break;
-			case R:
-				currentGame.moveRoom();
-				renderer.newRoom();
-				break;
-			case B:
-				currentGame.bribeGuard();
-				break;
-			default:
+        //testing
+        switch (event.getCode()) {
+            case UP:
+                dx = -1;
+                break;
+            case LEFT:
+                dy = -1;
+                break;
+            case DOWN:
+                dx = 1;
+                break;
+            case RIGHT:
+                dy = 1;
+                break;
+            case SPACE:
+                renderer.rotate();
+                break;
+            case P:
+                currentGame.pickUpItem();
+                break;
+            case D:
+                currentGame.dropItem();
+                break;
+            case F:
+                currentGame.diffuseBomb();
+                break;
+            case U:
+                currentGame.unlockVendingMachine();
+                break;
+            case V:
+                currentGame.useVendingMachine();
+                break;
+            case R:
+                currentGame.moveRoom();
+                renderer.newRoom();
+                break;
+            case B:
+                currentGame.bribeGuard();
+                break;
+            default:
 
-		}
-		if(!currentGame.getPlayer().moveTile(dx, dy)){
-			//Return if player is out of bounds
-			return;
-		}
-		renderer.draw();
-	}
-
-
-
+        }
+        if(!currentGame.getPlayer().moveTile(dx, dy)){
+            //Return if player is out of bounds
+            return;
+        }
+        renderer.draw();
+    }
 
 
     public static void main(String[] args) {
-		Application.launch(args);
-	}
+        Application.launch(args);
+    }
 
 }
