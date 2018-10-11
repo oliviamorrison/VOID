@@ -30,7 +30,10 @@ import static java.lang.Integer.parseInt;
 //TODO: UML Diagram
 
 //TODO: Remove item from list of items in room when picked up
-//TODO: Change doortile to portal
+//TODO: Change door tile to portal
+
+  //TODO: fix moving items to different rooms, this can either be done by the items keeping track of what room they are in
+  //or when an item is moved the room updates its list of items
 public class XMLParser {
   private static Schema schema;
 
@@ -101,6 +104,7 @@ public class XMLParser {
     //Get position of player and add as attribute to player element
     player.setAttribute("row", game.getPlayer().getTile().getX()+"");
     player.setAttribute("col", game.getPlayer().getTile().getY()+"");
+    player.setAttribute("health", game.getPlayer().getHealth()+"");
 
     //Add coordinates of the room the player is in to the player element
     Element roomRow = document.createElement("roomRow");
@@ -199,13 +203,7 @@ public class XMLParser {
     }
   }
 
-  public static class ParseError extends Exception{
-    ParseError(String message){
-      super(message);
-    }
-  }
-
-  private static void parseRoom(Node room, Room[][] board) {
+  private static void parseRoom(Node room, Room[][] board) throws ParseError {
     List<String> doors = new ArrayList<>();
     List<Item> items = new ArrayList<>();
     List<Challenge> challenges = new ArrayList<>();
@@ -234,15 +232,17 @@ public class XMLParser {
     board[rowCol[0]][rowCol[1]] = newRoom;
   }
 
-  private static Player parsePlayer(Node playerNode, Room[][] board) {
+  private static Player parsePlayer(Node playerNode, Room[][] board) throws ParseError {
     Element playerElement = (Element) playerNode;
     int roomRow = parseInteger("roomRow", playerElement);
     int roomCol = parseInteger("roomCol", playerElement);
 
     Room playerRoom = board[roomRow][roomCol];
     int[] rowCol = getRowCol(playerElement);
+    if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
+    int health = parseInt(playerElement.getAttribute("health"));
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), -1);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
@@ -256,7 +256,7 @@ public class XMLParser {
     return parseInt(n.item(0).getTextContent());
   }
 
-  private static void parseItems(NodeList items, List<Item> tokens, boolean isInventory) {
+  private static void parseItems(NodeList items, List<Item> tokens, boolean isInventory) throws ParseError {
     for(int i = 0; i< items.getLength(); i++){
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
       if(!token.equals("")){
@@ -295,7 +295,7 @@ public class XMLParser {
     }
   }
 
-  private static void parseChallenges(NodeList items, List<Challenge> challenges) {
+  private static void parseChallenges(NodeList items, List<Challenge> challenges) throws ParseError {
 
     for(int i = 0; i< items.getLength(); i++){
       Node node = items.item(i);
@@ -332,11 +332,18 @@ public class XMLParser {
     }
   }
 
-  private static int[] getRowCol(Element elem){
+  private static int[] getRowCol(Element elem) throws ParseError {
+    if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals(""))
+      throw new ParseError("Player needs position attribute");
+
     int row = parseInt(elem.getAttribute("row"));
     int col = parseInt(elem.getAttribute("col"));
     return new int[]{row, col};
   }
 
-  //TODO: Save and load players health
+  public static class ParseError extends Exception{
+    ParseError(String message){
+      super(message);
+    }
+  }
 }

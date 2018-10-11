@@ -35,11 +35,9 @@
         <door>Left</door>
         <item row="7" col="7">Coin</item>
     </room>
-    <player row="1" col="1">
+    <player row="1" col="1" health="100">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
-        <inventory>
-            <item>item</item>
-        </inventory>
+        <inventory/>
     </player>
 </game>
