@@ -37,10 +37,10 @@ public class Renderer {
         root.getChildren().add(player.getEllipse());
     }
 
-    public void rotate() {
-        currentRoom.rotateRoomClockwise();
-        draw();
-    }
+//    public void rotate() {
+//        currentRoom.rotateRoomClockwise();
+//        draw();
+//    }
 
     public void draw(){
         root.getChildren().clear();
@@ -90,7 +90,7 @@ public class Renderer {
     }
 
     public void drawHealthBar(){
-        //TODO: Need to fix this. 
+        //TODO: Need to fix this.
         System.out.println(game.getPlayer().getHealth());
         double height = 20;
         double width = (game.getPlayer().getHealth()) * 2;

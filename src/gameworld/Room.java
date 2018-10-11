@@ -323,7 +323,7 @@ public class Room {
     items.remove(item);
   }
 
-  public void rotateRoomClockwise() {
+  public void rotateRoomAnticlockwise() {
     int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;
     for (int i = 0; i < x; i++) {
@@ -336,5 +336,17 @@ public class Room {
       }
     }
   }
+
+  public void rotateRoomClockwise(){
+    Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
+    for(int row = 0; row < ROOMSIZE; row++){
+      for(int col = 0; col < ROOMSIZE; col++){
+        tempArray[ROOMSIZE - col - 1][row] = this.tiles[row][col];
+      }
+    }
+    this.tiles = tempArray;
+  }
+
+
 
 }
