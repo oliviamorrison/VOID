@@ -1,16 +1,24 @@
 package application;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Optional;
 
 import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -31,36 +39,81 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 	private Renderer renderer;
 	private static Game currentGame;
 
-	private Stage mainStage;
-	private Stage helpStage;
+	private Stage window;
+	private Scene startScene, gameScene;
 
 
 	@Override public void start(Stage stage) {
-		// create the menu bar
-		MenuBar menuBar = new MenuBar();
-		HBox hBox = new HBox(menuBar);
-		menuBar.setPrefWidth(WINDOW_WIDTH);
+	    window = stage;
 
-		// menu bar
-		Menu file = new Menu("File");
-		menuBar.getMenus().add(file);
+        // display the start menu first
+        window.setScene(createStartScene(stage));
+        window.setTitle("An Adventure Game");
+        window.show();
+	}
 
-		// file 
-		MenuItem newGame = new MenuItem("New Game");
-		MenuItem editMap = new MenuItem("Edit Map");
-		MenuItem loadGame = new MenuItem("Load Game");
-		MenuItem saveGame = new MenuItem("Save Game");
-		file.getItems().addAll(newGame, editMap, loadGame, saveGame);
+    private Scene createStartScene(Stage stage) {
 
-		newGame.setOnAction(Event -> startNewGame(stage));
-		loadGame.setOnAction(Event -> loadFile(stage));
-		saveGame.setOnAction(Event -> saveFile(stage));
+        // new game
+        Button newGame = new Button("New Game");
+        //TODO create new instance of a game from a default xml file
+        //TODO storyline????
+        newGame.setOnAction(e -> window.setScene(createGameScene(stage)));
 
-		// quit
-		Label quit = new Label("Quit");
-		quit.setOnMouseClicked(mouseEvent->{ confirmExit(); });
-		Menu quitGame = new Menu("", quit);
-		menuBar.getMenus().add(quitGame);
+        // load
+        Button load = new Button("Load Game");
+        load.setOnAction(e -> window.setScene(createGameScene(stage)));
+
+        // edit map
+        Button editMap = new Button("Edit Map");
+        //TODO link up map editor gui
+        editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
+
+        // quit
+        Button quit = new Button("Quit");
+        quit.setOnMouseClicked(mouseEvent->{ confirmExit(); });
+
+
+        // buttons laid out in vertical column
+        VBox buttons = new VBox(20);
+        buttons.getChildren().addAll(newGame, load, editMap, quit);
+        buttons.setAlignment(Pos.CENTER);
+
+
+        // create the Game Scene
+        startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
+        startScene.setOnKeyPressed(this);
+        return startScene;
+
+    }
+
+
+    public Scene createGameScene(Stage stage) {
+	    // create the menu bar
+        MenuBar menuBar = new MenuBar();
+        HBox hBox = new HBox(menuBar);
+        menuBar.setPrefWidth(WINDOW_WIDTH);
+
+        // menu bar
+        Menu file = new Menu("File");
+        menuBar.getMenus().add(file);
+
+        // file
+        MenuItem newGame = new MenuItem("New Game");
+        MenuItem editMap = new MenuItem("Edit Map");
+        MenuItem loadGame = new MenuItem("Load Game");
+        MenuItem saveGame = new MenuItem("Save Game");
+        file.getItems().addAll(newGame, editMap, loadGame, saveGame);
+
+        newGame.setOnAction(Event -> startNewGame(stage));
+        loadGame.setOnAction(Event -> loadFile(stage));
+        saveGame.setOnAction(Event -> saveFile(stage));
+
+        // quit
+        Label quit = new Label("Quit");
+        quit.setOnMouseClicked(mouseEvent->{ confirmExit(); });
+        Menu quitGame = new Menu("", quit);
+        menuBar.getMenus().add(quitGame);
 
         // help
         Label help = new Label("Help");
@@ -68,49 +121,43 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         Menu helpMenu = new Menu("", help);
         menuBar.getMenus().add(helpMenu);
 
-		// initialise the game panes
-		this.game = setGame(stage);
-		this.inventory = setInventory();
-		this.options = setOptions();
-		this.map = setMap();
+        // initialise the game panes
+        this.game = setGame(stage);
+        this.inventory = setInventory();
+        this.options = setOptions();
+        this.map = setMap();
 
-		FlowPane stack = new FlowPane();
-		stack.getChildren().addAll(inventory, options, map);
+        FlowPane stack = new FlowPane();
+        stack.getChildren().addAll(inventory, options, map);
 
-		stack.setHgap(4);
-		stack.setPrefWrapLength(WINDOW_WIDTH*0.3); // preferred width allows for two columns
+        stack.setHgap(4);
+        stack.setPrefWrapLength(WINDOW_WIDTH*0.3); // preferred width allows for two columns
 
-		HBox hb = new HBox();
-		hb.getChildren().add(stack);
+        HBox hb = new HBox();
+        hb.getChildren().add(stack);
 
-		GridPane grid = new GridPane();
+        GridPane grid = new GridPane();
 
-		grid.add(game, 0, 1);
-		grid.add(hb, 1, 1);
-		grid.add(hBox, 0, 0);
+        grid.add(game, 0, 1);
+        grid.add(hb, 1, 1);
+        grid.add(hBox, 0, 0);
 
-		setWindowRatio();
+        setWindowRatio();
 
-		// Set the size of the window
-		grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        // Set the size of the window
+        grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		// Create the Scene
-		Scene scene = new Scene(grid);
-
-		scene.setOnKeyPressed(this);
-
-		// Add the scene to the Stage
-		stage.setScene(scene);
-		// Set the title of the Stage
-		stage.setTitle("An Adventure Game");
-		// Display the Stage
-		stage.show();
-	}
+        // Create the Game Scene
+        gameScene = new Scene(grid);
+        gameScene.setOnKeyPressed(this);
+        return gameScene;
+    }
 
 	private void startNewGame(Stage stage) {
 		currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
 		setGame(stage);
 	}
+
 
 	public void loadFile(Stage stage) {
 		FileChooser chooser = new FileChooser();
@@ -166,8 +213,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		}
 		renderer = new Renderer(currentGame);
 		GridPane grid = new GridPane();
-		Text name = new Text("game");
-		grid.add(name, 0, 0);
 		grid.add(renderer.getRoot(), 0, 1);
 		return grid;
 	}
