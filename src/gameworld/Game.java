@@ -65,28 +65,6 @@ public class Game {
 
   }
 
-  public void distributeHealthPacks() {
-
-    int healthPacks = 2, randomX, randomY;
-
-    while (healthPacks > 0) {
-
-      randomX = (int) (Math.random() * 3);
-      randomY = (int) (Math.random() * 3);
-
-      Room randomRoom = board[randomY][randomX];
-
-      if (randomRoom != null)
-        if (!randomRoom.hasHealthPack()) {
-          randomRoom.addHealthPack();
-          randomRoom.setHasHealthPack(true);
-          healthPacks--;
-        }
-
-    }
-
-  }
-
   public void setupTimer() {
 
     timer = new Timer();
@@ -188,7 +166,7 @@ public class Game {
   public void unlockVendingMachine() {
 
     System.out.println("You are unlocking");
-    AccessibleTile t = (AccessibleTile) player.getTile();
+    AccessibleTile t = player.getTile();
 
     AccessibleTile challengeTile = this.currentRoom.checkChallengeNearby(t);
 
