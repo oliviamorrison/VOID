@@ -242,7 +242,7 @@ public class XMLParser {
     if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
     int health = parseInt(playerElement.getAttribute("health"));
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, Direction.Top);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");

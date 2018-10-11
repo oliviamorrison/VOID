@@ -85,6 +85,8 @@ public class Room {
   }
 
   public Tile moveTile(Tile t, int dx, int dy) {
+//    based on dx and dy values change currentdirection of player
+
 
     int[] coordinates = getTileCoordinates(t);
 
