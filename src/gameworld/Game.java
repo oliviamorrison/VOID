@@ -29,11 +29,11 @@ public class Game {
     this.currentRoom = player.getRoom();
     connectRooms();
     distributeHealthPacks();
+    setupTimer();
   }
 
   public void startGame() {
 
-    setupTimer();
 
     while (true) {
 
@@ -97,9 +97,18 @@ public class Game {
 
   }
 
+  public int getHealth() {
+    return health;
+  }
+
+  public void setHealth(int health) {
+    this.health = health;
+  }
+
   public void setupTimer() {
 
     timer = new Timer();
+//    timer.schedule(new HealthLossTimer(), 0, 1000);
     timer.schedule(new HealthLossTimer(), 0, 1000);
 
   }
