@@ -349,6 +349,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 				break;
 			case R:
 				currentGame.moveRoom();
+				renderer.newRoom();
 				break;
 			case B:
 				currentGame.bribeGuard();
@@ -357,7 +358,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 		}
 		currentGame.getPlayer().moveTile(dx, dy);
-		renderer.redraw();
+		renderer.draw();
 	}
 
 
