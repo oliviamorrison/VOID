@@ -96,7 +96,7 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
-    if (newX >= 10 || newY >= 10)
+    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10)
       return null;
 
     Tile tile = tiles[newX][newY];

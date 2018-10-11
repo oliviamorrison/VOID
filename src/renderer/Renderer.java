@@ -90,6 +90,7 @@ public class Renderer {
     }
 
     public void drawHealthBar(){
+        //TODO: Need to fix this. 
         System.out.println(game.getPlayer().getHealth());
         double height = 20;
         double width = (game.getPlayer().getHealth()) * 2;
