@@ -10,7 +10,7 @@
                             <xs:element type="xs:byte" name="row"/>
                             <xs:element type="xs:byte" name="col"/>
                             <xs:element type="xs:string" name="door" maxOccurs="unbounded" minOccurs="0"/>
-                            <xs:element type="xs:string" name="mapItem" minOccurs="0"/>
+                            <xs:element type="xs:string" name="item" maxOccurs="unbounded" minOccurs="0"/>
                             <xs:element name="challenge" minOccurs="0">
                                 <xs:complexType>
                                     <xs:simpleContent>
@@ -30,7 +30,13 @@
                             <xs:element type="xs:byte" name="roomCol"/>
                             <xs:element type="xs:byte" name="tileRow"/>
                             <xs:element type="xs:byte" name="tileCol"/>
-                            <xs:element type="xs:string" name="inventory"/>
+                            <xs:element name="inventory">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="item" maxOccurs="unbounded" minOccurs="0"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
