@@ -13,7 +13,6 @@ public class Room {
   private List<String> doors;
   private List<Challenge> challenges;
   private boolean hasHealthPack = false;
-  private boolean hasAntidote = false;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
@@ -23,10 +22,6 @@ public class Room {
 
 
   public Room(int row, int col, List<String> doors, List<Item> items, List<Challenge> challenges) {
-
-    if (items.contains(Item.Antidote)) {
-      hasAntidote = true;
-    }
 
     this.row = row;
     this.col = col;
@@ -43,9 +38,15 @@ public class Room {
       }
     }
 
-    while (!challenges.isEmpty()) {
+    for (Item item : items) {
 
-      Challenge challenge = challenges.get(0);
+      AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
+      tile.setItem(item);
+
+    }
+
+    for (Challenge challenge : challenges) {
+
       String dir = challenge.getDirection();
 
       if (challenge instanceof Bomb || challenge instanceof Guard) {
@@ -70,91 +71,60 @@ public class Room {
 
       if (challenge instanceof VendingMachine) {
 
-        boolean itemPlaced = false;
-        while (!itemPlaced) {
-          int randomX = (int) (Math.random() * 8) + 1;
-          int randomY = (int) (Math.random() * 8) + 1;
-          if (tiles[randomY][randomX] instanceof AccessibleTile) {
+        AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
+        tile.setChallenge(challenge);
 
-            AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-            if (checkWallsNearby(tile)) {
-              if (!tile.hasItem() && !tile.hasChallenge()) {
-                tile.setChallenge(challenge);
-                itemPlaced = true;
-              }
-            }
-          }
-        }
       }
-
-      challenges.remove(challenge);
 
     }
 
-    if (!hasAntidote) {
-      for (Item item : this.items) {
-        boolean itemPlaced = false;
-        while (!itemPlaced) {
-          int randomX = (int) (Math.random() * 8) + 1;
-          int randomY = (int) (Math.random() * 8) + 1;
-          if (tiles[randomY][randomX] instanceof AccessibleTile) {
-            AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-            if (!tile.hasItem() && !tile.hasChallenge()) {
-              tile.setItem(item);
-              itemPlaced = true;
-            }
-          }
-        }
-      }
-    }
   }
 
   public List<Challenge> getChallenges() {
     return challenges;
   }
 
-  public boolean checkWallsNearby(AccessibleTile tile) {
-
-    boolean nearbyWalls = false;
-    boolean doorNearby = false;
-
-    Tile t;
-
-    for (Direction direction : Direction.values()) {
-
-      int row = tile.getX();
-      int col = tile.getY();
-
-      switch (direction) {
-        case Left:
-          col -= 1;
-          break;
-        case Right:
-          col += 1;
-          break;
-        case Top:
-          row -= 1;
-          break;
-        case Bottom:
-          row += 1;
-          break;
-      }
-
-      if (row == 5 || col == 5) {
-        return false;
-      }
-
-      t = tiles[row][col];
-
-      if (t instanceof InaccessibleTile) {
-        nearbyWalls = true;
-      }
-
-    }
-
-    return nearbyWalls;
-
-  }
+//  public boolean checkWallsNearby(AccessibleTile tile) {
+//
+//    boolean nearbyWalls = false;
+//
+//    Tile t;
+//
+//    for (Direction direction : Direction.values()) {
+//
+//      int row = tile.getX();
+//      int col = tile.getY();
+//
+//      switch (direction) {
+//        case Left:
+//          col -= 1;
+//          break;
+//        case Right:
+//          col += 1;
+//          break;
+//        case Top:
+//          row -= 1;
+//          break;
+//        case Bottom:
+//          row += 1;
+//          break;
+//      }
+//
+//      if (row == 5 || col == 5) {
+//        return false;
+//      }
+//
+//      t = tiles[row][col];
+//
+//      if (t instanceof InaccessibleTile) {
+//        nearbyWalls = true;
+//      }
+//
+//    }
+//
+//    return nearbyWalls;
+//
+//  }
 
   public Room() {
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
@@ -240,10 +210,6 @@ public class Room {
 
   public void setTile(Tile tile, int row, int col) {
     tiles[row][col] = tile;
-  }
-
-  public Tile getNeighbour() {
-    return null;
   }
 
   public AccessibleTile checkChallengeNearby(AccessibleTile tile) {
