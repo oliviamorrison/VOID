@@ -174,7 +174,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     } catch (XMLParser.ParseError parseError) {
       parseError.printStackTrace();
     }
-    setGame(stage);
+   // setGame(stage);
 	}
 
 
