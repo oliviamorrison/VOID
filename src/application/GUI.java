@@ -188,6 +188,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         currentGame = XMLParser.parseGame(file);
       } catch (XMLParser.ParseError parseError) {
         //TODO: Get user to load  a new file
+        System.out.println("Invalid file");
 
       }
       setGame(stage);
