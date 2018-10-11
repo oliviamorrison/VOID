@@ -21,7 +21,10 @@ import static java.lang.Integer.parseInt;
 
 /**
  * Using javax.xml.parsers library
+ * Schema is in schema.xsd
  */
+//TODO: Generate new schema, check if players inventory can be saved, loaded and passed to the GUI
+
 //TODO: Make default new game file ineditable
   //TODO: If we have time, add different difficulty levels for easy/medium/hard
   //TODO: Add README
@@ -39,25 +42,23 @@ public class XMLParser {
 
       Room[][] board = game.getBoard();
 
-      //save game
-      Element root = saveGame(document, board);
+      //add root to XML file
+      Element root = document.createElement("game");
+      root.setAttribute("rows", board.length+"");
+      root.setAttribute("cols", board[0].length+"");
       document.appendChild(root);
 
-      //save room
+      //save rooms
       for(int i = 0; i < board.length; i++){
         for(int j = 0; j < board[i].length; j++){
           if(board[i][j]!=null){
-            Room room = board[i][j];
-            Element roomElement = saveRoom(document, i, j, room);
-            //Add room
-            root.appendChild(roomElement);
+            root.appendChild(saveRoom(document, i, j, board[i][j]));
           }
         }
       }
 
       //save player
-      Element player = savePlayer(game, document);
-      root.appendChild(player);
+      root.appendChild(savePlayer(game, document));
 
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
@@ -78,35 +79,10 @@ public class XMLParser {
     }
   }
 
-  private static Element saveGame(Document document, Room[][] board) {
-    // root element
-    Element root = document.createElement("game");
-    root.setAttribute("rows", board.length+"");
-    root.setAttribute("cols", board[0].length+"");
-
-//    // rows element
-//    Element rows = document.createElement("rows");
-//    rows.appendChild(document.createTextNode(board.length+""));
-//    root.appendChild(rows);
-//
-//    //cols element
-//    Element cols = document.createElement("cols");
-//    cols.appendChild(document.createTextNode(board[0].length+""));
-//    root.appendChild(cols);
-    return root;
-  }
-
   private static Element saveRoom(Document document, int i, int j, Room room) {
     Element roomElement = document.createElement("room");
-
-    //row
-    Element row = document.createElement("row");
-    row.appendChild(document.createTextNode(i+""));
-    roomElement.appendChild(row);
-    //col
-    Element col = document.createElement("col");
-    col.appendChild(document.createTextNode(j+""));
-    roomElement.appendChild(col);
+    roomElement.setAttribute("row", i+"");
+    roomElement.setAttribute("col", j+"");
 
     for(String direction: room.getDoors()){
       Element door = document.createElement("door");
@@ -122,28 +98,21 @@ public class XMLParser {
 
   private static Element savePlayer(Game game, Document document) {
     Element player = document.createElement("player");
+    //Get position of player and add as attribute to player element
+    player.setAttribute("row", game.getPlayer().getTile().getX()+"");
+    player.setAttribute("col", game.getPlayer().getTile().getY()+"");
 
-    //room coordinates
+    //Add coordinates of the room the player is in to the player element
     Element roomRow = document.createElement("roomRow");
     roomRow.appendChild(document.createTextNode(game.getPlayer().getRoom().getRow()+""));
     Element roomCol = document.createElement("roomCol");
     roomCol.appendChild(document.createTextNode(game.getPlayer().getRoom().getCol()+""));
-
     player.appendChild(roomRow);
     player.appendChild(roomCol);
 
-    //tile coordinates
-    Element tileRow = document.createElement("tileRow");
-    tileRow.appendChild(document.createTextNode(game.getPlayer().getTile().getX()+""));
-    Element tileCol = document.createElement("tileCol");
-    tileCol.appendChild(document.createTextNode(game.getPlayer().getTile().getY()+""));
-
-    player.appendChild(tileRow);
-    player.appendChild(tileCol);
-
     //save inventory
     Element inventory = document.createElement("inventory");
-    saveItems(document, game.getPlayer().getInventory(), inventory);
+    saveItems(document, game.getPlayer().getInventory(), inventory); //TODO: Change this bc inventory items don't have X and Y
     player.appendChild(inventory);
 
     return player;
@@ -156,7 +125,7 @@ public class XMLParser {
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
     }
-    //TODO: Health packs
+    //TODO: Health packs and row and col
   }
 
   private static void saveChallenges(Document document, List<Challenge> challenges, Element challengeCollector){
@@ -175,6 +144,7 @@ public class XMLParser {
       challenge.appendChild(document.createTextNode(challengeItem.toString()));
       challengeCollector.appendChild(challenge);
     }
+    //TODO: row and col
   }
 
 
