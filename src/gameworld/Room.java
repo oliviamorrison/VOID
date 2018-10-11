@@ -39,43 +39,73 @@ public class Room {
     }
 
     while (!challenges.isEmpty()) {
+
       Challenge challenge = challenges.get(0);
 
       if (challenge instanceof Bomb) {
 
-      }
-      challenges.remove(challenge);
-    }
+        Bomb bomb = (Bomb) challenge;
+        String dir = bomb.getDirection();
+        switch (dir) {
+          case "Left":
+            ((AccessibleTile) tiles[LEFT.x][LEFT.y + 1]).setChallenge(bomb);
+            break;
+          case "Right":
+            ((AccessibleTile) tiles[RIGHT.x][RIGHT.y - 1]).setChallenge(bomb);
+            break;
+          case "Top":
+            ((AccessibleTile) tiles[TOP.x + 1][TOP.y]).setChallenge(bomb);
+            break;
+          case "Bottom":
+            ((AccessibleTile) tiles[BOTTOM.x - 1][BOTTOM.y]).setChallenge(bomb);
+            break;
+          default:
 
-    if (row == 0 && col == 1) {
-      Tile t = tiles[8][5];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Bomb("Bottom"));
-      }
-    }
-    if (row == 1 && col == 2) {
-      boolean itemPlaced = false;
-      while (!itemPlaced) {
-        int randomX = (int) (Math.random() * 8) + 1;
-        int randomY = (int) (Math.random() * 8) + 1;
-        if (tiles[randomY][randomX] instanceof AccessibleTile) {
-          AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-          if (!tile.hasItem()) {
-            tile.setChallenge(new VendingMachine());
-            itemPlaced = true;
-          }
         }
       }
-    }
-    if (row == 2 && col == 1) {
-      Tile t = tiles[5][1];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Guard("Right"));
-      }
-    }
 
+      if (challenge instanceof Guard) {
+
+        Guard guard = (Guard) challenge;
+        String dir = guard.getDirection();
+        switch (dir) {
+          case "Left":
+            ((AccessibleTile) tiles[LEFT.x][LEFT.y + 1]).setChallenge(guard);
+            break;
+          case "Right":
+            ((AccessibleTile) tiles[RIGHT.x][RIGHT.y - 1]).setChallenge(guard);
+            break;
+          case "Top":
+            ((AccessibleTile) tiles[TOP.x + 1][TOP.y]).setChallenge(guard);
+            break;
+          case "Bottom":
+            ((AccessibleTile) tiles[BOTTOM.x - 1][BOTTOM.y]).setChallenge(guard);
+            break;
+          default:
+
+        }
+      }
+
+      if (challenge instanceof VendingMachine) {
+
+        boolean itemPlaced = false;
+        while (!itemPlaced) {
+          int randomX = (int) (Math.random() * 8) + 1;
+          int randomY = (int) (Math.random() * 8) + 1;
+          if (tiles[randomY][randomX] instanceof AccessibleTile) {
+            AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
+            if (!tile.hasItem()) {
+              tile.setChallenge(new VendingMachine());
+              itemPlaced = true;
+            }
+          }
+        }
+
+      }
+
+      challenges.remove(challenge);
+
+    }
 
     for (Item item : this.items) {
       boolean itemPlaced = false;
