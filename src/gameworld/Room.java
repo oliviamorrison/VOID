@@ -39,43 +39,50 @@ public class Room {
     }
 
     while (!challenges.isEmpty()) {
+
       Challenge challenge = challenges.get(0);
+      String dir = challenge.getDirection();
 
-      if (challenge instanceof Bomb) {
+      if (challenge instanceof Bomb || challenge instanceof Guard) {
 
-      }
-      challenges.remove(challenge);
-    }
+        switch (dir) {
+          case "Left":
+            ((AccessibleTile) tiles[LEFT.x][LEFT.y + 1]).setChallenge(challenge);
+            break;
+          case "Right":
+            ((AccessibleTile) tiles[RIGHT.x][RIGHT.y - 1]).setChallenge(challenge);
+            break;
+          case "Top":
+            ((AccessibleTile) tiles[TOP.x + 1][TOP.y]).setChallenge(challenge);
+            break;
+          case "Bottom":
+            ((AccessibleTile) tiles[BOTTOM.x - 1][BOTTOM.y]).setChallenge(challenge);
+            break;
+          default:
 
-    if (row == 0 && col == 1) {
-      Tile t = tiles[8][5];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Bomb("Bottom"));
-      }
-    }
-    if (row == 1 && col == 2) {
-      boolean itemPlaced = false;
-      while (!itemPlaced) {
-        int randomX = (int) (Math.random() * 8) + 1;
-        int randomY = (int) (Math.random() * 8) + 1;
-        if (tiles[randomY][randomX] instanceof AccessibleTile) {
-          AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-          if (!tile.hasItem()) {
-            tile.setChallenge(new VendingMachine());
-            itemPlaced = true;
-          }
         }
       }
-    }
-    if (row == 2 && col == 1) {
-      Tile t = tiles[5][1];
-      if (t instanceof AccessibleTile) {
-        AccessibleTile a = (AccessibleTile) t;
-        a.setChallenge(new Guard("Right"));
-      }
-    }
 
+      else if (challenge instanceof VendingMachine) {
+
+        boolean itemPlaced = false;
+        while (!itemPlaced) {
+          int randomX = (int) (Math.random() * 8) + 1;
+          int randomY = (int) (Math.random() * 8) + 1;
+          if (tiles[randomY][randomX] instanceof AccessibleTile) {
+            AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
+            if (!tile.hasItem()) {
+              tile.setChallenge(challenge);
+              itemPlaced = true;
+            }
+          }
+        }
+
+      }
+
+      challenges.remove(challenge);
+
+    }
 
     for (Item item : this.items) {
       boolean itemPlaced = false;

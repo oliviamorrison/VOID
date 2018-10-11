@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class Game {
 
   private static final int HEALTH_BOOST = 20;
-  private static final int MAX_HEALTH = 100;
+  private static final int MAX_HEALTH = 200;
 
   private Room[][] board;
   private Player player;
