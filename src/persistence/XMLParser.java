@@ -32,10 +32,6 @@ import static java.lang.Integer.parseInt;
 //TODO: Remove item from list of items in room when picked up
 //TODO: Change door tile to portal
 
-//TODO: fix moving items to different rooms, this can either be done by the items keeping track of what room they are in
-//or when an item is moved the room updates its list of items
-
-//TODO: Change parser to read tiles instead of lists?
 public class XMLParser {
   private static Schema schema;
 

@@ -21,34 +21,34 @@ public class Room {
   public static final int ROOMSIZE = 10;
 
 
-  public Room(int row, int col, List<String> doors, List<Item> items, List<Challenge> challenges) {
-
-    this.row = row;
-    this.col = col;
-    this.items = items;
-    this.doors = doors;
-    this.challenges = challenges;
-    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
-
-//    for (int i = 0; i < ROOMSIZE; i++) {
-//      for (int j = 0; j < ROOMSIZE; j++) {
-//        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
-//          tiles[i][j] = new InaccessibleTile(this, i, j);
-//        else tiles[i][j] = new AccessibleTile(this, i, j);
-//      }
+//  public Room(int row, int col, List<String> doors, List<Item> items, List<Challenge> challenges) {
+//
+//    this.row = row;
+//    this.col = col;
+//    this.items = items;
+//    this.doors = doors;
+//    this.challenges = challenges;
+//    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+//
+////    for (int i = 0; i < ROOMSIZE; i++) {
+////      for (int j = 0; j < ROOMSIZE; j++) {
+////        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
+////          tiles[i][j] = new InaccessibleTile(this, i, j);
+////        else tiles[i][j] = new AccessibleTile(this, i, j);
+////      }
+////    }
+//
+//    for (Item item : items) {
+//      AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
+//      tile.setItem(item);
 //    }
-
-    for (Item item : items) {
-      AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
-      tile.setItem(item);
-    }
-
-    for (Challenge challenge : challenges) {
-      AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
-      tile.setChallenge(challenge);
-    }
-
-  }
+//
+//    for (Challenge challenge : challenges) {
+//      AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
+//      tile.setChallenge(challenge);
+//    }
+//
+//  }
 
 
   public Room(int row, int col, Tile[][] tiles, List<String> doors){
@@ -83,10 +83,6 @@ public class Room {
 
   public int getCol() {
     return col;
-  }
-
-  public List<Item> getItems() {
-    return items;
   }
 
   public List<String> getDoors() {
