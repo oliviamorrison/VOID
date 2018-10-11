@@ -263,6 +263,14 @@ public class MapEditor extends Application {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("cutters.png",new Image(getClass().getResourceAsStream("cutters.png"),17, 17, false, false)));
       }
+
+      node = getNodeByRowColumnIndex(2,5,room5);
+
+      if(node instanceof TilePane){
+        TilePane i = (TilePane) node;
+        i.setMapItem(new MapItem("healthpack.png", new Image(getClass().getResourceAsStream("healthpack.png"),17,17,false,false)));
+      }
+
     }
 
     //room 6
@@ -312,6 +320,14 @@ public class MapEditor extends Application {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("two-coins.png",new Image(getClass().getResourceAsStream("two-coins.png"),17, 17, false, false)));
       }
+
+      node = getNodeByRowColumnIndex(7,2,room9);
+
+      if(node instanceof TilePane){
+        TilePane i = (TilePane) node;
+        i.setMapItem(new MapItem("healthpack.png", new Image(getClass().getResourceAsStream("healthpack.png"),17,17,false,false)));
+      }
+
     }
 
   }
@@ -561,9 +577,6 @@ public class MapEditor extends Application {
         if(roomNode instanceof GridPane){
           GridPane roomGrid = (GridPane) roomNode;
 
-          List<Item> items = new ArrayList<>();
-          List<Challenge> challenges = new ArrayList<>();
-          List<DoorTile> doors = new ArrayList<>();
 
           for(int k=0; k<10; k++){
             for(int l=0; l<10;l++){
@@ -593,14 +606,17 @@ public class MapEditor extends Application {
                       case "two-coins.png":
                         item = Item.Coin;
                         break;
+                      case "healthpack.png":
+                        item = Item.HealthPack;
+                        break;
                       case "guard.png":
-//                        challenge = new Guard(""); //TODO: Door checks
+                        challenge = new Guard(k,l);
                         break;
                       case "unlit-bomb.png":
-//                        challenge = new Bomb(""); //TODO: Door checks
+                        challenge = new Bomb(k,l);
                         break;
                       case "vending-machine.png":
-//                        challenge = new VendingMachine();
+                        challenge = new VendingMachine(k,l);
                         break;
                     }
 
