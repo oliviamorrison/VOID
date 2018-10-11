@@ -441,5 +441,13 @@ public class Game {
     return board;
   }
 
+  public void rotateRoomClockwise(){
+      currentRoom.rotateRoomClockwise();
+  }
+
+  public void rotateRoomAnticlockwise(){
+      currentRoom.rotateRoomAnticlockwise();
+  }
+
 }
 

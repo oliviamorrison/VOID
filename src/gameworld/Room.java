@@ -101,7 +101,7 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
-    if (newX >= 10 || newY >= 10)
+    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10)
       return null;
 
     Tile tile = tiles[newX][newY];
@@ -328,7 +328,7 @@ public class Room {
     items.remove(item);
   }
 
-  public void rotateRoomClockwise() {
+  public void rotateRoomAnticlockwise() {
     int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;
     for (int i = 0; i < x; i++) {
@@ -341,5 +341,17 @@ public class Room {
       }
     }
   }
+
+  public void rotateRoomClockwise(){
+    Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
+    for(int row = 0; row < ROOMSIZE; row++){
+      for(int col = 0; col < ROOMSIZE; col++){
+        tempArray[ROOMSIZE - col - 1][row] = this.tiles[row][col];
+      }
+    }
+    this.tiles = tempArray;
+  }
+
+
 
 }
