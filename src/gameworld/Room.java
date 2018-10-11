@@ -63,7 +63,7 @@ public class Room {
         }
       }
 
-      else if (challenge instanceof VendingMachine) {
+      if (challenge instanceof VendingMachine) {
 
         boolean itemPlaced = false;
         while (!itemPlaced) {
