@@ -22,7 +22,6 @@ public class Player {
     this.ellipse.setFill(Color.ORANGE);
     this.ellipse.setRadiusX(8);
     this.ellipse.setRadiusY(15);
-
   }
 
   public Room getRoom() {

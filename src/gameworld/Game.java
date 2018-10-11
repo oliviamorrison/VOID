@@ -23,7 +23,6 @@ public class Game {
   private int health = MAX_HEALTH;
 
   public Game(Room[][] board, Player player) {
-
     this.player = player;
     this.board = board;
     this.currentRoom = player.getRoom();
@@ -31,6 +30,10 @@ public class Game {
     distributeHealthPacks();
 
   }
+
+  /**
+   * For testing purposes
+   */
 
   public void startGame() {
 
@@ -121,7 +124,7 @@ public class Game {
 
   }
 
-  private void movePlayer(String direction) {
+  public void movePlayer(String direction) {
     int dx = 0;
     int dy = 0;
 
@@ -147,37 +150,6 @@ public class Game {
 
   private void startTurn() {
     String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
-    switch (input) {
-      case "m":
-        movePlayer();
-        break;
-      case "u":
-        pickUpItem();
-        break;
-      case "d":
-        dropItem();
-        break;
-      case "f":
-        diffuseBomb();
-        break;
-      case "t":
-        unlockVendingMachine();
-        break;
-      case "v":
-        useVendingMachine();
-        break;
-      case "r":
-        moveRoom();
-        break;
-      case "b":
-        bribeGuard();
-        break;
-      default:
-
-    }
-  }
-
-  public void startTurn(String input) {
     switch (input) {
       case "m":
         movePlayer();
@@ -328,12 +300,6 @@ public class Game {
 
   }
 
-  // for testing purposes
-  public String drawRoom() {
-    return currentRoom.draw();
-  }
-
-  // for testing purposes
   public Player getPlayer() {
     return player;
   }
@@ -366,6 +332,7 @@ public class Game {
       System.out.println("Player dropped " + item.toString());
     }
   }
+
 
   public void diffuseBomb() {
     AccessibleTile t = (AccessibleTile) player.getTile();
