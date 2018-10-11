@@ -117,6 +117,21 @@ public class MapEditor extends Application {
           if(selectedTilePane.getMapItem()==null) {
             //swap items
             String name = i.getImageName();
+
+            if(name.equals("player.png") || name.equals("diffuser.png")) {
+              String otherName;
+              if(name.equals("player.png"))otherName = "diffuser.png";
+              else otherName = "player.png";
+
+              GridPane room = selectedTilePane.getRoom();
+              TilePane moveTo = findFirstEmptyTile(room);
+              TilePane moveFrom = findItemInBoard(otherName);
+
+              moveTo.setMapItem(new MapItem(otherName,new Image(getClass().getResourceAsStream(otherName),20, 20, false, false)));
+              moveFrom.setMapItem(null);
+              moveFrom.resetImageView();
+            }
+
             selectedTilePane.setMapItem(new MapItem(name, new Image(getClass().getResourceAsStream(name),20, 20, false, false)));
             selectedItem.setMapItem(null);
             selectedItem.resetImageView();
@@ -137,6 +152,38 @@ public class MapEditor extends Application {
     items.add(makeGame, 2,4);
 
     return items;
+  }
+
+  private TilePane findItemInBoard(String name){
+    for (int i = 0; i <3; i++) {
+      for (int j = 0; j <3; j++) {
+        Node n = getNodeByRowColumnIndex(i,j,boardGrid);
+        if(n instanceof GridPane){
+          GridPane room = (GridPane) n;
+
+          for (int k = 0; k < 10; k++) {
+            for (int l = 0; l < 10; l++) {
+              Node tn = getNodeByRowColumnIndex(k,l,room);
+
+              if(tn instanceof TilePane){
+                TilePane t = (TilePane) tn;
+                if(t.hasMapItem()){
+
+                  MapItem item = t.getMapItem();
+
+                  if(item.getImageName().equals(name)) return t;
+                }
+
+              }
+
+            }
+          }
+
+        }
+      }
+    }
+
+    return null;
   }
 
   private GridPane initBoard() {
@@ -183,6 +230,15 @@ public class MapEditor extends Application {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("player.png",new Image(getClass().getResourceAsStream("player.png"),17, 17, false, false)));
       }
+
+      node = getNodeByRowColumnIndex(1,2,room1);
+
+      if(node instanceof TilePane){
+        TilePane i = (TilePane) node;
+        i.setMapItem(new MapItem("diffuser.png", new Image(getClass().getResourceAsStream("diffuser.png"),17,17,false,false)));
+
+      }
+
     }
 
     //room 2
@@ -230,6 +286,7 @@ public class MapEditor extends Application {
       if(node instanceof TilePane){
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("antidote.png",new Image(getClass().getResourceAsStream("antidote.png"),17, 17, false, false)));
+        i.setAccessible(false);
       }
     }
 
@@ -302,7 +359,7 @@ public class MapEditor extends Application {
           }
         }
 
-        TilePane tilePane = new TilePane(i, j, accessible);
+        TilePane tilePane = new TilePane(i, j, accessible, room);
         // Set each 'TilePane' the width and height
         tilePane.setPrefSize(tileWidth, tileHeight);
 
@@ -332,12 +389,25 @@ public class MapEditor extends Application {
   }
 
   public ItemSpace findFirstEmptyItem(){
-    ObservableList<Node> childrens = itemGrid.getChildren();
+    ObservableList<Node> children = itemGrid.getChildren();
 
-    for (Node node : childrens) {
+    for (Node node : children) {
       if(node instanceof ItemSpace) {
         ItemSpace i = (ItemSpace) node;
         if(!i.hasItem()) return i;
+      }
+    }
+
+    return null;
+  }
+
+  public TilePane findFirstEmptyTile(GridPane room){
+    ObservableList<Node> children = room.getChildren();
+
+    for (Node node : children) {
+      if(node instanceof TilePane) {
+        TilePane i = (TilePane) node;
+        if(!i.hasMapItem() && i.isAccessible()) return i;
       }
     }
 
@@ -364,33 +434,44 @@ public class MapEditor extends Application {
     private MapItem mapItem;
     private ImageView imageView;
     private boolean accessible;
+    private GridPane room;
 
-    public TilePane(int x, int y, boolean a) {
+    public TilePane(int x, int y, boolean a, GridPane r) {
       positionX = x;
       positionY = y;
       imageView = new ImageView();
       accessible = a;
+      room = r;
 
-      if(accessible) {
         setOnMouseClicked(e -> {
-          if (selectedTilePane != null) {
-            selectedTilePane.setStyle("-fx-padding: 0;" +
-                "-fx-border-style: solid inside;" +
-                "-fx-border-width: 0.5;" +
-                "-fx-border-color: black;");
-          }
+          if(accessible) {
+            if (selectedTilePane != null) {
+              selectedTilePane.setStyle("-fx-padding: 0;" +
+                      "-fx-border-style: solid inside;" +
+                      "-fx-border-width: 0.5;" +
+                      "-fx-border-color: black;");
+            }
 
-          selectedTilePane = this;
-          this.setStyle("-fx-padding: 0;" +
-              "-fx-border-style: solid inside;" +
-              "-fx-border-width: 2;" +
-              "-fx-border-color: red;");
+            selectedTilePane = this;
+            this.setStyle("-fx-padding: 0;" +
+                    "-fx-border-style: solid inside;" +
+                    "-fx-border-width: 2;" +
+                    "-fx-border-color: red;");
+          }
         });
-      }
+
+    }
+
+    public GridPane getRoom() {
+      return room;
     }
 
     public boolean isAccessible(){
       return accessible;
+    }
+
+    public void setAccessible(boolean b){
+      accessible = b;
     }
 
     public void resetImageView(){
@@ -400,6 +481,10 @@ public class MapEditor extends Application {
 
     public MapItem getMapItem() {
       return mapItem;
+    }
+
+    public boolean hasMapItem(){
+      return mapItem!=null;
     }
 
     public void setMapItem(MapItem mapItem) {
