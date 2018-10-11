@@ -289,7 +289,7 @@ public class MapEditor extends Application {
                     }
                 }
 
-                MapEditor.Tile tile = new MapEditor.Tile(i, j, accessible);
+                MapEditor.Tile tile = new MapEditor.Tile(i, j, accessible, door);
                 // Set each 'Tile' the width and height
                 tile.setPrefSize(tileWidth, tileHeight);
 
@@ -351,12 +351,14 @@ public class MapEditor extends Application {
         private Item item;
         private ImageView imageView;
         private boolean accessible;
+        private boolean door;
 
-        public Tile(int x, int y, boolean a) {
+        public Tile(int x, int y, boolean a, boolean d) {
             positionX = x;
             positionY = y;
             imageView = new ImageView();
             accessible = a;
+            door = d;
 
             if(accessible) {
                 setOnMouseClicked(e -> {
