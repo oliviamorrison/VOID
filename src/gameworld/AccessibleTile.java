@@ -11,8 +11,8 @@ public class AccessibleTile extends Tile {
   private boolean player = false;
 
 
-  public AccessibleTile(Room room, int x, int y) {
-    super(room, x, y);
+  public AccessibleTile( int x, int y) {
+    super(x, y);
   }
 
   public void setItem(Item item) {

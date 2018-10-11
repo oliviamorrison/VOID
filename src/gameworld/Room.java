@@ -30,13 +30,13 @@ public class Room {
     this.challenges = challenges;
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
 
-    for (int i = 0; i < ROOMSIZE; i++) {
-      for (int j = 0; j < ROOMSIZE; j++) {
-        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
-          tiles[i][j] = new InaccessibleTile(this, i, j);
-        else tiles[i][j] = new AccessibleTile(this, i, j);
-      }
-    }
+//    for (int i = 0; i < ROOMSIZE; i++) {
+//      for (int j = 0; j < ROOMSIZE; j++) {
+//        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
+//          tiles[i][j] = new InaccessibleTile(this, i, j);
+//        else tiles[i][j] = new AccessibleTile(this, i, j);
+//      }
+//    }
 
     for (Item item : items) {
       AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
@@ -50,6 +50,15 @@ public class Room {
 
   }
 
+
+  public Room(int row, int col, Tile[][] tiles, List<String> doors){
+    this.row = row;
+    this.col = col;
+    this.tiles = tiles;
+    this.doors = doors;
+  }
+
+
   public List<Challenge> getChallenges() {
     return challenges;
   }
@@ -59,8 +68,8 @@ public class Room {
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
         if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
-          tiles[i][j] = new InaccessibleTile(this, i, j);
-        else tiles[i][j] = new AccessibleTile(this, i, j);
+          tiles[i][j] = new InaccessibleTile(i, j);
+        else tiles[i][j] = new AccessibleTile(i, j);
       }
     }
     this.doors = new ArrayList<>();
