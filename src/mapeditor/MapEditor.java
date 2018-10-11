@@ -35,7 +35,7 @@ public class MapEditor extends Application {
         boardGrid.setPrefSize(BOARD_SIZE, BOARD_SIZE);
 
         itemGrid = initItem();
-        itemGrid.setStyle("-fx-background-color: lightpink");
+        itemGrid.setStyle("-fx-background-color: lightblue");
 
         // Use a StackPane to display the Image and the Grid
         mainPane = new GridPane();
@@ -68,7 +68,7 @@ public class MapEditor extends Application {
                 tile.setStyle("-fx-padding: 0;" +
                         "-fx-border-style: solid inside;" +
                         "-fx-border-width: 0.5;" +
-                        "-fx-border-color: green;");
+                        "-fx-border-color: black;");
 
                 // Add node on j column and i row
                 items.add(tile, j, i);
@@ -306,6 +306,10 @@ public class MapEditor extends Application {
         public boolean hasItem(){
             return item!=null;
         }
+    }
+
+    public void createGame(){
+
     }
 
 }
