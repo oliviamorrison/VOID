@@ -66,8 +66,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         ImageView imageView = new ImageView(image);
 
-
-
         // new game
         Button newGame = new Button("New Game");
         //TODO storyline????
@@ -80,7 +78,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         // edit map
         Button editMap = new Button("Edit Map");
         //TODO link up map editor gui
-        editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
+       // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
 
         // quit
         Button quit = new Button("Quit");
@@ -97,7 +95,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
         startScene.setOnKeyPressed(this);
         return startScene;
-
     }
 
 
@@ -119,7 +116,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         file.getItems().addAll(newGame, editMap, loadGame, saveGame);
 
         newGame.setOnAction(Event -> startNewGame(stage));
-        loadGame.setOnAction(Event -> loadFile(stage));
+        loadGame.setOnAction(Event -> {
+            currentGame = null;
+            window.setScene(createGameScene(stage));
+        });
+       // loadGame.setOnAction(Event -> loadFile(stage));
         saveGame.setOnAction(Event -> saveFile(stage));
 
         // quit
@@ -133,6 +134,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         help.setOnMouseClicked(mouseEvent->{ confirmExit(); });
         Menu helpMenu = new Menu("", help);
         menuBar.getMenus().add(helpMenu);
+
+        // disables key control
+        menuBar.setFocusTraversable(false);
 
         // initialise the game panes
         this.game = setGame(stage);
@@ -173,7 +177,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     } catch (XMLParser.ParseError parseError) {
       parseError.printStackTrace();
     }
-   // setGame(stage);
 	}
 
 
@@ -286,6 +289,25 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         dropButton.setFocusTraversable(false);
         diffuseButton.setFocusTraversable(false);
         unlockButton.setFocusTraversable(false);
+
+        // button listeners
+        pickupButton.setOnAction(Event -> {
+            currentGame.pickUpItem();
+            renderer.draw();
+        });
+        dropButton.setOnAction(Event -> {
+            currentGame.dropItem();
+            renderer.draw();
+        });
+        diffuseButton.setOnAction(Event -> {
+            currentGame.diffuseBomb();
+            renderer.draw();
+        });
+        unlockButton.setOnAction(Event -> {
+            currentGame.unlockVendingMachine();
+            renderer.draw();
+        });
+
 
         HBox hb = new HBox();
 		hb.setPadding(new Insets( 20,0,20,20));
