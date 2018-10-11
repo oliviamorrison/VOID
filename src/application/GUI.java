@@ -2,6 +2,8 @@ package application;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Optional;
 
 import gameworld.Game;
@@ -54,11 +56,23 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     private Scene createStartScene(Stage stage) {
 
+	    // title
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream("src/application/title.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ImageView imageView = new ImageView(image);
+
+
+
         // new game
         Button newGame = new Button("New Game");
         //TODO create new instance of a game from a default xml file
         //TODO storyline????
-        newGame.setOnAction(e -> window.setScene(createGameScene(stage)));
+        newGame.setOnAction(Event -> startNewGame(stage));
 
         // load
         Button load = new Button("Load Game");
@@ -76,7 +90,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         // buttons laid out in vertical column
         VBox buttons = new VBox(20);
-        buttons.getChildren().addAll(newGame, load, editMap, quit);
+        buttons.getChildren().addAll(imageView, newGame, load, editMap, quit);
         buttons.setAlignment(Pos.CENTER);
 
 
@@ -349,6 +363,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 				break;
 			case R:
 				currentGame.moveRoom();
+				renderer.newRoom();
 				break;
 			case B:
 				currentGame.bribeGuard();
@@ -357,7 +372,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 		}
 		currentGame.getPlayer().moveTile(dx, dy);
-		renderer.redraw();
+		renderer.draw();
 	}
 
 
