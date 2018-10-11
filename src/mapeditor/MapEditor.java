@@ -509,13 +509,13 @@ public class MapEditor extends Application {
                         item = Item.Coin;
                         break;
                       case "guard.png":
-                        challenge = new Guard(""); //TODO: Door checks
+//                        challenge = new Guard(""); //TODO: Door checks
                         break;
                       case "unlit-bomb.png":
-                        challenge = new Bomb(""); //TODO: Door checks
+//                        challenge = new Bomb(""); //TODO: Door checks
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine();
+//                        challenge = new VendingMachine();
                         break;
                     }
 
@@ -539,7 +539,7 @@ public class MapEditor extends Application {
     }
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
-    Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8));
+    Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100);
 
     Game game = new Game(board, player);
 

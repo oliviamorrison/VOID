@@ -5,7 +5,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import persistence.RoomParser;
 
 public class Renderer {
     private final static Color ITColor = Color.rgb(237, 185, 177);
@@ -91,9 +90,9 @@ public class Renderer {
     }
 
     public void drawHealthBar(){
-        System.out.println(game.getHealth());
+        System.out.println(game.getPlayer().getHealth());
         double height = 20;
-        double width = (game.getHealth()) * 2;
+        double width = (game.getPlayer().getHealth()) * 2;
 //        double width = 200;
         Rectangle healthBar =  new Rectangle();
         healthBar.setX(20);
@@ -108,15 +107,6 @@ public class Renderer {
         currentRoom = player.getRoom();
         root.getChildren().clear();
         draw();
-    }
-
-    private void setUpGame() {
-        // create a starting room for testing
-        Room defaultRoom = RoomParser.createRoom(RoomParser.getBombRoom());
-        currentRoom = defaultRoom;
-        AccessibleTile startingTile = (AccessibleTile) defaultRoom.getTile(2, 2);
-        player = new Player(defaultRoom, startingTile);
-        startingTile.setPlayer(true);
     }
 
     public Color randomColor() {

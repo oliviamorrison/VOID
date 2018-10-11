@@ -229,7 +229,7 @@ public class XMLParser {
     Room playerRoom = board[roomRow][roomCol];
     int[] rowCol = getRowCol(playerElement);
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]));
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), -1);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
@@ -249,13 +249,44 @@ public class XMLParser {
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
         int[] rowCol = getRowCol(elem);
+        Item item;
         //TODO: Pass row and col to items
         switch(token){
-          case "Antidote": tokens.add(Item.Antidote); break;
-          case "Beer": tokens.add(Item.Beer); break;
-          case "Diffuser": tokens.add(Item.Diffuser); break;
-          case "Coin": tokens.add(Item.Coin); break;
-          case "BoltCutter": tokens.add(Item.BoltCutter); break;
+          case "Antidote":
+            item = Item.Antidote;
+            item.setX(rowCol[0]);
+            item.setY(rowCol[1]);
+            tokens.add(item); break;
+          case "Beer":
+            item = Item.Beer;
+            item.setX(rowCol[0]);
+            item.setY(rowCol[1]);
+            tokens.add(item);
+            break;
+          case "BoltCutter":
+            item = Item.BoltCutter;
+            item.setX(rowCol[0]);
+            item.setY(rowCol[1]);
+            tokens.add(item);
+            break;
+          case "Coin":
+            item = Item.Coin;
+            item.setX(rowCol[0]);
+            item.setY(rowCol[1]);
+            tokens.add(item);
+            break;
+          case "Diffuser":
+            item = Item.Diffuser;
+            item.setX(rowCol[0]);
+            item.setY(rowCol[1]);
+            tokens.add(item);
+            break;
+          case "HealthPack":
+            item = Item.HealthPack;
+            item.setX(rowCol[0]);
+            item.setY(rowCol[1]);
+            tokens.add(item);
+            break;
         }
       }
     }
@@ -265,21 +296,21 @@ public class XMLParser {
 
     for(int i = 0; i< items.getLength(); i++){
       Node node = items.item(i);
+      Element elem = (Element) node;
+      int[] rowCol = getRowCol(elem);
       switch(node.getTextContent().trim()){
         case "Bomb":
-          Element elem = (Element) node;
           String direction = elem.getAttribute("door");
-          int[] rowCol = getRowCol(elem);
           //TODO: Pass row and col to items
-          challenges.add(new Bomb(direction));
+          challenges.add(new Bomb(rowCol[0], rowCol[1], direction));
           break;
         case "Guard":
           elem = (Element) node;
           direction = elem.getAttribute("door");
           rowCol = getRowCol(elem);
-          challenges.add(new Guard(direction));
+          challenges.add(new Guard(rowCol[0], rowCol[1], direction));
           break;
-        case "VendingMachine": challenges.add(new VendingMachine()); break;
+        case "VendingMachine": challenges.add(new VendingMachine(rowCol[0], rowCol[1])); break;
       }
     }
   }
