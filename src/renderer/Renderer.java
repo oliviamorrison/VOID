@@ -8,6 +8,12 @@ import javafx.scene.shape.Rectangle;
 import persistence.RoomParser;
 
 public class Renderer {
+    private final static Color ITColor = Color.rgb(237, 185, 177);
+    private final static Color ATColor = Color.rgb(226, 209, 206);
+    private final static Color DTColor = Color.GRAY;
+    private  final static double floorHeight = 0;
+    private  final static double wallHeight = 0.75;
+
     private Game game;
     private static Player player;
     private static Room currentRoom;
@@ -18,15 +24,90 @@ public class Renderer {
         player = game.getPlayer();
         currentRoom = player.getRoom();
         root = new Group();
-//        drawFloor();
-//        drawUpperWall();
-//        drawPlayer();
-//        drawLowerWall();
         draw();
     }
 
     public Group getRoot() {
         return root;
+    }
+
+    public void drawPlayer() {
+        Point2D p = currentRoom.getPlayerTile().getCenter();
+        player.getEllipse().setCenterX(p.getX());
+        player.getEllipse().setCenterY(p.getY() - 13);
+        root.getChildren().add(player.getEllipse());
+    }
+
+    public void rotate() {
+        currentRoom.rotateRoomClockwise();
+        draw();
+    }
+
+    public void draw(){
+        root.getChildren().clear();
+        int w = 10;
+        int h = 10;
+        for (int k = 0; k <= w + h - 2; k++) {
+            for (int col = 0; col <= k; col++) {
+                int row = k - col;
+                if (row < h && col < w) {
+                    drawPolygonBlock(row, col);
+                }
+            }
+        }
+//        drawHealthBar();
+
+    }
+
+    public void drawPolygonBlock(int row, int col){
+        Tile tile = currentRoom.getTile(row, col);
+        Color color = Color.BLACK;
+        double height = 0;
+        if(tile instanceof  AccessibleTile){
+            AccessibleTile AT = (AccessibleTile) tile;
+            color = ATColor;
+            height = floorHeight;
+            if(AT.hasItem()){
+                color = Color.BLUE;
+            } else if(AT.hasChallenge()){
+                color = Color.RED;
+            }
+        } else if (tile instanceof InaccessibleTile){
+            height = wallHeight;
+            InaccessibleTile IT = (InaccessibleTile) tile;
+            color = ITColor;
+        }
+        if(tile instanceof DoorTile){
+            height = floorHeight;
+            color = DTColor;
+        }
+
+        PolygonBlock poly = new PolygonBlock(col, row, height, color);
+        tile.setTilePolygon(poly);
+        root.getChildren().addAll(poly.getPolygons());
+        if(currentRoom.getPlayerTile().equals(tile) ){
+            drawPlayer();
+        }
+    }
+
+    public void drawHealthBar(){
+        System.out.println(game.getHealth());
+        double height = 20;
+        double width = (game.getHealth()) * 2;
+//        double width = 200;
+        Rectangle healthBar =  new Rectangle();
+        healthBar.setX(20);
+        healthBar.setY(20);
+        healthBar.setHeight(height);
+        healthBar.setWidth(width);
+//        healthBar.setFill(Color.RED);
+        root.getChildren().add(healthBar);
+    }
+
+    public void newRoom(){
+        currentRoom = player.getRoom();
+        root.getChildren().clear();
+        draw();
     }
 
     private void setUpGame() {
@@ -38,130 +119,8 @@ public class Renderer {
         startingTile.setPlayer(true);
     }
 
-    public void drawFloor() {
-        for (int row = 1; row < Room.ROOMSIZE - 1; row++) {
-            for (int col = 1; col < Room.ROOMSIZE - 1; col++) {
-                AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
-                Color color = tile.getColor();
-                if(tile.hasItem()) {
-                    color = Color.BLUE;
-                } else if(tile.hasChallenge()) {
-                    color = Color.RED;
-                } if(tile instanceof  DoorTile){
-                    color = Color.ORANGE;
-                }
-                PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
-                tile.setTilePolygon(poly);
-                root.getChildren().addAll(poly.getPolygons());
-            }
-        }
-    }
-
     public Color randomColor() {
         return Color.rgb((int) (255 * Math.random()), (int) (255 * Math.random()), (int) (255 * Math.random()));
-    }
-
-    public void drawPlayer() {
-        Point2D p = currentRoom.getPlayerTile().getCenter();
-        player.getEllipse().setCenterX(p.getX());
-        player.getEllipse().setCenterY(p.getY() - 13);
-        root.getChildren().add(player.getEllipse());
-    }
-
-    public void drawUpperWall() {
-        for (int row = 0; row < Room.ROOMSIZE - 1; row++) {
-            for (int col = 0; col < Room.ROOMSIZE - 1; col++) {
-                if (row == 0 || col == 0) {
-                    Tile tile = currentRoom.getTile(row, col);
-                    Color color = tile.getColor();
-                    if(tile instanceof DoorTile){
-                        color = Color.ORANGE;
-                    }
-                    PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
-                    tile.setTilePolygon(poly);
-                    root.getChildren().addAll(poly.getPolygons());
-                }
-            }
-        }
-    }
-
-    public void drawLowerWall() {
-        for (int row = 0; row < Room.ROOMSIZE; row++) {
-            for (int col = 0; col < Room.ROOMSIZE; col++) {
-                if (row == Room.ROOMSIZE - 1 || col == Room.ROOMSIZE - 1) {
-                    Tile tile = currentRoom.getTile(row, col);
-                    Color color = tile.getColor();
-                    if(tile instanceof DoorTile){
-                        color = Color.ORANGE;
-                    }
-                    PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
-                    tile.setTilePolygon(poly);
-                    root.getChildren().addAll(poly.getPolygons());
-                }
-            }
-        }
-    }
-
-    public void redraw() {
-        root.getChildren().clear();
-//        drawFloor();
-//        drawUpperWall();
-//        drawPlayer();
-//        drawLowerWall();
-        draw();
-    }
-
-    public void rotate() {
-        currentRoom.rotateRoomClockwise();
-        redraw();
-    }
-
-    public void draw(){
-        int w = 10;
-        int h = 10;
-        for (int k = 0; k <= w + h - 2; k++) {
-            for (int col = 0; col <= k; col++) {
-                int row = k - col;
-                if (row < h && col < w) {
-                    drawPolygonBlock(row, col);
-                }
-            }
-        }
-    }
-
-    public void drawPolygonBlock(int row, int col){
-        Tile tile = currentRoom.getTile(row, col);
-        Color color = Color.BLACK;
-        if(tile instanceof  AccessibleTile){
-            AccessibleTile AT = (AccessibleTile) tile;
-            color = AT.getColor();
-            if(AT.hasItem()){
-                color = Color.BLUE;
-            } else if(AT.hasChallenge()){
-                color = Color.RED;
-            }
-        } else if (tile instanceof InaccessibleTile){
-            InaccessibleTile IT = (InaccessibleTile) tile;
-            color = IT.getColor();
-        }
-        if(tile instanceof DoorTile){
-            System.out.println("DOOR");
-            DoorTile DT = (DoorTile) tile;
-            color = Color.GRAY;
-        }
-
-        PolygonBlock poly = new PolygonBlock(col, row, tile.getHeight(), color);
-        tile.setTilePolygon(poly);
-        root.getChildren().addAll(poly.getPolygons());
-        if(currentRoom.getPlayerTile().equals(tile) ){
-            drawPlayer();
-        }
-    }
-
-    public void drawHealthBar(){
-        Rectangle healthBar =  new Rectangle();
-        healthBar.setX(20);
-        healthBar.setY(20);
     }
 
 }
