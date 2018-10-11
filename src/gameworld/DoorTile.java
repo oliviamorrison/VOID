@@ -1,12 +1,13 @@
 package gameworld;
 
 public class DoorTile extends AccessibleTile {
-
+  private Room room;
   private Room toRoom;
   private Direction direction;
 
   public DoorTile(Room room, Room toRoom, int x, int y, Direction direction) {
-    super(room, x, y);
+    super(x, y);
+    this.room = room;
     this.toRoom = toRoom;
     this.direction = direction;
   }
@@ -21,7 +22,7 @@ public class DoorTile extends AccessibleTile {
 
   @Override
   public String toString() {
-    return "0";
+    return direction.toString();
   }
 
 }

@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 
 public class InaccessibleTile extends Tile {
 
-  public InaccessibleTile(Room room, int x, int y) {
-    super(room, x, y);
+  public InaccessibleTile(int x, int y) {
+    super(x, y);
   }
 
   @Override

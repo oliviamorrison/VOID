@@ -6,15 +6,15 @@ import renderer.PolygonBlock;
 
 public abstract class Tile {
 
-  private Room room;
+//  private Room room;
   private PolygonBlock polygon;
   private int x;
   private int y;
 
-  public Tile(Room r, int x, int y) {
+  public Tile( int x, int y) {
     this.x = x;
     this.y = y;
-    this.room = r;
+//    this.room = r;
   }
 
   public int getX() {
@@ -25,9 +25,9 @@ public abstract class Tile {
     return y;
   }
 
-  public Room getRoom() {
-    return room;
-  }
+//  public Room getRoom() {
+//    return room;
+//  }
 
   public PolygonBlock getTilePolygon() {
     return this.polygon;

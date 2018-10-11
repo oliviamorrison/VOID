@@ -489,7 +489,7 @@ public class MapEditor extends Application {
 
                 TilePane tilePane = (TilePane) t;
                 if(tilePane.isAccessible()){
-                  AccessibleTile tile = new AccessibleTile(room, k, l);
+                  AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if(mapItem!=null){
                     Item item = null;
@@ -526,7 +526,7 @@ public class MapEditor extends Application {
                   }
                 }
                 else{
-                  room.setTile(new InaccessibleTile(room, k, l),k,l);
+                  room.setTile(new InaccessibleTile(k, l),k,l);
                 }
               }
 
