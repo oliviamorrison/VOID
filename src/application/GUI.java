@@ -70,7 +70,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         // new game
         Button newGame = new Button("New Game");
-        //TODO create new instance of a game from a default xml file
         //TODO storyline????
         newGame.setOnAction(Event -> startNewGame(stage));
 
