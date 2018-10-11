@@ -294,7 +294,7 @@ public class Game {
   }
 
   public void pickUpItem() {
-    AccessibleTile currentTile = (AccessibleTile) player.getTile();
+    AccessibleTile currentTile = player.getTile();
     if (currentTile.hasItem()) {
       if (!player.getInventory().isEmpty()) {
         System.out.println("Player can only have one item at a time");
@@ -311,7 +311,7 @@ public class Game {
 
   public void dropItem() {
     List<Item> inventory = player.getInventory();
-    AccessibleTile currentTile = (AccessibleTile) player.getTile();
+    AccessibleTile currentTile = player.getTile();
     if (currentTile instanceof DoorTile) {
       return;
     }

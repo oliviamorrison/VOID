@@ -23,14 +23,17 @@ import static java.lang.Integer.parseInt;
  * Using javax.xml.parsers library
  * Schema is in schema.xsd
  */
-//TODO: Generate new schema, check if players inventory can be saved, loaded and passed to the GUI
-
 //TODO: Make default new game file ineditable
-  //TODO: If we have time, add different difficulty levels for easy/medium/hard
-  //TODO: Add README
-  //TODO: Add tests
-  //TODO: UML Diagram
+//TODO: If we have time, add different difficulty levels for easy/medium/hard
+//TODO: Add README
+//TODO: Add tests
+//TODO: UML Diagram
 
+//TODO: Remove item from list of items in room when picked up
+//TODO: Change door tile to portal
+
+  //TODO: fix moving items to different rooms, this can either be done by the items keeping track of what room they are in
+  //or when an item is moved the room updates its list of items
 public class XMLParser {
   private static Schema schema;
 
@@ -44,8 +47,8 @@ public class XMLParser {
 
       //add root to XML file
       Element root = document.createElement("game");
-      root.setAttribute("rows", board.length+"");
-      root.setAttribute("cols", board[0].length+"");
+      root.setAttribute("row", board.length+"");
+      root.setAttribute("col", board[0].length+"");
       document.appendChild(root);
 
       //save rooms
@@ -90,7 +93,7 @@ public class XMLParser {
       roomElement.appendChild(door);
     }
 
-    saveItems(document, room.getItems(), roomElement);
+    saveItems(document, room.getItems(), roomElement, false);
     saveChallenges(document, room.getChallenges(), roomElement);
 
     return roomElement;
@@ -101,6 +104,7 @@ public class XMLParser {
     //Get position of player and add as attribute to player element
     player.setAttribute("row", game.getPlayer().getTile().getX()+"");
     player.setAttribute("col", game.getPlayer().getTile().getY()+"");
+    player.setAttribute("health", game.getPlayer().getHealth()+"");
 
     //Add coordinates of the room the player is in to the player element
     Element roomRow = document.createElement("roomRow");
@@ -112,20 +116,24 @@ public class XMLParser {
 
     //save inventory
     Element inventory = document.createElement("inventory");
-    saveItems(document, game.getPlayer().getInventory(), inventory); //TODO: Change this bc inventory items don't have X and Y
+    saveItems(document, game.getPlayer().getInventory(), inventory, true);
     player.appendChild(inventory);
 
     return player;
   }
 
 
-  private static void saveItems(Document document, List<Item> items, Element itemCollector){
+  private static void saveItems(Document document, List<Item> items, Element itemCollector, boolean isInventory){
     for(Item token: items){
       Element item = document.createElement("item");
+      if((token.getX() == -1 || token.getY() == -1) && !isInventory) return;
+      else if(!isInventory){
+        item.setAttribute("row", token.getX()+"");
+        item.setAttribute("col", token.getY()+"");
+      }
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
     }
-    //TODO: Health packs and row and col
   }
 
   private static void saveChallenges(Document document, List<Challenge> challenges, Element challengeCollector){
@@ -134,17 +142,26 @@ public class XMLParser {
 
       if(challengeItem instanceof Bomb) {
         Bomb bomb = (Bomb) challengeItem;
-        challenge.setAttribute("door", bomb.getDirection());
+        challenge.setAttribute("row", bomb.getX()+"");
+        challenge.setAttribute("col", bomb.getY()+"");
+        challenge.setAttribute("state", bomb.isNavigable()+"");
       }
       else if(challengeItem instanceof Guard){
         Guard guard = (Guard) challengeItem;
-        challenge.setAttribute("door", guard.getDirection());
+        challenge.setAttribute("row", guard.getX()+"");
+        challenge.setAttribute("col", guard.getY()+"");
+        challenge.setAttribute("state", guard.isNavigable()+"");
+      }
+      else{
+        VendingMachine vm = (VendingMachine) challengeItem;
+        challenge.setAttribute("row", vm.getX()+"");
+        challenge.setAttribute("col", vm.getY()+"");
+        challenge.setAttribute("state", vm.isNavigable()+"");
       }
 
       challenge.appendChild(document.createTextNode(challengeItem.toString()));
       challengeCollector.appendChild(challenge);
     }
-    //TODO: row and col
   }
 
 
@@ -186,13 +203,7 @@ public class XMLParser {
     }
   }
 
-  public static class ParseError extends Exception{
-    ParseError(String message){
-      super(message);
-    }
-  }
-
-  private static void parseRoom(Node room, Room[][] board) {
+  private static void parseRoom(Node room, Room[][] board) throws ParseError {
     List<String> doors = new ArrayList<>();
     List<Item> items = new ArrayList<>();
     List<Challenge> challenges = new ArrayList<>();
@@ -211,7 +222,7 @@ public class XMLParser {
 
     //parse items
     NodeList itemList = roomElement.getElementsByTagName("item");
-    parseItems(itemList, items);
+    parseItems(itemList, items, false);
 
     //parse challenges
     NodeList challengeList = roomElement.getElementsByTagName("challenge");
@@ -221,19 +232,21 @@ public class XMLParser {
     board[rowCol[0]][rowCol[1]] = newRoom;
   }
 
-  private static Player parsePlayer(Node playerNode, Room[][] board) {
+  private static Player parsePlayer(Node playerNode, Room[][] board) throws ParseError {
     Element playerElement = (Element) playerNode;
     int roomRow = parseInteger("roomRow", playerElement);
     int roomCol = parseInteger("roomCol", playerElement);
 
     Room playerRoom = board[roomRow][roomCol];
     int[] rowCol = getRowCol(playerElement);
+    if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
+    int health = parseInt(playerElement.getAttribute("health"));
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), -1);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
-    parseItems(inventory, player.getInventory());
+    parseItems(inventory, player.getInventory(), true);
 
     return player;
   }
@@ -243,74 +256,68 @@ public class XMLParser {
     return parseInt(n.item(0).getTextContent());
   }
 
-  private static void parseItems(NodeList items, List<Item> tokens) {
+  private static void parseItems(NodeList items, List<Item> tokens, boolean isInventory) throws ParseError {
     for(int i = 0; i< items.getLength(); i++){
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
-        int[] rowCol = getRowCol(elem);
-        Item item;
-        //TODO: Pass row and col to items
+
+        Item item = null;
         switch(token){
           case "Antidote":
-            item = Item.Antidote;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item); break;
+            item = Item.Antidote;break;
           case "Beer":
             item = Item.Beer;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "BoltCutter":
             item = Item.BoltCutter;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "Coin":
             item = Item.Coin;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "Diffuser":
             item = Item.Diffuser;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
           case "HealthPack":
             item = Item.HealthPack;
-            item.setX(rowCol[0]);
-            item.setY(rowCol[1]);
-            tokens.add(item);
             break;
         }
+
+        if(item!=null && !isInventory){
+          int[] rowCol = getRowCol(elem);
+          item.setX(rowCol[0]);
+          item.setY(rowCol[1]);
+          tokens.add(item);
+        }
+        else if(item!=null)tokens.add(item);
+
       }
     }
   }
 
-  private static void parseChallenges(NodeList items, List<Challenge> challenges) {
+  private static void parseChallenges(NodeList items, List<Challenge> challenges) throws ParseError {
 
     for(int i = 0; i< items.getLength(); i++){
       Node node = items.item(i);
       Element elem = (Element) node;
       int[] rowCol = getRowCol(elem);
+      String state = elem.getAttribute("state");
       switch(node.getTextContent().trim()){
         case "Bomb":
-          String direction = elem.getAttribute("door");
-          //TODO: Pass row and col to items
-          challenges.add(new Bomb(rowCol[0], rowCol[1], direction));
+          Bomb bomb = new Bomb(rowCol[0], rowCol[1]);
+          bomb.setNavigable(Boolean.parseBoolean(state));
+          challenges.add(bomb);
           break;
         case "Guard":
-          elem = (Element) node;
-          direction = elem.getAttribute("door");
-          rowCol = getRowCol(elem);
-          challenges.add(new Guard(rowCol[0], rowCol[1], direction));
+          Guard guard = new Guard(rowCol[0], rowCol[1]);
+          guard.setNavigable(Boolean.parseBoolean(state));
+          challenges.add(guard);
           break;
-        case "VendingMachine": challenges.add(new VendingMachine(rowCol[0], rowCol[1])); break;
+        case "VendingMachine":
+          VendingMachine vm = new VendingMachine(rowCol[0], rowCol[1]);
+          vm.setUnlocked(Boolean.parseBoolean(state));
+          challenges.add(vm);
+          break;
       }
     }
   }
@@ -325,10 +332,18 @@ public class XMLParser {
     }
   }
 
-  private static int[] getRowCol(Element elem){
+  private static int[] getRowCol(Element elem) throws ParseError {
+    if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals(""))
+      throw new ParseError("Player needs position attribute");
+
     int row = parseInt(elem.getAttribute("row"));
     int col = parseInt(elem.getAttribute("col"));
     return new int[]{row, col};
   }
 
+  public static class ParseError extends Exception{
+    ParseError(String message){
+      super(message);
+    }
+  }
 }

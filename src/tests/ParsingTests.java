@@ -37,6 +37,11 @@ public class ParsingTests {
         ()-> XMLParser.parseGame(new File("data/badXMLFile.xml")));
   }
 
+  //test no properties specified (no row/col/health)
+  //test too many rooms (> 9)
+  //test not enough doors (< 1)
+
+
 
 
 }
