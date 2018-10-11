@@ -114,7 +114,7 @@ public class MapEditor extends Application {
           MapItem i = selectedItem.getMapItem();
 
           //if there is nothing in the selected tile
-          if(selectedTilePane.getMapItem()==null) {
+          if(selectedTilePane.getMapItem()==null && !isInAntidoteRoom(selectedTilePane)) {
             //swap items
             String name = i.getImageName();
 
@@ -152,6 +152,11 @@ public class MapEditor extends Application {
     items.add(makeGame, 2,4);
 
     return items;
+  }
+
+  private boolean isInAntidoteRoom(TilePane find){
+    TilePane t = findItemInBoard("antidote.png");
+    return t.getRoom() == find.getRoom();
   }
 
   private TilePane findItemInBoard(String name){
