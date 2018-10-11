@@ -43,6 +43,7 @@ public class MapEditor extends Application {
     itemGrid.setStyle("-fx-background-color: lightblue");
     initaliseItems();
 
+        itemGrid.setStyle("-fx-background-color: lightpink");
 
     // Use a StackPane to display the Image and the Grid
     mainPane = new GridPane();
