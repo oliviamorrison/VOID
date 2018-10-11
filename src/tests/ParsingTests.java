@@ -24,7 +24,7 @@ public class ParsingTests {
   public void testReadGame() throws ParserConfigurationException, IOException, SAXException {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-    Document doc = dBuilder.parse("data/gameworld.xml");
+    Document doc = dBuilder.parse("data/easy.xml");
 
     NodeList children = doc.getChildNodes();
     Element gameElement = (Element) children.item(0);
@@ -40,6 +40,7 @@ public class ParsingTests {
   //test no properties specified (no row/col/health)
   //test too many rooms (> 9)
   //test not enough doors (< 1)
+  //test too many players
 
 
 

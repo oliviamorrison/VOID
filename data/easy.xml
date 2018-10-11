@@ -28,7 +28,7 @@
         <door>Top</door>
         <door>Left</door>
         <door>Right</door>
-        <challenge row="1" col="5" state="false">Guard</challenge>
+        <challenge row="5" col="1" state="false">Guard</challenge>
     </room>
     <room row="2" col="2">
         <door>Top</door>

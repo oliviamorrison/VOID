@@ -9,7 +9,7 @@ public class TextBased {
 
   public static void main(String[] args) throws XMLParser.ParseError {
 
-    Game game = XMLParser.parseGame(new File("data/gameworld.xml"));
+    Game game = XMLParser.parseGame(new File("data/easy.xml"));
 
     assert game != null;
     game.startGame();
