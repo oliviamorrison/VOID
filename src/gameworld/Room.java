@@ -1,6 +1,7 @@
 package gameworld;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Room {
@@ -29,7 +30,6 @@ public class Room {
     this.challenges = challenges;
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
 
-    //For now until we can load in an XML file
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
         if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
@@ -99,6 +99,16 @@ public class Room {
 
   public Room() {
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+    for (int i = 0; i < ROOMSIZE; i++) {
+      for (int j = 0; j < ROOMSIZE; j++) {
+        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
+          tiles[i][j] = new InaccessibleTile(this, i, j);
+        else tiles[i][j] = new AccessibleTile(this, i, j);
+      }
+    }
+    this.doors = new ArrayList<>();
+    this.items = new ArrayList<>();
+    this.challenges = new ArrayList<>();
   }
 
   public int getRow() {
