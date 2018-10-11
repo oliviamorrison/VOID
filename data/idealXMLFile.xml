@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<game rows="3" cols="3">
+<game row="3" col="3">
     <room row="0" col="0">
         <door>Right</door>
         <item row="0" col="0">Diffuser</item>

@@ -165,13 +165,10 @@ public class XMLParser {
       doc.getDocumentElement().normalize();
 
       //parse rows and cols
-      int rows = parseInteger("rows", doc.getDocumentElement());
-      int cols = parseInteger("cols", doc.getDocumentElement());
-
       int[] rowCol = getRowCol(doc.getDocumentElement());
 
       //create new board array
-      Room[][] board = new Room[rows][cols];
+      Room[][] board = new Room[rowCol[0]][rowCol[1]];
 
       //parse rooms
       NodeList roomList = doc.getElementsByTagName("room");
