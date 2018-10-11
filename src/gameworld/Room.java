@@ -315,6 +315,14 @@ public class Room {
     this.hasHealthPack = hasHealthPack;
   }
 
+  public void addItem(Item item) {
+    items.add(item);
+  }
+
+  public void removeItem(Item item) {
+    items.remove(item);
+  }
+
   public void rotateRoomClockwise() {
     int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;

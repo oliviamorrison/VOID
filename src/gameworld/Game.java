@@ -303,6 +303,7 @@ public class Game {
       Item item = currentTile.getItem();
       player.pickUp(item);
       currentTile.setItem(null);
+      currentRoom.removeItem(item);
       item.setX(-1);
       item.setY(-1);
       System.out.println("Player picked up " + item.toString());
@@ -320,6 +321,7 @@ public class Game {
       item.setX(currentTile.getX());
       item.setY(currentTile.getY());
       currentTile.setItem(item);
+      currentRoom.addItem(item);
       System.out.println("Player dropped " + item.toString());
     }
   }
