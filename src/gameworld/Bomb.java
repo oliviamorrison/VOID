@@ -1,8 +1,16 @@
 package gameworld;
 
-//TODO: Had to change bomb to implement token just for now
-public class Bomb implements Token{
+public class Bomb extends Challenge {
+  private String direction;
   boolean isActive = false;
+
+  public Bomb(String direction) {
+    this.direction = direction;
+  }
+
+  public String getDirection() {
+    return direction;
+  }
 
   public boolean isActive() {
     return isActive;
@@ -14,6 +22,7 @@ public class Bomb implements Token{
 
   @Override
   public String toString(){
-    return "bomb";
+    return "Bomb";
   }
+
 }

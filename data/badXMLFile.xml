@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <game>
+    <player>
+        <roomRow>0</roomRow>
+        <roomCol>0</roomCol>
+        <tileRow>5</tileRow>
+        <tileCol>5</tileCol>
+        <inventory/>
+    </player>
     <rows>3</rows>
     <cols>3</cols>
     <room>
@@ -52,11 +59,4 @@
         <door>Left</door>
         <item>Coin</item>
     </room>
-    <player>
-        <roomRow>0</roomRow>
-        <roomCol>0</roomCol>
-        <tileRow>5</tileRow>
-        <tileCol>5</tileCol>
-        <inventory/>
-    </player>
 </game>

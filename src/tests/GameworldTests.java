@@ -1,150 +1,66 @@
-//package tests;
-//
-//import gameworld.AccessibleTile;
-//import gameworld.Game;
-//import gameworld.Player;
-//import org.junit.Test;
-//
-//import static org.junit.Assert.*;
-//
-//public class GameworldTests {
-//
-//  @Test
-//  public void createsNewGameCorrectly() {
-//
-//    String room = "X X X X X X X X X X\n"
-//        + "X                 X\n"
-//        + "X   P             X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X           D     X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X X X X X X X X X X\n";
-//
-//    Game game = new Game(true);
-//    Player player = game.getPlayer();
-//
-//    assertNotNull(player);
-//    assertTrue(player.getInventory().isEmpty());
-//    assertEquals(room, game.drawRoom());
-//
-//  }
-//
-//  @Test
-//  public void playerCanMoveWithinARoom() {
-//
-//    String room = "X X X X X X X X X X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X     P           X\n"
-//        + "X                 X\n"
-//        + "X           D     X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X X X X X X X X X X\n";
-//
-//    Game game = new Game(true);
-//    Player player = game.getPlayer();
-//    player.moveTile(2, 1);
-//    assertEquals(room, game.drawRoom());
-//
-//  }
-//
-//  @Test
-//  public void rendersPlayerOnTokenTileCorrectly() {
-//
-//    String room = "X X X X X X X X X X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X           !     X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X X X X X X X X X X\n";
-//
-//    Game game = new Game(true);
-//    Player player = game.getPlayer();
-//
-//    player.moveTile(4, 4);
-//    AccessibleTile tile = (AccessibleTile) player.getTile();
-//
-//    assertTrue(tile.hasToken());
-//    assertEquals(room, game.drawRoom());
-//
-//  }
-//
-//  @Test
-//  public void playerCanPickupTokens() {
-//
-//    String room = "X X X X X X X X X X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X           P     X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X X X X X X X X X X\n";
-//
-//    Game game = new Game(true);
-//    Player player = game.getPlayer();
-//
-//    player.moveTile(2, 2);
-//    game.pickUpItem();
-//
-//    AccessibleTile tile = (AccessibleTile) player.getTile();
-//    player.moveTile(2, 2);
-//    game.pickUpItem();
-//
-//    assertFalse(tile.hasToken());
-//    assertEquals(1, player.getInventory().size());
-//    assertEquals(room, game.drawRoom());
-//
-//  }
-//
-//  @Test
-//  public void playerCanDropTokens() {
-//
-//    String room = "X X X X X X X X X X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X       P D       X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X                 X\n"
-//        + "X X X X X X X X X X\n";
-//
-//    Game game = new Game(true);
-//    Player player = game.getPlayer();
-//
-//    player.moveTile(2, 2);
-//    game.dropItem();
-//
-//    AccessibleTile firstTile = (AccessibleTile) player.getTile();
-//    player.moveTile(2, 2);
-//    game.pickUpItem();
-//    assertFalse(firstTile.hasToken());
-//
-//    player.moveTile(-1, -1);
-//
-//    AccessibleTile secondTile = (AccessibleTile) player.getTile();
-//    game.dropItem();
-//    assertTrue(player.getInventory().isEmpty());
-//    assertTrue(secondTile.hasToken());
-//
-//    player.moveTile(0, -1);
-//
-//    assertEquals(room, game.drawRoom());
-//
-//  }
-//
-//}
-//
+package tests;
+
+import gameworld.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class GameworldTests {
+
+  private Room[][] board;
+  private Player player;
+  private Game game;
+
+
+  @BeforeEach
+  public void setUp() {
+    board = new Room[3][3];
+    for(int i = 0; i < board.length; i++){
+      for(int j = 0; j < board[i].length; j++){
+        board[i][j] = new Room();
+      }
+    }
+    player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5));
+
+    ((AccessibleTile) board[0][0].getTile(6,5)).setItem(Item.Diffuser);
+
+    game = new Game(board, player);
+
+  }
+  @Test
+  public void movePlayerTest(){
+    //player starts at 5,5
+    assertEquals(player.getTile().getX(), 5);
+    assertEquals(player.getTile().getY(), 5);
+
+    //move player up
+    game.movePlayer("w");
+
+    //player should be at 4,5
+    assertEquals(player.getTile().getX(), 4); //TODO: is this right ??? It's moving the X coord not the Y coord
+    assertEquals(player.getTile().getY(), 5);
+
+    //move player right
+    game.movePlayer("d");
+
+    //player should be at 4,6
+    assertEquals(player.getTile().getX(), 4);
+    assertEquals(player.getTile().getY(), 6);
+  }
+
+  @Test
+  public void pickUpItem(){
+    game.movePlayer("s");
+
+    game.pickUpItem();
+    assertEquals(player.getInventory().get(0), Item.Diffuser);
+  }
+
+
+
+
+
+}
+

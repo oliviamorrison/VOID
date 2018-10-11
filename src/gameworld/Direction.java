@@ -4,19 +4,23 @@ public enum Direction {
 
   Top, Bottom, Left, Right;
 
-  public String toString() {
+  public Direction getOppositeDirection() {
 
     switch (this) {
+
+      case Top:
+        return Direction.Bottom;
+      case Bottom:
+        return Direction.Top;
       case Left:
-        return "left";
-      case Right :
-        return "right";
-      case Top :
-        return "top";
-      case Bottom :
-        return "bottom";
+        return Direction.Right;
+      case Right:
+        return Direction.Left;
       default:
-          return null;
+        return null;
+
     }
+
   }
+  
 }

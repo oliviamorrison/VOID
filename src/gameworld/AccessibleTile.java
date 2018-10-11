@@ -1,48 +1,74 @@
 package gameworld;
 
+import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import renderer.PolygonBlock;
+
 public class AccessibleTile extends Tile {
-    private Token token;
-    private Bomb bomb;
-    private boolean player = false;
+  private Item item;
+  private Challenge challenge;
+  private boolean player = false;
+  private final static Color color = Color.rgb(226, 209, 206);
+  private final static double height = 0;
 
-    public AccessibleTile(Room room, int x, int y) {
-        super(room, x, y);
-    }
+  public AccessibleTile(Room room, int x, int y) {
+    super(room, x, y, color, height);
+  }
 
-    public void setToken(Token token) {
-        this.token = token;
-    }
+  public void setItem(Item item) {
+    this.item = item;
+  }
 
-    public Token getToken() {
-        return this.token;
-    }
+  public Item getItem() {
+    return this.item;
+  }
 
-    public boolean hasToken() {
-        return this.token != null;
-    }
+  public boolean hasItem() {
+    return this.item != null;
+  }
 
-    public void setBomb(Bomb b) {
-        this.bomb = b;
-    }
+  public void setPlayer(boolean player) {
+    this.player = player;
+  }
 
-    public Bomb getBomb() {
-        return this.bomb;
-    }
+  public boolean hasPlayer() {
+    return player;
+  }
 
-    public boolean hasBomb() {
-        return this.bomb != null;
-    }
+  public boolean hasChallenge() {
+    return this.challenge != null;
+  }
 
-    public void setPlayer(boolean player) {
-        this.player = player;
-    }
+  public void setChallenge(Challenge challenge) {
+    this.challenge = challenge;
+  }
 
-    public boolean hasPlayer() {
-        return player;
-    }
+  public Challenge getChallenge() {
+    return this.challenge;
+  }
 
-    @Override
-    public String toString() {
-        return "X";
+
+  @Override
+  public String toString() {
+    return " ";
+  }
+
+  public Point2D getCenter() {
+    Polygon p = super.getTilePolygon().getPolygons().get(0);
+    double minX = Double.MAX_VALUE;
+    double maxX = Double.MIN_VALUE;
+    double minY = Double.MAX_VALUE;
+    double maxY = Double.MIN_VALUE;
+    for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
+      minX = Math.min(minX, p.getPoints().get(i));
+      maxX = Math.max(maxX, p.getPoints().get(i));
+      minY = Math.min(minY, p.getPoints().get(i + 1));
+      maxY = Math.max(maxY, p.getPoints().get(i + 1));
     }
+    double centerX = minX + ((maxX - minX) / 2);
+    double centerY = minY + ((maxY - minY) / 2);
+
+    return new Point2D(centerX, centerY);
+  }
 }

@@ -1,21 +1,16 @@
-/*
+
 package persistence;
 
-import gameworld.AccessibleTile;
-import gameworld.Bomb;
-import gameworld.Diffuser;
-import gameworld.InaccessibleTile;
-import gameworld.Room;
-import gameworld.Tile;
+import gameworld.*;
 
 public class RoomParser {
 
-  */
+
 /**
    * This method creates a new room based on the information
    * passed in from a data file. (should have a file as an argument)
    * @return new room as described by the data file
-   *//*
+   */
 
   public static Room createRoom(String[] data) {
 
@@ -28,18 +23,17 @@ public class RoomParser {
         Character character = data[row].charAt(count);
 
         if (character == 'X') {
-          tile = new InaccessibleTile(room);
+          tile = new InaccessibleTile(room, row, col);
         } else {
-          tile = new AccessibleTile(room);
+          tile = new AccessibleTile(room, row, col);
           if (character == 'D') {
-            Diffuser diffuser = new Diffuser();
             AccessibleTile accessibleTile = (AccessibleTile) tile;
-            accessibleTile.setToken(diffuser);
+            accessibleTile.setItem(Item.Diffuser);
           }
           else if(character == 'B') {
-        	  Bomb bomb = new Bomb();
+        	  Bomb bomb = new Bomb("");
         	  AccessibleTile accessibleTile = (AccessibleTile) tile;
-              accessibleTile.setBomb(bomb);
+//              accessibleTile.setBomb(bomb);
           }
         }
         room.setTile(tile, row, col);
@@ -52,11 +46,11 @@ public class RoomParser {
 
   }
 
-  */
+
 /**
    * This method creates a default room with a single token.
    * @return default room information as string[]
-   *//*
+   */
 
   public static String[] getDefaultRoom() {
 
@@ -91,4 +85,4 @@ public class RoomParser {
 
   }
 }
-*/
+

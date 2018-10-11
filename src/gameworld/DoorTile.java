@@ -4,11 +4,15 @@ public class DoorTile extends AccessibleTile {
   private Room toRoom;
   private Direction direction;
 
-    public DoorTile(Room room, Room toRoom, int x, int y, Direction direction) {
-        super(room, x, y);
-        this.toRoom = toRoom;
-        this.direction = direction;
-    }
+  public DoorTile(Room room, int x, int y) {
+    super(room, x, y);
+  }
+
+  public DoorTile(Room room, Room toRoom, int x, int y, Direction direction) {
+    super(room, x, y);
+    this.toRoom = toRoom;
+    this.direction = direction;
+  }
 
   public Room getToRoom() {
     return toRoom;
@@ -18,22 +22,11 @@ public class DoorTile extends AccessibleTile {
     return direction;
   }
 
-  public Direction getOppoositeDirection(Direction dir) {
-
-    switch (dir) {
-      case Top:
-        return Direction.Bottom;
-      case Bottom:
-        return Direction.Top;
-      case Left:
-        return Direction.Right;
-      case Right:
-        return Direction.Left;
-      default:
-        return null;
-    }
-
+  @Override
+  public String toString() {
+    return "0";
   }
+
 }
 
 
