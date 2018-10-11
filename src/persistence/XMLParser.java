@@ -2,6 +2,8 @@ package persistence;
 import gameworld.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -174,6 +176,7 @@ public class XMLParser {
       Document doc = dBuilder.parse(file);
 
       DOMSource source = new DOMSource(doc);
+
       //using schema.xsd to validate the schema
       loadSchema();
       Validator validator = schema.newValidator();
@@ -200,10 +203,14 @@ public class XMLParser {
       return game;
     }
     catch (ParserConfigurationException | SAXException | IOException e) {
-      e.printStackTrace();
+      throw new ParseError("Invalid XML");
     }
+  }
 
-    return null;
+  public static class ParseError extends Error{
+    ParseError(String message){
+      super(message);
+    }
   }
 
   private static void parseRoom(Node room, Room[][] board) {

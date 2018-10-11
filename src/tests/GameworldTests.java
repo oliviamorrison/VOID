@@ -1,10 +1,11 @@
 package tests;
 
 import gameworld.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GameworldTests {
 
@@ -13,7 +14,7 @@ public class GameworldTests {
   private Game game;
 
 
-  @Before
+  @BeforeEach
   public void setUp() {
     board = new Room[3][3];
     for(int i = 0; i < board.length; i++){
@@ -38,7 +39,7 @@ public class GameworldTests {
     game.movePlayer("w");
 
     //player should be at 4,5
-    assertEquals(player.getTile().getX(), 4); //TODO: is this right ???
+    assertEquals(player.getTile().getX(), 4); //TODO: is this right ??? It's moving the X coord not the Y coord
     assertEquals(player.getTile().getY(), 5);
 
     //move player right
