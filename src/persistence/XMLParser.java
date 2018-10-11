@@ -15,11 +15,18 @@ import javax.xml.validation.Validator;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Integer.*;
 import static java.lang.Integer.parseInt;
 
 /**
  * Using javax.xml.parsers library
  */
+//TODO: Make default new game file ineditable
+  //TODO: If we have time, add different difficulty levels for easy/medium/hard
+  //TODO: Add README
+  //TODO: Add tests
+  //TODO: UML Diagram
 
 public class XMLParser {
   private static Schema schema;
@@ -74,16 +81,18 @@ public class XMLParser {
   private static Element saveGame(Document document, Room[][] board) {
     // root element
     Element root = document.createElement("game");
+    root.setAttribute("rows", board.length+"");
+    root.setAttribute("cols", board[0].length+"");
 
-    // rows element
-    Element rows = document.createElement("rows");
-    rows.appendChild(document.createTextNode(board.length+""));
-    root.appendChild(rows);
-
-    //cols element
-    Element cols = document.createElement("cols");
-    cols.appendChild(document.createTextNode(board[0].length+""));
-    root.appendChild(cols);
+//    // rows element
+//    Element rows = document.createElement("rows");
+//    rows.appendChild(document.createTextNode(board.length+""));
+//    root.appendChild(rows);
+//
+//    //cols element
+//    Element cols = document.createElement("cols");
+//    cols.appendChild(document.createTextNode(board[0].length+""));
+//    root.appendChild(cols);
     return root;
   }
 
@@ -147,6 +156,7 @@ public class XMLParser {
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
     }
+    //TODO: Health packs
   }
 
   private static void saveChallenges(Document document, List<Challenge> challenges, Element challengeCollector){
@@ -188,6 +198,8 @@ public class XMLParser {
       int rows = parseInteger("rows", doc.getDocumentElement());
       int cols = parseInteger("cols", doc.getDocumentElement());
 
+      int[] rowCol = getRowCol(doc.getDocumentElement());
+
       //create new board array
       Room[][] board = new Room[rows][cols];
 
@@ -221,8 +233,7 @@ public class XMLParser {
     Element roomElement = (Element) room;
 
     //parse row and col
-    int row = parseInteger("row", roomElement);
-    int col = parseInteger("col", roomElement);
+    int[] rowCol = getRowCol(roomElement);
 
     //parse doors
     NodeList doorList = roomElement.getElementsByTagName("door");
@@ -239,8 +250,8 @@ public class XMLParser {
     NodeList challengeList = roomElement.getElementsByTagName("challenge");
     parseChallenges(challengeList, challenges);
 
-    Room newRoom = new Room(row, col, doors, items, challenges);
-    board[row][col] = newRoom;
+    Room newRoom = new Room(rowCol[0], rowCol[1], doors, items, challenges);
+    board[rowCol[0]][rowCol[1]] = newRoom;
   }
 
   private static Player parsePlayer(Node playerNode, Room[][] board) {
@@ -249,12 +260,10 @@ public class XMLParser {
     int roomCol = parseInteger("roomCol", playerElement);
 
     Room playerRoom = board[roomRow][roomCol];
+    int[] rowCol = getRowCol(playerElement);
 
-    int tileRow = parseInteger("tileRow", playerElement);
-    int tileCol = parseInteger("tileCol", playerElement);
-
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(tileRow,tileCol));
-    ((AccessibleTile) playerRoom.getTile(tileRow, tileCol)).setPlayer(true);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]));
+    ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
     parseItems(inventory, player.getInventory());
@@ -270,12 +279,17 @@ public class XMLParser {
   private static void parseItems(NodeList items, List<Item> tokens) {
     for(int i = 0; i< items.getLength(); i++){
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
-      switch(token){
-        case "Antidote": tokens.add(Item.Antidote); break;
-        case "Beer": tokens.add(Item.Beer); break;
-        case "Diffuser": tokens.add(Item.Diffuser); break;
-        case "Coin": tokens.add(Item.Coin); break;
-        case "BoltCutter": tokens.add(Item.BoltCutter); break;
+      if(!token.equals("")){
+        Element elem = (Element) items.item(i);
+        int[] rowCol = getRowCol(elem);
+        //TODO: Pass row and col to items
+        switch(token){
+          case "Antidote": tokens.add(Item.Antidote); break;
+          case "Beer": tokens.add(Item.Beer); break;
+          case "Diffuser": tokens.add(Item.Diffuser); break;
+          case "Coin": tokens.add(Item.Coin); break;
+          case "BoltCutter": tokens.add(Item.BoltCutter); break;
+        }
       }
     }
   }
@@ -288,11 +302,14 @@ public class XMLParser {
         case "Bomb":
           Element elem = (Element) node;
           String direction = elem.getAttribute("door");
+          int[] rowCol = getRowCol(elem);
+          //TODO: Pass row and col to items
           challenges.add(new Bomb(direction));
           break;
         case "Guard":
           elem = (Element) node;
           direction = elem.getAttribute("door");
+          rowCol = getRowCol(elem);
           challenges.add(new Guard(direction));
           break;
         case "VendingMachine": challenges.add(new VendingMachine()); break;
@@ -309,4 +326,11 @@ public class XMLParser {
       e.printStackTrace();
     }
   }
+
+  private static int[] getRowCol(Element elem){
+    int row = parseInt(elem.getAttribute("row"));
+    int col = parseInt(elem.getAttribute("col"));
+    return new int[]{row, col};
+  }
+
 }
