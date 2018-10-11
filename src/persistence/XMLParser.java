@@ -42,8 +42,8 @@ public class XMLParser {
 
       //add root to XML file
       Element root = document.createElement("game");
-      root.setAttribute("rows", board.length+"");
-      root.setAttribute("cols", board[0].length+"");
+      root.setAttribute("row", board.length+"");
+      root.setAttribute("col", board[0].length+"");
       document.appendChild(root);
 
       //save rooms
@@ -120,10 +120,12 @@ public class XMLParser {
   private static void saveItems(Document document, List<Item> items, Element itemCollector){
     for(Item token: items){
       Element item = document.createElement("item");
+      item.setAttribute("row", token.getX()+"");
+      item.setAttribute("col", token.getY()+"");
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
     }
-    //TODO: Health packs and row and col
+    //TODO: Health packs
   }
 
   private static void saveChallenges(Document document, List<Challenge> challenges, Element challengeCollector){
@@ -132,17 +134,23 @@ public class XMLParser {
 
       if(challengeItem instanceof Bomb) {
         Bomb bomb = (Bomb) challengeItem;
-        challenge.setAttribute("door", bomb.getDirection());
+        challenge.setAttribute("row", bomb.getX()+"");
+        challenge.setAttribute("col", bomb.getY()+"");
       }
       else if(challengeItem instanceof Guard){
         Guard guard = (Guard) challengeItem;
-        challenge.setAttribute("door", guard.getDirection());
+        challenge.setAttribute("row", guard.getX()+"");
+        challenge.setAttribute("col", guard.getY()+"");
+      }
+      else{
+        VendingMachine vm = (VendingMachine) challengeItem;
+        challenge.setAttribute("row", vm.getX()+"");
+        challenge.setAttribute("col", vm.getY()+"");
       }
 
       challenge.appendChild(document.createTextNode(challengeItem.toString()));
       challengeCollector.appendChild(challenge);
     }
-    //TODO: row and col
   }
 
 
@@ -248,7 +256,6 @@ public class XMLParser {
         Element elem = (Element) items.item(i);
         int[] rowCol = getRowCol(elem);
         Item item;
-        //TODO: Pass row and col to items
         switch(token){
           case "Antidote":
             item = Item.Antidote;
@@ -298,17 +305,14 @@ public class XMLParser {
       int[] rowCol = getRowCol(elem);
       switch(node.getTextContent().trim()){
         case "Bomb":
-          String direction = elem.getAttribute("door");
-          //TODO: Pass row and col to items
-          challenges.add(new Bomb(rowCol[0], rowCol[1], direction));
+          challenges.add(new Bomb(rowCol[0], rowCol[1]));
           break;
         case "Guard":
-          elem = (Element) node;
-          direction = elem.getAttribute("door");
-          rowCol = getRowCol(elem);
-          challenges.add(new Guard(rowCol[0], rowCol[1], direction));
+          challenges.add(new Guard(rowCol[0], rowCol[1]));
           break;
-        case "VendingMachine": challenges.add(new VendingMachine(rowCol[0], rowCol[1])); break;
+        case "VendingMachine":
+          challenges.add(new VendingMachine(rowCol[0], rowCol[1]));
+          break;
       }
     }
   }

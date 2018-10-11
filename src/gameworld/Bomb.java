@@ -2,11 +2,8 @@ package gameworld;
 
 public class Bomb extends Challenge {
 
-  public Bomb(int x, int y, String direction) {
-
+  public Bomb(int x, int y) {
     super(x, y);
-    setDirection(direction);
-
   }
 
   @Override

@@ -39,18 +39,13 @@ public class Room {
     }
 
     for (Item item : items) {
-
       AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
       tile.setItem(item);
-
     }
 
-    for (Challenge challenge : challenges) {
-
+/*    for (Challenge challenge : challenges) {
       String dir = challenge.getDirection();
-
       if (challenge instanceof Bomb || challenge instanceof Guard) {
-
         switch (dir) {
           case "Left":
             ((AccessibleTile) tiles[LEFT.x][LEFT.y + 1]).setChallenge(challenge);
@@ -65,17 +60,18 @@ public class Room {
             ((AccessibleTile) tiles[BOTTOM.x - 1][BOTTOM.y]).setChallenge(challenge);
             break;
           default:
-
         }
       }
-
       if (challenge instanceof VendingMachine) {
-
         AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
         tile.setChallenge(challenge);
-
       }
 
+    }*/
+
+    for (Challenge challenge : challenges) {
+      AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
+      tile.setChallenge(challenge);
     }
 
   }
