@@ -12,6 +12,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import persistence.XMLParser;
+
+import java.io.File;
 
 public class MapEditor extends Application {
 
@@ -519,7 +522,11 @@ public class MapEditor extends Application {
         }
       }
 
+      //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
+      Player player = new Player(board[0][0], board[0][0].getPlayerTile());
 
+      Game game = new Game(board, player);
+      XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
 
     }
 

@@ -10,7 +10,7 @@
                             <xs:element type="xs:byte" name="row"/>
                             <xs:element type="xs:byte" name="col"/>
                             <xs:element type="xs:string" name="door" maxOccurs="unbounded" minOccurs="0"/>
-                            <xs:element type="xs:string" name="item" minOccurs="0"/>
+                            <xs:element type="xs:string" name="mapItem" minOccurs="0"/>
                             <xs:element name="challenge" minOccurs="0">
                                 <xs:complexType>
                                     <xs:simpleContent>
