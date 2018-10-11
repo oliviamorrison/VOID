@@ -154,8 +154,12 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
 
 	private void startNewGame(Stage stage) {
-		currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
-		setGame(stage);
+    try {
+      currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
+    } catch (XMLParser.ParseError parseError) {
+      parseError.printStackTrace();
+    }
+    setGame(stage);
 	}
 
 
@@ -166,8 +170,13 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		File file = chooser.showOpenDialog(stage);
 
 		if(file != null) {
-			currentGame = XMLParser.parseGame(file);
-			setGame(stage);
+      try {
+        currentGame = XMLParser.parseGame(file);
+      } catch (XMLParser.ParseError parseError) {
+        //TODO: Get user to load  a new file
+
+      }
+      setGame(stage);
 		}
 	}
 
@@ -340,6 +349,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 				break;
 			case R:
 				currentGame.moveRoom();
+				renderer.newRoom();
 				break;
 			case B:
 				currentGame.bribeGuard();
@@ -348,7 +358,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 		}
 		currentGame.getPlayer().moveTile(dx, dy);
-		renderer.redraw();
+		renderer.draw();
 	}
 
 

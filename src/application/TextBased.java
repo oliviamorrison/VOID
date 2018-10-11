@@ -7,7 +7,7 @@ import java.io.File;
 
 public class TextBased {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws XMLParser.ParseError {
 
     Game game = XMLParser.parseGame(new File("data/gameworld.xml"));
 

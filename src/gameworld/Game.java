@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class Game {
 
   private static final int HEALTH_BOOST = 20;
-  private static final int MAX_HEALTH = 200;
+  private static final int MAX_HEALTH = 100;
 
   private Room[][] board;
   private Player player;
@@ -28,6 +28,7 @@ public class Game {
     this.currentRoom = player.getRoom();
     connectRooms();
     distributeHealthPacks();
+    setupTimer();
 
   }
 
@@ -36,8 +37,6 @@ public class Game {
    */
 
   public void startGame() {
-
-    setupTimer();
 
     while (true) {
 
@@ -326,6 +325,9 @@ public class Game {
   public void dropItem() {
     List<Item> inventory = player.getInventory();
     AccessibleTile currentTile = (AccessibleTile) player.getTile();
+    if (currentTile instanceof DoorTile) {
+      return;
+    }
     if (!currentTile.hasItem() && !inventory.isEmpty()) {
       Item item = player.getInventory().remove(0);
       currentTile.setItem(item);
