@@ -13,21 +13,18 @@ import java.util.TimerTask;
  */
 public class Game {
 
-  private static final int HEALTH_BOOST = 20;
-  private static final int MAX_HEALTH = 100;
-
   private Room[][] board;
   private Player player;
   private Room currentRoom;
   private Timer timer;
-  private int health = MAX_HEALTH;
 
   public Game(Room[][] board, Player player) {
+
     this.player = player;
     this.board = board;
     this.currentRoom = player.getRoom();
     connectRooms();
-    distributeHealthPacks();
+//    distributeHealthPacks();
     setupTimer();
 
   }
@@ -51,12 +48,12 @@ public class Game {
           return;
         } else if (item.equals(Item.HealthPack)) {
           currentTile.setItem(null);
-          applyHealthBoost();
-          System.out.printf("Health pack found: health boosted %d\n", HEALTH_BOOST);
+          player.boostHealth();
+          System.out.println("Health pack found: health boosted 20");
         }
       }
       currentRoom.draw();
-      if (health == 0) {
+      if (player.getHealth() == 0) {
         System.out.println("You died from poisoning");
         timer.cancel();
         timer.purge();
@@ -65,15 +62,6 @@ public class Game {
       notifyHealth();
       startTurn();
     }
-
-  }
-
-  public void applyHealthBoost() {
-
-    health += HEALTH_BOOST;
-
-    if (health > MAX_HEALTH)
-      health = MAX_HEALTH;
 
   }
 
@@ -106,10 +94,7 @@ public class Game {
 
       @Override
       public void run() {
-        if (health > 0)
-          health--;
-        else
-          health = 0;
+        player.loseHealth();
       }
 
     }, 0, 1000);
@@ -119,7 +104,7 @@ public class Game {
   public void notifyHealth() {
 
     // degrade health over time
-    System.out.println("Health: " + health);
+    System.out.println("Health: " + player.getHealth());
 
   }
 
@@ -318,6 +303,8 @@ public class Game {
       Item item = currentTile.getItem();
       player.pickUp(item);
       currentTile.setItem(null);
+      item.setX(-1);
+      item.setY(-1);
       System.out.println("Player picked up " + item.toString());
     }
   }
@@ -330,6 +317,8 @@ public class Game {
     }
     if (!currentTile.hasItem() && !inventory.isEmpty()) {
       Item item = player.getInventory().remove(0);
+      item.setX(currentTile.getX());
+      item.setY(currentTile.getY());
       currentTile.setItem(item);
       System.out.println("Player dropped " + item.toString());
     }
@@ -419,7 +408,6 @@ public class Game {
         if (room != null) {
           for (String dir : room.getDoors()) {
             switch (dir) {
-              // flip that shit to make it work
               case "Left":
                 if (j > 0) {
                   room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.Left), Room.LEFT.x, Room.LEFT.y);
@@ -445,10 +433,6 @@ public class Game {
         }
       }
     }
-  }
-
-  public int getHealth() {
-    return health;
   }
 
   public Room[][] getBoard() {
