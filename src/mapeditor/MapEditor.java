@@ -542,8 +542,8 @@ public class MapEditor extends Application {
     Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8));
 
     Game game = new Game(board, player);
-    XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
 
+    XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
   }
 
 }
