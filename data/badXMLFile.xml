@@ -1,62 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<game>
-    <player>
+<game row="3" col="3">
+    <player row="1" col="1" health="100">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
-        <tileRow>5</tileRow>
-        <tileCol>5</tileCol>
         <inventory/>
     </player>
-    <rows>3</rows>
-    <cols>3</cols>
-    <room>
-        <row>0</row>
-        <col>0</col>
+    <room row="0" col="0">
         <door>Right</door>
-        <item>Diffuser</item>
+        <item row="4" col="3">Diffuser</item>
     </room>
-    <room>
-        <row>0</row>
-        <col>1</col>
+    <room row="0" col="1">
         <door>Left</door>
         <door>Bottom</door>
-        <challenge door="Bottom">Bomb</challenge>
+        <challenge row="8" col="5" state="false">Bomb</challenge>
     </room>
-    <room>
-        <row>1</row>
-        <col>1</col>
+    <room row="1" col="1">
         <door>Right</door>
-        <door>Left</door>
         <door>Top</door>
         <door>Bottom</door>
-        <item>BoltCutter</item>
+        <item row="1" col="4">BoltCutter</item>
     </room>
-    <room>
-        <row>1</row>
-        <col>2</col>
+    <room row="1" col="2">
         <door>Left</door>
         <door>Bottom</door>
-        <challenge>VendingMachine</challenge>
+        <challenge row="6" col="3" state="false">VendingMachine</challenge>
     </room>
-    <room>
-        <row>2</row>
-        <col>0</col>
+    <room row="2" col="0">
         <door>Right</door>
-        <item>Antidote</item>
+        <item row="1" col="5">Antidote</item>
     </room>
-    <room>
-        <row>2</row>
-        <col>1</col>
+    <room row="2" col="1">
         <door>Top</door>
         <door>Left</door>
         <door>Right</door>
-        <challenge door="Left">Guard</challenge>
+        <challenge row="5" col="1" state="false">Guard</challenge>
     </room>
-    <room>
-        <row>2</row>
-        <col>2</col>
+    <room row="2" col="2">
         <door>Top</door>
         <door>Left</door>
-        <item>Coin</item>
+        <item row="7" col="7">Coin</item>
     </room>
 </game>

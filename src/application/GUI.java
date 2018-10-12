@@ -170,14 +170,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         return gameScene;
     }
 
-    private void startNewGame(Stage stage) {
-        try {
-            currentGame = XMLParser.parseGame(new File("data/gameworld.xml"));
-            window.setScene(createGameScene(stage));
-        } catch (XMLParser.ParseError parseError) {
-            parseError.printStackTrace();
-        }
-    }
 
 
     public void loadFile(Stage stage) {
@@ -221,6 +213,16 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
+    }
+
+
+	private void startNewGame(Stage stage) {
+        try {
+            currentGame = XMLParser.parseGame(new File("data/easy.xml"));
+            window.setScene(createGameScene(stage));
+        } catch (XMLParser.ParseError parseError) {
+            parseError.printStackTrace();
+        }
     }
 
 
@@ -318,6 +320,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         return options;
     }
 
+
     public GridPane setMap() {
         GridPane grid = new GridPane();
         Text name = new Text("map");
@@ -340,6 +343,62 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
             //do nothing..
         }
     }
+
+	@Override
+	public void handle(KeyEvent event) {
+		int dx = 0;
+		int dy = 0;
+		//TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
+//		currentGame.startTurn(event.getCode().getName());
+		//testing
+		switch (event.getCode()) {
+			case UP:
+				dx = -1;
+				break;
+			case LEFT:
+				dy = -1;
+				break;
+			case DOWN:
+				dx = 1;
+				break;
+			case RIGHT:
+				dy = 1;
+				break;
+			case A:
+				currentGame.rotateRoomAnticlockwise();
+				break;
+			case D:
+				currentGame.rotateRoomClockwise();
+				break;
+			case Z:
+				currentGame.pickUpItem();
+				break;
+			case X:
+				currentGame.dropItem();
+				break;
+			case F:
+				currentGame.diffuseBomb();
+				break;
+			case C:
+				currentGame.unlockVendingMachine();
+				break;
+			case V:
+				currentGame.useVendingMachine();
+				break;
+			case SPACE:
+				currentGame.moveRoom();
+				renderer.newRoom();
+				break;
+			case B:
+				currentGame.bribeGuard();
+				break;
+			default:
+
+		}
+		currentGame.getPlayer().moveTile(dx, dy);
+		renderer.draw();
+	}
+
 
     public void displayHelp() {
         // blur the GUI
@@ -374,63 +433,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         helpDialog.show();
 
-
-
-    }
-
-    @Override
-    public void handle(KeyEvent event) {
-        int dx = 0;
-        int dy = 0;
-        //TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
-//		currentGame.startTurn(event.getCode().getName());
-        //testing
-        switch (event.getCode()) {
-            case UP:
-                dx = -1;
-                break;
-            case LEFT:
-                dy = -1;
-                break;
-            case DOWN:
-                dx = 1;
-                break;
-            case RIGHT:
-                dy = 1;
-                break;
-            case SPACE:
-                renderer.rotate();
-                break;
-            case P:
-                currentGame.pickUpItem();
-                break;
-            case D:
-                currentGame.dropItem();
-                break;
-            case F:
-                currentGame.diffuseBomb();
-                break;
-            case U:
-                currentGame.unlockVendingMachine();
-                break;
-            case V:
-                currentGame.useVendingMachine();
-                break;
-            case R:
-                currentGame.moveRoom();
-                renderer.newRoom();
-                break;
-            case B:
-                currentGame.bribeGuard();
-                break;
-            default:
-
-        }
-        if(!currentGame.getPlayer().moveTile(dx, dy)){
-            //Return if player is out of bounds
-            return;
-        }
-        renderer.draw();
     }
 
 

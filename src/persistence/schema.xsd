@@ -2,34 +2,34 @@
     <xs:element name="game">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="room" maxOccurs="9">
-                    <xs:complexType mixed="true">
-                        <xs:sequence>
-                            <xs:element type="xs:string" name="door" maxOccurs="4"/>
-                            <xs:element name="item" minOccurs="0">
+                <xs:element name="room" maxOccurs="9" minOccurs="3">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="4">
+                            <xs:element type="xs:string" name="door"/>
+                            <xs:element name="challenge" maxOccurs="unbounded" minOccurs="0">
                                 <xs:complexType>
                                     <xs:simpleContent>
                                         <xs:extension base="xs:string">
-                                            <xs:attribute type="xs:byte" name="row" use="required"/>
                                             <xs:attribute type="xs:byte" name="col" use="required"/>
-                                        </xs:extension>
-                                    </xs:simpleContent>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="challenge" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:simpleContent>
-                                        <xs:extension base="xs:string">
                                             <xs:attribute type="xs:byte" name="row" use="required"/>
-                                            <xs:attribute type="xs:byte" name="col" use="required"/>
                                             <xs:attribute type="xs:string" name="state" use="required"/>
                                         </xs:extension>
                                     </xs:simpleContent>
                                 </xs:complexType>
                             </xs:element>
-                        </xs:sequence>
-                        <xs:attribute type="xs:byte" name="row" use="required"/>
+                            <xs:element name="item" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="col" use="required"/>
+                                            <xs:attribute type="xs:byte" name="row" use="required"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
                         <xs:attribute type="xs:byte" name="col" use="required"/>
+                        <xs:attribute type="xs:byte" name="row" use="required"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="player">
@@ -45,14 +45,14 @@
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
-                        <xs:attribute type="xs:byte" name="row"/>
-                        <xs:attribute type="xs:byte" name="col"/>
-                        <xs:attribute type="xs:byte" name="health"/>
+                        <xs:attribute type="xs:byte" name="col" use="required"/>
+                        <xs:attribute type="xs:byte" name="health" use="required"/>
+                        <xs:attribute type="xs:byte" name="row" use="required"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute type="xs:byte" name="row"/>
-            <xs:attribute type="xs:byte" name="col"/>
+            <xs:attribute type="xs:byte" name="col" use="required"/>
+            <xs:attribute type="xs:byte" name="row" use="required"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

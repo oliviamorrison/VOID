@@ -16,17 +16,27 @@ public class Player {
   private Room room;
   private Ellipse ellipse;
   private int health;
+  private Direction playerDir;
 
-  public Player(Room room, AccessibleTile tile, int health) {
+  public Player(Room room, AccessibleTile tile, int health, Direction direction) {
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
     this.health = (health > 0) ? health : MAX_HEALTH;
+    this.playerDir = direction;
 
     this.ellipse = new Ellipse();
     this.ellipse.setFill(Color.ORANGE);
     this.ellipse.setRadiusX(8);
     this.ellipse.setRadiusY(15);
+  }
+
+  public Direction getPlayerDir() {
+    return playerDir;
+  }
+
+  public void setPlayerDir(Direction playerDir) {
+    this.playerDir = playerDir;
   }
 
   public int getHealth() {
@@ -59,15 +69,29 @@ public class Player {
     return room;
   }
 
-  public boolean moveTile(int dx, int dy) {
+  public void moveTile(int dx, int dy) {
+    Direction direction = null;
+    if(dx < 0) {
+      direction = Direction.Top;
+    } else if(dx > 0){
+      direction = Direction.Bottom;
+    } else if(dy < 0){
+      direction = Direction.Left;
+    } else if(dy > 0){
+      direction = Direction.Right;
+    }
+
+    if(playerDir != direction){
+      playerDir = direction;
+      return;
+    }
 
     if (room.moveTile(tile, dx, dy) == null) {
-      return false;
+      return;
     }
     tile.setPlayer(false);
     tile = (AccessibleTile) room.moveTile(tile, dx, dy);
     tile.setPlayer(true);
-    return true;
   }
 
   public AccessibleTile getTile() {

@@ -9,9 +9,7 @@ public class Room {
   private int row;
   private int col;
   private Tile[][] tiles;
-  private List<Item> items;
   private List<String> doors;
-  private List<Challenge> challenges;
   private boolean hasHealthPack = false;
 
   public static final Point TOP = new Point(0, 5);
@@ -20,38 +18,11 @@ public class Room {
   public static final Point RIGHT = new Point(5, 9);
   public static final int ROOMSIZE = 10;
 
-
-  public Room(int row, int col, List<String> doors, List<Item> items, List<Challenge> challenges) {
-
+  public Room(int row, int col, Tile[][] tiles, List<String> doors) {
     this.row = row;
     this.col = col;
-    this.items = items;
+    this.tiles = tiles;
     this.doors = doors;
-    this.challenges = challenges;
-    this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
-
-    for (int i = 0; i < ROOMSIZE; i++) {
-      for (int j = 0; j < ROOMSIZE; j++) {
-        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
-          tiles[i][j] = new InaccessibleTile(this, i, j);
-        else tiles[i][j] = new AccessibleTile(this, i, j);
-      }
-    }
-
-    for (Item item : items) {
-      AccessibleTile tile = (AccessibleTile) tiles[item.getX()][item.getY()];
-      tile.setItem(item);
-    }
-
-    for (Challenge challenge : challenges) {
-      AccessibleTile tile = (AccessibleTile) tiles[challenge.getX()][challenge.getY()];
-      tile.setChallenge(challenge);
-    }
-
-  }
-
-  public List<Challenge> getChallenges() {
-    return challenges;
   }
 
   public Room() {
@@ -59,13 +30,11 @@ public class Room {
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
         if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
-          tiles[i][j] = new InaccessibleTile(this, i, j);
-        else tiles[i][j] = new AccessibleTile(this, i, j);
+          tiles[i][j] = new InaccessibleTile(i, j);
+        else tiles[i][j] = new AccessibleTile(i, j);
       }
     }
     this.doors = new ArrayList<>();
-    this.items = new ArrayList<>();
-    this.challenges = new ArrayList<>();
   }
 
   public int getRow() {
@@ -76,15 +45,12 @@ public class Room {
     return col;
   }
 
-  public List<Item> getItems() {
-    return items;
-  }
-
   public List<String> getDoors() {
     return doors;
   }
 
   public Tile moveTile(Tile t, int dx, int dy) {
+//    based on dx and dy values change currentdirection of player
 
     int[] coordinates = getTileCoordinates(t);
 
@@ -96,7 +62,7 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
-    if (newX >= 10 || newY >= 10)
+    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10)
       return null;
 
     Tile tile = tiles[newX][newY];
@@ -112,7 +78,7 @@ public class Room {
       }
     }
 
-    //if the newCoordinates are inbounds and the tile is not inaacessible
+    //if the newCoordinates are inbounds and the tile is not inaccessible
     if (!(tile instanceof InaccessibleTile)) {
       return tile;
     }
@@ -140,38 +106,35 @@ public class Room {
     tiles[row][col] = tile;
   }
 
-  public AccessibleTile checkChallengeNearby(AccessibleTile tile) {
-
+  public AccessibleTile checkFacingChallenge(AccessibleTile tile, Direction playerDirection) {
 
     Tile t;
 
-    for (Direction direction : Direction.values()) {
+    int row = tile.getX();
+    int col = tile.getY();
 
-      int row = tile.getX();
-      int col = tile.getY();
+    switch (playerDirection) {
+      case Left:
+        col -= 1;
+        break;
+      case Right:
+        col += 1;
+        break;
+      case Top:
+        row -= 1;
+        break;
+      case Bottom:
+        row += 1;
+        break;
+    }
 
-      switch (direction) {
-        case Left:
-          col -= 1;
-          break;
-        case Right:
-          col += 1;
-          break;
-        case Top:
-          row -= 1;
-          break;
-        case Bottom:
-          row += 1;
-          break;
-      }
+    t = tiles[row][col];
 
-      t = tiles[row][col];
-      if (t instanceof InaccessibleTile || t instanceof DoorTile) {
-      } else {
-        AccessibleTile a = (AccessibleTile) t;
-        if (a.hasChallenge())
-          return a;
-      }
+    if (t instanceof InaccessibleTile || t instanceof DoorTile) {
+    } else {
+      AccessibleTile a = (AccessibleTile) t;
+      if (a.hasChallenge())
+        return a;
     }
 
     return null;
@@ -290,40 +253,7 @@ public class Room {
     return null;
   }
 
-  public void addHealthPack() {
-
-    boolean itemPlaced = false;
-    while (!itemPlaced) {
-      int randomX = (int) (Math.random() * 8) + 1;
-      int randomY = (int) (Math.random() * 8) + 1;
-      if (tiles[randomY][randomX] instanceof AccessibleTile) {
-        AccessibleTile tile = (AccessibleTile) tiles[randomY][randomX];
-        if (!tile.hasItem() && !tile.hasChallenge()) {
-          tile.setItem(Item.HealthPack);
-          itemPlaced = true;
-        }
-      }
-    }
-
-  }
-
-  public boolean hasHealthPack() {
-    return hasHealthPack;
-  }
-
-  public void setHasHealthPack(boolean hasHealthPack) {
-    this.hasHealthPack = hasHealthPack;
-  }
-
-  public void addItem(Item item) {
-    items.add(item);
-  }
-
-  public void removeItem(Item item) {
-    items.remove(item);
-  }
-
-  public void rotateRoomClockwise() {
+  public void rotateRoomAnticlockwise() {
     int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;
     for (int i = 0; i < x; i++) {
@@ -335,6 +265,16 @@ public class Room {
         this.tiles[j][y - i] = value;
       }
     }
+  }
+
+  public void rotateRoomClockwise() {
+    Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+        tempArray[ROOMSIZE - col - 1][row] = this.tiles[row][col];
+      }
+    }
+    this.tiles = tempArray;
   }
 
 }
