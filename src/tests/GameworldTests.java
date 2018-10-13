@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameworldTests {
 
@@ -23,7 +24,7 @@ public class GameworldTests {
     }
     player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, Direction.NORTH);
 
-    ((AccessibleTile) board[0][0].getTile(6,5)).setItem(Item.Diffuser);
+    ((AccessibleTile) board[0][0].getTile(6,5)).setItem(new Diffuser(6, 5));
 
     game = new Game(board, player);
 
@@ -54,7 +55,7 @@ public class GameworldTests {
     game.movePlayer("s");
 
     game.pickUpItem();
-    assertEquals(player.getInventory().get(0), Item.Diffuser);
+    assertTrue(player.getInventory().get(0) instanceof Diffuser);
   }
 
 

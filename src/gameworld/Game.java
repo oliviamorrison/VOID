@@ -42,10 +42,10 @@ public class Game {
 
         Item item = currentTile.getItem();
 
-        if (item.equals(Item.Antidote)) {
+        if (item instanceof Antidote) {
           System.out.println("you win");
           return;
-        } else if (item.equals(Item.HealthPack)) {
+        } else if (item instanceof HealthPack) {
           currentTile.setItem(null);
           player.boostHealth();
           System.out.println("Health pack found: health boosted 20");
@@ -172,7 +172,7 @@ public class Game {
     if (challengeTile == null)
       return;
 
-    Challenge challenge = challengeTile.getChallenge();
+    ChallengeItem challenge = challengeTile.getChallenge();
 
     if (challenge instanceof VendingMachine) {
       VendingMachine v = (VendingMachine) challenge;
@@ -180,7 +180,7 @@ public class Game {
       if (!v.isUnlocked()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item.equals(Item.BoltCutter)) {
+          if (item instanceof BoltCutter) {
             v.setUnlocked(true);
             System.out.println("Chains are removed from Vending machine");
             System.out.println("Vending machine is available for use");
@@ -200,7 +200,7 @@ public class Game {
     if (challengeTile == null)
       return;
 
-    Challenge challenge = challengeTile.getChallenge();
+    ChallengeItem challenge = challengeTile.getChallenge();
 
     Item coin = null;
 
@@ -210,7 +210,7 @@ public class Game {
       if (v.isUnlocked()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item.equals(Item.Coin)) {
+          if (item instanceof Coin) {
             coin = item;
           }
         }
@@ -219,7 +219,7 @@ public class Game {
 
     if (coin != null) {
       player.removeItem(coin);
-      player.addItem(Item.Beer);
+      player.addItem(new Beer(-1, -1));
       System.out.println("Placed coin into vending machine...");
       System.out.println("Pick up the beer that is dispensed");
     }
@@ -235,7 +235,7 @@ public class Game {
     if (challengeTile == null)
       return;
 
-    Challenge challenge = challengeTile.getChallenge();
+    ChallengeItem challenge = challengeTile.getChallenge();
 
     Item beer = null;
     Guard g = null;
@@ -246,7 +246,7 @@ public class Game {
       if (!g.isNavigable()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item.equals(Item.Beer)) {
+          if (item instanceof Beer) {
             beer = item;
           }
         }
@@ -310,14 +310,14 @@ public class Game {
     if (challengeTile == null)
       return;
 
-    Challenge challenge = challengeTile.getChallenge();
+    ChallengeItem challenge = challengeTile.getChallenge();
 
     if (challenge instanceof Bomb) {
       Bomb b = (Bomb) challenge;
       if (!b.isNavigable()) {
         List<Item> pack = player.getInventory();
         for (Item item : pack) {
-          if (item.equals(Item.Diffuser)) {
+          if (item instanceof Diffuser) {
             b.setNavigable(true);
             System.out.println("Bomb diffused with " + item.toString());
           }

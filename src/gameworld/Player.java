@@ -83,6 +83,10 @@ public class Player {
       direction = Direction.EAST;
     }
 
+    if (direction == null){
+      return;
+    }
+
     if(playerDir != direction){
       playerDir = direction;
       return;

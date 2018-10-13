@@ -71,7 +71,7 @@ public class Room {
     if (tile instanceof AccessibleTile) {
       AccessibleTile at = (AccessibleTile) tile;
       if (at.hasChallenge()) {
-        Challenge c = at.getChallenge();
+        ChallengeItem c = at.getChallenge();
         if (!c.isNavigable()) {
           return null;
         }
@@ -172,20 +172,20 @@ public class Room {
             room.append("P");
           else if (accessibleTile.hasItem()) {
             Item item = accessibleTile.getItem();
-            if (item.equals(Item.Diffuser))
+            if (item instanceof Diffuser)
               room.append("D");
-            if (item.equals(Item.Antidote))
+            if (item instanceof Antidote)
               room.append("A");
-            if (item.equals(Item.Coin))
+            if (item instanceof Coin)
               room.append("C");
-            if (item.equals(Item.Beer))
+            if (item instanceof Beer)
               room.append("R");
-            if (item.equals(Item.BoltCutter))
+            if (item instanceof BoltCutter)
               room.append("Z");
-            if (item.equals(Item.HealthPack))
+            if (item instanceof HealthPack)
               room.append("H");
           } else if (accessibleTile.hasChallenge()) {
-            Challenge challenge = accessibleTile.getChallenge();
+            ChallengeItem challenge = accessibleTile.getChallenge();
             if (challenge instanceof Bomb)
               room.append("B");
             if (challenge instanceof VendingMachine)

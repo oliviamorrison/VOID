@@ -10,7 +10,7 @@ import javafx.scene.shape.Polygon;
 public class AccessibleTile extends Tile {
 
   private Item item;
-  private Challenge challenge;
+  private ChallengeItem challenge;
   private boolean player = false;
 
   public AccessibleTile(int x, int y) {
@@ -37,11 +37,11 @@ public class AccessibleTile extends Tile {
     return player;
   }
 
-  public Challenge getChallenge() {
+  public ChallengeItem getChallenge() {
     return this.challenge;
   }
 
-  public void setChallenge(Challenge challenge) {
+  public void setChallenge(ChallengeItem challenge) {
     this.challenge = challenge;
   }
 

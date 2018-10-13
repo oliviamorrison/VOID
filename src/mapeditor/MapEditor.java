@@ -594,23 +594,23 @@ public class MapEditor extends Application {
                   MapItem mapItem = tilePane.getMapItem();
                   if(mapItem!=null){
                     Item item = null;
-                    Challenge challenge = null;
+                    ChallengeItem challenge = null;
 
                     switch(mapItem.getImageName()){
                       case "antidote.png":
-                        item = Item.Antidote;
+                        item = new Antidote(k, l);
                         break;
                       case "cutters.png":
-                        item = Item.BoltCutter;
+                        item = new BoltCutter(k, l);
                         break;
                       case "diffuser.png":
-                        item = Item.Diffuser;
+                        item = new Diffuser(k, l);
                         break;
                       case "two-coins.png":
-                        item = Item.Coin;
+                        item = new Coin(k, l);
                         break;
                       case "healthpack.png":
-                        item = Item.HealthPack;
+                        item = new HealthPack(k, l);
                         break;
                       case "guard.png":
                         challenge = new Guard(k,l);
@@ -643,6 +643,7 @@ public class MapEditor extends Application {
     }
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
+    // TODO: Decide which default direction player should be created with (currently NORTH)
     Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100, Direction.NORTH);
 
     Game game = new Game(board, player);

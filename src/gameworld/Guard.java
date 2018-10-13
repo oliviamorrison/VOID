@@ -4,10 +4,20 @@ package gameworld;
  * This class represents a guard challenge which must be bribed
  * with a beer by the player in order to access a portal.
  */
-public class Guard extends Challenge {
+public class Guard extends ChallengeItem {
 
   public Guard(int x, int y) {
     super(x, y);
+  }
+
+  @Override
+  public String getName() {
+    return "";
+  }
+
+  @Override
+  public String getDescription() {
+    return "";
   }
 
   @Override
