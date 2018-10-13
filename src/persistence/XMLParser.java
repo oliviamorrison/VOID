@@ -160,11 +160,10 @@ public class XMLParser {
 
     //save inventory
     Element inventory = document.createElement("inventory");
-    for(Item item : game.getPlayer().getInventory()){
-      Element itemElement = document.createElement("item");
-      itemElement.appendChild(document.createTextNode(item.toString()));
-      inventory.appendChild(itemElement);
-    }
+    Item item = game.getPlayer().getItem();
+    Element itemElement = document.createElement("item");
+    itemElement.appendChild(document.createTextNode(item.toString()));
+    inventory.appendChild(itemElement);
 
 //    saveItems(document, game.getPlayer().getInventory(), inventory, true);
     player.appendChild(inventory);
@@ -351,10 +350,8 @@ public class XMLParser {
           ((AccessibleTile) tiles[rowCol[0]][rowCol[1]]).setItem(item);
         }
         else if(item!=null && p!=null){
-          p.getInventory().add(item);
+          p.addItem(item);
         }
-
-
       }
     }
   }
