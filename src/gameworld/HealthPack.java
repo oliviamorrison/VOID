@@ -2,8 +2,8 @@ package gameworld;
 
 public class HealthPack extends Item {
 
-  public HealthPack(int x, int y) {
-    super(x, y);
+  public HealthPack(int row, int col) {
+    super(row, col);
   }
 
   @Override

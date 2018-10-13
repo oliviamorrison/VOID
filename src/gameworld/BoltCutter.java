@@ -1,9 +1,9 @@
 package gameworld;
 
-public class BoltCutter extends Item{
+public class BoltCutter extends Item {
 
-  public BoltCutter(int x, int y) {
-    super(x, y);
+  public BoltCutter(int row, int col) {
+    super(row, col);
   }
 
   @Override

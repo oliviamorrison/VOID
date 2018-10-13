@@ -6,8 +6,8 @@ package gameworld;
  */
 public class Bomb extends ChallengeItem {
 
-  public Bomb(int x, int y) {
-    super(x, y);
+  public Bomb(int row, int col) {
+    super(row, col);
   }
 
   @Override

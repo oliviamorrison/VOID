@@ -86,8 +86,8 @@ public class XMLParser {
     for(int y = 0; y < 10; y++){
       for(int x = 0; x < 10; x++){
         Tile tile = room.getTile(x,y);
-        if(tile instanceof DoorTile){
-          DoorTile door = (DoorTile) tile;
+        if(tile instanceof Portal){
+          Portal door = (Portal) tile;
           Element doorElement = document.createElement("door");
           doorElement.appendChild((document.createTextNode(door.toString())));
           roomElement.appendChild(doorElement);
@@ -98,8 +98,8 @@ public class XMLParser {
           //save items
           if(aTile.hasItem()){
             Element item = document.createElement("item");
-            item.setAttribute("row", aTile.getItem().getX()+"");
-            item.setAttribute("col", aTile.getItem().getY()+"");
+            item.setAttribute("row", aTile.getItem().getRow()+"");
+            item.setAttribute("col", aTile.getItem().getCol()+"");
             item.appendChild(document.createTextNode(aTile.getItem().toString()));
             roomElement.appendChild(item);
           }
@@ -121,8 +121,8 @@ public class XMLParser {
               VendingMachine vm = (VendingMachine) challengeItem;
               challenge.setAttribute("state", vm.isUnlocked()+"");
             }
-            challenge.setAttribute("row", challengeItem.getX()+"");
-            challenge.setAttribute("col", challengeItem.getY()+"");
+            challenge.setAttribute("row", challengeItem.getRow()+"");
+            challenge.setAttribute("col", challengeItem.getCol()+"");
             challenge.appendChild(document.createTextNode(aTile.getChallenge().toString()));
             roomElement.appendChild(challenge);
           }
@@ -146,8 +146,8 @@ public class XMLParser {
   private static Element savePlayer(Game game, Document document) {
     Element player = document.createElement("player");
     //Get position of player and add as attribute to player element
-    player.setAttribute("row", game.getPlayer().getTile().getX()+"");
-    player.setAttribute("col", game.getPlayer().getTile().getY()+"");
+    player.setAttribute("row", game.getPlayer().getTile().getRow()+"");
+    player.setAttribute("col", game.getPlayer().getTile().getCol()+"");
     player.setAttribute("health", game.getPlayer().getHealth()+"");
 
     //Add coordinates of the room the player is in to the player element
@@ -176,10 +176,10 @@ public class XMLParser {
   private static void saveItems(Document document, List<Item> items, Element itemCollector, boolean isInventory){
     for(Item token: items){
       Element item = document.createElement("item");
-      if((token.getX() == -1 || token.getY() == -1) && !isInventory) return;
+      if((token.getRow() == -1 || token.getCol() == -1) && !isInventory) return;
       else if(!isInventory){
-        item.setAttribute("row", token.getX()+"");
-        item.setAttribute("col", token.getY()+"");
+        item.setAttribute("row", token.getRow()+"");
+        item.setAttribute("col", token.getCol()+"");
       }
       item.appendChild(document.createTextNode(token.toString()));
       itemCollector.appendChild(item);
@@ -192,20 +192,20 @@ public class XMLParser {
 
       if(challengeItem instanceof Bomb) {
         Bomb bomb = (Bomb) challengeItem;
-        challenge.setAttribute("row", bomb.getX()+"");
-        challenge.setAttribute("col", bomb.getY()+"");
+        challenge.setAttribute("row", bomb.getRow()+"");
+        challenge.setAttribute("col", bomb.getCol()+"");
         challenge.setAttribute("state", bomb.isNavigable()+"");
       }
       else if(challengeItem instanceof Guard){
         Guard guard = (Guard) challengeItem;
-        challenge.setAttribute("row", guard.getX()+"");
-        challenge.setAttribute("col", guard.getY()+"");
+        challenge.setAttribute("row", guard.getRow()+"");
+        challenge.setAttribute("col", guard.getCol()+"");
         challenge.setAttribute("state", guard.isNavigable()+"");
       }
       else{
         VendingMachine vm = (VendingMachine) challengeItem;
-        challenge.setAttribute("row", vm.getX()+"");
-        challenge.setAttribute("col", vm.getY()+"");
+        challenge.setAttribute("row", vm.getRow()+"");
+        challenge.setAttribute("col", vm.getCol()+"");
         challenge.setAttribute("state", vm.isNavigable()+"");
       }
 
@@ -302,7 +302,7 @@ public class XMLParser {
     if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
     int health = parseInt(playerElement.getAttribute("health"));
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, Direction.NORTH);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, Direction.EAST);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
@@ -346,8 +346,8 @@ public class XMLParser {
         }
 
         if(item!=null && tiles!=null){
-          item.setX(rowCol[0]);
-          item.setY(rowCol[1]);
+          item.setRow(rowCol[0]);
+          item.setCol(rowCol[1]);
           ((AccessibleTile) tiles[rowCol[0]][rowCol[1]]).setItem(item);
         }
         else if(item!=null && p!=null){

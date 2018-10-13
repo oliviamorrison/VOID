@@ -1,8 +1,8 @@
 package gameworld;
 
 public class Coin extends Item {
-  public Coin(int x, int y) {
-    super(x, y);
+  public Coin(int row, int col) {
+    super(row, col);
   }
 
   @Override
