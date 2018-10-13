@@ -147,14 +147,13 @@ public class XMLParser {
     player.appendChild(roomRow);
     player.appendChild(roomCol);
 
-    //TODO: Don't need to run through inventory list
     //save inventory
-    Element inventory = document.createElement("item");
-    for(Item item : game.getPlayer().getInventory()){
-      Element itemElement = document.createElement("item");
-      itemElement.appendChild(document.createTextNode(item.toString()));
-      inventory.appendChild(itemElement);
-    }
+    Element inventory = document.createElement("inventory");
+    Item item = game.getPlayer().getItem();
+    Element itemElement = document.createElement("item");
+    itemElement.appendChild(document.createTextNode(item.toString()));
+    inventory.appendChild(itemElement);
+
 
     player.appendChild(inventory);
 
