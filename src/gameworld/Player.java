@@ -14,11 +14,12 @@ public class Player {
   private AccessibleTile tile;
   private List<Item> inventory;
   private Room room;
-  private Ellipse ellipse;
   private int health;
   private Direction playerDir;
+  private Ellipse ellipse;
 
   public Player(Room room, AccessibleTile tile, int health, Direction direction) {
+
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
@@ -29,6 +30,7 @@ public class Player {
     this.ellipse.setFill(Color.ORANGE);
     this.ellipse.setRadiusX(8);
     this.ellipse.setRadiusY(15);
+
   }
 
   public Direction getPlayerDir() {
@@ -72,13 +74,17 @@ public class Player {
   public void moveTile(int dx, int dy) {
     Direction direction = null;
     if(dx < 0) {
-      direction = Direction.Top;
+      direction = Direction.NORTH;
     } else if(dx > 0){
-      direction = Direction.Bottom;
+      direction = Direction.SOUTH;
     } else if(dy < 0){
-      direction = Direction.Left;
+      direction = Direction.WEST;
     } else if(dy > 0){
-      direction = Direction.Right;
+      direction = Direction.EAST;
+    }
+
+    if (direction == null){
+      return;
     }
 
     if(playerDir != direction){
