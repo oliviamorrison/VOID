@@ -240,9 +240,15 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
             //TODO: For now until we can get a start menu
             loadFile(stage);
         }
+        Text controls = new Text("Move: Arrow keys\nRotate: A & D\nPickup: Z\nDrop: X\nMove Room: Space\n" +
+                "Diffuse: F\nUnlock: C\nUse: V\nBribe: B");
+        controls.setFill(Color.WHITE);
+
         renderer = new Renderer(currentGame);
         GridPane grid = new GridPane();
-        grid.add(renderer.getRoot(), 0, 1);
+        grid.add(renderer.getRoot(), 0, 0);
+        grid.add(controls,0,1);
+        grid.setStyle("-fx-background-color: #484a4c;");
         return grid;
     }
 
@@ -350,7 +356,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 		int dy = 0;
 		//TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
 //		currentGame.startTurn(event.getCode().getName());
-		//testing
 		switch (event.getCode()) {
 			case UP:
 				dx = -1;
