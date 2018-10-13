@@ -241,7 +241,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
             loadFile(stage);
         }
         Text controls = new Text("Move: Arrow keys\nRotate: A & D\nPickup: Z\nDrop: X\nMove Room: Space\n" +
-                "Diffuse: F\nUnlock: C\nUse: V\nBribe: B");
+                "Diffuse: N\nUnlock: C\nUse: V\nBribe: B");
         controls.setFill(Color.WHITE);
 
         renderer = new Renderer(currentGame);
@@ -381,7 +381,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			case X:
 				currentGame.dropItem();
 				break;
-			case F:
+			case N:
 				currentGame.diffuseBomb();
 				break;
 			case C:
@@ -422,8 +422,17 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
         pauseRoot.setPadding(new Insets(20));
 
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream("src/application/controls.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ImageView imageView = new ImageView(image);
+
         Button resume = new Button("Resume");
-        pauseRoot.getChildren().add(resume);
+        pauseRoot.getChildren().addAll(imageView, resume);
 
         Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
         helpDialog.initOwner(window);
