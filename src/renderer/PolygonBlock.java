@@ -63,7 +63,7 @@ public class PolygonBlock {
     }
 
     public void drawTop() {
-        // Top
+        // NORTH
         tpx1 = (0) + originX;
         tpy1 = (-z * tileHeight) + originY;
         tpx2 = (tileWidth / 2) + originX;

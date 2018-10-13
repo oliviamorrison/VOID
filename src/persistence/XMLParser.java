@@ -2,7 +2,6 @@ package persistence;
 import gameworld.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -16,7 +15,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Integer.*;
 import static java.lang.Integer.parseInt;
 
 /**
@@ -108,7 +106,7 @@ public class XMLParser {
 
           //save challenges
           if(aTile.hasChallenge()){
-            Challenge challengeItem = aTile.getChallenge();
+            ChallengeItem challengeItem = aTile.getChallenge();
             Element challenge = document.createElement("challenge");
 
             if(challengeItem instanceof Bomb) {
@@ -304,7 +302,7 @@ public class XMLParser {
     if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
     int health = parseInt(playerElement.getAttribute("health"));
 
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, Direction.Top);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, Direction.NORTH);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
     NodeList inventory = playerElement.getElementsByTagName("inventory");
@@ -323,30 +321,31 @@ public class XMLParser {
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
+        int[] rowCol = getRowCol(elem);
 
         Item item = null;
         switch(token){
           case "Antidote":
-            item = Item.Antidote;break;
+            item = new Antidote(rowCol[0], rowCol[1]);
+            break;
           case "Beer":
-            item = Item.Beer;
+            item = new Beer(rowCol[0], rowCol[1]);
             break;
           case "BoltCutter":
-            item = Item.BoltCutter;
+            item = new BoltCutter(rowCol[0], rowCol[1]);
             break;
           case "Coin":
-            item = Item.Coin;
+            item = new Coin(rowCol[0], rowCol[1]);
             break;
           case "Diffuser":
-            item = Item.Diffuser;
+            item = new Diffuser(rowCol[0], rowCol[1]);
             break;
           case "HealthPack":
-            item = Item.HealthPack;
+            item = new HealthPack(rowCol[0], rowCol[1]);
             break;
         }
 
         if(item!=null && tiles!=null){
-          int[] rowCol = getRowCol(elem);
           item.setX(rowCol[0]);
           item.setY(rowCol[1]);
           ((AccessibleTile) tiles[rowCol[0]][rowCol[1]]).setItem(item);

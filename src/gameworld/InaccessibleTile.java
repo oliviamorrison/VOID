@@ -1,7 +1,8 @@
 package gameworld;
 
-import javafx.scene.paint.Color;
-
+/**
+ * This class represents a tile in a Room that cannot be accessed.
+ */
 public class InaccessibleTile extends Tile {
 
   public InaccessibleTile(int x, int y) {
@@ -12,4 +13,5 @@ public class InaccessibleTile extends Tile {
   public String toString() {
     return "X";
   }
+
 }

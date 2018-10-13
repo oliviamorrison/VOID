@@ -2,6 +2,7 @@ package gameworld;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Room {
@@ -10,7 +11,6 @@ public class Room {
   private int col;
   private Tile[][] tiles;
   private List<String> doors;
-  private boolean hasHealthPack = false;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
@@ -21,7 +21,7 @@ public class Room {
   public Room(int row, int col, Tile[][] tiles, List<String> doors) {
     this.row = row;
     this.col = col;
-    this.tiles = tiles;
+    this.tiles = Arrays.copyOf(tiles, tiles.length);
     this.doors = doors;
   }
 
@@ -71,7 +71,7 @@ public class Room {
     if (tile instanceof AccessibleTile) {
       AccessibleTile at = (AccessibleTile) tile;
       if (at.hasChallenge()) {
-        Challenge c = at.getChallenge();
+        ChallengeItem c = at.getChallenge();
         if (!c.isNavigable()) {
           return null;
         }
@@ -114,16 +114,16 @@ public class Room {
     int col = tile.getY();
 
     switch (playerDirection) {
-      case Left:
+      case WEST:
         col -= 1;
         break;
-      case Right:
+      case EAST:
         col += 1;
         break;
-      case Top:
+      case NORTH:
         row -= 1;
         break;
-      case Bottom:
+      case SOUTH:
         row += 1;
         break;
     }
@@ -172,20 +172,20 @@ public class Room {
             room.append("P");
           else if (accessibleTile.hasItem()) {
             Item item = accessibleTile.getItem();
-            if (item.equals(Item.Diffuser))
+            if (item instanceof Diffuser)
               room.append("D");
-            if (item.equals(Item.Antidote))
+            if (item instanceof Antidote)
               room.append("A");
-            if (item.equals(Item.Coin))
+            if (item instanceof Coin)
               room.append("C");
-            if (item.equals(Item.Beer))
+            if (item instanceof Beer)
               room.append("R");
-            if (item.equals(Item.BoltCutter))
+            if (item instanceof BoltCutter)
               room.append("Z");
-            if (item.equals(Item.HealthPack))
+            if (item instanceof HealthPack)
               room.append("H");
           } else if (accessibleTile.hasChallenge()) {
-            Challenge challenge = accessibleTile.getChallenge();
+            ChallengeItem challenge = accessibleTile.getChallenge();
             if (challenge instanceof Bomb)
               room.append("B");
             if (challenge instanceof VendingMachine)
@@ -226,13 +226,13 @@ public class Room {
   public Point getNextPoint(Direction direction) {
 
     switch (direction) {
-      case Left:
+      case WEST:
         return LEFT;
-      case Right:
+      case EAST:
         return RIGHT;
-      case Bottom:
+      case SOUTH:
         return BOTTOM;
-      case Top:
+      case NORTH:
         return TOP;
       default:
         return null;

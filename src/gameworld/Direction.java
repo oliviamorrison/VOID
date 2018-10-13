@@ -1,26 +1,33 @@
 package gameworld;
 
+/**
+ * This class helps to identify the orientation of game objects
+ * relative to the room as well as the direction the player is facing.
+ */
 public enum Direction {
 
-  Top, Bottom, Left, Right;
+  NORTH, SOUTH, EAST, WEST;
 
+  /**
+   * This method finds the opposite direction.
+   *
+   * @return the opposite direction
+   */
   public Direction getOppositeDirection() {
 
     switch (this) {
 
-      case Top:
-        return Direction.Bottom;
-      case Bottom:
-        return Direction.Top;
-      case Left:
-        return Direction.Right;
-      case Right:
-        return Direction.Left;
+      case NORTH:
+        return Direction.SOUTH;
+      case SOUTH:
+        return Direction.NORTH;
+      case WEST:
+        return Direction.EAST;
+      case EAST:
       default:
-        return null;
+        return Direction.WEST;
 
     }
-
   }
-  
+
 }
