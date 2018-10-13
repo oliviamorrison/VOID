@@ -272,7 +272,7 @@ public class XMLParser {
         Element elem = (Element) items.item(i);
         int[] rowCol = getRowCol(elem);
 
-        Item item;
+        Item item = null;
         switch(token){
           case "Antidote":
             item = new Antidote(rowCol[0], rowCol[1]);
@@ -302,7 +302,7 @@ public class XMLParser {
           ((AccessibleTile) tiles[rowCol[0]][rowCol[1]]).setItem(item);
         }
         else if(p!=null){
-          p.getInventory().add(item);
+          p.addItem(item);
         }
 
       }
