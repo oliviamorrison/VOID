@@ -400,7 +400,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       default:
 
     }
-
     if (!(dx == 0 && dy == 0)) {
 
       currentGame.movePlayer(dx, dy);
@@ -414,40 +413,53 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     renderer.draw();
 
+
   }
 
-  public void displayHelp() {
-    // blur the GUI
-    game.setEffect(new GaussianBlur());
-    inventory.setEffect(new GaussianBlur());
-    options.setEffect(new GaussianBlur());
-    map.setEffect(new GaussianBlur());
-
-    VBox pauseRoot = new VBox(5);
-    pauseRoot.setPrefSize(500, 200);
-
-    pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-    pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
-    pauseRoot.setPadding(new Insets(20));
-
-    Button resume = new Button("Resume");
-    pauseRoot.getChildren().add(resume);
-
-    Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
-    helpDialog.initOwner(window);
-    helpDialog.initModality(Modality.APPLICATION_MODAL);
-    helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
+    
 
 
-    resume.setOnAction(event -> {
-      game.setEffect(null);
-      inventory.setEffect(null);
-      options.setEffect(null);
-      map.setEffect(null);
-      helpDialog.hide();
-    });
 
-    helpDialog.show();
+    public void displayHelp() {
+        // blur the GUI
+        game.setEffect(new GaussianBlur());
+        inventory.setEffect(new GaussianBlur());
+        options.setEffect(new GaussianBlur());
+        map.setEffect(new GaussianBlur());
+
+        VBox pauseRoot = new VBox(5);
+        pauseRoot.setPrefSize(500,200);
+
+        pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+        pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
+        pauseRoot.setPadding(new Insets(20));
+
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream("src/application/controls.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ImageView imageView = new ImageView(image);
+
+        Button resume = new Button("Play");
+        pauseRoot.getChildren().addAll(imageView, resume);
+
+        Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
+        helpDialog.initOwner(window);
+        helpDialog.initModality(Modality.APPLICATION_MODAL);
+        helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
+
+        resume.setOnAction(event -> {
+            game.setEffect(null);
+            inventory.setEffect(null);
+            options.setEffect(null);
+            map.setEffect(null);
+            helpDialog.hide();
+        });
+
+        helpDialog.show();
 
   }
 
