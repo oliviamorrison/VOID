@@ -5,8 +5,8 @@ package gameworld;
  */
 public class InaccessibleTile extends Tile {
 
-  public InaccessibleTile(int x, int y) {
-    super(x, y);
+  public InaccessibleTile(int row, int col) {
+    super(row, col);
   }
 
   @Override

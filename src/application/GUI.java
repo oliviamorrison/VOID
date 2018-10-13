@@ -1,5 +1,6 @@
 package application;
 
+import gameworld.Direction;
 import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -349,23 +350,24 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   @Override
   public void handle(KeyEvent event) {
-    int dx = 0;
-    int dy = 0;
     //TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
 //		currentGame.startTurn(event.getCode().getName());
     //testing
+
+    Direction direction = null;
+
     switch (event.getCode()) {
       case UP:
-        dx = -1;
+        direction = Direction.NORTH;
         break;
       case LEFT:
-        dy = -1;
+        direction = Direction.WEST;
         break;
       case DOWN:
-        dx = 1;
+        direction = Direction.SOUTH;
         break;
       case RIGHT:
-        dy = 1;
+        direction = Direction.EAST;
         break;
       case A:
         currentGame.rotateRoomAnticlockwise();
@@ -398,8 +400,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       default:
 
     }
-    if (!(dx == 0 && dy == 0)) {
-      currentGame.getPlayer().moveTile(dx, dy);
+
+    if (direction != null) {
+
+      currentGame.movePlayer(direction);
+
       if (currentGame.checkForAntidote()) {
         System.out.println("Winner winner");
         System.exit(0);

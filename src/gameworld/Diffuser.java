@@ -2,8 +2,8 @@ package gameworld;
 
 public class Diffuser extends Item {
 
-  public Diffuser(int x, int y) {
-    super(x, y);
+  public Diffuser(int row, int col) {
+    super(row, col);
   }
 
   @Override

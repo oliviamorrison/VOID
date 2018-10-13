@@ -28,10 +28,15 @@ public class Room {
 
   }
 
-  // test constructor
   public Room() {
 
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+    this.doors = new ArrayList<>();
+    setupTestRoom();
+
+  }
+
+  private void setupTestRoom() {
 
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
@@ -43,90 +48,64 @@ public class Room {
       }
     }
 
-    this.doors = new ArrayList<>();
-
   }
 
-  public Tile moveTile(Tile t, int dx, int dy) {
-//    based on dx and dy values change currentdirection of player
+  public AccessibleTile findNextTile(AccessibleTile tile, Direction direction) {
 
-    int[] coordinates = getTileCoordinates(t);
+    Tile nextTile = findTile(tile, direction);
 
-    assert coordinates != null;
+    if (nextTile instanceof AccessibleTile) {
 
-    int x = coordinates[0];
-    int y = coordinates[1];
+      AccessibleTile accessibleTile = (AccessibleTile) nextTile;
+      if (accessibleTile.checkNavigable())
+        return accessibleTile;
 
-    int newX = x + dx;
-    int newY = y + dy;
-
-    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10)
-      return null;
-
-    Tile tile = tiles[newX][newY];
-
-    // cannot move onto bomb until disabled
-    if (tile instanceof AccessibleTile) {
-      AccessibleTile at = (AccessibleTile) tile;
-      if (at.hasChallenge()) {
-        ChallengeItem c = at.getChallenge();
-        if (!c.isNavigable()) {
-          return null;
-        }
-      }
-    }
-
-    //if the newCoordinates are inbounds and the tile is not inaccessible
-    if (!(tile instanceof InaccessibleTile)) {
-      return tile;
     }
 
     return null;
+
   }
 
-  private int[] getTileCoordinates(Tile t) {
-    for (int i = 0; i < ROOMSIZE; i++) {
-      for (int j = 0; j < ROOMSIZE; j++) {
+  private Tile findTile(AccessibleTile tile, Direction direction) {
 
-        //returns coordinates of the tile
-        if (tiles[i][j].equals(t)) return new int[]{i, j};
-      }
-    }
+    int row = tile.getRow();
+    int col = tile.getCol();
 
-    return null;
-  }
-
-
-
-  public AccessibleTile checkFacingChallenge(AccessibleTile tile, Direction playerDirection) {
-
-    Tile t;
-
-    int row = tile.getX();
-    int col = tile.getY();
-
-    switch (playerDirection) {
-      case WEST:
-        col -= 1;
-        break;
-      case EAST:
-        col += 1;
-        break;
+    switch (direction) {
       case NORTH:
         row -= 1;
         break;
       case SOUTH:
         row += 1;
         break;
+      case EAST:
+        col += 1;
+        break;
+      case WEST:
+        col -= 1;
+        break;
+      default:
+
     }
 
-    t = tiles[row][col];
+    if (row < 0 || col < 0 || row >= 10 || col >= 10)
+      return null;
 
-    if (t instanceof InaccessibleTile || t instanceof DoorTile) {
-    } else {
-      AccessibleTile a = (AccessibleTile) t;
-      if (a.hasChallenge())
-        return a;
+    return tiles[row][col];
+
+  }
+
+  public ChallengeItem getAdjacentChallenge(AccessibleTile currentTile, Direction direction) {
+
+    Tile adjacentTile = findTile(currentTile, direction);
+
+    if (adjacentTile instanceof AccessibleTile) {
+
+      AccessibleTile tile = (AccessibleTile) adjacentTile;
+
+      if (tile.hasChallenge())
+        return tile.getChallenge();
+
     }
 
     return null;
@@ -148,10 +127,10 @@ public class Room {
 
         if (tile instanceof InaccessibleTile)
           room.append("X");
-        else if (tile instanceof DoorTile) {
-          DoorTile doorTile = (DoorTile) tile;
+        else if (tile instanceof Portal) {
+          Portal portal = (Portal) tile;
 
-          if (doorTile.hasPlayer())
+          if (portal.hasPlayer())
             room.append("!");
           else
             room.append("0");
@@ -196,7 +175,7 @@ public class Room {
     return room.toString();
   }
 
-  public DoorTile getNextDoorTile(Direction dir) {
+  public Portal getNextDoorTile(Direction dir) {
 
     Point point = null;
 
@@ -211,7 +190,7 @@ public class Room {
 
     assert point != null;
 
-    return (DoorTile) (tiles[point.x][point.y]);
+    return (Portal) (tiles[point.x][point.y]);
 
   }
 

@@ -1,13 +1,13 @@
 package gameworld;
 
-public class DoorTile extends AccessibleTile {
+public class Portal extends AccessibleTile {
 
   private Room neighbour;
   private Direction direction;
 
-  public DoorTile(Room neighbour, int x, int y, Direction direction) {
+  public Portal(int row, int col, Room neighbour, Direction direction) {
 
-    super(x, y);
+    super(row, col);
     this.neighbour = neighbour;
     this.direction = direction;
 

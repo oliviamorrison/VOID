@@ -12,7 +12,7 @@ public class Player {
   private List<Item> inventory;
   private Room room;
   private int health;
-  private Direction directionFacing;
+  private Direction direction;
 
   public Player(Room room, AccessibleTile tile, int health, Direction direction) {
 
@@ -20,16 +20,16 @@ public class Player {
     this.tile = tile;
     this.inventory = new ArrayList<>();
     this.health = (health > 0) ? health : MAX_HEALTH;
-    this.directionFacing = direction;
+    this.direction = direction;
 
   }
 
-  public Direction getDirectionFacing() {
-    return directionFacing;
+  public Direction getDirection() {
+    return direction;
   }
 
-  public void setDirectionFacing(Direction directionFacing) {
-    this.directionFacing = directionFacing;
+  public void setDirection(Direction direction) {
+    this.direction = direction;
   }
 
   public int getHealth() {
@@ -62,33 +62,15 @@ public class Player {
     return room;
   }
 
-  public void moveTile(int dx, int dy) {
-    Direction direction = null;
-    if(dx < 0) {
-      direction = Direction.NORTH;
-    } else if(dx > 0){
-      direction = Direction.SOUTH;
-    } else if(dy < 0){
-      direction = Direction.WEST;
-    } else if(dy > 0){
-      direction = Direction.EAST;
+  public boolean changeDirection(Direction direction) {
+
+    if (this.direction != direction) {
+      this.direction = direction;
+      return true;
     }
 
-    if (direction == null){
-      return;
-    }
+    return false;
 
-    if(directionFacing != direction){
-      directionFacing = direction;
-      return;
-    }
-
-    if (room.moveTile(tile, dx, dy) == null) {
-      return;
-    }
-    tile.setPlayer(false);
-    tile = (AccessibleTile) room.moveTile(tile, dx, dy);
-    tile.setPlayer(true);
   }
 
   public AccessibleTile getTile() {

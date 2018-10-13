@@ -4,21 +4,21 @@ import renderer.PolygonBlock;
 
 public abstract class Tile {
 
-  private int x;
-  private int y;
+  private int row;
+  private int col;
   private PolygonBlock polygon;
 
-  public Tile(int x, int y) {
-    this.x = x;
-    this.y = y;
+  public Tile(int row, int col) {
+    this.row = row;
+    this.col = col;
   }
 
-  public int getX() {
-    return x;
+  public int getRow() {
+    return row;
   }
 
-  public int getY() {
-    return y;
+  public int getCol() {
+    return col;
   }
 
   public PolygonBlock getTilePolygon() {

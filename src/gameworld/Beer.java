@@ -1,9 +1,9 @@
 package gameworld;
 
-public class Beer extends Item{
+public class Beer extends Item {
 
-  public Beer(int x, int y) {
-    super(x, y);
+  public Beer(int row, int col) {
+    super(row, col);
   }
 
   @Override

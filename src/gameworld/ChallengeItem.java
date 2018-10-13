@@ -4,8 +4,8 @@ public abstract class ChallengeItem extends Item {
 
   private boolean navigable = false;
 
-  public ChallengeItem(int x, int y) {
-    super(x, y);
+  public ChallengeItem(int row, int col) {
+    super(row, col);
   }
 
   public boolean isNavigable() {

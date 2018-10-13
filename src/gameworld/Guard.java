@@ -6,8 +6,8 @@ package gameworld;
  */
 public class Guard extends ChallengeItem {
 
-  public Guard(int x, int y) {
-    super(x, y);
+  public Guard(int row, int col) {
+    super(row, col);
   }
 
   @Override
