@@ -1,6 +1,5 @@
 package application;
 
-import gameworld.Direction;
 import gameworld.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -357,8 +356,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     int dx = 0;
     int dy = 0;
 
-    Direction direction = null;
-
     switch (event.getCode()) {
       case UP:
         dx = -1;
@@ -416,8 +413,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
 
     renderer.draw();
-  }
 
+  }
 
   public void displayHelp() {
     // blur the GUI
@@ -453,7 +450,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     helpDialog.show();
 
   }
-
 
   public static void main(String[] args) {
     Application.launch(args);

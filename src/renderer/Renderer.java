@@ -14,9 +14,10 @@ import java.io.FileNotFoundException;
 public class Renderer {
     private final static Color ITColor = Color.rgb(237, 185, 177);
     private final static Color ATColor = Color.rgb(226, 209, 206);
-    private final static Color DTColor = Color.GRAY;
+    private final static Color DTColor = Color.rgb(161, 176, 201);
     private  final static double floorHeight = 0;
-    private  final static double wallHeight = 0.75;
+    private  final static double wallHeight = 1.25;
+    private final static  double doorHeight = 0;
 
     private final static double playerHeight = 60;
     private String NORTH = "src/application/north.png";
@@ -105,7 +106,7 @@ public class Renderer {
             color = ITColor;
         }
         if(tile instanceof Portal){
-            height = floorHeight;
+            height = doorHeight;
             color = DTColor;
         }
 
