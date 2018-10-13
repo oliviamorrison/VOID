@@ -1,8 +1,5 @@
 package gameworld;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +12,7 @@ public class Player {
   private List<Item> inventory;
   private Room room;
   private int health;
-  private Direction playerDir;
+  private Direction directionFacing;
 
   public Player(Room room, AccessibleTile tile, int health, Direction direction) {
 
@@ -23,16 +20,16 @@ public class Player {
     this.tile = tile;
     this.inventory = new ArrayList<>();
     this.health = (health > 0) ? health : MAX_HEALTH;
-    this.playerDir = direction;
+    this.directionFacing = direction;
 
   }
 
-  public Direction getPlayerDir() {
-    return playerDir;
+  public Direction getDirectionFacing() {
+    return directionFacing;
   }
 
-  public void setPlayerDir(Direction playerDir) {
-    this.playerDir = playerDir;
+  public void setDirectionFacing(Direction directionFacing) {
+    this.directionFacing = directionFacing;
   }
 
   public int getHealth() {
@@ -81,8 +78,8 @@ public class Player {
       return;
     }
 
-    if(playerDir != direction){
-      playerDir = direction;
+    if(directionFacing != direction){
+      directionFacing = direction;
       return;
     }
 

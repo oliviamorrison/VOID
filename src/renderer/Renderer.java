@@ -45,7 +45,7 @@ public class Renderer {
         Point2D p = currentRoom.getPlayerTile().getCenter();
         Image image = null;
         try {
-            switch (player.getPlayerDir()) {
+            switch (player.getDirectionFacing()) {
                 case NORTH:
                     image = new Image(new FileInputStream(NORTH));
                     break;

@@ -7,6 +7,8 @@ import java.util.List;
 
 public class Room {
 
+  public static final int ROOMSIZE = 10;
+
   private int row;
   private int col;
   private Tile[][] tiles;
@@ -16,37 +18,33 @@ public class Room {
   public static final Point BOTTOM = new Point(9, 5);
   public static final Point LEFT = new Point(5, 0);
   public static final Point RIGHT = new Point(5, 9);
-  public static final int ROOMSIZE = 10;
 
   public Room(int row, int col, Tile[][] tiles, List<String> doors) {
+
     this.row = row;
     this.col = col;
     this.tiles = Arrays.copyOf(tiles, tiles.length);
     this.doors = doors;
+
   }
 
+  // test constructor
   public Room() {
+
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
+
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
+
         if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
           tiles[i][j] = new InaccessibleTile(i, j);
         else tiles[i][j] = new AccessibleTile(i, j);
+
       }
     }
+
     this.doors = new ArrayList<>();
-  }
 
-  public int getRow() {
-    return row;
-  }
-
-  public int getCol() {
-    return col;
-  }
-
-  public List<String> getDoors() {
-    return doors;
   }
 
   public Tile moveTile(Tile t, int dx, int dy) {
@@ -98,13 +96,7 @@ public class Room {
     return null;
   }
 
-  public Tile getTile(int row, int col) {
-    return tiles[row][col];
-  }
 
-  public void setTile(Tile tile, int row, int col) {
-    tiles[row][col] = tile;
-  }
 
   public AccessibleTile checkFacingChallenge(AccessibleTile tile, Direction playerDirection) {
 
@@ -240,41 +232,73 @@ public class Room {
   }
 
   public AccessibleTile getPlayerTile() {
+
     for (int row = 0; row < ROOMSIZE; row++) {
       for (int col = 0; col < ROOMSIZE; col++) {
+
         if (this.tiles[row][col] instanceof AccessibleTile) {
+
           AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
-          if (tile.hasPlayer()) {
+
+          if (tile.hasPlayer())
             return tile;
-          }
+
         }
       }
     }
+
     return null;
+
   }
 
   public void rotateRoomClockwise() {
+
     int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;
+
     for (int i = 0; i < x; i++) {
       for (int j = i; j < y - i; j++) {
+
         Tile value = this.tiles[i][j];
         this.tiles[i][j] = this.tiles[y - j][i];
         this.tiles[y - j][i] = this.tiles[y - i][y - j];
         this.tiles[y - i][y - j] = this.tiles[j][y - i];
         this.tiles[j][y - i] = value;
+
       }
     }
   }
 
   public void rotateRoomAnticlockwise() {
+
     Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
-    for (int row = 0; row < ROOMSIZE; row++) {
-      for (int col = 0; col < ROOMSIZE; col++) {
+
+    for (int row = 0; row < ROOMSIZE; row++)
+      for (int col = 0; col < ROOMSIZE; col++)
         tempArray[ROOMSIZE - col - 1][row] = this.tiles[row][col];
-      }
-    }
+
     this.tiles = tempArray;
+
+  }
+
+  public int getRow() {
+    return row;
+  }
+
+  public int getCol() {
+    return col;
+  }
+
+  public Tile getTile(int row, int col) {
+    return tiles[row][col];
+  }
+
+  public void setTile(Tile tile, int row, int col) {
+    tiles[row][col] = tile;
+  }
+
+  public List<String> getDoors() {
+    return doors;
   }
 
 }

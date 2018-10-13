@@ -1,19 +1,20 @@
 package gameworld;
 
 public class DoorTile extends AccessibleTile {
-  private Room room;
-  private Room toRoom;
+
+  private Room neighbour;
   private Direction direction;
 
-  public DoorTile(Room room, Room toRoom, int x, int y, Direction direction) {
+  public DoorTile(Room neighbour, int x, int y, Direction direction) {
+
     super(x, y);
-    this.room = room;
-    this.toRoom = toRoom;
+    this.neighbour = neighbour;
     this.direction = direction;
+
   }
 
-  public Room getToRoom() {
-    return toRoom;
+  public Room getNeighbour() {
+    return neighbour;
   }
 
   public Direction getDirection() {
