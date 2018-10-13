@@ -13,11 +13,12 @@ public class Room {
   private int col;
   private Tile[][] tiles;
   private List<String> doors;
+  private List<Portal> portals;
 
-  public static final Point TOP = new Point(0, 5);
-  public static final Point BOTTOM = new Point(9, 5);
-  public static final Point LEFT = new Point(5, 0);
-  public static final Point RIGHT = new Point(5, 9);
+  public static final Point NORTH_PORTAL = new Point(0, 5);
+  public static final Point SOUTH_PORTAL = new Point(9, 5);
+  public static final Point EAST_PORTAL = new Point(5, 9);
+  public static final Point WEST_PORTAL = new Point(5, 0);
 
   public Room(int row, int col, Tile[][] tiles, List<String> doors) {
 
@@ -25,6 +26,7 @@ public class Room {
     this.col = col;
     this.tiles = Arrays.copyOf(tiles, tiles.length);
     this.doors = doors;
+    this.portals = new ArrayList<>();
 
   }
 
@@ -32,28 +34,28 @@ public class Room {
 
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
     this.doors = new ArrayList<>();
+    this.portals = new ArrayList<>();
+
     setupTestRoom();
 
   }
 
   private void setupTestRoom() {
 
-    for (int i = 0; i < ROOMSIZE; i++) {
-      for (int j = 0; j < ROOMSIZE; j++) {
-
-        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1) {
-          tiles[i][j] = new InaccessibleTile(i, j);
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+        if (row == 0 || col == 0 || col == ROOMSIZE - 1 || row == ROOMSIZE - 1) {
+          tiles[row][col] = new InaccessibleTile(row, col);
         } else {
-          tiles[i][j] = new AccessibleTile(i, j);
+          tiles[row][col] = new AccessibleTile(row, col);
         }
       }
     }
-
   }
 
-  public AccessibleTile findNextTile(Tile t, int dx, int dy) {
+  public AccessibleTile findNextTile(Tile currentTile, int dx, int dy) {
 
-    int[] coordinates = getTileCoordinates(t);
+    int[] coordinates = getTileCoordinates(currentTile);
 
     assert coordinates != null;
 
@@ -83,12 +85,12 @@ public class Room {
 
   }
 
-  private int[] getTileCoordinates(Tile t) {
+  private int[] getTileCoordinates(Tile tile) {
 
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
 
-        if (tiles[i][j].equals(t)) {
+        if (tiles[i][j].equals(tile)) {
           return new int[]{i, j};
         }
 
@@ -148,56 +150,14 @@ public class Room {
 
   }
 
-  public Portal getDestinationPortal(Direction dir) {
+  public Portal getDestinationPortal(Direction direction) {
 
-    Point point = null;
+    for (Portal portal : portals) {
 
-    for (String direction : doors) {
-
-      String d = dir.toString();
-
-      if (d.equals(direction)) {
-        point = getNextPoint(dir);
+      if (portal.getDirection() == direction) {
+        return portal;
       }
-    }
 
-    assert point != null;
-
-    return (Portal) (tiles[point.x][point.y]);
-
-  }
-
-  public Point getNextPoint(Direction direction) {
-
-    switch (direction) {
-      case WEST:
-        return LEFT;
-      case EAST:
-        return RIGHT;
-      case SOUTH:
-        return BOTTOM;
-      case NORTH:
-        return TOP;
-      default:
-        return null;
-    }
-  }
-
-  public AccessibleTile getPlayerTile() {
-
-    for (int row = 0; row < ROOMSIZE; row++) {
-      for (int col = 0; col < ROOMSIZE; col++) {
-
-        if (this.tiles[row][col] instanceof AccessibleTile) {
-
-          AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
-
-          if (tile.hasPlayer()) {
-            return tile;
-          }
-
-        }
-      }
     }
 
     return null;
@@ -234,6 +194,10 @@ public class Room {
 
     this.tiles = tempArray;
 
+  }
+
+  public void addPortal(Portal portal) {
+    portals.add(portal);
   }
 
   public int getRow() {

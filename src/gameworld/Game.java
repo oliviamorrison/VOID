@@ -31,8 +31,9 @@ public class Game {
     AccessibleTile currentTile = player.getTile();
     Direction nextDirection = player.getDirection().nextDirection(dx, dy);
 
-    if (player.changeDirection(nextDirection))
+    if (player.changeDirection(nextDirection)) {
       return;
+    }
 
     AccessibleTile nextTile = currentRoom.findNextTile(currentTile, dx, dy);
 
@@ -59,6 +60,10 @@ public class Game {
 
       Direction oppositeDirection = portal.getDirection().getOppositeDirection();
       Portal destination = nextRoom.getDestinationPortal(oppositeDirection);
+
+      if (destination == null) {
+        return;
+      }
 
       destination.setPlayer(true);
       portal.setPlayer(false);
@@ -91,29 +96,29 @@ public class Game {
 
             case "NORTH":
               if (row > 0) {
-                x = Room.TOP.x;
-                y = Room.TOP.y;
+                x = Room.NORTH_PORTAL.x;
+                y = Room.NORTH_PORTAL.y;
                 portal = new Portal(x, y, board[row - 1][col], Direction.NORTH);
               }
               break;
             case "SOUTH":
               if (row < board[row].length - 1) {
-                x = Room.BOTTOM.x;
-                y = Room.BOTTOM.y;
+                x = Room.SOUTH_PORTAL.x;
+                y = Room.SOUTH_PORTAL.y;
                 portal = new Portal(x, y, board[row + 1][col], Direction.SOUTH);
               }
               break;
             case "EAST":
               if (col < board.length - 1) {
-                x = Room.RIGHT.x;
-                y = Room.RIGHT.y;
+                x = Room.EAST_PORTAL.x;
+                y = Room.EAST_PORTAL.y;
                 portal = new Portal(x, y, board[row][col + 1], Direction.EAST);
               }
               break;
             case "WEST":
               if (col > 0) {
-                x = Room.LEFT.x;
-                y = Room.LEFT.y;
+                x = Room.WEST_PORTAL.x;
+                y = Room.WEST_PORTAL.y;
                 portal = new Portal(x, y, board[row][col - 1], Direction.WEST);
               }
               break;
@@ -122,6 +127,7 @@ public class Game {
           }
 
           if (portal != null && x > -1 && y > -1) {
+            room.addPortal(portal);
             room.setTile(portal, x, y);
           }
 

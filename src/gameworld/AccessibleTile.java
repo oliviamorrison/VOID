@@ -27,6 +27,36 @@ public class AccessibleTile extends Tile {
 
   }
 
+  /**
+   * This method finds the centre point of the accessible tile.
+   *
+   * @return the centre of the tile as a Point2D
+   */
+  public Point2D getCenter() {
+
+    Polygon p = super.getTilePolygon().getPolygons().get(0);
+
+    double minX = Double.MAX_VALUE;
+    double maxX = Double.MIN_VALUE;
+    double minY = Double.MAX_VALUE;
+    double maxY = Double.MIN_VALUE;
+
+    for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
+
+      minX = Math.min(minX, p.getPoints().get(i));
+      maxX = Math.max(maxX, p.getPoints().get(i));
+      minY = Math.min(minY, p.getPoints().get(i + 1));
+      maxY = Math.max(maxY, p.getPoints().get(i + 1));
+
+    }
+
+    double centerX = minX + ((maxX - minX) / 2);
+    double centerY = minY + ((maxY - minY) / 2);
+
+    return new Point2D(centerX, centerY);
+
+  }
+
   public Item getItem() {
     return this.item;
   }
@@ -57,36 +87,6 @@ public class AccessibleTile extends Tile {
 
   public boolean hasChallenge() {
     return this.challenge != null;
-  }
-
-  /**
-   * This method finds the centre point of the accessible tile.
-   *
-   * @return the centre of the tile as a Point2D
-   */
-  public Point2D getCenter() {
-
-    Polygon p = super.getTilePolygon().getPolygons().get(0);
-
-    double minX = Double.MAX_VALUE;
-    double maxX = Double.MIN_VALUE;
-    double minY = Double.MAX_VALUE;
-    double maxY = Double.MIN_VALUE;
-
-    for (int i = 0; i < p.getPoints().size() - 1; i += 2) {
-
-      minX = Math.min(minX, p.getPoints().get(i));
-      maxX = Math.max(maxX, p.getPoints().get(i));
-      minY = Math.min(minY, p.getPoints().get(i + 1));
-      maxY = Math.max(maxY, p.getPoints().get(i + 1));
-
-    }
-
-    double centerX = minX + ((maxX - minX) / 2);
-    double centerY = minY + ((maxY - minY) / 2);
-
-    return new Point2D(centerX, centerY);
-
   }
 
   @Override

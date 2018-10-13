@@ -28,17 +28,19 @@ public class Player {
 
     health += HEALTH_BOOST;
 
-    if (health > MAX_HEALTH)
+    if (health > MAX_HEALTH) {
       health = MAX_HEALTH;
+    }
 
   }
 
   public void loseHealth() {
 
-    if (health > 0)
+    if (health > 0) {
       health--;
-    else
+    } else {
       health = 0;
+    }
 
   }
 
