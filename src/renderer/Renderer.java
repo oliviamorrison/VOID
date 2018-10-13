@@ -46,7 +46,7 @@ public class Renderer {
         Point2D p = currentRoom.getPlayerTile().getCenter();
         Image image = null;
         try {
-            switch (player.getPlayerDir()) {
+            switch (player.getDirection()) {
                 case NORTH:
                     image = new Image(new FileInputStream(NORTH));
                     break;
@@ -105,7 +105,7 @@ public class Renderer {
             InaccessibleTile IT = (InaccessibleTile) tile;
             color = ITColor;
         }
-        if(tile instanceof DoorTile){
+        if(tile instanceof Portal){
             height = doorHeight;
             color = DTColor;
         }

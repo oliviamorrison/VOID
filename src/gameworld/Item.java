@@ -2,28 +2,28 @@ package gameworld;
 
 public abstract class Item {
 
-  private int x;
-  private int y;
+  private int row;
+  private int col;
 
-  public Item(int x, int y) {
-    this.x = x;
-    this.y = y;
+  public Item(int row, int col) {
+    this.row = row;
+    this.col = col;
   }
 
-  public int getX() {
-    return x;
+  public int getRow() {
+    return row;
   }
 
-  public void setX(int x) {
-    this.x = x;
+  public void setRow(int row) {
+    this.row = row;
   }
 
-  public int getY() {
-    return y;
+  public int getCol() {
+    return col;
   }
 
-  public void setY(int y) {
-    this.y = y;
+  public void setCol(int col) {
+    this.col = col;
   }
 
   public abstract String getName();

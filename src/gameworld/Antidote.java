@@ -2,8 +2,8 @@ package gameworld;
 
 public class Antidote extends Item {
 
-  public Antidote(int x, int y) {
-    super(x, y);
+  public Antidote(int row, int col) {
+    super(row, col);
   }
 
   @Override

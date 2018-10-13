@@ -21,13 +21,68 @@ public enum Direction {
         return Direction.SOUTH;
       case SOUTH:
         return Direction.NORTH;
-      case WEST:
-        return Direction.EAST;
       case EAST:
-      default:
         return Direction.WEST;
+      case WEST:
+      default:
+        return Direction.EAST;
 
     }
+
+  }
+
+  public Direction getClockwiseDirection() {
+
+    switch (this) {
+
+      case NORTH:
+        return Direction.EAST;
+      case SOUTH:
+        return Direction.WEST;
+      case EAST:
+        return Direction.SOUTH;
+      case WEST:
+      default:
+        return Direction.NORTH;
+
+    }
+
+  }
+
+  public Direction getAnticlockwiseDirection() {
+
+    switch (this) {
+
+      case NORTH:
+        return Direction.WEST;
+      case SOUTH:
+        return Direction.EAST;
+      case EAST:
+        return Direction.NORTH;
+      case WEST:
+      default:
+        return Direction.SOUTH;
+
+    }
+
+  }
+
+  public Direction nextDirection(int dx, int dy) {
+
+    Direction direction = null;
+
+    if (dx < 0) {
+      direction = Direction.NORTH;
+    } else if (dx > 0) {
+      direction = Direction.SOUTH;
+    } else if (dy < 0) {
+      direction = Direction.WEST;
+    } else if (dy > 0) {
+      direction = Direction.EAST;
+    }
+
+    return direction;
+
   }
 
 }

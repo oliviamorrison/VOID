@@ -13,8 +13,8 @@ public class AccessibleTile extends Tile {
   private ChallengeItem challenge;
   private boolean player = false;
 
-  public AccessibleTile(int x, int y) {
-    super(x, y);
+  public AccessibleTile(int row, int col) {
+    super(row, col);
   }
 
   public Item getItem() {
@@ -47,6 +47,16 @@ public class AccessibleTile extends Tile {
 
   public boolean hasChallenge() {
     return this.challenge != null;
+  }
+
+  public boolean checkNavigable() {
+
+    if (hasChallenge()) {
+      return challenge.isNavigable();
+    }
+
+    return true;
+
   }
 
   /**
