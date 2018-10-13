@@ -357,16 +357,16 @@ public class Game {
     }
 
     switch (direction) {
-      case Top:
+      case NORTH:
         roomRow -= 1;
         break;
-      case Bottom:
+      case SOUTH:
         roomRow += 1;
         break;
-      case Left:
+      case WEST:
         roomCol -= 1;
         break;
-      case Right:
+      case EAST:
         roomCol += 1;
         break;
     }
@@ -385,24 +385,24 @@ public class Game {
         if (room != null) {
           for (String dir : room.getDoors()) {
             switch (dir) {
-              case "Left":
+              case "WEST":
                 if (j > 0) {
-                  room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.Left), Room.LEFT.x, Room.LEFT.y);
+                  room.setTile(new DoorTile(board[i][j - 1], room, i, j, Direction.WEST), Room.LEFT.x, Room.LEFT.y);
                   break;
                 }
-              case "Right":
+              case "EAST":
                 if (j < board.length - 1) {
-                  room.setTile(new DoorTile(board[i][j + 1], room, i, j, Direction.Right), Room.RIGHT.x, Room.RIGHT.y);
+                  room.setTile(new DoorTile(board[i][j + 1], room, i, j, Direction.EAST), Room.RIGHT.x, Room.RIGHT.y);
                   break;
                 }
-              case "Top":
+              case "NORTH":
                 if (i > 0) {
-                  room.setTile(new DoorTile(board[i - 1][j], room, i, j, Direction.Top), Room.TOP.x, Room.TOP.y);
+                  room.setTile(new DoorTile(board[i - 1][j], room, i, j, Direction.NORTH), Room.TOP.x, Room.TOP.y);
                   break;
                 }
-              case "Bottom":
+              case "SOUTH":
                 if (i < board[i].length - 1) {
-                  room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.Bottom), Room.BOTTOM.x, Room.BOTTOM.y);
+                  room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.SOUTH), Room.BOTTOM.x, Room.BOTTOM.y);
                   break;
                 }
             }

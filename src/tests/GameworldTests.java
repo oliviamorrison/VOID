@@ -21,7 +21,7 @@ public class GameworldTests {
         board[i][j] = new Room();
       }
     }
-    player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, Direction.Top);
+    player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, Direction.NORTH);
 
     ((AccessibleTile) board[0][0].getTile(6,5)).setItem(Item.Diffuser);
 

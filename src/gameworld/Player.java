@@ -74,13 +74,13 @@ public class Player {
   public void moveTile(int dx, int dy) {
     Direction direction = null;
     if(dx < 0) {
-      direction = Direction.Top;
+      direction = Direction.NORTH;
     } else if(dx > 0){
-      direction = Direction.Bottom;
+      direction = Direction.SOUTH;
     } else if(dy < 0){
-      direction = Direction.Left;
+      direction = Direction.WEST;
     } else if(dy > 0){
-      direction = Direction.Right;
+      direction = Direction.EAST;
     }
 
     if(playerDir != direction){

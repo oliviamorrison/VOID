@@ -6,7 +6,7 @@ package gameworld;
  */
 public enum Direction {
 
-  Top, Bottom, Left, Right;
+  NORTH, SOUTH, EAST, WEST;
 
   /**
    * This method finds the opposite direction.
@@ -17,15 +17,15 @@ public enum Direction {
 
     switch (this) {
 
-      case Top:
-        return Direction.Bottom;
-      case Bottom:
-        return Direction.Top;
-      case Left:
-        return Direction.Right;
-      case Right:
+      case NORTH:
+        return Direction.SOUTH;
+      case SOUTH:
+        return Direction.NORTH;
+      case WEST:
+        return Direction.EAST;
+      case EAST:
       default:
-        return Direction.Left;
+        return Direction.WEST;
 
     }
   }

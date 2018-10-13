@@ -15,8 +15,6 @@ import javafx.stage.Stage;
 import persistence.XMLParser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MapEditor extends Application {
 
@@ -645,7 +643,7 @@ public class MapEditor extends Application {
     }
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
-    Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100, Direction.Top);
+    Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100, Direction.NORTH);
 
     Game game = new Game(board, player);
 
