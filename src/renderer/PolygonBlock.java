@@ -11,6 +11,7 @@ public class PolygonBlock {
     private double originX;
     private double originY;
     private double z;
+    private double center = 350;
 
     private final double tileWidth = 80;
     private final double tileHeight = 40;
@@ -44,7 +45,7 @@ public class PolygonBlock {
     private List<Double> rightPoints;
 
     public PolygonBlock(double x, double y, double z, Color c) {
-        originX = ((x - y) * tileWidth / 2) + 300;
+        originX = ((x - y) * tileWidth / 2) + center;
         originY = (x + y) * tileHeight / 2;
         this.z = z;
         this.topColor = c;

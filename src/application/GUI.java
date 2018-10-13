@@ -395,7 +395,10 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 			default:
 
 		}
-		currentGame.getPlayer().moveTile(dx, dy);
+		if(!(dx == 0 && dy == 0)){
+            currentGame.getPlayer().moveTile(dx, dy);
+        }
+
 		renderer.draw();
 	}
 
