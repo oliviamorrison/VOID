@@ -17,6 +17,16 @@ public class AccessibleTile extends Tile {
     super(row, col);
   }
 
+  public boolean checkNavigable() {
+
+    if (hasChallenge()) {
+      return challenge.isNavigable();
+    }
+
+    return true;
+
+  }
+
   public Item getItem() {
     return this.item;
   }
@@ -47,16 +57,6 @@ public class AccessibleTile extends Tile {
 
   public boolean hasChallenge() {
     return this.challenge != null;
-  }
-
-  public boolean checkNavigable() {
-
-    if (hasChallenge()) {
-      return challenge.isNavigable();
-    }
-
-    return true;
-
   }
 
   /**

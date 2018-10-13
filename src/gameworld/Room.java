@@ -1,6 +1,6 @@
 package gameworld;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,10 +41,11 @@ public class Room {
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
 
-        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1)
+        if (i == 0 || j == 0 || j == ROOMSIZE - 1 || i == ROOMSIZE - 1) {
           tiles[i][j] = new InaccessibleTile(i, j);
-        else tiles[i][j] = new AccessibleTile(i, j);
-
+        } else {
+          tiles[i][j] = new AccessibleTile(i, j);
+        }
       }
     }
 
@@ -62,8 +63,9 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
-    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10)
+    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10) {
       return null;
+    }
 
     Tile tile = tiles[newX][newY];
 
@@ -97,6 +99,7 @@ public class Room {
 
   }
 
+  // find tile in a given direction
   private Tile findTile(AccessibleTile tile, Direction direction) {
 
     int row = tile.getRow();
@@ -119,8 +122,9 @@ public class Room {
 
     }
 
-    if (row < 0 || col < 0 || row >= 10 || col >= 10)
+    if (row < 0 || col < 0 || row >= 10 || col >= 10) {
       return null;
+    }
 
     return tiles[row][col];
 
@@ -134,8 +138,9 @@ public class Room {
 
       AccessibleTile tile = (AccessibleTile) adjacentTile;
 
-      if (tile.hasChallenge())
+      if (tile.hasChallenge()) {
         return tile.getChallenge();
+      }
 
     }
 
@@ -143,70 +148,7 @@ public class Room {
 
   }
 
-  /**
-   * This method creates and prints out the visual
-   * representation of the room to the user.
-   */
-  public String draw() {
-
-    StringBuilder room = new StringBuilder();
-
-    for (int row = 0; row < ROOMSIZE; row++) {
-      for (int col = 0; col < ROOMSIZE; col++) {
-
-        Tile tile = tiles[row][col];
-
-        if (tile instanceof InaccessibleTile)
-          room.append("X");
-        else if (tile instanceof Portal) {
-          Portal portal = (Portal) tile;
-
-          if (portal.hasPlayer())
-            room.append("!");
-          else
-            room.append("0");
-        } else if (tile instanceof AccessibleTile) {
-          AccessibleTile accessibleTile = (AccessibleTile) tile;
-
-          if (accessibleTile.hasPlayer() && accessibleTile.hasItem())
-            room.append("!");
-          else if (accessibleTile.hasPlayer())
-            room.append("P");
-          else if (accessibleTile.hasItem()) {
-            Item item = accessibleTile.getItem();
-            if (item instanceof Diffuser)
-              room.append("D");
-            if (item instanceof Antidote)
-              room.append("A");
-            if (item instanceof Coin)
-              room.append("C");
-            if (item instanceof Beer)
-              room.append("R");
-            if (item instanceof BoltCutter)
-              room.append("Z");
-            if (item instanceof HealthPack)
-              room.append("H");
-          } else if (accessibleTile.hasChallenge()) {
-            ChallengeItem challenge = accessibleTile.getChallenge();
-            if (challenge instanceof Bomb)
-              room.append("B");
-            if (challenge instanceof VendingMachine)
-              room.append("V");
-            if (challenge instanceof Guard)
-              room.append("G");
-          } else
-            room.append(" ");
-        }
-        if (col < ROOMSIZE - 1)
-          room.append(" ");
-      }
-      room.append("\n");
-    }
-    System.out.println(room.toString());
-    return room.toString();
-  }
-
-  public Portal getNextDoorTile(Direction dir) {
+  public Portal getDestinationPortal(Direction dir) {
 
     Point point = null;
 
@@ -214,9 +156,9 @@ public class Room {
 
       String d = dir.toString();
 
-      if (d.equals(direction))
+      if (d.equals(direction)) {
         point = getNextPoint(dir);
-
+      }
     }
 
     assert point != null;
@@ -250,8 +192,9 @@ public class Room {
 
           AccessibleTile tile = (AccessibleTile) this.tiles[row][col];
 
-          if (tile.hasPlayer())
+          if (tile.hasPlayer()) {
             return tile;
+          }
 
         }
       }
@@ -269,7 +212,7 @@ public class Room {
     for (int i = 0; i < x; i++) {
       for (int j = i; j < y - i; j++) {
 
-        Tile value = this.tiles[i][j];
+        final Tile value = this.tiles[i][j];
         this.tiles[i][j] = this.tiles[y - j][i];
         this.tiles[y - j][i] = this.tiles[y - i][y - j];
         this.tiles[y - i][y - j] = this.tiles[j][y - i];
@@ -283,9 +226,11 @@ public class Room {
 
     Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
 
-    for (int row = 0; row < ROOMSIZE; row++)
-      for (int col = 0; col < ROOMSIZE; col++)
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
         tempArray[ROOMSIZE - col - 1][row] = this.tiles[row][col];
+      }
+    }
 
     this.tiles = tempArray;
 

@@ -58,7 +58,7 @@ public class Game {
       }
 
       Direction oppositeDirection = portal.getDirection().getOppositeDirection();
-      Portal destination = nextRoom.getNextDoorTile(oppositeDirection);
+      Portal destination = nextRoom.getDestinationPortal(oppositeDirection);
 
       destination.setPlayer(true);
       portal.setPlayer(false);
