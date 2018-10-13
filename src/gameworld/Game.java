@@ -1,7 +1,6 @@
 package gameworld;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -156,13 +155,13 @@ public class Game {
 
     if (tile.hasItem()) {
 
-      if (!player.getInventory().isEmpty()) {
+      if (player.hasItem()) {
         System.out.println("Player may only have one item at a time");
         return;
       }
 
       Item item = tile.getItem();
-      player.pickUp(item);
+      player.addItem(item);
       tile.setItem(null);
       item.setRow(-1);
       item.setCol(-1);
@@ -174,17 +173,15 @@ public class Game {
 
   public void dropItem() {
 
-    List<Item> inventory = player.getInventory();
-
     AccessibleTile tile = player.getTile();
 
     if (tile instanceof Portal) {
       return;
     }
 
-    if (!tile.hasItem() && !inventory.isEmpty()) {
+    if (!tile.hasItem() && !tile.hasChallenge() && player.hasItem()) {
 
-      Item item = player.getInventory().remove(0);
+      Item item = player.dropItem();
       item.setRow(tile.getRow());
       item.setCol(tile.getCol());
       tile.setItem(item);
@@ -210,13 +207,14 @@ public class Game {
       Bomb bomb = (Bomb) challenge;
 
       if (!bomb.isNavigable()) {
-        for (Item item : player.getInventory()) {
 
-          if (item instanceof Diffuser) {
-            bomb.setNavigable(true);
-            System.out.println("Bomb diffused with " + item.toString());
-          }
+        Item item = player.getItem();
+
+        if (item instanceof Diffuser) {
+          bomb.setNavigable(true);
+          System.out.println("Bomb diffused with " + item.toString());
         }
+
       }
     }
   }
@@ -237,14 +235,15 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
 
       if (!vendingMachine.isUnlocked()) {
-        for (Item item : player.getInventory()) {
 
-          if (item instanceof BoltCutter) {
-            vendingMachine.setUnlocked(true);
-            System.out.println("Chains are removed from Vending machine");
-            System.out.println("Vending machine is available for use");
-          }
+        Item item = player.getItem();
+
+        if (item instanceof BoltCutter) {
+          vendingMachine.setUnlocked(true);
+          System.out.println("Chains are removed from Vending machine");
+          System.out.println("Vending machine is available for use");
         }
+
       }
     }
   }
@@ -265,15 +264,16 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
 
       if (vendingMachine.isUnlocked()) {
-        for (Item item : player.getInventory()) {
-          if (item instanceof Coin) {
 
-            player.removeItem(item);
-            player.addItem(new Beer(-1, -1));
-            System.out.println("Placed coin into vending machine...");
-            System.out.println("Pick up the beer that is dispensed");
+        Item item = player.getItem();
 
-          }
+        if (item instanceof Coin) {
+
+          player.dropItem();
+          player.addItem(new Beer(-1, -1));
+          System.out.println("Placed coin into vending machine...");
+          System.out.println("Pick up the beer that is dispensed");
+
         }
       }
     }
@@ -296,14 +296,15 @@ public class Game {
       Guard guard = (Guard) challenge;
 
       if (!guard.isNavigable()) {
-        for (Item item : player.getInventory()) {
 
-          if (item instanceof Beer) {
-            player.removeItem(item);
-            guard.setNavigable(true);
-            System.out.println("Guard bribed with beer");
+        Item item = player.getItem();
 
-          }
+        if (item instanceof Beer) {
+
+          player.dropItem();
+          guard.setNavigable(true);
+          System.out.println("Guard bribed with beer");
+
         }
       }
     }
