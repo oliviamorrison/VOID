@@ -43,7 +43,7 @@ public class Renderer {
     }
 
     public void drawPlayer() {
-        Point2D p = currentRoom.getPlayerTile().getCenter();
+        Point2D p = player.getTile().getCenter();
         Image image = null;
         try {
             switch (player.getDirection()) {
@@ -113,7 +113,7 @@ public class Renderer {
         PolygonBlock poly = new PolygonBlock(col, row, height, color);
         tile.setTilePolygon(poly);
         root.getChildren().addAll(poly.getPolygons());
-        if(currentRoom.getPlayerTile().equals(tile) ){
+        if(player.getTile().equals(tile) ){
             drawPlayer();
         }
     }
