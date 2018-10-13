@@ -678,7 +678,7 @@ public class MapEditor extends Application {
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
     // TODO: Decide which default direction player should be created with (currently NORTH)
-    Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100, Direction.NORTH);
+    Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100, "Top");
 
     Game game = new Game(board, player);
 
