@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -154,7 +155,14 @@ public class MapEditor extends Application {
     makeGame.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-        createGame();
+        if(noItemsInItemGrid()) createGame();
+        else {
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("Error");
+          alert.setHeaderText("You cannot make a game until all items are placed on the board");
+
+          alert.showAndWait();
+        }
       }
     });
 
@@ -163,6 +171,21 @@ public class MapEditor extends Application {
     items.add(makeGame, 2,4);
 
     return items;
+  }
+
+  public boolean noItemsInItemGrid(){
+    for (int i = 0; i <2; i++) {
+      for (int j = 0; j < 4; j++) {
+        Node n = getNodeByRowColumnIndex(i, j, itemGrid);
+        if (n instanceof ItemSpace) {
+          ItemSpace itemSpace = (ItemSpace) n;
+          if(itemSpace.hasItem()) return false;
+        }
+      }
+    }
+
+    return true;
+
   }
 
   private boolean isInAntidoteRoom(TilePane find){
@@ -351,8 +374,6 @@ public class MapEditor extends Application {
   private GridPane initNullRoom(){
     GridPane room = new GridPane();
     int roomNum = 3;
-    double roomWidth = BOARD_SIZE / roomNum;
-    double roomHeight = BOARD_SIZE / roomNum;
 
     room.setStyle("-fx-background-color: gray");
     return room;
