@@ -416,49 +416,42 @@ public class Game {
     return board;
   }
 
-<<<<<<< HEAD
   public void rotateRoomClockwise(){
     switch (player.getPlayerDir()){
-      case Top:
-        player.setPlayerDir(Direction.Right);
+        case NORTH:
+        player.setPlayerDir(Direction.EAST);
         break;
-      case Right:
-        player.setPlayerDir(Direction.Bottom);
+      case EAST:
+        player.setPlayerDir(Direction.SOUTH);
         break;
-      case Bottom:
-        player.setPlayerDir(Direction.Left);
+        case SOUTH:
+        player.setPlayerDir(Direction.WEST);
         break;
-      case Left:
-        player.setPlayerDir(Direction.Top);
-        break;
-    }
-    currentRoom.rotateRoomClockwise();
-  }
-
-  public void rotateRoomAnticlockwise(){
-    switch (player.getPlayerDir()){
-      case Top:
-        player.setPlayerDir(Direction.Left);
-        break;
-      case Left:
-        player.setPlayerDir(Direction.Bottom);
-        break;
-      case Bottom:
-        player.setPlayerDir(Direction.Right);
-        break;
-      case Right:
-        player.setPlayerDir(Direction.Top);
+        case WEST:
+        player.setPlayerDir(Direction.NORTH);
         break;
     }
-=======
-  public void rotateRoomClockwise() {
     currentRoom.rotateRoomClockwise();
   }
 
   public void rotateRoomAnticlockwise() {
->>>>>>> dce14d4041d1b0a190b8483f46927ccdd189d18e
-    currentRoom.rotateRoomAnticlockwise();
+      switch (player.getPlayerDir()) {
+          case NORTH:
+              player.setPlayerDir(Direction.WEST);
+              break;
+          case WEST:
+              player.setPlayerDir(Direction.SOUTH);
+              break;
+          case SOUTH:
+              player.setPlayerDir(Direction.EAST);
+              break;
+          case EAST:
+              player.setPlayerDir(Direction.NORTH);
+              break;
+      }
+      currentRoom.rotateRoomAnticlockwise();
   }
+
 
 }
 
