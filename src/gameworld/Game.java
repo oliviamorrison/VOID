@@ -3,6 +3,7 @@ package gameworld;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,7 +22,7 @@ public class Game {
   public Game(Room[][] board, Player player) {
 
     this.player = player;
-    this.board = board;
+    this.board = Arrays.copyOf(board, board.length);
     this.currentRoom = player.getRoom();
     connectRooms();
     setupTimer();
@@ -59,7 +60,7 @@ public class Game {
         break;
       }
       notifyHealth();
-      startTurn();
+//      startTurn();
     }
 
   }
@@ -109,37 +110,37 @@ public class Game {
     player.moveTile(dx, dy);
   }
 
-  private void startTurn() {
-    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
-    switch (input) {
-      case "m":
-        movePlayer();
-        break;
-      case "u":
-        pickUpItem();
-        break;
-      case "d":
-        dropItem();
-        break;
-      case "f":
-        diffuseBomb();
-        break;
-      case "t":
-        unlockVendingMachine();
-        break;
-      case "v":
-        useVendingMachine();
-        break;
-      case "r":
-        moveRoom();
-        break;
-      case "b":
-        bribeGuard();
-        break;
-      default:
-
-    }
-  }
+//  private void startTurn() {
+//    String input = inputString("Move:m Pickup:u Drop:d Diffuse:f Unlock Vend:t use Vend:v Use Door:r Bribe: b");
+//    switch (input) {
+//      case "m":
+//        movePlayer();
+//        break;
+//      case "u":
+//        pickUpItem();
+//        break;
+//      case "d":
+//        dropItem();
+//        break;
+//      case "f":
+//        diffuseBomb();
+//        break;
+//      case "t":
+//        unlockVendingMachine();
+//        break;
+//      case "v":
+//        useVendingMachine();
+//        break;
+//      case "r":
+//        moveRoom();
+//        break;
+//      case "b":
+//        bribeGuard();
+//        break;
+//      default:
+//
+//    }
+//  }
 
   public void moveRoom() {
 
@@ -265,10 +266,10 @@ public class Game {
     return player;
   }
 
-  public void movePlayer() {
-    String dir = inputString("Direction: ");
-    movePlayer(dir);
-  }
+//  public void movePlayer() {
+//    String dir = inputString("Direction: ");
+//    movePlayer(dir);
+//  }
 
   public void pickUpItem() {
     AccessibleTile currentTile = player.getTile();
@@ -326,17 +327,17 @@ public class Game {
     }
   }
 
-  private static String inputString(String msg) {
-    System.out.print(msg + " ");
-    while (true) {
-      BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-      try {
-        return input.readLine();
-      } catch (IOException e) {
-        System.out.println("I/O Error ... please try again!");
-      }
-    }
-  }
+//  private static String inputString(String msg) {
+//    System.out.print(msg + " ");
+//    while (true) {
+//      BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+//      try {
+//        return input.readLine();
+//      } catch (IOException e) {
+//        System.out.println("I/O Error ... please try again!");
+//      }
+//    }
+//  }
 
   private Room findNextRoom(DoorTile tile) {
 
@@ -405,6 +406,8 @@ public class Game {
                   room.setTile(new DoorTile(board[i + 1][j], room, i, j, Direction.SOUTH), Room.BOTTOM.x, Room.BOTTOM.y);
                   break;
                 }
+                default:
+
             }
           }
         }
@@ -413,7 +416,7 @@ public class Game {
   }
 
   public Room[][] getBoard() {
-    return board;
+    return Arrays.copyOf(board, board.length);
   }
 
   public void rotateRoomClockwise() {
