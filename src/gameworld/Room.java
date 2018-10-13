@@ -253,7 +253,7 @@ public class Room {
     return null;
   }
 
-  public void rotateRoomAnticlockwise() {
+  public void rotateRoomClockwise() {
     int x = ROOMSIZE / 2;
     int y = ROOMSIZE - 1;
     for (int i = 0; i < x; i++) {
@@ -267,7 +267,7 @@ public class Room {
     }
   }
 
-  public void rotateRoomClockwise() {
+  public void rotateRoomAnticlockwise() {
     Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
     for (int row = 0; row < ROOMSIZE; row++) {
       for (int col = 0; col < ROOMSIZE; col++) {

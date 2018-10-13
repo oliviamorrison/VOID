@@ -14,7 +14,6 @@ public class Player {
   private AccessibleTile tile;
   private List<Item> inventory;
   private Room room;
-  private Ellipse ellipse;
   private int health;
   private Direction playerDir;
 
@@ -24,11 +23,6 @@ public class Player {
     this.inventory = new ArrayList<>();
     this.health = (health > 0) ? health : MAX_HEALTH;
     this.playerDir = direction;
-
-    this.ellipse = new Ellipse();
-    this.ellipse.setFill(Color.ORANGE);
-    this.ellipse.setRadiusX(8);
-    this.ellipse.setRadiusY(15);
   }
 
   public Direction getPlayerDir() {
@@ -120,14 +114,6 @@ public class Player {
 
   public void pickUp(Item item) {
     this.inventory.add(item);
-  }
-
-  public Ellipse getEllipse() {
-    return this.ellipse;
-  }
-
-  public void setEllipse(Ellipse e) {
-    this.ellipse = e;
   }
 
 }

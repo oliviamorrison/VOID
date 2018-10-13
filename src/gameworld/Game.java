@@ -417,11 +417,39 @@ public class Game {
   }
 
   public void rotateRoomClockwise(){
-      currentRoom.rotateRoomClockwise();
+    switch (player.getPlayerDir()){
+      case Top:
+        player.setPlayerDir(Direction.Right);
+        break;
+      case Right:
+        player.setPlayerDir(Direction.Bottom);
+        break;
+      case Bottom:
+        player.setPlayerDir(Direction.Left);
+        break;
+      case Left:
+        player.setPlayerDir(Direction.Top);
+        break;
+    }
+    currentRoom.rotateRoomClockwise();
   }
 
   public void rotateRoomAnticlockwise(){
-      currentRoom.rotateRoomAnticlockwise();
+    switch (player.getPlayerDir()){
+      case Top:
+        player.setPlayerDir(Direction.Left);
+        break;
+      case Left:
+        player.setPlayerDir(Direction.Bottom);
+        break;
+      case Bottom:
+        player.setPlayerDir(Direction.Right);
+        break;
+      case Right:
+        player.setPlayerDir(Direction.Top);
+        break;
+    }
+    currentRoom.rotateRoomAnticlockwise();
   }
 
 }
