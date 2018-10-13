@@ -31,31 +31,44 @@ public class MapEditor extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    // Initialize the grid
-    boardGrid = initBoard();
 
-    // Set the dimensions of the grid
-    boardGrid.setPrefSize(BOARD_SIZE, BOARD_SIZE);
+    setUp();
 
-    itemGrid = initItem();
+    itemGrid = initItemSpaces();
     itemGrid.setStyle("-fx-background-color: lightblue");
-    initaliseItems();
 
-        itemGrid.setStyle("-fx-background-color: lightpink");
+    initaliseItems();
 
     // Use a StackPane to display the Image and the Grid
     mainPane = new GridPane();
     mainPane.add(boardGrid, 0,0);
     mainPane.add(itemGrid,1,0);
 
-
     primaryStage.setScene(new Scene(mainPane));
     primaryStage.setResizable(false);
     primaryStage.show();
   }
 
+  public GridPane getBoardGrid() {
+    return boardGrid;
+  }
 
-  private GridPane initItem(){
+  public GridPane getItemGrid() {
+    return itemGrid;
+  }
+
+  public void setUp(){
+    // Initialize the grid
+    boardGrid = initBoard();
+
+    // Set the dimensions of the grid
+    boardGrid.setPrefSize(BOARD_SIZE, BOARD_SIZE);
+
+
+  }
+
+
+  public GridPane initItemSpaces(){
     GridPane items = new GridPane();
 
     int rows = 2;
