@@ -431,14 +431,13 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         ImageView imageView = new ImageView(image);
 
-        Button resume = new Button("Resume");
+        Button resume = new Button("Play");
         pauseRoot.getChildren().addAll(imageView, resume);
 
         Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
         helpDialog.initOwner(window);
         helpDialog.initModality(Modality.APPLICATION_MODAL);
         helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
-
 
         resume.setOnAction(event -> {
             game.setEffect(null);
