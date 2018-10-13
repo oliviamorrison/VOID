@@ -1,8 +1,5 @@
 package gameworld;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,50 +11,17 @@ public class Player {
   private AccessibleTile tile;
   private List<Item> inventory;
   private Room room;
-  private Ellipse ellipse;
   private int health;
-  private Direction playerDir;
+  private Direction direction;
 
   public Player(Room room, AccessibleTile tile, int health, String direction) {
+
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
     this.health = (health > 0) ? health : MAX_HEALTH;
-    this.playerDir = directionFromString(direction);
+    this.direction = directionFromString(direction);
 
-    this.ellipse = new Ellipse();
-    this.ellipse.setFill(Color.ORANGE);
-    this.ellipse.setRadiusX(8);
-    this.ellipse.setRadiusY(15);
-  }
-
-  public Direction directionFromString (String direction){
-    switch(direction){
-      case "Top":
-        return Direction.Top;
-      case "Left":
-        return Direction.Left;
-      case "Bottom":
-        return Direction.Bottom;
-      default:
-        return Direction.Right;
-    }
-  }
-
-  public Direction getPlayerDir() {
-    return playerDir;
-  }
-
-  public void setPlayerDir(Direction playerDir) {
-    this.playerDir = playerDir;
-  }
-
-  public int getHealth() {
-    return health;
-  }
-
-  public void setHealth(int health) {
-    this.health = health;
   }
 
   public void boostHealth() {
@@ -70,41 +34,54 @@ public class Player {
   }
 
   public void loseHealth() {
-
     if (health > 0)
       health--;
     else
       health = 0;
+  }
 
+  public Direction directionFromString (String direction){
+    switch(direction){
+      case "North":
+        return Direction.NORTH;
+      case "South":
+        return Direction.SOUTH;
+      case "East":
+        return Direction.EAST;
+      default:
+        return Direction.WEST;
+    }
+  }
+
+  public boolean changeDirection(Direction direction) {
+
+    if (this.direction != direction) {
+      this.direction = direction;
+      return true;
+    }
+
+    return false;
+
+  }
+
+  public Direction getDirection() {
+    return direction;
+  }
+
+  public void setDirection(Direction direction) {
+    this.direction = direction;
+  }
+
+  public int getHealth() {
+    return health;
+  }
+
+  public void setHealth(int health) {
+    this.health = health;
   }
 
   public Room getRoom() {
     return room;
-  }
-
-  public void moveTile(int dx, int dy) {
-    Direction direction = null;
-    if(dx < 0) {
-      direction = Direction.Top;
-    } else if(dx > 0){
-      direction = Direction.Bottom;
-    } else if(dy < 0){
-      direction = Direction.Left;
-    } else if(dy > 0){
-      direction = Direction.Right;
-    }
-
-    if(playerDir != direction){
-      playerDir = direction;
-      return;
-    }
-
-    if (room.moveTile(tile, dx, dy) == null) {
-      return;
-    }
-    tile.setPlayer(false);
-    tile = (AccessibleTile) room.moveTile(tile, dx, dy);
-    tile.setPlayer(true);
   }
 
   public AccessibleTile getTile() {
@@ -133,14 +110,6 @@ public class Player {
 
   public void pickUp(Item item) {
     this.inventory.add(item);
-  }
-
-  public Ellipse getEllipse() {
-    return this.ellipse;
-  }
-
-  public void setEllipse(Ellipse e) {
-    this.ellipse = e;
   }
 
 }

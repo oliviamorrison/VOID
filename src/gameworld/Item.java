@@ -1,26 +1,33 @@
 package gameworld;
 
-public enum Item {
+public abstract class Item {
 
-  Antidote, Beer, BoltCutter, Coin, Diffuser, HealthPack;
+  private int row;
+  private int col;
 
-  private int x;
-  private int y;
-
-  public int getX() {
-    return x;
+  public Item(int row, int col) {
+    this.row = row;
+    this.col = col;
   }
 
-  public void setX(int x) {
-    this.x = x;
+  public int getRow() {
+    return row;
   }
 
-  public int getY() {
-    return y;
+  public void setRow(int row) {
+    this.row = row;
   }
 
-  public void setY(int y) {
-    this.y = y;
+  public int getCol() {
+    return col;
   }
+
+  public void setCol(int col) {
+    this.col = col;
+  }
+
+  public abstract String getName();
+
+  public abstract String getDescription();
 
 }

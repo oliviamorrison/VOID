@@ -2,7 +2,6 @@ package persistence;
 import gameworld.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -15,8 +14,6 @@ import javax.xml.validation.Validator;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Integer.*;
 import static java.lang.Integer.parseInt;
 
 /**
@@ -88,8 +85,8 @@ public class XMLParser {
     for(int y = 0; y < 10; y++){
       for(int x = 0; x < 10; x++){
         Tile tile = room.getTile(x,y);
-        if(tile instanceof DoorTile){
-          DoorTile door = (DoorTile) tile;
+        if(tile instanceof Portal){
+          Portal door = (Portal) tile;
           Element doorElement = document.createElement("door");
           doorElement.appendChild((document.createTextNode(door.toString())));
           roomElement.appendChild(doorElement);
@@ -100,15 +97,15 @@ public class XMLParser {
           //save items
           if(aTile.hasItem()){
             Element item = document.createElement("item");
-            item.setAttribute("row", aTile.getItem().getX()+"");
-            item.setAttribute("col", aTile.getItem().getY()+"");
+            item.setAttribute("row", aTile.getItem().getRow()+"");
+            item.setAttribute("col", aTile.getItem().getCol()+"");
             item.appendChild(document.createTextNode(aTile.getItem().toString()));
             roomElement.appendChild(item);
           }
 
           //save challenges
           if(aTile.hasChallenge()){
-            Challenge challengeItem = aTile.getChallenge();
+            ChallengeItem challengeItem = aTile.getChallenge();
             Element challenge = document.createElement("challenge");
 
             if(challengeItem instanceof Bomb) {
@@ -123,8 +120,8 @@ public class XMLParser {
               VendingMachine vm = (VendingMachine) challengeItem;
               challenge.setAttribute("state", vm.isUnlocked()+"");
             }
-            challenge.setAttribute("row", challengeItem.getX()+"");
-            challenge.setAttribute("col", challengeItem.getY()+"");
+            challenge.setAttribute("row", challengeItem.getRow()+"");
+            challenge.setAttribute("col", challengeItem.getCol()+"");
             challenge.appendChild(document.createTextNode(aTile.getChallenge().toString()));
             roomElement.appendChild(challenge);
           }
@@ -137,8 +134,8 @@ public class XMLParser {
   private static Element savePlayer(Game game, Document document) {
     Element player = document.createElement("player");
     //Get position of player and add as attribute to player element
-    player.setAttribute("row", game.getPlayer().getTile().getX()+"");
-    player.setAttribute("col", game.getPlayer().getTile().getY()+"");
+    player.setAttribute("row", game.getPlayer().getTile().getRow()+"");
+    player.setAttribute("col", game.getPlayer().getTile().getCol()+"");
     player.setAttribute("health", game.getPlayer().getHealth()+"");
     player.setAttribute("direction", game.getPlayer().getPlayerDir().toString());
 
@@ -271,33 +268,35 @@ public class XMLParser {
       String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
+        int[] rowCol = getRowCol(elem);
+
         Item item;
         switch(token){
           case "Antidote":
-            item = Item.Antidote;break;
+            item = new Antidote(rowCol[0], rowCol[1]);
+            break;
           case "Beer":
-            item = Item.Beer;
+            item = new Beer(rowCol[0], rowCol[1]);
             break;
           case "BoltCutter":
-            item = Item.BoltCutter;
+            item = new BoltCutter(rowCol[0], rowCol[1]);
             break;
           case "Coin":
-            item = Item.Coin;
+            item = new Coin(rowCol[0], rowCol[1]);
             break;
           case "Diffuser":
-            item = Item.Diffuser;
+            item = new Diffuser(rowCol[0], rowCol[1]);
             break;
           case "HealthPack":
-            item = Item.HealthPack;
+            item = new HealthPack(rowCol[0], rowCol[1]);
             break;
           default:
             throw new ParseError("Incorrect item name");
         }
 
         if(tiles!=null){
-          int[] rowCol = getRowCol(elem);
-          item.setX(rowCol[0]);
-          item.setY(rowCol[1]);
+          item.setRow(rowCol[0]);
+          item.setCol(rowCol[1]);
           ((AccessibleTile) tiles[rowCol[0]][rowCol[1]]).setItem(item);
         }
         else if(p!=null){

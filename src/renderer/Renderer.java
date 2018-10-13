@@ -3,15 +3,27 @@ package renderer;
 import gameworld.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Renderer {
     private final static Color ITColor = Color.rgb(237, 185, 177);
     private final static Color ATColor = Color.rgb(226, 209, 206);
-    private final static Color DTColor = Color.GRAY;
+    private final static Color DTColor = Color.rgb(161, 176, 201);
     private  final static double floorHeight = 0;
-    private  final static double wallHeight = 0.75;
+    private  final static double wallHeight = 1.25;
+    private final static  double doorHeight = 0;
+
+    private final static double playerHeight = 60;
+    private String NORTH = "src/application/north.png";
+    private String SOUTH = "src/application/south.png";
+    private String WEST = "src/application/west.png";
+    private String EAST = "src/application/east.png";
 
     private Game game;
     private static Player player;
@@ -31,16 +43,33 @@ public class Renderer {
     }
 
     public void drawPlayer() {
-        Point2D p = currentRoom.getPlayerTile().getCenter();
-        player.getEllipse().setCenterX(p.getX());
-        player.getEllipse().setCenterY(p.getY() - 13);
-        root.getChildren().add(player.getEllipse());
+        Point2D p = player.getTile().getCenter();
+        Image image = null;
+        try {
+            switch (player.getDirection()) {
+                case NORTH:
+                    image = new Image(new FileInputStream(NORTH));
+                    break;
+                case SOUTH:
+                    image = new Image(new FileInputStream(SOUTH));
+                    break;
+                case WEST:
+                    image = new Image(new FileInputStream(WEST));
+                    break;
+                case EAST:
+                    image = new Image(new FileInputStream(EAST));
+                    break;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ImageView playerImage = new ImageView(image);
+        playerImage.setPreserveRatio(true);
+        playerImage.setFitHeight(playerHeight);
+        playerImage.setX(p.getX() - 15);
+        playerImage.setY(p.getY() - 55);
+        root.getChildren().add(playerImage);
     }
-
-//    public void rotate() {
-//        currentRoom.rotateRoomClockwise();
-//        draw();
-//    }
 
     public void draw(){
         root.getChildren().clear();
@@ -76,15 +105,15 @@ public class Renderer {
             InaccessibleTile IT = (InaccessibleTile) tile;
             color = ITColor;
         }
-        if(tile instanceof DoorTile){
-            height = floorHeight;
+        if(tile instanceof Portal){
+            height = doorHeight;
             color = DTColor;
         }
 
         PolygonBlock poly = new PolygonBlock(col, row, height, color);
         tile.setTilePolygon(poly);
         root.getChildren().addAll(poly.getPolygons());
-        if(currentRoom.getPlayerTile().equals(tile) ){
+        if(player.getTile().equals(tile) ){
             drawPlayer();
         }
     }

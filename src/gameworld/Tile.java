@@ -1,33 +1,25 @@
 package gameworld;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import renderer.PolygonBlock;
 
 public abstract class Tile {
 
-//  private Room room;
+  private int row;
+  private int col;
   private PolygonBlock polygon;
-  private int x;
-  private int y;
 
-  public Tile( int x, int y) {
-    this.x = x;
-    this.y = y;
-//    this.room = r;
+  public Tile(int row, int col) {
+    this.row = row;
+    this.col = col;
   }
 
-  public int getX() {
-    return x;
+  public int getRow() {
+    return row;
   }
 
-  public int getY() {
-    return y;
+  public int getCol() {
+    return col;
   }
-
-//  public Room getRoom() {
-//    return room;
-//  }
 
   public PolygonBlock getTilePolygon() {
     return this.polygon;

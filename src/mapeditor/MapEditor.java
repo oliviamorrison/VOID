@@ -15,8 +15,6 @@ import javafx.stage.Stage;
 import persistence.XMLParser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MapEditor extends Application {
 
@@ -114,7 +112,7 @@ public class MapEditor extends Application {
           MapItem i = selectedItem.getMapItem();
 
           //if there is nothing in the selected tile
-          if(selectedTilePane.getMapItem()==null) {
+          if(selectedTilePane.getMapItem()==null && !isInAntidoteRoom(selectedTilePane)) {
             //swap items
             String name = i.getImageName();
 
@@ -152,6 +150,11 @@ public class MapEditor extends Application {
     items.add(makeGame, 2,4);
 
     return items;
+  }
+
+  private boolean isInAntidoteRoom(TilePane find){
+    TilePane t = findItemInBoard("antidote.png");
+    return t.getRoom() == find.getRoom();
   }
 
   private TilePane findItemInBoard(String name){
@@ -263,6 +266,14 @@ public class MapEditor extends Application {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("cutters.png",new Image(getClass().getResourceAsStream("cutters.png"),17, 17, false, false)));
       }
+
+      node = getNodeByRowColumnIndex(2,5,room5);
+
+      if(node instanceof TilePane){
+        TilePane i = (TilePane) node;
+        i.setMapItem(new MapItem("healthpack.png", new Image(getClass().getResourceAsStream("healthpack.png"),17,17,false,false)));
+      }
+
     }
 
     //room 6
@@ -312,6 +323,14 @@ public class MapEditor extends Application {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("two-coins.png",new Image(getClass().getResourceAsStream("two-coins.png"),17, 17, false, false)));
       }
+
+      node = getNodeByRowColumnIndex(7,2,room9);
+
+      if(node instanceof TilePane){
+        TilePane i = (TilePane) node;
+        i.setMapItem(new MapItem("healthpack.png", new Image(getClass().getResourceAsStream("healthpack.png"),17,17,false,false)));
+      }
+
     }
 
   }
@@ -561,9 +580,6 @@ public class MapEditor extends Application {
         if(roomNode instanceof GridPane){
           GridPane roomGrid = (GridPane) roomNode;
 
-          List<Item> items = new ArrayList<>();
-          List<Challenge> challenges = new ArrayList<>();
-          List<DoorTile> doors = new ArrayList<>();
 
           for(int k=0; k<10; k++){
             for(int l=0; l<10;l++){
@@ -578,29 +594,32 @@ public class MapEditor extends Application {
                   MapItem mapItem = tilePane.getMapItem();
                   if(mapItem!=null){
                     Item item = null;
-                    Challenge challenge = null;
+                    ChallengeItem challenge = null;
 
                     switch(mapItem.getImageName()){
                       case "antidote.png":
-                        item = Item.Antidote;
+                        item = new Antidote(k, l);
                         break;
                       case "cutters.png":
-                        item = Item.BoltCutter;
+                        item = new BoltCutter(k, l);
                         break;
                       case "diffuser.png":
-                        item = Item.Diffuser;
+                        item = new Diffuser(k, l);
                         break;
                       case "two-coins.png":
-                        item = Item.Coin;
+                        item = new Coin(k, l);
+                        break;
+                      case "healthpack.png":
+                        item = new HealthPack(k, l);
                         break;
                       case "guard.png":
-//                        challenge = new Guard(""); //TODO: Door checks
+                        challenge = new Guard(k,l);
                         break;
                       case "unlit-bomb.png":
-//                        challenge = new Bomb(""); //TODO: Door checks
+                        challenge = new Bomb(k,l);
                         break;
                       case "vending-machine.png":
-//                        challenge = new VendingMachine();
+                        challenge = new VendingMachine(k,l);
                         break;
                     }
 
@@ -624,6 +643,7 @@ public class MapEditor extends Application {
     }
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
+    // TODO: Decide which default direction player should be created with (currently NORTH)
     Player player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(8,8), 100, "Top");
 
     Game game = new Game(board, player);
