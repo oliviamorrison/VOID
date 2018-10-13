@@ -1,5 +1,9 @@
 package gameworld;
 
+/**
+ * This class represents a vending machine challenge which must
+ * be unlocked and passed a coin by the player in order to dispense a beer.
+ */
 public class VendingMachine extends Challenge {
 
   private boolean unlocked = false;

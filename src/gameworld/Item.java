@@ -2,7 +2,7 @@ package gameworld;
 
 public enum Item {
 
-  Antidote, Beer, BoltCutter, Coin, Diffuser, HealthPack;
+  Antidote , Beer, BoltCutter, Coin, Diffuser, HealthPack;
 
   private int x;
   private int y;

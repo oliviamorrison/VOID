@@ -14,11 +14,12 @@ public class Player {
   private AccessibleTile tile;
   private List<Item> inventory;
   private Room room;
-  private Ellipse ellipse;
   private int health;
   private Direction playerDir;
+  private Ellipse ellipse;
 
   public Player(Room room, AccessibleTile tile, int health, Direction direction) {
+
     this.room = room;
     this.tile = tile;
     this.inventory = new ArrayList<>();
@@ -29,6 +30,7 @@ public class Player {
     this.ellipse.setFill(Color.ORANGE);
     this.ellipse.setRadiusX(8);
     this.ellipse.setRadiusY(15);
+
   }
 
   public Direction getPlayerDir() {

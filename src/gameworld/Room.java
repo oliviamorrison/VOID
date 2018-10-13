@@ -2,6 +2,7 @@ package gameworld;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Room {
@@ -10,7 +11,6 @@ public class Room {
   private int col;
   private Tile[][] tiles;
   private List<String> doors;
-  private boolean hasHealthPack = false;
 
   public static final Point TOP = new Point(0, 5);
   public static final Point BOTTOM = new Point(9, 5);
@@ -21,7 +21,7 @@ public class Room {
   public Room(int row, int col, Tile[][] tiles, List<String> doors) {
     this.row = row;
     this.col = col;
-    this.tiles = tiles;
+    this.tiles = Arrays.copyOf(tiles, tiles.length);
     this.doors = doors;
   }
 
