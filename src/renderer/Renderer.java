@@ -46,16 +46,16 @@ public class Renderer {
         Image image = null;
         try {
             switch (player.getPlayerDir()) {
-                case Top:
+                case NORTH:
                     image = new Image(new FileInputStream(NORTH));
                     break;
-                case Bottom:
+                case SOUTH:
                     image = new Image(new FileInputStream(SOUTH));
                     break;
-                case Left:
+                case WEST:
                     image = new Image(new FileInputStream(WEST));
                     break;
-                case Right:
+                case EAST:
                     image = new Image(new FileInputStream(EAST));
                     break;
             }
