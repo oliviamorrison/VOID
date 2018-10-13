@@ -36,9 +36,8 @@
         <door>WEST</door>
         <item row="7" col="7">Coin</item>
     </room>
-    <player row="1" col="1" health="100" direction="Right">
+    <player row="1" col="1" health="100" direction="EAST">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
-        <inventory/>
     </player>
 </game>

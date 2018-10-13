@@ -42,11 +42,11 @@ public class Player {
 
   public Direction directionFromString (String direction){
     switch(direction){
-      case "North":
+      case "NORTH":
         return Direction.NORTH;
-      case "South":
+      case "SOUTH":
         return Direction.SOUTH;
-      case "East":
+      case "EAST":
         return Direction.EAST;
       default:
         return Direction.WEST;

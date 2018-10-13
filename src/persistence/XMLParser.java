@@ -88,7 +88,7 @@ public class XMLParser {
         if(tile instanceof Portal){
           Portal door = (Portal) tile;
           Element doorElement = document.createElement("door");
-          doorElement.appendChild((document.createTextNode(door.toString())));
+          doorElement.appendChild((document.createTextNode(door.getDirection().toString())));
           roomElement.appendChild(doorElement);
         }
         else if(tile instanceof AccessibleTile){
@@ -137,7 +137,7 @@ public class XMLParser {
     player.setAttribute("row", game.getPlayer().getTile().getRow()+"");
     player.setAttribute("col", game.getPlayer().getTile().getCol()+"");
     player.setAttribute("health", game.getPlayer().getHealth()+"");
-    player.setAttribute("direction", game.getPlayer().getPlayerDir().toString());
+    player.setAttribute("direction", game.getPlayer().getDirection().toString());
 
     //Add coordinates of the room the player is in to the player element
     Element roomRow = document.createElement("roomRow");
@@ -147,8 +147,9 @@ public class XMLParser {
     player.appendChild(roomRow);
     player.appendChild(roomCol);
 
+    //TODO: Don't need to run through inventory list
     //save inventory
-    Element inventory = document.createElement("inventory");
+    Element inventory = document.createElement("item");
     for(Item item : game.getPlayer().getInventory()){
       Element itemElement = document.createElement("item");
       itemElement.appendChild(document.createTextNode(item.toString()));
@@ -252,7 +253,8 @@ public class XMLParser {
     Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, direction);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
-    NodeList inventory = playerElement.getElementsByTagName("inventory");
+    //TODO: Don't need to run through list of inventory
+    NodeList inventory = playerElement.getElementsByTagName("item");
     parseItems(inventory, null, player);
 
     return player;

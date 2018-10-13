@@ -185,8 +185,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         currentGame = XMLParser.parseGame(file);
       } catch (XMLParser.ParseError parseError) {
         //TODO: Open dialogue box that says it was an invalid XML file and to please try again
-        System.out.println("Invalid file");
-
+//        System.out.println("Invalid file");
+        System.out.println(parseError.getMessage());
       }
       setGame(stage);
     }
