@@ -26,14 +26,15 @@ public class Game {
 
   }
 
-  public void movePlayer(Direction direction) {
-
-    if (player.changeDirection(direction)) {
-      return;
-    }
+  public void movePlayer(int dx, int dy) {
 
     AccessibleTile currentTile = player.getTile();
-    AccessibleTile nextTile = currentRoom.findNextTile(currentTile, direction);
+    Direction nextDirection = player.getDirection().nextDirection(dx, dy);
+
+    if (player.changeDirection(nextDirection))
+      return;
+
+    AccessibleTile nextTile = currentRoom.findNextTile(currentTile, dx, dy);
 
     if (nextTile != null) {
 

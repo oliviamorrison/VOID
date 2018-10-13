@@ -354,20 +354,23 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 //		currentGame.startTurn(event.getCode().getName());
     //testing
 
+    int dx = 0;
+    int dy = 0;
+
     Direction direction = null;
 
     switch (event.getCode()) {
       case UP:
-        direction = Direction.NORTH;
+        dx = -1;
         break;
       case LEFT:
-        direction = Direction.WEST;
+        dy = -1;
         break;
       case DOWN:
-        direction = Direction.SOUTH;
+        dx = 1;
         break;
       case RIGHT:
-        direction = Direction.EAST;
+        dy = 1;
         break;
       case A:
         currentGame.rotateRoomAnticlockwise();
@@ -401,9 +404,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     }
 
-    if (direction != null) {
+    if (!(dx == 0 && dy == 0)) {
 
-      currentGame.movePlayer(direction);
+      currentGame.movePlayer(dx, dy);
 
       if (currentGame.checkForAntidote()) {
         System.out.println("Winner winner");

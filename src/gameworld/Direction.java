@@ -67,4 +67,22 @@ public enum Direction {
 
   }
 
+  public Direction nextDirection(int dx, int dy) {
+
+    Direction direction = null;
+
+    if (dx < 0) {
+      direction = Direction.NORTH;
+    } else if (dx > 0) {
+      direction = Direction.SOUTH;
+    } else if (dy < 0) {
+      direction = Direction.WEST;
+    } else if (dy > 0) {
+      direction = Direction.EAST;
+    }
+
+    return direction;
+
+  }
+
 }

@@ -50,16 +50,47 @@ public class Room {
 
   }
 
-  public AccessibleTile findNextTile(AccessibleTile tile, Direction direction) {
+  public AccessibleTile findNextTile(Tile t, int dx, int dy) {
 
-    Tile nextTile = findTile(tile, direction);
+    int[] coordinates = getTileCoordinates(t);
 
-    if (nextTile instanceof AccessibleTile) {
+    assert coordinates != null;
 
-      AccessibleTile accessibleTile = (AccessibleTile) nextTile;
-      if (accessibleTile.checkNavigable())
-        return accessibleTile;
+    int x = coordinates[0];
+    int y = coordinates[1];
 
+    int newX = x + dx;
+    int newY = y + dy;
+
+    if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10)
+      return null;
+
+    Tile tile = tiles[newX][newY];
+
+    if (tile instanceof AccessibleTile) {
+
+      AccessibleTile nextTile = (AccessibleTile) tile;
+
+      if (nextTile.checkNavigable()) {
+        return nextTile;
+      }
+
+    }
+
+    return null;
+
+  }
+
+  private int[] getTileCoordinates(Tile t) {
+
+    for (int i = 0; i < ROOMSIZE; i++) {
+      for (int j = 0; j < ROOMSIZE; j++) {
+
+        if (tiles[i][j].equals(t)) {
+          return new int[]{i, j};
+        }
+
+      }
     }
 
     return null;

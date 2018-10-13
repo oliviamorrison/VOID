@@ -24,22 +24,6 @@ public class Player {
 
   }
 
-  public Direction getDirection() {
-    return direction;
-  }
-
-  public void setDirection(Direction direction) {
-    this.direction = direction;
-  }
-
-  public int getHealth() {
-    return health;
-  }
-
-  public void setHealth(int health) {
-    this.health = health;
-  }
-
   public void boostHealth() {
 
     health += HEALTH_BOOST;
@@ -58,10 +42,6 @@ public class Player {
 
   }
 
-  public Room getRoom() {
-    return room;
-  }
-
   public boolean changeDirection(Direction direction) {
 
     if (this.direction != direction) {
@@ -71,6 +51,26 @@ public class Player {
 
     return false;
 
+  }
+
+  public Direction getDirection() {
+    return direction;
+  }
+
+  public void setDirection(Direction direction) {
+    this.direction = direction;
+  }
+
+  public int getHealth() {
+    return health;
+  }
+
+  public void setHealth(int health) {
+    this.health = health;
+  }
+
+  public Room getRoom() {
+    return room;
   }
 
   public AccessibleTile getTile() {
