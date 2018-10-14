@@ -377,7 +377,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         currentGame.useVendingMachine();
         break;
       case SPACE:
-        currentGame.moveRoom();
+        currentGame.teleport();
         renderer.newRoom();
         break;
       case B:

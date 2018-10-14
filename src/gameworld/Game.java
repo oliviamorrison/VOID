@@ -46,7 +46,7 @@ public class Game {
 
   }
 
-  public void moveRoom() {
+  public void teleport() {
 
     if (player.getTile() instanceof Portal) {
 
@@ -340,6 +340,17 @@ public class Game {
 
   }
 
+  public void teleport(Room room) {
+
+    AccessibleTile tile = player.getTile();
+    AccessibleTile nextTile = (AccessibleTile) room.getTile(5, 5);
+    tile.setPlayer(false);
+    currentRoom = room;
+    player.setTile(nextTile);
+    nextTile.setPlayer(true);
+
+  }
+
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
@@ -362,5 +373,8 @@ public class Game {
     return player;
   }
 
+  public Room getCurrentRoom() {
+    return currentRoom;
+  }
 }
 
