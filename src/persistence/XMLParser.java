@@ -30,49 +30,47 @@ import static java.lang.Integer.parseInt;
 public class XMLParser {
   private static Schema schema;
 
-  public static void saveFile(File file, Game game){
-    try {
-      DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-      Document document = documentBuilder.newDocument();
+  public static void saveFile(File file, Game game) throws ParserConfigurationException, TransformerException {
 
-      Room[][] board = game.getBoard();
+    DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+    Document document = documentBuilder.newDocument();
 
-      //add root to XML file
-      Element root = document.createElement("game");
-      root.setAttribute("row", board.length+"");
-      root.setAttribute("col", board[0].length+"");
-      document.appendChild(root);
+    Room[][] board = game.getBoard();
 
-      //save rooms
-      for(int i = 0; i < board.length; i++){
-        for(int j = 0; j < board[i].length; j++){
-          if(board[i][j]!=null){
-            root.appendChild(saveRoom(document, i, j, board[i][j]));
-          }
+    //add root to XML file
+    Element root = document.createElement("game");
+    root.setAttribute("row", board.length+"");
+    root.setAttribute("col", board[0].length+"");
+    document.appendChild(root);
+
+    //save rooms
+    for(int i = 0; i < board.length; i++){
+      for(int j = 0; j < board[i].length; j++){
+        if(board[i][j]!=null){
+          root.appendChild(saveRoom(document, i, j, board[i][j]));
         }
       }
-
-      //save player
-      root.appendChild(savePlayer(game, document));
-
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
-
-      //Add line breaks and indentation
-      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-      //Save to file
-      DOMSource source = new DOMSource(document);
-      StreamResult result = new StreamResult(file);
-      document.getDocumentElement().normalize();
-      transformer.transform(source, result);
-
-    } catch (ParserConfigurationException | TransformerException e) {
-      e.printStackTrace();
     }
+
+    //save player
+    root.appendChild(savePlayer(game, document));
+
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+
+    //Add line breaks and indentation
+    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+    //Save to file
+    DOMSource source = new DOMSource(document);
+    StreamResult result = new StreamResult(file);
+    document.getDocumentElement().normalize();
+    transformer.transform(source, result);
+
+
   }
 
   private static Element saveRoom(Document document, int i, int j, Room room) {
@@ -168,7 +166,7 @@ public class XMLParser {
       DOMSource source = new DOMSource(doc);
 
       //using schema.xsd to validate the schema
-      loadSchema();
+      loadSchema("src/persistence/schema.xsd");
       Validator validator = schema.newValidator();
       validator.validate(source);
 
@@ -228,7 +226,6 @@ public class XMLParser {
     NodeList challengeList = roomElement.getElementsByTagName("challenge");
     parseChallenges(challengeList, tiles);
 
-
     Room newRoom = new Room(rowCol[0], rowCol[1], tiles, doors);
 
 //    Room newRoom = new Room(rowCol[0], rowCol[1], doors, items, challenges);
@@ -273,9 +270,6 @@ public class XMLParser {
           case "Antidote":
             item = new Antidote(rowCol[0], rowCol[1]);
             break;
-          case "Beer":
-            item = new Beer(rowCol[0], rowCol[1]);
-            break;
           case "BoltCutter":
             item = new BoltCutter(rowCol[0], rowCol[1]);
             break;
@@ -305,7 +299,7 @@ public class XMLParser {
     }
   }
 
-  private static void parseChallenges(NodeList items, Tile[][] tiles) throws ParseError {
+  private static void parseChallenges(NodeList items, Tile[][] tiles){
 
     for(int i = 0; i< items.getLength(); i++){
       Node node = items.item(i);
@@ -332,20 +326,17 @@ public class XMLParser {
     }
   }
 
-  private static void loadSchema(){
-    try {
-      String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
-      SchemaFactory factory = SchemaFactory.newInstance(language);
-      schema = factory.newSchema(new File("src/persistence/schema.xsd"));
-    } catch (SAXException e) {
-      e.printStackTrace();
-    }
+  /**
+   * A method to load the schema for XML files
+   * @param fileName
+   */
+  public static void loadSchema(String fileName) throws SAXException {
+    String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
+    SchemaFactory factory = SchemaFactory.newInstance(language);
+    schema = factory.newSchema(new File(fileName));
   }
 
-  private static int[] getRowCol(Element elem) throws ParseError {
-    if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals(""))
-      throw new ParseError("Needs position attribute");
-
+  private static int[] getRowCol(Element elem){
     int row = parseInt(elem.getAttribute("row"));
     int col = parseInt(elem.getAttribute("col"));
     return new int[]{row, col};
