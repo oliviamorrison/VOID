@@ -1,13 +1,17 @@
 package gameworld;
 
+import static gameworld.Direction.directionFromString;
+
 public abstract class Item {
 
   private int row;
   private int col;
+  private Direction direction;
 
-  public Item(int row, int col) {
+  public Item(int row, int col, String direction) {
     this.row = row;
     this.col = col;
+    this.direction = directionFromString(direction);
   }
 
   public int getRow() {
@@ -24,6 +28,14 @@ public abstract class Item {
 
   public void setCol(int col) {
     this.col = col;
+  }
+
+  public Direction getDirection() {
+    return direction;
+  }
+
+  public void setDirection(Direction direction) {
+    this.direction = direction;
   }
 
   public abstract String getName();

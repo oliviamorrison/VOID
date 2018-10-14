@@ -8,17 +8,16 @@ import java.util.List;
 public class Room {
 
   public static final int ROOMSIZE = 10;
+  public static final Point NORTH_PORTAL = new Point(0, 5);
+  public static final Point SOUTH_PORTAL = new Point(9, 5);
+  public static final Point EAST_PORTAL = new Point(5, 9);
+  public static final Point WEST_PORTAL = new Point(5, 0);
 
   private int row;
   private int col;
   private Tile[][] tiles;
   private List<String> doors;
   private List<Portal> portals;
-
-  public static final Point NORTH_PORTAL = new Point(0, 5);
-  public static final Point SOUTH_PORTAL = new Point(9, 5);
-  public static final Point EAST_PORTAL = new Point(5, 9);
-  public static final Point WEST_PORTAL = new Point(5, 0);
 
   public Room(int row, int col, Tile[][] tiles, List<String> doors) {
 
@@ -106,10 +105,15 @@ public class Room {
   // find tile in a given direction
   private Tile findTile(AccessibleTile tile, Direction direction) {
 
-    int row = tile.getRow();
-    int col = tile.getCol();
+    int[] coordinates = getTileCoordinates(tile);
+
+    assert coordinates != null;
+
+    int row = coordinates[0];
+    int col = coordinates[1];
 
     switch (direction) {
+
       case NORTH:
         row -= 1;
         break;
@@ -120,9 +124,9 @@ public class Room {
         col += 1;
         break;
       case WEST:
+      default:
         col -= 1;
         break;
-      default:
 
     }
 

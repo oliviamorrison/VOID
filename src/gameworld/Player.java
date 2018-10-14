@@ -1,5 +1,7 @@
 package gameworld;
 
+import static gameworld.Direction.directionFromString;
+
 public class Player {
 
   private static final int HEALTH_BOOST = 20;
@@ -41,19 +43,6 @@ public class Player {
       health--;
     else
       health = 0;
-  }
-
-  public Direction directionFromString (String direction){
-    switch(direction){
-      case "NORTH":
-        return Direction.NORTH;
-      case "SOUTH":
-        return Direction.SOUTH;
-      case "EAST":
-        return Direction.EAST;
-      default:
-        return Direction.WEST;
-    }
   }
 
   public boolean changeDirection(Direction direction) {

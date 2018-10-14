@@ -1,41 +1,85 @@
 package gameworld;
 
+import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.XMLParser;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class GameworldTests {
 
+  private Game game;
   private Room[][] board;
   private Player player;
-  private Game game;
 
   @BeforeEach
   public void setUp() {
 
-    board = new Room[3][3];
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board[i].length; j++) {
-//        board[i][j] = new Room();
-      }
+    try {
+      game = XMLParser.parseGame(new File("data/gameworldTestData.xml"));
+    } catch (XMLParser.ParseError parseError) {
+      parseError.printStackTrace();
     }
-    player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, "NORTH");
 
-    ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5));
+    if (game != null) {
 
-    game = new Game(board, player);
+      board = game.getBoard();
+      player = game.getPlayer();
 
-  }
-
-  @Test
-  public void movePlayerTest() {
+    }
 
   }
 
   @Test
-  public void pickUpItem() {
+  public void gameCreatedCorrectly() {
+
+    assertNotNull(game.getBoard());
+    assertNotNull(game.getPlayer());
+    assertNotNull(game.getCurrentRoom());
 
   }
+
+  @Test
+  public void playerCanChangeDirection() {
+
+    AccessibleTile startTile = player.getTile();
+    Direction startDirection = player.getDirection();
+
+    game.movePlayer(1, 0);
+    AccessibleTile nextTile = player.getTile();
+
+    assertEquals(startTile, nextTile);
+    assertNotEquals(startDirection, player.getDirection());
+
+  }
+
+  @Test
+  public void playerCanMove() {
+
+    AccessibleTile startTile = player.getTile();
+
+    game.movePlayer(1, 0);
+    game.movePlayer(1, 0);
+
+    AccessibleTile nextTile = player.getTile();
+
+    assertNotEquals(startTile, nextTile);
+    assertEquals(nextTile, game.getCurrentRoom().getTile(6, 5));
+
+  }
+
+  @Test
+  public void playerCannotTeleportWithoutPortal() {
+
+    AccessibleTile startTile = player.getTile();
+
+    game.teleport();
+
+    assertEquals(startTile, player.getTile());
+
+  }
+
 
 }

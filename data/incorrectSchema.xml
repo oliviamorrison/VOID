@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <game row="3" col="3">
+    <player row="1" col="1" health="100" direction="EAST">
+        <roomRow>0</roomRow>
+        <roomCol>0</roomCol>
+    </player>
     <room row="0" col="0">
         <door>EAST</door>
         <item row="4" col="3">Diffuser</item>
@@ -36,8 +40,4 @@
         <door>WEST</door>
         <item row="7" col="7">Coin</item>
     </room>
-    <player row="1" col="1" health="100" direction="EAST">
-        <roomRow>0</roomRow>
-        <roomCol>0</roomCol>
-    </player>
 </game>

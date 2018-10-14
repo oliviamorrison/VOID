@@ -46,7 +46,7 @@ public class Game {
 
   }
 
-  public void moveRoom() {
+  public void teleport() {
 
     if (player.getTile() instanceof Portal) {
 
@@ -233,6 +233,11 @@ public class Game {
     if (challenge instanceof VendingMachine) {
 
       VendingMachine vendingMachine = (VendingMachine) challenge;
+      Direction vmDirection = vendingMachine.getDirection();
+
+      if (!direction.getOppositeDirection().equals(vmDirection)) {
+        return;
+      }
 
       if (!vendingMachine.isUnlocked()) {
 
@@ -262,6 +267,11 @@ public class Game {
     if (challenge instanceof VendingMachine) {
 
       VendingMachine vendingMachine = (VendingMachine) challenge;
+      Direction vmDirection = vendingMachine.getDirection();
+
+      if (!direction.getOppositeDirection().equals(vmDirection)) {
+        return;
+      }
 
       if (vendingMachine.isUnlocked()) {
 
@@ -270,7 +280,7 @@ public class Game {
         if (item instanceof Coin) {
 
           player.dropItem();
-          player.addItem(new Beer(-1, -1));
+          player.addItem(new Beer(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
           System.out.println("Pick up the beer that is dispensed");
 
@@ -294,6 +304,11 @@ public class Game {
     if (challenge instanceof Guard) {
 
       Guard guard = (Guard) challenge;
+      Direction guardDirection = guard.getDirection();
+
+      if (!direction.getOppositeDirection().equals(guardDirection)) {
+        return;
+      }
 
       if (!guard.isNavigable()) {
 
@@ -340,6 +355,17 @@ public class Game {
 
   }
 
+  public void teleport(Room room, int row, int col) {
+
+    AccessibleTile tile = player.getTile();
+    AccessibleTile nextTile = (AccessibleTile) room.getTile(row, col);
+    tile.setPlayer(false);
+    currentRoom = room;
+    player.setTile(nextTile);
+    nextTile.setPlayer(true);
+
+  }
+
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
@@ -362,5 +388,8 @@ public class Game {
     return player;
   }
 
+  public Room getCurrentRoom() {
+    return currentRoom;
+  }
 }
 
