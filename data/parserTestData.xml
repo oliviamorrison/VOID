@@ -39,5 +39,6 @@
     <player row="1" col="1" health="100" direction="EAST">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
+        <item row="-1" col="-1">Coin</item>
     </player>
 </game>
