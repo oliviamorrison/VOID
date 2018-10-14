@@ -233,6 +233,11 @@ public class Game {
     if (challenge instanceof VendingMachine) {
 
       VendingMachine vendingMachine = (VendingMachine) challenge;
+      Direction vmDirection = vendingMachine.getDirection();
+
+      if (!direction.getOppositeDirection().equals(vmDirection)) {
+        return;
+      }
 
       if (!vendingMachine.isUnlocked()) {
 
@@ -262,6 +267,11 @@ public class Game {
     if (challenge instanceof VendingMachine) {
 
       VendingMachine vendingMachine = (VendingMachine) challenge;
+      Direction vmDirection = vendingMachine.getDirection();
+
+      if (!direction.getOppositeDirection().equals(vmDirection)) {
+        return;
+      }
 
       if (vendingMachine.isUnlocked()) {
 
@@ -294,6 +304,11 @@ public class Game {
     if (challenge instanceof Guard) {
 
       Guard guard = (Guard) challenge;
+      Direction guardDirection = guard.getDirection();
+
+      if (!direction.getOppositeDirection().equals(guardDirection)) {
+        return;
+      }
 
       if (!guard.isNavigable()) {
 
@@ -340,10 +355,10 @@ public class Game {
 
   }
 
-  public void teleport(Room room) {
+  public void teleport(Room room, int row, int col) {
 
     AccessibleTile tile = player.getTile();
-    AccessibleTile nextTile = (AccessibleTile) room.getTile(5, 5);
+    AccessibleTile nextTile = (AccessibleTile) room.getTile(row, col);
     tile.setPlayer(false);
     currentRoom = room;
     player.setTile(nextTile);

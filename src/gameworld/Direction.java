@@ -85,4 +85,20 @@ public enum Direction {
 
   }
 
+  public static Direction directionFromString(String direction){
+
+    switch(direction){
+
+      case "NORTH":
+        return Direction.NORTH;
+      case "SOUTH":
+        return Direction.SOUTH;
+      case "EAST":
+        return Direction.EAST;
+      default:
+        return Direction.WEST;
+
+    }
+  }
+
 }

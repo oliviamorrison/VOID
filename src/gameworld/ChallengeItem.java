@@ -16,4 +16,6 @@ public abstract class ChallengeItem extends Item {
     this.navigable = navigable;
   }
 
+
+
 }
