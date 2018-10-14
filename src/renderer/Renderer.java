@@ -55,7 +55,6 @@ public class Renderer {
 
     public void drawPlayer() {
         Point2D p = player.getTile().getCenter();
-
         ImageView playerImage = null;
         switch (player.getDirection()) {
             case NORTH:
@@ -123,49 +122,42 @@ public class Renderer {
         if(tile instanceof  AccessibleTile){
             AccessibleTile AT = (AccessibleTile) tile;
             if(AT.hasItem()){
-                gameObject = getItem(AT);
+                gameObject = getItemImage(AT);
 
             } else if(AT.hasChallenge()){
-                gameObject = getChallenge(AT);
+                gameObject = getChallengeImage(AT);
             }
         }
-
-
 
         root.getChildren().addAll(poly.getPolygons());
         if(gameObject != null){
             root.getChildren().add(gameObject);
         }
-
         if(player.getTile().equals(tile) ){
             drawPlayer();
         }
     }
-    public ImageView getItem(AccessibleTile tile){
+    public ImageView getItemImage(AccessibleTile tile){
         Item item = tile.getItem();
         ImageView itemImage = null;
         Point2D c = tile.getCenter();
         if(item instanceof Diffuser){
             itemImage = getImage(diffuserImage);
-            itemImage.setPreserveRatio(true);
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 22);
         } else if(item instanceof Coin){
             itemImage = getImage((coinImage+"1.png"));
-            itemImage.setPreserveRatio(true);
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 13);
             itemImage.setY(c.getY() - 22);
         } else if(item instanceof BoltCutter){
             itemImage = getImage((boltCutterImage+"1.png"));
-            itemImage.setPreserveRatio(true);
             itemImage.setFitHeight(20);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 12);
         } else if(item instanceof Beer){
             itemImage = getImage((beerImage));
-            itemImage.setPreserveRatio(true);
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 5);
             itemImage.setY(c.getY() - 25);
@@ -173,25 +165,35 @@ public class Renderer {
         return itemImage;
 
     }
-    public ImageView getChallenge(AccessibleTile tile){
+    public ImageView getChallengeImage(AccessibleTile tile){
         Item challenge = tile.getChallenge();
         ImageView itemImage = null;
         Point2D c = tile.getCenter();
         if(challenge instanceof Bomb){
             itemImage = getImage((bombImage+"1.png"));
-            itemImage.setPreserveRatio(true);
             itemImage.setFitHeight(35);
             itemImage.setX(c.getX() - 20);
             itemImage.setY(c.getY() - 22);
         } else if(challenge instanceof VendingMachine){
             itemImage = getImage((vendingMachineImage+"1.png"));
-            itemImage.setPreserveRatio(true);
             itemImage.setFitHeight(80);
             itemImage.setX(c.getX() - 30);
             itemImage.setY(c.getY() - 65);
         }
         return itemImage;
 
+    }
+
+    public ImageView getImage(String imageName){
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream(imageName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ImageView imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        return imageView;
     }
 
 
@@ -210,15 +212,7 @@ public class Renderer {
         root.getChildren().add(healthBar);
     }
 
-    public ImageView getImage(String imageName){
-        Image image = null;
-        try {
-            image = new Image(new FileInputStream(imageName));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return new ImageView(image);
-    }
+
 
 
 
