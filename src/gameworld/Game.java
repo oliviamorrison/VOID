@@ -280,7 +280,7 @@ public class Game {
         if (item instanceof Coin) {
 
           player.dropItem();
-          player.addItem(new Beer(-1, -1));
+          player.addItem(new Beer(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
           System.out.println("Pick up the beer that is dispensed");
 

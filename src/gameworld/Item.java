@@ -6,12 +6,12 @@ public abstract class Item {
 
   private int row;
   private int col;
-  private Direction direction = Direction.EAST;
+  private Direction direction;
 
-  public Item(int row, int col) {
+  public Item(int row, int col, String direction) {
     this.row = row;
     this.col = col;
-//    this.direction = directionFromString(direction);
+    this.direction = directionFromString(direction);
   }
 
   public int getRow() {

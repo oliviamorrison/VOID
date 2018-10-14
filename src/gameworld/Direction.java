@@ -95,6 +95,7 @@ public enum Direction {
         return Direction.SOUTH;
       case "EAST":
         return Direction.EAST;
+      case "WEST":
       default:
         return Direction.WEST;
 
