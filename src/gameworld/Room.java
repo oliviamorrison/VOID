@@ -29,8 +29,12 @@ public class Room {
 
   }
 
-  public Room() {
-
+  /**
+   * For testing and the MapEditor
+   * */
+  public Room(int row, int col) {
+    this.row = row;
+    this.col = col;
     this.tiles = new Tile[ROOMSIZE][ROOMSIZE];
     this.doors = new ArrayList<>();
     this.portals = new ArrayList<>();

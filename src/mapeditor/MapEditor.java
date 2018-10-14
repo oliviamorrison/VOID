@@ -16,6 +16,9 @@ import gameworld.Player;
 import gameworld.Room;
 import gameworld.VendingMachine;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +33,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import persistence.XMLParser;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 
 public class MapEditor extends Application {
@@ -313,7 +319,7 @@ public class MapEditor extends Application {
     node = getNodeByRowColumnIndex(0,1, boardGrid);
     if (node instanceof GridPane) {
       GridPane room2 = (GridPane) node;
-      node = getNodeByRowColumnIndex(9, 5, room2);
+      node = getNodeByRowColumnIndex(8, 5, room2);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
@@ -380,7 +386,7 @@ public class MapEditor extends Application {
     node = getNodeByRowColumnIndex(2,1, boardGrid);
     if (node instanceof GridPane) {
       GridPane room8 = (GridPane) node;
-      node = getNodeByRowColumnIndex(5,0, room8);
+      node = getNodeByRowColumnIndex(5,1, room8);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
@@ -441,6 +447,7 @@ public class MapEditor extends Application {
 
         boolean accessible = true;
         boolean door = false;
+        String direction = "";
 
         //if tile is on the outside perimeter
         if (i == 0 || j == 0 || i == 9 || j == 9) {
@@ -461,11 +468,26 @@ public class MapEditor extends Application {
               door = false;
             } else {
               door = true;
+              if (i == 0){
+                direction = "NORTH";
+              } else if (i == 9){
+                direction = "SOUTH";
+              } else if (j == 0){
+                direction  = "WEST";
+              } else {
+                direction = "EAST";
+              }
             }
           }
         }
 
-        TilePane tilePane = new TilePane(i, j, accessible, room);
+        boolean challenge = false;
+        if ((row == 0 && col == 1 && i == 8 && j == 5) || (row == 2 && col == 1 && i == 5 && j == 1)) {
+          challenge = true;
+        }
+
+
+        TilePane tilePane = new TilePane(accessible, room, door, direction, challenge);
         // Set each 'TilePane' the width and height
         tilePane.setPrefSize(tileWidth, tileHeight);
 
@@ -537,22 +559,24 @@ public class MapEditor extends Application {
   }
 
   class TilePane extends Pane {
-    private int positionX;
-    private int positionY;
     private MapItem mapItem;
     private ImageView imageView;
     private boolean accessible;
     private GridPane room;
+    private boolean door;
+    private String direction;
+    private boolean challenge;
 
-    public TilePane(int x, int y, boolean a, GridPane r) {
-      positionX = x;
-      positionY = y;
+    public TilePane(boolean a, GridPane r, boolean d, String dir, boolean c) {
       imageView = new ImageView();
       accessible = a;
       room = r;
+      door = d;
+      direction = dir;
+      challenge = c;
 
       setOnMouseClicked(e -> {
-        if (accessible) {
+        if (accessible && !challenge) {
           if (selectedTilePane != null) {
             selectedTilePane.setStyle("-fx-padding: 0;"
                     + "-fx-border-style: solid inside;"
@@ -568,6 +592,14 @@ public class MapEditor extends Application {
         }
       });
 
+    }
+
+    public String getDirection() {
+      return direction;
+    }
+
+    public boolean isDoor() {
+      return door;
     }
 
     public GridPane getRoom() {
@@ -657,14 +689,16 @@ public class MapEditor extends Application {
 
   public void createGame() {
     Room[][] board = new Room[3][3];
+    Player player = null;
 
     //Iterate through rooms
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
 
         Node roomNode = getNodeByRowColumnIndex(i,j,boardGrid);
-        Room room = new Room();
+        Room room = new Room(i,j);
         board[i][j] = room;
+        List<String> doors = new ArrayList<>();
 
         if (roomNode instanceof GridPane) {
           GridPane roomGrid = (GridPane) roomNode;
@@ -687,41 +721,49 @@ public class MapEditor extends Application {
 
                     switch (mapItem.getImageName()) {
                       case "antidote.png":
-                        item = new Antidote(k, l);
+                        item = new Antidote(k, l, "NORTH");
                         break;
                       case "cutters.png":
-                        item = new BoltCutter(k, l);
+                        item = new BoltCutter(k, l, "NORTH");
                         break;
                       case "diffuser.png":
-                        item = new Diffuser(k, l);
+                        item = new Diffuser(k, l, "NORTH");
                         break;
                       case "two-coins.png":
-                        item = new Coin(k, l);
+                        item = new Coin(k, l, "NORTH");
                         break;
                       case "healthpack.png":
-                        item = new HealthPack(k, l);
+                        item = new HealthPack(k, l, "NORTH");
                         break;
                       case "guard.png":
-                        challenge = new Guard(k,l);
+                        challenge = new Guard(k,l, "NORTH");
                         break;
                       case "unlit-bomb.png":
-                        challenge = new Bomb(k,l);
+                        challenge = new Bomb(k,l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k,l);
+                        challenge = new VendingMachine(k,l, "NORTH");
                         break;
+                      case "player.png":
+                        player = new Player(room,tile,100,"NORTH");
                       default:
-//                        return;
+                        continue;
                     }
 
                     if (mapItem.getImageName() != null) {
                       tile.setItem(item);
                       tile.setChallenge(challenge);
+                      System.out.println(mapItem.getImageName());
                     }
 
                     room.setTile(tile, k,l);
                   }
                 } else {
+                  //if it is a door add its direction
+                  if (tilePane.isDoor()) {
+                    doors.add(tilePane.getDirection());
+                  }
+
                   room.setTile(new InaccessibleTile(k, l),k,l);
                 }
               }
@@ -729,21 +771,20 @@ public class MapEditor extends Application {
             }
           }
 
+          room.getDoors().addAll(doors);
+
         }
 
       }
-    }//TODO: Parse doors
-
-    //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
-    // TODO: Decide which default direction player should be created with (currently NORTH)
-
-    Player player = new Player(board[0][0],
-            (AccessibleTile) board[0][0].getTile(8,8), 100, "NORTH");
-
+    }
 
     Game game = new Game(board, player);
 
-    XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
+    try {
+      XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
+    } catch (ParserConfigurationException | TransformerException e) {
+      e.printStackTrace();
+    }
   }
 
 }
