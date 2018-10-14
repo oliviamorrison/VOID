@@ -2,7 +2,6 @@ package application;
 
 import gameworld.Game;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,6 +21,8 @@ import javafx.stage.StageStyle;
 import persistence.XMLParser;
 import renderer.Renderer;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -199,7 +199,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     File file = fileChooser.showSaveDialog(stage);
 
     if (file != null) {
-      XMLParser.saveFile(file, currentGame);
+      try {
+        XMLParser.saveFile(file, currentGame);
+      } catch (ParserConfigurationException | TransformerException e) {
+        e.printStackTrace();
+      }
     }
   }
 

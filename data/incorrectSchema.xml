@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<game row="3" col="3">
+    <player row="1" col="1" health="100" direction="EAST">
+        <roomRow>0</roomRow>
+        <roomCol>0</roomCol>
+    </player>
+    <room row="0" col="0">
+        <door>EAST</door>
+        <item row="4" col="3">Diffuser</item>
+    </room>
+    <room row="0" col="1">
+        <door>WEST</door>
+        <door>SOUTH</door>
+        <challenge row="8" col="5" state="false">Bomb</challenge>
+    </room>
+    <room row="1" col="1">
+        <door>EAST</door>
+        <door>NORTH</door>
+        <door>SOUTH</door>
+        <item row="1" col="4">BoltCutter</item>
+        <item row="4" col="6">HealthPack</item>
+    </room>
+    <room row="1" col="2">
+        <door>WEST</door>
+        <door>SOUTH</door>
+        <challenge row="8" col="8" state="false">VendingMachine</challenge>
+    </room>
+    <room row="2" col="0">
+        <door>EAST</door>
+        <item row="1" col="5">Antidote</item>
+    </room>
+    <room row="2" col="1">
+        <door>NORTH</door>
+        <door>WEST</door>
+        <door>EAST</door>
+        <challenge row="5" col="1" state="false">Guard</challenge>
+    </room>
+    <room row="2" col="2">
+        <door>NORTH</door>
+        <door>WEST</door>
+        <item row="7" col="7">Coin</item>
+    </room>
+</game>

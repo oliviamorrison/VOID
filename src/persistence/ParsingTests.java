@@ -1,21 +1,13 @@
 package persistence;
 
 import gameworld.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import persistence.XMLParser;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Using JUnit 5
@@ -23,20 +15,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ParsingTests {
 
   @Test
-  public void testReadGame() throws ParserConfigurationException, IOException, SAXException {
-    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-    Document doc = dBuilder.parse("data/easy.xml");
+  public void testReadGame() throws XMLParser.ParseError {
 
-    NodeList children = doc.getChildNodes();
-    Element gameElement = (Element) children.item(0);
-    assertEquals(gameElement.getTagName(), "game");
+    Game game = XMLParser.parseGame(new File("data/parserTestData.xml"));
+    assertNotNull(game);
   }
 
   @Test
-  public void badXMLTest() {
+  public void testIncorrectSchema() {
     assertThrows(XMLParser.ParseError.class,
-        ()-> XMLParser.parseGame(new File("data/badXMLFile.xml")));
+        ()-> XMLParser.parseGame(new File("data/incorrectSchema.xml")));
+  }
+
+  @Test
+  public void testIncorrectItemName() {
+    assertThrows(XMLParser.ParseError.class,
+        ()-> XMLParser.parseGame(new File("data/incorrectItemName.xml")));
   }
 
 
@@ -44,30 +38,29 @@ public class ParsingTests {
   private Player player;
   private Game game;
   @Test
-  public void testSaveFile(){
+  public void testSaveFile() throws TransformerException, ParserConfigurationException {
 
-      board = new Room[3][3];
-      for (int i = 0; i < board.length; i++) {
-        for (int j = 0; j < board[i].length; j++) {
-          board[i][j] = new Room();
-        }
+    board = new Room[3][3];
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        board[i][j] = new Room();
       }
-      player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, "NORTH");
+    }
+    player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, "NORTH");
+    board[0][0].setTile(new Portal(5, 9,board[0][1], Direction.NORTH), 5, 9);
+    ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5));
+    ((AccessibleTile) board[0][0].getTile(4, 7)).setChallenge(new VendingMachine(4,7));
+    ((AccessibleTile) board[0][0].getTile(2, 2)).setChallenge(new Guard(2,2));
+    ((AccessibleTile) board[0][0].getTile(6, 3)).setChallenge(new Bomb(6,3));
 
-      ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5));
+    player.addItem(new Diffuser(-1,-1));
 
-      game = new Game(board, player);
+    game = new Game(board, player);
 
-      XMLParser.saveFile(new File("data/testSave.xml"), game);
-
+    File testFile = new File("data/testSave.xml");
+    XMLParser.saveFile(new File("data/testSave.xml"), game);
+    assertTrue(testFile.length() > 0);
   }
-
-  //test no properties specified (no row/col/health)
-  //test too many rooms (> 9)
-  //test not enough doors (< 1)
-  //test too many players
-
-
 
 
 }
