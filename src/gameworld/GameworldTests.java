@@ -81,5 +81,31 @@ public class GameworldTests {
 
   }
 
+  @Test
+  public void playerCanTeleport() {
+
+    AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(5,9);
+    player.setTile(startTile);
+    startTile.setPlayer(true);
+
+    Room startRoom = game.getCurrentRoom();
+
+    game.teleport();
+
+    assertNotEquals(startRoom, game.getCurrentRoom());
+
+  }
+
+  @Test
+  public void playerCannotTeleportWithoutDestinationPortal() {
+
+    AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(5,9);
+    player.setTile(startTile);
+    startTile.setPlayer(true);
+
+    game.teleport();
+
+  }
+
 
 }
