@@ -26,8 +26,6 @@ import static java.lang.Integer.parseInt;
 //TODO: Add tests
 //TODO: UML Diagram
 
-//TODO: Remove item from list of items in room when picked up
-//TODO: Change door tile to portal
 
 public class XMLParser {
   private static Schema schema;
@@ -147,15 +145,15 @@ public class XMLParser {
     player.appendChild(roomRow);
     player.appendChild(roomCol);
 
-    //save inventory
-    Element inventory = document.createElement("inventory");
-    Item item = game.getPlayer().getItem();
-    Element itemElement = document.createElement("item");
-    itemElement.appendChild(document.createTextNode(item.toString()));
-    inventory.appendChild(itemElement);
-
-
-    player.appendChild(inventory);
+    //save players item
+    Item playerItem = game.getPlayer().getItem();
+    if(playerItem!=null){
+      Element item = document.createElement("item");
+      item.setAttribute("row", -1+"");
+      item.setAttribute("col", -1+"");
+      item.appendChild(document.createTextNode(playerItem.toString()));
+      player.appendChild(item);
+    }
 
     return player;
   }
@@ -249,10 +247,10 @@ public class XMLParser {
     if(playerElement.getAttribute("direction").equals("")) throw new ParseError("Player needs direction attribute");
     String direction = playerElement.getAttribute("direction");
 
+    //TODO: Fix saving and loading a player on a door tile
     Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1]), health, direction);
     ((AccessibleTile) playerRoom.getTile(rowCol[0], rowCol[1])).setPlayer(true);
 
-    //TODO: Don't need to run through list of inventory
     NodeList inventory = playerElement.getElementsByTagName("item");
     parseItems(inventory, null, player);
 
@@ -266,12 +264,11 @@ public class XMLParser {
 
   private static void parseItems(NodeList items, Tile[][] tiles, Player p) throws ParseError {
     for(int i = 0; i< items.getLength(); i++){
-      String token = items.item(i).getTextContent().trim(); //TODO: Figure out why when there are more than 1 item it doesn't trim it
+      String token = items.item(i).getTextContent().trim();
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
         int[] rowCol = getRowCol(elem);
-
-        Item item = null;
+        Item item;
         switch(token){
           case "Antidote":
             item = new Antidote(rowCol[0], rowCol[1]);
@@ -347,7 +344,7 @@ public class XMLParser {
 
   private static int[] getRowCol(Element elem) throws ParseError {
     if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals(""))
-      throw new ParseError("Player needs position attribute");
+      throw new ParseError("Needs position attribute");
 
     int row = parseInt(elem.getAttribute("row"));
     int col = parseInt(elem.getAttribute("col"));

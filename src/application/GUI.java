@@ -34,7 +34,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
   private GridPane game;
   private FlowPane inventory;
   private AnchorPane options;
-  private GridPane map;
   private Renderer renderer;
   private static Game currentGame;
 
@@ -145,10 +144,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     this.game = setGame(stage);
     this.inventory = setInventory();
     this.options = setOptions();
-    this.map = setMap();
 
     FlowPane stack = new FlowPane();
-    stack.getChildren().addAll(inventory, options, map);
+    stack.getChildren().addAll(inventory, options);
 
     stack.setHgap(4);
     stack.setPrefWrapLength(WINDOW_WIDTH * 0.3); // preferred width allows for two columns
@@ -234,8 +232,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     //set ratios
     this.game.setPrefSize(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT);
     this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.5);
-    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.1);
-    this.map.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
+    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.5);
   }
 
   public GridPane setGame(Stage stage) {
@@ -321,15 +318,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     return options;
   }
 
-
-  public GridPane setMap() {
-    GridPane grid = new GridPane();
-    Text name = new Text("map");
-    grid.add(name, 0, 0);
-    grid.setStyle("-fx-background-color: orange;");
-    grid.setPrefWidth(170);
-    return grid;
-  }
 
   public void confirmExit() {
     Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -420,7 +408,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         game.setEffect(new GaussianBlur());
         inventory.setEffect(new GaussianBlur());
         options.setEffect(new GaussianBlur());
-        map.setEffect(new GaussianBlur());
 
         VBox pauseRoot = new VBox(5);
         pauseRoot.setPrefSize(500,200);
@@ -450,7 +437,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
             game.setEffect(null);
             inventory.setEffect(null);
             options.setEffect(null);
-            map.setEffect(null);
             helpDialog.hide();
         });
 

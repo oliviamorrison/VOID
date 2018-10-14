@@ -176,18 +176,15 @@ public class MapEditor extends Application {
       }
     });
 
-    makeGame.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        if (noItemsInItemGrid()) {
-          createGame();
-        } else {
-          Alert alert = new Alert(Alert.AlertType.INFORMATION);
-          alert.setTitle("Error");
-          alert.setHeaderText("You cannot make a game until all items are placed on the board");
+    makeGame.setOnAction(event -> {
+      if (noItemsInItemGrid()) {
+        createGame();
+      } else {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Error");
+        alert.setHeaderText("You cannot make a game until all items are placed on the board");
 
-          alert.showAndWait();
-        }
+        alert.showAndWait();
       }
     });
 
@@ -714,7 +711,7 @@ public class MapEditor extends Application {
                         challenge = new VendingMachine(k,l);
                         break;
                       default:
-                        return;
+//                        return;
                     }
 
                     if (mapItem.getImageName() != null) {
@@ -735,13 +732,13 @@ public class MapEditor extends Application {
         }
 
       }
-    }
+    }//TODO: Parse doors
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
     // TODO: Decide which default direction player should be created with (currently NORTH)
 
     Player player = new Player(board[0][0],
-            (AccessibleTile) board[0][0].getTile(8,8), 100, "Top");
+            (AccessibleTile) board[0][0].getTile(8,8), 100, "NORTH");
 
 
     Game game = new Game(board, player);
