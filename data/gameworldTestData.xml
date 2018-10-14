@@ -2,6 +2,7 @@
 <game row="3" col="3">
     <room row="0" col="0">
         <door>EAST</door>
+        <door>SOUTH</door>
         <item row="4" col="3">Diffuser</item>
     </room>
     <room row="0" col="1">
@@ -19,7 +20,7 @@
     <room row="1" col="2">
         <door>WEST</door>
         <door>SOUTH</door>
-        <challenge row="8" col="8" state="false">VendingMachine</challenge>
+        <challenge row="6" col="3" state="false">VendingMachine</challenge>
     </room>
     <room row="2" col="0">
         <door>EAST</door>
@@ -36,8 +37,9 @@
         <door>WEST</door>
         <item row="7" col="7">Coin</item>
     </room>
-    <player row="1" col="1" health="100" direction="EAST">
+    <player row="5" col="5" health="100">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
+        <inventory/>
     </player>
 </game>
