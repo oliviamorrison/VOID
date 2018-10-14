@@ -90,7 +90,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 
     // create the Game Scene
-    startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
+    startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
+    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
     startScene.setOnKeyPressed(this);
     return startScene;
   }
@@ -371,7 +372,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       case X:
         currentGame.dropItem();
         break;
-      case F:
+      case N:
         currentGame.diffuseBomb();
         break;
       case C:
@@ -429,7 +430,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         ImageView imageView = new ImageView(image);
 
-        Button resume = new Button("Play");
+        Button resume = new Button("Resume");
         pauseRoot.getChildren().addAll(imageView, resume);
 
         Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
