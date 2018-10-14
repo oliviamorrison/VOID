@@ -478,7 +478,13 @@ public class MapEditor extends Application {
           }
         }
 
-        TilePane tilePane = new TilePane(accessible, room, door, direction);
+        boolean challenge = false;
+        if ((row == 0 && col == 1 && i == 8 && j == 5) || (row == 2 && col == 1 && i == 5 && j == 1)) {
+          challenge = true;
+        }
+
+
+        TilePane tilePane = new TilePane(accessible, room, door, direction, challenge);
         // Set each 'TilePane' the width and height
         tilePane.setPrefSize(tileWidth, tileHeight);
 
@@ -556,16 +562,18 @@ public class MapEditor extends Application {
     private GridPane room;
     private boolean door;
     private String direction;
+    private boolean challenge;
 
-    public TilePane(boolean a, GridPane r, boolean d, String dir) {
+    public TilePane(boolean a, GridPane r, boolean d, String dir, boolean c) {
       imageView = new ImageView();
       accessible = a;
       room = r;
       door = d;
       direction = dir;
+      challenge = c;
 
       setOnMouseClicked(e -> {
-        if (accessible) {
+        if (accessible && !challenge) {
           if (selectedTilePane != null) {
             selectedTilePane.setStyle("-fx-padding: 0;"
                     + "-fx-border-style: solid inside;"
@@ -678,13 +686,14 @@ public class MapEditor extends Application {
 
   public void createGame() {
     Room[][] board = new Room[3][3];
+    Player player = null;
 
     //Iterate through rooms
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
 
         Node roomNode = getNodeByRowColumnIndex(i,j,boardGrid);
-        Room room = new Room();
+        Room room = new Room(i,j);
         board[i][j] = room;
         List<String> doors = new ArrayList<>();
 
@@ -732,6 +741,8 @@ public class MapEditor extends Application {
                       case "vending-machine.png":
                         challenge = new VendingMachine(k,l);
                         break;
+                      case "player.png":
+                        player = new Player(room,tile,100,"NORTH");
                       default:
                         continue;
                     }
@@ -762,14 +773,7 @@ public class MapEditor extends Application {
         }
 
       }
-    }//TODO: Parse doors
-
-    //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
-    // TODO: Decide which default direction player should be created with (currently NORTH)
-
-    Player player = new Player(board[0][0],
-            (AccessibleTile) board[0][0].getTile(8,8), 100, "NORTH");
-
+    }
 
     Game game = new Game(board, player);
 

@@ -17,7 +17,7 @@ public class GameworldTests {
     board = new Room[3][3];
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
-        board[i][j] = new Room();
+//        board[i][j] = new Room();
       }
     }
     player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, "NORTH");
