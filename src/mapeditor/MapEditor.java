@@ -7,7 +7,6 @@ import gameworld.Bomb;
 import gameworld.ChallengeItem;
 import gameworld.Coin;
 import gameworld.Diffuser;
-import gameworld.Direction;
 import gameworld.Game;
 import gameworld.Guard;
 import gameworld.HealthPack;
@@ -740,8 +739,9 @@ public class MapEditor extends Application {
 
     //HARDCODED FOR NOW TO TEST ROOMS ARE LOADED
     // TODO: Decide which default direction player should be created with (currently NORTH)
+
     Player player = new Player(board[0][0],
-            (AccessibleTile) board[0][0].getTile(8,8), 100, Direction.NORTH);
+            (AccessibleTile) board[0][0].getTile(8,8), 100, "Top");
 
     Game game = new Game(board, player);
 

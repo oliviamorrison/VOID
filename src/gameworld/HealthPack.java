@@ -18,7 +18,7 @@ public class HealthPack extends Item {
 
   @Override
   public String toString() {
-    return "Health pack";
+    return "HealthPack";
   }
 
 }
