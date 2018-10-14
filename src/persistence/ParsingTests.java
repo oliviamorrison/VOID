@@ -1,5 +1,7 @@
-package tests;
+package persistence;
 
+import gameworld.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,6 +37,29 @@ public class ParsingTests {
   public void badXMLTest() {
     assertThrows(XMLParser.ParseError.class,
         ()-> XMLParser.parseGame(new File("data/badXMLFile.xml")));
+  }
+
+
+  private Room[][] board;
+  private Player player;
+  private Game game;
+  @Test
+  public void testSaveFile(){
+
+      board = new Room[3][3];
+      for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[i].length; j++) {
+          board[i][j] = new Room();
+        }
+      }
+      player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, "NORTH");
+
+      ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5));
+
+      game = new Game(board, player);
+
+      XMLParser.saveFile(new File("data/testSave.xml"), game);
+
   }
 
   //test no properties specified (no row/col/health)
