@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.File;
+import java.util.ArrayList;
 
+import static gameworld.Room.ROOMSIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -43,17 +45,20 @@ public class ParsingTests {
     board = new Room[3][3];
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
-        board[i][j] = new Room();
+        board[i][j] = new Room(i,j);
       }
     }
-    player = new Player(board[0][0], (AccessibleTile) board[0][0].getTile(5,5), 100, "NORTH");
-    board[0][0].setTile(new Portal(5, 9,board[0][1], Direction.NORTH), 5, 9);
-    ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5));
-    ((AccessibleTile) board[0][0].getTile(4, 7)).setChallenge(new VendingMachine(4,7));
-    ((AccessibleTile) board[0][0].getTile(2, 2)).setChallenge(new Guard(2,2));
-    ((AccessibleTile) board[0][0].getTile(6, 3)).setChallenge(new Bomb(6,3));
 
-    player.addItem(new Diffuser(-1,-1));
+
+
+    player = new Player(board[2][2], (AccessibleTile) board[2][2].getTile(5,5), 100, "NORTH");
+    board[0][0].setTile(new Portal(5, 9,board[0][1], Direction.NORTH), 5, 9);
+    ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5, "NORTH"));
+    ((AccessibleTile) board[0][1].getTile(4, 7)).setChallenge(new VendingMachine(4,7, "NORTH"));
+    ((AccessibleTile) board[1][0].getTile(2, 2)).setChallenge(new Guard(2,2, "NORTH"));
+    ((AccessibleTile) board[2][0].getTile(6, 3)).setChallenge(new Bomb(6,3, "NORTH"));
+
+    player.addItem(new Diffuser(-1,-1, "NORTH"));
 
     game = new Game(board, player);
 
