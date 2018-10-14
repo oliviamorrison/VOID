@@ -184,9 +184,10 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       try {
         currentGame = XMLParser.parseGame(file);
       } catch (XMLParser.ParseError parseError) {
-        //TODO: Open dialogue box that says it was an invalid XML file and to please try again
-        System.out.println("Invalid file");
-
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("File Error");
+        alert.setContentText("Please load a valid XML file");
+        alert.showAndWait();
       }
       setGame(stage);
     }
@@ -239,8 +240,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   public GridPane setGame(Stage stage) {
     if (currentGame == null) {
-//			System.out.println("Load a game or start a new game first!");
-      //TODO: For now until we can get a start menu
       loadFile(stage);
     }
     renderer = new Renderer(currentGame);
@@ -278,7 +277,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
 
     return flow;
-
   }
 
   public AnchorPane setOptions() {
@@ -341,7 +339,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     Optional<ButtonType> result = alert.showAndWait();
 
     if (result.get() == ButtonType.OK) {
-      Platform.exit(); // exit application
+      System.exit(0); // exit application
     } else {
       //do nothing..
     }
@@ -413,10 +411,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     renderer.draw();
 
-
   }
-
-    
 
 
 

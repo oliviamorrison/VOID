@@ -18,7 +18,7 @@ public class BoltCutter extends Item {
 
   @Override
   public String toString() {
-    return "Bolt cutter";
+    return "BoltCutter";
   }
 
 }
