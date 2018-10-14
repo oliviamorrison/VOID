@@ -8,8 +8,8 @@ public class VendingMachine extends ChallengeItem {
 
   private boolean unlocked = false;
 
-  public VendingMachine(int row, int col) {
-    super(row, col);
+  public VendingMachine(int row, int col, String direction) {
+    super(row, col, direction);
   }
 
   public boolean isUnlocked() {
