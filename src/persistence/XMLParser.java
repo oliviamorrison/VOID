@@ -25,6 +25,7 @@ import static java.lang.Integer.parseInt;
 //TODO: Add README
 //TODO: Add tests
 //TODO: UML Diagram
+  //TODO: Add comments/java docs
 
 
 public class XMLParser {
@@ -95,6 +96,7 @@ public class XMLParser {
             Element item = document.createElement("item");
             item.setAttribute("row", aTile.getItem().getRow()+"");
             item.setAttribute("col", aTile.getItem().getCol()+"");
+            item.setAttribute("direction", aTile.getItem().getDirection().toString());
             item.appendChild(document.createTextNode(aTile.getItem().toString()));
             roomElement.appendChild(item);
           }
@@ -118,6 +120,7 @@ public class XMLParser {
             }
             challenge.setAttribute("row", challengeItem.getRow()+"");
             challenge.setAttribute("col", challengeItem.getCol()+"");
+            challenge.setAttribute("direction", challengeItem.getDirection().toString());
             challenge.appendChild(document.createTextNode(aTile.getChallenge().toString()));
             roomElement.appendChild(challenge);
           }
@@ -149,6 +152,7 @@ public class XMLParser {
       Element item = document.createElement("item");
       item.setAttribute("row", -1+"");
       item.setAttribute("col", -1+"");
+      item.setAttribute("direction", "NORTH");
       item.appendChild(document.createTextNode(playerItem.toString()));
       player.appendChild(item);
     }
@@ -228,8 +232,6 @@ public class XMLParser {
     parseChallenges(challengeList, tiles);
 
     Room newRoom = new Room(row, col, tiles, doors);
-
-//    Room newRoom = new Room(rowCol[0], rowCol[1], doors, items, challenges);
     board[row][col] = newRoom;
   }
 
