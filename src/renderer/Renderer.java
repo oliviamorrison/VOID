@@ -25,6 +25,17 @@ public class Renderer {
     private String WEST = "src/application/west.png";
     private String EAST = "src/application/east.png";
 
+    //Challenges
+    private String bombImage = "src/application/bomb";
+    private String vendingMachineImage = "src/application/vending-machine";
+
+    //Items
+    private String diffuserImage = "src/application/diffuser.png";//TODO: needs orientation
+    private String coinImage = "src/application/coin";
+    private String boltCutterImage = "src/application/bolt-cutter";
+    private String beerImage = "src/application/beer.png";
+
+
     private Game game;
     private static Player player;
     private static Room currentRoom;
@@ -44,26 +55,22 @@ public class Renderer {
 
     public void drawPlayer() {
         Point2D p = player.getTile().getCenter();
-        Image image = null;
-        try {
-            switch (player.getDirection()) {
-                case NORTH:
-                    image = new Image(new FileInputStream(NORTH));
-                    break;
-                case SOUTH:
-                    image = new Image(new FileInputStream(SOUTH));
-                    break;
-                case WEST:
-                    image = new Image(new FileInputStream(WEST));
-                    break;
-                case EAST:
-                    image = new Image(new FileInputStream(EAST));
-                    break;
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+        ImageView playerImage = null;
+        switch (player.getDirection()) {
+            case NORTH:
+                playerImage = getImage(NORTH);
+                break;
+            case SOUTH:
+                playerImage = getImage(SOUTH);
+                break;
+            case WEST:
+                playerImage = getImage(WEST);
+                break;
+            case EAST:
+                playerImage = getImage(EAST);
+                break;
         }
-        ImageView playerImage = new ImageView(image);
         playerImage.setPreserveRatio(true);
         playerImage.setFitHeight(playerHeight);
         playerImage.setX(p.getX() - 15);
@@ -91,32 +98,102 @@ public class Renderer {
         Tile tile = currentRoom.getTile(row, col);
         Color color = Color.BLACK;
         double height = 0;
+
         if(tile instanceof  AccessibleTile){
             AccessibleTile AT = (AccessibleTile) tile;
             color = ATColor;
             height = floorHeight;
-            if(AT.hasItem()){
-                color = Color.BLUE;
-            } else if(AT.hasChallenge()){
-                color = Color.RED;
-            }
+//            if(AT.hasItem()){
+//                color = Color.BLUE;
+//            } else if(AT.hasChallenge()){
+//                color = Color.RED;
+//            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
-            InaccessibleTile IT = (InaccessibleTile) tile;
             color = ITColor;
         }
         if(tile instanceof Portal){
             height = doorHeight;
             color = DTColor;
         }
-
         PolygonBlock poly = new PolygonBlock(col, row, height, color);
         tile.setTilePolygon(poly);
+
+        ImageView gameObject = null;
+        if(tile instanceof  AccessibleTile){
+            AccessibleTile AT = (AccessibleTile) tile;
+            if(AT.hasItem()){
+                gameObject = getItem(AT);
+
+            } else if(AT.hasChallenge()){
+                gameObject = getChallenge(AT);
+            }
+        }
+
+
+
         root.getChildren().addAll(poly.getPolygons());
+        if(gameObject != null){
+            root.getChildren().add(gameObject);
+        }
+
         if(player.getTile().equals(tile) ){
             drawPlayer();
         }
     }
+    public ImageView getItem(AccessibleTile tile){
+        Item item = tile.getItem();
+        ImageView itemImage = null;
+        Point2D c = tile.getCenter();
+        if(item instanceof Diffuser){
+            itemImage = getImage(diffuserImage);
+            itemImage.setPreserveRatio(true);
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 14);
+            itemImage.setY(c.getY() - 22);
+        } else if(item instanceof Coin){
+            itemImage = getImage((coinImage+"1.png"));
+            itemImage.setPreserveRatio(true);
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 13);
+            itemImage.setY(c.getY() - 22);
+        } else if(item instanceof BoltCutter){
+            itemImage = getImage((boltCutterImage+"1.png"));
+            itemImage.setPreserveRatio(true);
+            itemImage.setFitHeight(20);
+            itemImage.setX(c.getX() - 14);
+            itemImage.setY(c.getY() - 12);
+        } else if(item instanceof Beer){
+            itemImage = getImage((beerImage));
+            itemImage.setPreserveRatio(true);
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 5);
+            itemImage.setY(c.getY() - 25);
+        }
+        return itemImage;
+
+    }
+    public ImageView getChallenge(AccessibleTile tile){
+        Item challenge = tile.getChallenge();
+        ImageView itemImage = null;
+        Point2D c = tile.getCenter();
+        if(challenge instanceof Bomb){
+            itemImage = getImage((bombImage+"1.png"));
+            itemImage.setPreserveRatio(true);
+            itemImage.setFitHeight(35);
+            itemImage.setX(c.getX() - 20);
+            itemImage.setY(c.getY() - 22);
+        } else if(challenge instanceof VendingMachine){
+            itemImage = getImage((vendingMachineImage+"1.png"));
+            itemImage.setPreserveRatio(true);
+            itemImage.setFitHeight(80);
+            itemImage.setX(c.getX() - 30);
+            itemImage.setY(c.getY() - 65);
+        }
+        return itemImage;
+
+    }
+
 
     public void drawHealthBar(){
         //TODO: Need to fix this.
@@ -132,6 +209,18 @@ public class Renderer {
 //        healthBar.setFill(Color.RED);
         root.getChildren().add(healthBar);
     }
+
+    public ImageView getImage(String imageName){
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream(imageName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new ImageView(image);
+    }
+
+
 
     public void newRoom(){
         currentRoom = player.getRoom();
