@@ -2,8 +2,8 @@ package gameworld;
 
 public class Antidote extends Item {
 
-  public Antidote(int row, int col) {
-    super(row, col);
+  public Antidote(int row, int col, String direction) {
+    super(row, col, direction);
   }
 
   @Override

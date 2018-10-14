@@ -12,6 +12,7 @@ public class Room {
   public static final Point SOUTH_PORTAL = new Point(9, 5);
   public static final Point EAST_PORTAL = new Point(5, 9);
   public static final Point WEST_PORTAL = new Point(5, 0);
+
   private int row;
   private int col;
   private Tile[][] tiles;
