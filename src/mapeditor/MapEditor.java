@@ -666,7 +666,7 @@ public class MapEditor extends Application {
       for (int j = 0; j < 3; j++) {
 
         Node roomNode = getNodeByRowColumnIndex(i,j,boardGrid);
-        Room room = new Room();
+        Room room = new Room(i,j);
         board[i][j] = room;
 
         if (roomNode instanceof GridPane) {
@@ -690,28 +690,28 @@ public class MapEditor extends Application {
 
                     switch (mapItem.getImageName()) {
                       case "antidote.png":
-                        item = new Antidote(k, l);
+                        item = new Antidote(k, l, "NORTH");
                         break;
                       case "cutters.png":
-                        item = new BoltCutter(k, l);
+                        item = new BoltCutter(k, l, "NORTH");
                         break;
                       case "diffuser.png":
-                        item = new Diffuser(k, l);
+                        item = new Diffuser(k, l, "NORTH");
                         break;
                       case "two-coins.png":
-                        item = new Coin(k, l);
+                        item = new Coin(k, l, "NORTH");
                         break;
                       case "healthpack.png":
-                        item = new HealthPack(k, l);
+                        item = new HealthPack(k, l, "NORTH");
                         break;
                       case "guard.png":
-                        challenge = new Guard(k,l);
+                        challenge = new Guard(k,l, "NORTH");
                         break;
                       case "unlit-bomb.png":
-                        challenge = new Bomb(k,l);
+                        challenge = new Bomb(k,l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k,l);
+                        challenge = new VendingMachine(k,l, "NORTH");
                         break;
                       default:
 //                        return;
