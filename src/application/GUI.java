@@ -116,7 +116,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     newGame.setOnAction(Event -> startNewGame(stage));
     loadGame.setOnAction(Event -> {
-      currentGame = null;
+      loadFile(stage);
       window.setScene(createGameScene(stage));
     });
     saveGame.setOnAction(Event -> saveFile(stage));
@@ -262,7 +262,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     ToggleButton btn;
     ToggleGroup group = new ToggleGroup();
 
-    String[] images = new String[]{"key.png", "green-key.png", "red-key.png", "unlit-bomb.png", "two-coins.png", "two-coins.png"};
+    String[] images = new String[]{"coin.png", "bolt.png", "red-key.png", "unlit-bomb.png", "two-coins.png", "two-coins.png"};
 
     for (int i = 0; i < 6; i++) {
       btn = new ToggleButton();
