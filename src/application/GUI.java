@@ -2,7 +2,6 @@ package application;
 
 import gameworld.Game;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,6 +21,8 @@ import javafx.stage.StageStyle;
 import persistence.XMLParser;
 import renderer.Renderer;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -90,7 +90,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
 
     // create the Game Scene
-    startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
+    startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
+    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
     startScene.setOnKeyPressed(this);
     return startScene;
   }
@@ -199,7 +200,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     File file = fileChooser.showSaveDialog(stage);
 
     if (file != null) {
-      XMLParser.saveFile(file, currentGame);
+      try {
+        XMLParser.saveFile(file, currentGame);
+      } catch (ParserConfigurationException | TransformerException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -367,7 +372,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       case X:
         currentGame.dropItem();
         break;
-      case F:
+      case N:
         currentGame.diffuseBomb();
         break;
       case C:
@@ -377,7 +382,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         currentGame.useVendingMachine();
         break;
       case SPACE:
-        currentGame.moveRoom();
+        currentGame.teleport();
         renderer.newRoom();
         break;
       case B:
@@ -425,7 +430,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         ImageView imageView = new ImageView(image);
 
-        Button resume = new Button("Play");
+        Button resume = new Button("Resume");
         pauseRoot.getChildren().addAll(imageView, resume);
 
         Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
