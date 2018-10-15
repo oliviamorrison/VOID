@@ -112,7 +112,7 @@ public class MapEditor extends Application {
     return items;
   }
 
-  public GridPane setOptions(GridPane items) {
+  public GridPane setOptions(GridPane items ) {
 
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
@@ -607,6 +607,10 @@ public class MapEditor extends Application {
     public void resetImageView() {
       this.getChildren().remove(imageView);
       imageView = new ImageView();
+    }
+    
+    public ImageView getImageView() {
+    		return imageView;
     }
 
     public MapItem getMapItem() {
