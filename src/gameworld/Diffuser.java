@@ -1,5 +1,7 @@
 package gameworld;
 
+import javafx.scene.image.Image;
+
 public class Diffuser extends Item {
 
   public Diffuser(int row, int col, String direction) {
@@ -17,8 +19,5 @@ public class Diffuser extends Item {
   }
 
   @Override
-  public String toString() {
-    return "Diffuser";
-  }
-
+  public String toString() { return "Diffuser"; }
 }

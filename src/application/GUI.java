@@ -26,13 +26,13 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.lang.reflect.Array;
+import java.util.*;
 
-public class GUI extends Application implements EventHandler<KeyEvent> {
+public class GUI extends Application implements EventHandler<KeyEvent>{
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 750;
+  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<String, ToggleButton>();
   private GridPane game;
   private FlowPane inventory;
   private GridPane healthBar;
@@ -78,7 +78,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     // edit map
     Button editMap = new Button("Edit Map");
-    //TODO link up map editor gui
+    // TODO link up map editor gui
     // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
 
     // quit
@@ -152,6 +152,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     this.inventory = setInventory();
     this.options = setOptions();
 
+    updateInventory();
+
     FlowPane stack = new FlowPane();
     stack.getChildren().addAll(healthBar,inventory, options);
 
@@ -169,10 +171,10 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     setWindowRatio();
 
-    // Set the size of the window
+    // set the size of the window
     grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    // Create the Game Scene
+    // create the Game Scene
     gameScene = new Scene(grid);
     gameScene.setOnKeyPressed(this);
     return gameScene;
@@ -267,39 +269,27 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     renderer.getRoot().setTranslateX(30);
     renderer.getRoot().setTranslateY(230);
 
-    setupTimer();
+    //setupTimer();
     return grid;
   }
 
   private Label health;
 
+
+
   public GridPane setHealthBar() {
     GridPane grid = new GridPane();
     grid.setStyle("-fx-background-color: red;");
     health = new Label(currentGame.getPlayer().getHealth() + "");
-    grid.add(health,0,0);
+    grid.add(health, 0, 0);
 
     return grid;
   }
 
-  public void setupTimer() {
-    this.timer = new Timer();
-    this.timer.schedule(new TimerTask() {
-
-      @Override
-      public void run() {
-        currentGame.getPlayer().loseHealth();
-        //System.out.println(currentGame.getPlayer().getHealth());
-        health.setLabelFor(healthBar);
-      }
-
-    }, 0, 1000);
-
-  }
 
   public FlowPane setInventory() {
     FlowPane flow = new FlowPane();
-    flow.setStyle("-fx-background-color: blue;");
+    flow.setStyle("-fx-background-color: white;");
 
     flow.setPadding(new Insets(8, 1, 1, 8));
     flow.setVgap(4);
@@ -309,12 +299,16 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     ToggleButton btn;
     ToggleGroup group = new ToggleGroup();
 
-    String[] images = new String[]{"coin.png", "bolt.png", "diffuser2.png", "beer2.png"};
+    ArrayList<String> availableItems = new ArrayList<>();
+    availableItems.add("Coin");
+    availableItems.add("Beer");
+    availableItems.add("Diffuser");
+    availableItems.add("BoltCutter");
 
-    for (int i = 0; i < 4; i++) {
+    for(String item : availableItems) {
       btn = new ToggleButton();
       btn.setFocusTraversable(false); // disables key control
-      Image image = new Image(getClass().getResourceAsStream(images[i]));
+      Image image = new Image(getClass().getResourceAsStream(item + ".png"));
       ImageView imageView = new ImageView(image);
       imageView.setFitHeight(80);
       imageView.setFitWidth(80);
@@ -322,39 +316,55 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       btn.setToggleGroup(group);
       btn.setPrefSize(WINDOW_WIDTH * 0.14, WINDOW_HEIGHT * 0.5 * 0.23);
       flow.getChildren().add(btn);
-
+      inventoryButtons.put(item, btn);
     }
+
+    // enable button listeners
+    inventoryButtons.get("Coin").setOnAction(Event -> {
+      currentGame.useVendingMachine();
+      updateInventory();
+      renderer.draw();
+    });
+    inventoryButtons.get("BoltCutter").setOnAction(Event -> {
+      currentGame.unlockVendingMachine();
+      updateInventory();
+      renderer.draw();
+    });
+    inventoryButtons.get("Beer").setOnAction(Event -> {
+      currentGame.bribeGuard();
+      updateInventory();
+      renderer.draw();
+    });
+    inventoryButtons.get("Diffuser").setOnAction(Event -> {
+      currentGame.diffuseBomb();
+      updateInventory();
+      renderer.draw();
+    });
+
     return flow;
   }
+
 
   public AnchorPane setOptions() {
     AnchorPane options = new AnchorPane();
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
-    Button diffuseButton = new Button("Diffuse");
-    Button unlockButton = new Button("Unlock");
+
 
     // disables key control
     pickupButton.setFocusTraversable(false);
     dropButton.setFocusTraversable(false);
-    diffuseButton.setFocusTraversable(false);
-    unlockButton.setFocusTraversable(false);
 
-    // button listeners
+
+    // enable button listeners
     pickupButton.setOnAction(Event -> {
       currentGame.pickUpItem();
+      updateInventory();
       renderer.draw();
     });
     dropButton.setOnAction(Event -> {
       currentGame.dropItem();
-      renderer.draw();
-    });
-    diffuseButton.setOnAction(Event -> {
-      currentGame.diffuseBomb();
-      renderer.draw();
-    });
-    unlockButton.setOnAction(Event -> {
-      currentGame.unlockVendingMachine();
+      updateInventory();
       renderer.draw();
     });
 
@@ -362,7 +372,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox hb = new HBox();
     hb.setPadding(new Insets(20, 0, 20, 20));
     hb.setSpacing(10);
-    hb.getChildren().addAll(pickupButton, dropButton, diffuseButton, unlockButton);
+    hb.getChildren().addAll(pickupButton, dropButton);
     options.setStyle("-fx-background-color: green;");
 
     options.getChildren().add(hb);
@@ -449,9 +459,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
 
     renderer.draw();
+    updateInventory();
 
   }
-
 
 
     public void displayHelp() {
@@ -495,6 +505,16 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   }
 
+  public void updateInventory() {
+    for (Map.Entry<String, ToggleButton> buttons : inventoryButtons.entrySet()) {
+      String item = buttons.getKey();
+      ToggleButton button = buttons.getValue();
+      if(!currentGame.getPlayer().hasSpecificItem(item)) {
+        button.setDisable(true);
+      } else
+        button.setDisable(false);
+    }
+  }
 
 
   public static void main(String[] args) {

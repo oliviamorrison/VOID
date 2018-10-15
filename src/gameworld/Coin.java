@@ -1,5 +1,7 @@
 package gameworld;
 
+import javafx.scene.image.Image;
+
 public class Coin extends Item {
   public Coin(int row, int col, String direction) {
     super(row, col, direction);

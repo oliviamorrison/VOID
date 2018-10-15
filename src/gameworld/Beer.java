@@ -1,5 +1,7 @@
 package gameworld;
 
+import javafx.scene.image.Image;
+
 public class Beer extends Item {
 
   public Beer(int row, int col, String direction) {
@@ -20,5 +22,6 @@ public class Beer extends Item {
   public String toString() {
     return "Beer";
   }
+
 
 }
