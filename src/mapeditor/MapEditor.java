@@ -26,9 +26,9 @@ import javax.xml.transform.TransformerException;
 
 public class MapEditor extends Application {
 
-  private final int boardSize = 800;
-  private final int itemWidth = 200;
-  private final int itemHeight = 800;
+  private final static int boardSize = 800;
+  private final static int itemWidth = 200;
+  private final static int itemHeight = 800;
 
   private TilePane selectedTilePane;
   private ItemSpace selectedItem;
@@ -88,7 +88,7 @@ public class MapEditor extends Application {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        MapEditor.ItemSpace tile = new MapEditor.ItemSpace(i, j);
+        MapEditor.ItemSpace tile = new MapEditor.ItemSpace();
 
         // Set each 'TilePane' the width and height
         tile.setPrefSize(itemWidth, itemHeight);
@@ -628,14 +628,10 @@ public class MapEditor extends Application {
   }
 
   class ItemSpace extends Pane {
-    private int positionX;
-    private int positionY;
     private MapItem mapItem;
     private ImageView imageView;
 
-    public ItemSpace(int x, int y) {
-      positionX = x;
-      positionY = y;
+    public ItemSpace() {
       imageView = new ImageView();
       setOnMouseClicked(e -> {
         if (selectedItem != null) {

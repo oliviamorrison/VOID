@@ -27,15 +27,12 @@ import static java.lang.Integer.parseInt;
  * @author Sam Ong 300363819
  *
  */
-//TODO: Add different difficulty levels for easy/medium/hard
 //TODO: UML Diagram
 //TODO: Throw more descriptive ParseErrors
 //TODO: Add music
 //TODO: Take group pic
 //TODO: Credits
 //TODO: Pause health bar when menu is clicked
-//TODO: Bug (renderer moves down a pixel when in top corner)
-
 
 public class XMLParser {
   private static Schema schema;

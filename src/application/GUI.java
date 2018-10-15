@@ -54,7 +54,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private GridPane screen;
   private Renderer renderer;
   private Text screenMessage;
-  private static Game currentGame;
+  private Game currentGame;
   private Stage window;
   private Scene startScene, gameScene;
   private ProgressBar pBar;

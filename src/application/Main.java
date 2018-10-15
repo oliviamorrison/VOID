@@ -46,7 +46,6 @@ public class Main extends Application {
                 int count = 0;
                 if(count == 14) {
                     text.setText("\n");
-                    count = 0;
                 }
                else {
                     text.setText(parsedStr.substring(0, n));
