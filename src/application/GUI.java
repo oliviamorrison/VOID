@@ -477,7 +477,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       renderer.draw();
     });
     inventoryButtons.get("MagicPotion").setOnAction(Event -> {
-      currentGame.bribeGuard();
+      currentGame.befriendAlien();
       updateInventory();
       renderer.draw();
     });
@@ -620,7 +620,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         renderer.newRoom();
         break;
       case B:
-        currentGame.bribeGuard();
+        currentGame.befriendAlien();
         break;
       default:
 

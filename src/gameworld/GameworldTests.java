@@ -18,6 +18,11 @@ import org.junit.jupiter.api.Test;
 import persistence.XMLParser;
 import renderer.Renderer;
 
+/**
+ * This class tests all of the gameworld logic.
+ *
+ * @author Latrell Whata 300417220
+ */
 public class GameworldTests {
 
   private Game game;
@@ -316,7 +321,7 @@ public class GameworldTests {
     alien.setDirection(Direction.WEST);
     player.setDirection(Direction.WEST);
 
-    game.bribeGuard();
+    game.befriendAlien();
 
     assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
@@ -324,7 +329,7 @@ public class GameworldTests {
     player.setDirection(Direction.EAST);
     player.addItem(new Potion(-1, -1, "NORTH"));
 
-    game.bribeGuard();
+    game.befriendAlien();
     assertTrue(player.getItem() instanceof Potion);
 
     game.directTeleport(board[2][1], 4, 1);
@@ -332,7 +337,7 @@ public class GameworldTests {
     alien.setDirection(Direction.EAST);
     alien.setNavigable(false);
 
-    game.bribeGuard();
+    game.befriendAlien();
     assertFalse(player.getItem() instanceof Potion);
 
   }
@@ -345,7 +350,7 @@ public class GameworldTests {
     game.diffuseBomb();
     game.unlockVendingMachine();
     game.useVendingMachine();
-    game.bribeGuard();
+    game.befriendAlien();
 
     assertSame(game, this.game);
 

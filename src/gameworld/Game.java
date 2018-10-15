@@ -5,6 +5,8 @@ import java.util.Arrays;
 /**
  * This is the main class the contains the logic for game play. It also connects
  * the rooms va their doors so that players can move between rooms.
+ *
+ * @author Latrell Whata 300417220
  */
 public class Game {
 
@@ -12,6 +14,12 @@ public class Game {
   private Player player;
   private Room currentRoom;
 
+  /**
+   * This constructor creates a new void game.
+   *
+   * @param board  the 2D array of room objects that make up the game
+   * @param player the current game player
+   */
   public Game(Room[][] board, Player player) {
 
     this.player = player;
@@ -21,11 +29,18 @@ public class Game {
 
   }
 
+  /**
+   * This method moves the player from its current position to a new tile.
+   *
+   * @param dx the difference between the row values
+   * @param dy the difference between the column values
+   */
   public void movePlayer(int dx, int dy) {
 
     AccessibleTile currentTile = player.getTile();
     Direction nextDirection = player.getDirection().nextDirection(dx, dy);
 
+    // only change direction of player
     if (player.changeDirection(nextDirection)) {
       return;
     }
@@ -42,10 +57,14 @@ public class Game {
 
   }
 
+  /**
+   * This method moves a player to an adjacent room.
+   */
   public void teleport() {
 
     if (player.getTile() instanceof Portal) {
 
+      // find neighbouring room
       Portal portal = (Portal) player.getTile();
       Room nextRoom = portal.getNeighbour();
 
@@ -53,6 +72,7 @@ public class Game {
         return;
       }
 
+      // next portal is in the adjacent room, in the opposite direction of the current portal
       Direction oppositeDirection = portal.getDirection().getOppositeDirection();
       Portal destination = nextRoom.getDestinationPortal(oppositeDirection);
 
@@ -60,6 +80,7 @@ public class Game {
         return;
       }
 
+      // update player position, relevant tiles
       destination.setPlayer(true);
       portal.setPlayer(false);
       currentRoom = nextRoom;
@@ -70,8 +91,12 @@ public class Game {
 
   }
 
+  /**
+   * This method connects each portal to the neighbouring room.
+   */
   private void connectPortals() {
 
+    // row, col values for each portal
     final int[] northPortal = new int[]{0, 5};
     final int[] southPortal = new int[]{9, 5};
     final int[] eastPortal = new int[]{5, 9};
@@ -90,6 +115,7 @@ public class Game {
           continue;
         }
 
+        // iterate through each door within a room
         for (String direction : room.getDoors()) {
 
           switch (direction) {
@@ -126,6 +152,7 @@ public class Game {
 
           }
 
+          // create portals and add them to the corresponding rooms
           if (portal != null && x > -1 && y > -1) {
             room.addPortal(portal);
             room.setTile(portal, x, y);
@@ -241,9 +268,9 @@ public class Game {
           System.out.println("Chains are removed from Vending machine");
           System.out.println("Vending machine is available for use");
         }
-
       }
     }
+
   }
 
   public void useVendingMachine() {
@@ -289,7 +316,7 @@ public class Game {
 
   }
 
-  public void bribeGuard() {
+  public void befriendAlien() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
@@ -341,6 +368,11 @@ public class Game {
 
   }
 
+  /**
+   * This method checks if the player has found it's spaceship.
+   *
+   * @return whether or not the spaceship is on the player tile
+   */
   public boolean checkForSpaceship() {
 
     AccessibleTile currentTile = player.getTile();
@@ -353,6 +385,14 @@ public class Game {
 
   }
 
+  /**
+   * This method is a helper for the test class. It enables a
+   * player to be directly moved to a room at a specific tile.
+   *
+   * @param room the destination room
+   * @param row  the row value of the new player tile
+   * @param col  the column value of the new player tile
+   */
   public void directTeleport(Room room, int row, int col) {
 
     AccessibleTile tile = player.getTile();
@@ -364,8 +404,12 @@ public class Game {
 
   }
 
+  /**
+   * This method rotates the every room on the board clockwise.
+   */
   public void rotateRoomClockwise() {
 
+    // update the player direction
     player.setDirection(player.getDirection().getClockwiseDirection());
 
     for (int row = 0; row < board.length; row++) {
@@ -381,8 +425,12 @@ public class Game {
 
   }
 
+  /**
+   * This method rotates the every room on the board anticlockwise.
+   */
   public void rotateRoomAnticlockwise() {
 
+    // update the player direction
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
 
     for (int row = 0; row < board.length; row++) {
@@ -398,14 +446,29 @@ public class Game {
 
   }
 
+  /**
+   * This method is a getter for the game board.
+   *
+   * @return the current game board
+   */
   public Room[][] getBoard() {
     return Arrays.copyOf(board, board.length);
   }
 
+  /**
+   * This method is a getter for the game player.
+   *
+   * @return the current game player
+   */
   public Player getPlayer() {
     return player;
   }
 
+  /**
+   * This method is a getter for the current room for the game.
+   *
+   * @return the current game room
+   */
   public Room getCurrentRoom() {
     return currentRoom;
   }
