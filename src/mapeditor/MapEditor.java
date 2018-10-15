@@ -1,6 +1,6 @@
 package mapeditor;
 
-import gameworld.*;;
+import gameworld.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +208,7 @@ public class MapEditor extends Application {
 
   }
 
-  private boolean isInAntidoteRoom(TilePane find) {
+  public boolean isInAntidoteRoom(TilePane find) {
     TilePane t = findItemInBoard("antidote.png");
     return t.getRoom() == find.getRoom();
   }
@@ -677,7 +677,7 @@ public class MapEditor extends Application {
     }
   }
 
-  public void createGame() {
+  public boolean createGame() {
     Room[][] board = new Room[3][3];
     Player player = null;
 
@@ -772,8 +772,10 @@ public class MapEditor extends Application {
 
     try {
       XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
+      return true;
     } catch (ParserConfigurationException | TransformerException e) {
       e.printStackTrace();
+      return false;
     }
   }
 
