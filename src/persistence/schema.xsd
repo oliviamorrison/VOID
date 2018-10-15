@@ -62,7 +62,7 @@
                         </xs:sequence>
                         <xs:attribute type="xs:byte" name="col"/>
                         <xs:attribute type="xs:string" name="direction"/>
-                        <xs:attribute type="xs:byte" name="health"/>
+                        <xs:attribute type="xs:byte" name="oxygen"/>
                         <xs:attribute type="xs:byte" name="row"/>
                     </xs:complexType>
                 </xs:element>

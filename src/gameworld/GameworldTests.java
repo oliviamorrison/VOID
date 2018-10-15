@@ -321,17 +321,19 @@ public class GameworldTests {
     assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
 
-    alien.setDirection(Direction.NORTH);
-    alien.setNavigable(false);
+    player.setDirection(Direction.EAST);
     player.addItem(new Potion(-1, -1, "NORTH"));
 
     game.bribeGuard();
     assertTrue(player.getItem() instanceof Potion);
 
+    game.directTeleport(board[2][1], 4, 1);
+    player.setDirection(Direction.SOUTH);
     alien.setDirection(Direction.EAST);
+    alien.setNavigable(false);
 
     game.bribeGuard();
-    assertTrue(player.getItem() instanceof Potion);
+    assertFalse(player.getItem() instanceof Potion);
 
   }
 
@@ -360,9 +362,9 @@ public class GameworldTests {
 
     assertEquals(tile, player.getTile());
 
-    game.checkForHealthPack();
+    game.checkForOxygenTank();
 
-    assertEquals(100, player.getHealth());
+    assertEquals(100, player.getOxygen());
 
   }
 
@@ -371,12 +373,12 @@ public class GameworldTests {
 
     game.directTeleport(board[2][0], 2, 5);
 
-    assertFalse(game.checkForAntidote());
+    assertFalse(game.checkForSpaceship());
 
     player.setDirection(Direction.NORTH);
     game.movePlayer(-1, 0);
 
-    assertTrue(game.checkForAntidote());
+    assertTrue(game.checkForSpaceship());
 
   }
 
@@ -449,16 +451,16 @@ public class GameworldTests {
   @Test
   public void playerHealthCannotExceedBounds() {
 
-    player.setHealth(150);
-    player.loseHealth();
-    player.boostHealth();
+    player.setOxygen(150);
+    player.loseOxygen();
+    player.boostOxygen();
 
-    assertTrue(player.getHealth() <= 100);
+    assertTrue(player.getOxygen() <= 100);
 
-    player.setHealth(0);
-    player.loseHealth();
+    player.setOxygen(0);
+    player.loseOxygen();
 
-    assertFalse(player.getHealth() < 0);
+    assertFalse(player.getOxygen() < 0);
 
   }
 

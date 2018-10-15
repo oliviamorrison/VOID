@@ -2,12 +2,8 @@ package application;
 
 import gameworld.Game;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -28,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import mapeditor.MapEditor;
 import persistence.XMLParser;
 import renderer.Renderer;
 
@@ -37,7 +32,6 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 //TODO fix health bar with a longer length
@@ -377,7 +371,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     renderer.getRoot().setTranslateY(230);
 
     /////////////////////////////////////////////////////////Here Annisha
-    pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
+    pBar = new ProgressBar(currentGame.getPlayer().getOxygen()/100);
     Task task = taskCreator(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
@@ -411,10 +405,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   return new Task() {
     @Override
     protected Object call() throws Exception {
-      for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
+      for(int i = currentGame.getPlayer().getOxygen(); i > 0; i = currentGame.getPlayer().getOxygen()){
         Thread.sleep(1000);
-        updateProgress(currentGame.getPlayer().getHealth(), health);
-        currentGame.getPlayer().loseHealth();
+        updateProgress(currentGame.getPlayer().getOxygen(), health);
+        currentGame.getPlayer().loseOxygen();
       }
       System.out.println("Finish");
       //TODO: game needs to end
@@ -635,11 +629,11 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
       currentGame.movePlayer(dx, dy);
 
-      if (currentGame.checkForAntidote()) {
+      if (currentGame.checkForSpaceship()) {
         System.out.println("Winner winner");
         System.exit(0);
       }
-      currentGame.checkForHealthPack();
+      currentGame.checkForOxygenTank();
     }
 
     renderer.draw();

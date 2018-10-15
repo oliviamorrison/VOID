@@ -1,9 +1,6 @@
 package gameworld;
 
-import java.awt.Point;
 import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * This is the main class the contains the logic for game play. It also connects
@@ -14,7 +11,6 @@ public class Game {
   private Room[][] board;
   private Player player;
   private Room currentRoom;
-  private Timer timer;
 
   public Game(Room[][] board, Player player) {
 
@@ -76,10 +72,10 @@ public class Game {
 
   private void connectPortals() {
 
-    final Point northPortal = new Point(0, 5);
-    final Point southPortal = new Point(9, 5);
-    final Point eastPortal = new Point(5, 9);
-    final Point westPortal = new Point(5, 0);
+    final int[] northPortal = new int[]{0, 5};
+    final int[] southPortal = new int[]{9, 5};
+    final int[] eastPortal = new int[]{5, 9};
+    final int[] westPortal = new int[]{5, 0};
 
     Portal portal = null;
     int x = -1;
@@ -100,29 +96,29 @@ public class Game {
 
             case "NORTH":
               if (row > 0) {
-                x = northPortal.x;
-                y = northPortal.y;
+                x = northPortal[0];
+                y = northPortal[1];
                 portal = new Portal(x, y, board[row - 1][col], Direction.NORTH);
               }
               break;
             case "SOUTH":
               if (row < board[row].length - 1) {
-                x = southPortal.x;
-                y = southPortal.y;
+                x = southPortal[0];
+                y = southPortal[1];
                 portal = new Portal(x, y, board[row + 1][col], Direction.SOUTH);
               }
               break;
             case "EAST":
               if (col < board.length - 1) {
-                x = eastPortal.x;
-                y = eastPortal.y;
+                x = eastPortal[0];
+                y = eastPortal[1];
                 portal = new Portal(x, y, board[row][col + 1], Direction.EAST);
               }
               break;
             case "WEST":
               if (col > 0) {
-                x = westPortal.x;
-                y = westPortal.y;
+                x = westPortal[0];
+                y = westPortal[1];
                 portal = new Portal(x, y, board[row][col - 1], Direction.WEST);
               }
               break;
@@ -317,8 +313,8 @@ public class Game {
           player.dropItem();
           alien.setNavigable(true);
           Direction nextDirection =
-              (player.getDirection() == Direction.NORTH || player.getDirection() == Direction.SOUTH) ?
-                  player.getDirection().getOppositeDirection() : player.getDirection();
+              (direction == Direction.NORTH || direction == Direction.SOUTH)
+                  ? direction.getOppositeDirection() : direction;
           alien.setDirection(nextDirection);
           System.out.println("Alien bribed with potion");
 
@@ -328,7 +324,7 @@ public class Game {
 
   }
 
-  public void checkForHealthPack() {
+  public void checkForOxygenTank() {
 
     AccessibleTile currentTile = player.getTile();
 
@@ -337,7 +333,7 @@ public class Game {
       Item item = currentTile.getItem();
 
       if (item instanceof OxygenTank) {
-        player.boostHealth();
+        player.boostOxygen();
         currentTile.setItem(null);
       }
 
@@ -345,7 +341,7 @@ public class Game {
 
   }
 
-  public boolean checkForAntidote() {
+  public boolean checkForSpaceship() {
 
     AccessibleTile currentTile = player.getTile();
 
@@ -371,8 +367,10 @@ public class Game {
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
+
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
+
         Room room = board[row][col];
         if (room == null) {
           continue;
@@ -386,8 +384,10 @@ public class Game {
   public void rotateRoomAnticlockwise() {
 
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
+
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
+
         Room room = board[row][col];
         if (room == null) {
           continue;

@@ -180,7 +180,7 @@ public class Room {
       }
     }
 
-    rotateObjectsAnticlockwise();
+    rotateObjects(false);
   }
 
   public void rotateRoomAnticlockwise() {
@@ -194,44 +194,34 @@ public class Room {
     }
 
     this.tiles = tempArray;
-    rotateObjectsClockwise();
+    rotateObjects(true);
 
   }
 
-  public void rotateObjectsAnticlockwise() {
-    for (int row = 0; row < ROOMSIZE; row++) {
-      for (int col = 0; col < ROOMSIZE; col++) {
-        if (getTile(row, col) instanceof AccessibleTile) {
-          AccessibleTile tile = (AccessibleTile) getTile(row, col);
-          if (tile.hasItem()) {
-            Item item = tile.getItem();
-            item.setDirection(item.getDirection().getAnticlockwiseDirection());
-          } else if (tile.hasChallenge()) {
-            ChallengeItem challenge = tile.getChallenge();
-            Direction direction = challenge.getDirection();
-            challenge.setDirection(direction.getAnticlockwiseDirection());
-          }
-        }
-      }
-    }
-  }
+  public void rotateObjects(boolean clockwise) {
 
-  public void rotateObjectsClockwise() {
     for (int row = 0; row < ROOMSIZE; row++) {
       for (int col = 0; col < ROOMSIZE; col++) {
         if (getTile(row, col) instanceof AccessibleTile) {
+
           AccessibleTile tile = (AccessibleTile) getTile(row, col);
+
           if (tile.hasItem()) {
             Item item = tile.getItem();
-            item.setDirection(item.getDirection().getClockwiseDirection());
+            Direction direction = item.getDirection();
+            item.setDirection(clockwise
+                ? direction.getClockwiseDirection() : direction.getAnticlockwiseDirection());
           } else if (tile.hasChallenge()) {
             ChallengeItem challenge = tile.getChallenge();
             Direction direction = challenge.getDirection();
-            challenge.setDirection(direction.getClockwiseDirection());
+            challenge.setDirection(clockwise
+                ? direction.getClockwiseDirection() : direction.getAnticlockwiseDirection());
           }
+
         }
       }
     }
+
   }
 
   public void addPortal(Portal portal) {

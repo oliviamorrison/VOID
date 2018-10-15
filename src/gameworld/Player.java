@@ -4,38 +4,40 @@ import static gameworld.Direction.directionFromString;
 
 public class Player {
 
-  private static final int HEALTH_BOOST = 20;
-  private static final int MAX_HEALTH = 100;
+  private static final int OXYGEN_BOOST = 20;
+  private static final int MAX_OXYGEN = 100;
 
   private AccessibleTile tile;
   private Item item = null;
   private Room room;
-  private int health;
+  private int oxygen;
   private Direction direction;
 
-  public Player(Room room, AccessibleTile tile, int health, String direction) {
+  public Player(Room room, AccessibleTile tile, int oxygen, String direction) {
 
     this.room = room;
     this.tile = tile;
-    this.health = (health > 0) ? health : MAX_HEALTH;
+    this.oxygen = (oxygen > 0) ? oxygen : MAX_OXYGEN;
     this.direction = directionFromString(direction);
 
   }
 
-  public void boostHealth() {
+  public void boostOxygen() {
 
-    health += HEALTH_BOOST;
+    oxygen += OXYGEN_BOOST;
 
-    if (health > MAX_HEALTH)
-      health = MAX_HEALTH;
+    if (oxygen > MAX_OXYGEN)
+      oxygen = MAX_OXYGEN;
 
   }
 
-  public void loseHealth() {
-    if (health > 0)
-      health--;
+  public void loseOxygen() {
+
+    if (oxygen > 0)
+      oxygen--;
     else
-      health = 0;
+      oxygen = 0;
+
   }
 
   public boolean changeDirection(Direction direction) {
@@ -57,12 +59,12 @@ public class Player {
     this.direction = direction;
   }
 
-  public int getHealth() {
-    return health;
+  public int getOxygen() {
+    return oxygen;
   }
 
-  public void setHealth(int health) {
-    this.health = health;
+  public void setOxygen(int oxygen) {
+    this.oxygen = oxygen;
   }
 
   public Room getRoom() {

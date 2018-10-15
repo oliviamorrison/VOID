@@ -156,10 +156,10 @@ public class XMLParser {
    */
   private static Element savePlayer(Player player, Document document) {
     Element playerElement = document.createElement("player");
-    //Get position, health and direction of player and add as attributes to player element
+    //Get position, oxygen and direction of player and add as attributes to player element
     playerElement.setAttribute("row", player.getTile().getRow()+"");
     playerElement.setAttribute("col", player.getTile().getCol()+"");
-    playerElement.setAttribute("health", player.getHealth()+"");
+    playerElement.setAttribute("oxygen", player.getOxygen()+"");
     playerElement.setAttribute("direction", player.getDirection().toString());
 
     //Add coordinates of the room the player is in
@@ -291,14 +291,14 @@ public class XMLParser {
     int row= parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
-    //Get the player's health and the direction they are facing
-    if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
-    int health = parseInt(playerElement.getAttribute("health"));
+    //Get the player's oxygen and the direction they are facing
+    if(playerElement.getAttribute("oxygen").equals("")) throw new ParseError("Player needs oxygen attribute");
+    int oxygen = parseInt(playerElement.getAttribute("oxygen"));
     if(playerElement.getAttribute("direction").equals("")) throw new ParseError("Player needs direction attribute");
     String direction = playerElement.getAttribute("direction");
 
     //TODO: Fix saving and loading a player on a door tile
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(row, col), health, direction);
+    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(row, col), oxygen, direction);
     ((AccessibleTile) playerRoom.getTile(row, col)).setPlayer(true);
 
     //Parse the player's item
