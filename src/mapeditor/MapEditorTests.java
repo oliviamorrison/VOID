@@ -2,13 +2,17 @@ package mapeditor;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import mapeditor.MapEditor.ItemSpace;
 import mapeditor.MapEditor.TilePane;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -128,5 +132,77 @@ public class MapEditorTests {
           GridPane room1 = (GridPane) node;
     	      
     	      assertNotNull(mapEditor.findFirstEmptyTile(room1));
+    	  }
+    	  
+    	  @Test
+    	  public void testResetImageView() {
+    		  MapEditor mapEditor = new MapEditor();
+    	      mapEditor.setUp();
+    	      
+    	      Node node = mapEditor.getNodeByRowColumnIndex(0,0, mapEditor.getBoardGrid());
+          assertTrue(node instanceof GridPane);
+          GridPane room1 = (GridPane) node;
+          node = mapEditor.getNodeByRowColumnIndex(1, 1, room1);
+          assertTrue(node instanceof TilePane);
+          TilePane tile = (TilePane) node;
+          
+          ImageView first = tile.getImageView();
+          
+          tile.resetImageView();
+          
+          ImageView second = tile.getImageView();
+          
+          assertNotEquals(first,second);
+    	      
+    	  }
+    	  
+    	  @Test
+    	  public void testImageSpace() {
+    		  MapEditor mapEditor = new MapEditor();
+    	      mapEditor.setUp();
+    	      
+    	      mapEditor.initItemSpaces(true);
+            
+          Node node = mapEditor.getNodeByRowColumnIndex(0,0, mapEditor.getItemGrid());
+          assertTrue(node instanceof ItemSpace);
+          ItemSpace itemSpace = (ItemSpace) node;
+          
+          assertNull(itemSpace.getMapItem());
+    	      
+          itemSpace.setMapItem(new MapItem("antidote.png",
+                  new Image(getClass().getResourceAsStream("antidote.png"),
+                          17, 17, false, false)));
+          MapItem first = itemSpace.getMapItem();
+          assertNotNull(first);
+          
+          assertTrue(itemSpace.hasItem());
+          
+          itemSpace.setMapItem(null);
+          assertNull(itemSpace.getMapItem());
+          
+          assertFalse(itemSpace.hasItem());
+    	  }
+    	  
+    	  @Test
+    	  public void testNoItemSpace() {
+    		  MapEditor mapEditor = new MapEditor();
+    	      mapEditor.setUp();
+    	      
+    	      mapEditor.initItemSpaces(true);
+    	      
+    	      assertTrue(mapEditor.noItemsInItemGrid());
+    	      
+    	      Node node = mapEditor.getNodeByRowColumnIndex(0,0, mapEditor.getItemGrid());
+          assertTrue(node instanceof ItemSpace);
+          ItemSpace itemSpace = (ItemSpace) node;
+              
+          assertNull(itemSpace.getMapItem());
+        	      
+          itemSpace.setMapItem(new MapItem("antidote.png",
+                 new Image(getClass().getResourceAsStream("antidote.png"),
+                          17, 17, false, false)));
+          
+          assertFalse(mapEditor.noItemsInItemGrid());
+    	      
     	  }
 }
