@@ -50,6 +50,15 @@ public class ParsingTests {
   }
 
   /**
+   * Test the parser throws an XMLParser error when a file with incorrect challenge names are loaded
+   */
+  @Test
+  public void testIncorrectChallengeName() {
+    assertThrows(XMLParser.ParseError.class,
+        ()-> XMLParser.parseGame(new File("data/incorrectChallengeName.xml")));
+  }
+
+  /**
    * Test the parser saves an XML file from a game that starts with a root node <game></game>
    */
   @Test
