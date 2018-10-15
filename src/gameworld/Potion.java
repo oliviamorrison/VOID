@@ -16,5 +16,9 @@ public class Potion extends Item {
     return "It's a magical potion. It could be useful to someone else.";
   }
 
+  @Override
+  public String toString() {
+    return "Potion";
+  }
 
 }

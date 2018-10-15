@@ -45,6 +45,11 @@ public class Portal extends AccessibleTile {
     return direction;
   }
 
+  @Override
+  public String toString() {
+    return "Portal";
+  }
+
 }
 
 
