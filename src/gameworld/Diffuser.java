@@ -1,5 +1,7 @@
 package gameworld;
 
+import javafx.scene.image.Image;
+
 public class Diffuser extends Item {
 
   public Diffuser(int row, int col, String direction) {
@@ -8,17 +10,12 @@ public class Diffuser extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The Bomb Diffuser";
   }
 
   @Override
   public String getDescription() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return "Diffuser";
+    return "It's a funny-looking suitcase. Which button do I press to work it?";
   }
 
 }

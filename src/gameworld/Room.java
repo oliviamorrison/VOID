@@ -8,10 +8,6 @@ import java.util.List;
 public class Room {
 
   public static final int ROOMSIZE = 10;
-  public static final Point NORTH_PORTAL = new Point(0, 5);
-  public static final Point SOUTH_PORTAL = new Point(9, 5);
-  public static final Point EAST_PORTAL = new Point(5, 9);
-  public static final Point WEST_PORTAL = new Point(5, 0);
 
   private int row;
   private int col;
@@ -88,7 +84,7 @@ public class Room {
 
   }
 
-  private int[] getTileCoordinates(Tile tile) {
+  public int[] getTileCoordinates(Tile tile) {
 
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
@@ -104,8 +100,7 @@ public class Room {
 
   }
 
-  // find tile in a given direction
-  private Tile findTile(AccessibleTile tile, Direction direction) {
+  public Tile findTile(AccessibleTile tile, Direction direction) {
 
     int[] coordinates = getTileCoordinates(tile);
 
@@ -206,6 +201,10 @@ public class Room {
 
   public void addPortal(Portal portal) {
     portals.add(portal);
+  }
+
+  public void removePortal(Portal portal) {
+    portals.remove(portal);
   }
 
   public int getRow() {

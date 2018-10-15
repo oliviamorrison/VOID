@@ -1,5 +1,6 @@
 package gameworld;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,6 +77,11 @@ public class Game {
 
   private void connectPortals() {
 
+    final Point NORTH_PORTAL = new Point(0, 5);
+    final Point SOUTH_PORTAL = new Point(9, 5);
+    final Point EAST_PORTAL = new Point(5, 9);
+    final Point WEST_PORTAL = new Point(5, 0);
+
     Portal portal = null;
     int x = -1;
     int y = -1;
@@ -95,29 +101,29 @@ public class Game {
 
             case "NORTH":
               if (row > 0) {
-                x = Room.NORTH_PORTAL.x;
-                y = Room.NORTH_PORTAL.y;
+                x = NORTH_PORTAL.x;
+                y = NORTH_PORTAL.y;
                 portal = new Portal(x, y, board[row - 1][col], Direction.NORTH);
               }
               break;
             case "SOUTH":
               if (row < board[row].length - 1) {
-                x = Room.SOUTH_PORTAL.x;
-                y = Room.SOUTH_PORTAL.y;
+                x = SOUTH_PORTAL.x;
+                y = SOUTH_PORTAL.y;
                 portal = new Portal(x, y, board[row + 1][col], Direction.SOUTH);
               }
               break;
             case "EAST":
               if (col < board.length - 1) {
-                x = Room.EAST_PORTAL.x;
-                y = Room.EAST_PORTAL.y;
+                x = EAST_PORTAL.x;
+                y = EAST_PORTAL.y;
                 portal = new Portal(x, y, board[row][col + 1], Direction.EAST);
               }
               break;
             case "WEST":
               if (col > 0) {
-                x = Room.WEST_PORTAL.x;
-                y = Room.WEST_PORTAL.y;
+                x = WEST_PORTAL.x;
+                y = WEST_PORTAL.y;
                 portal = new Portal(x, y, board[row][col - 1], Direction.WEST);
               }
               break;
@@ -165,7 +171,7 @@ public class Game {
       tile.setItem(null);
       item.setRow(-1);
       item.setCol(-1);
-      System.out.println("Player picked up " + item.toString());
+      System.out.println("Player picked up " + item.getName());
 
     }
 
@@ -185,7 +191,7 @@ public class Game {
       item.setRow(tile.getRow());
       item.setCol(tile.getCol());
       tile.setItem(item);
-      System.out.println("Player dropped " + item.toString());
+      System.out.println("Player dropped " + item.getName());
 
     }
 
@@ -212,7 +218,7 @@ public class Game {
 
         if (item instanceof Diffuser) {
           bomb.setNavigable(true);
-          System.out.println("Bomb diffused with " + item.toString());
+          System.out.println("Bomb diffused with " + item.getName());
         }
 
       }
@@ -280,9 +286,9 @@ public class Game {
         if (item instanceof Coin) {
 
           player.dropItem();
-          player.addItem(new Beer(-1, -1, "NORTH"));
+          player.addItem(new Potion(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
-          System.out.println("Pick up the beer that is dispensed");
+          System.out.println("Pick up the potion that is dispensed");
 
         }
       }
@@ -301,24 +307,24 @@ public class Game {
       return;
     }
 
-    if (challenge instanceof Guard) {
+    if (challenge instanceof Alien) {
 
-      Guard guard = (Guard) challenge;
-      Direction guardDirection = guard.getDirection();
+      Alien alien = (Alien) challenge;
+      Direction guardDirection = alien.getDirection();
 
       if (!direction.getOppositeDirection().equals(guardDirection)) {
         return;
       }
 
-      if (!guard.isNavigable()) {
+      if (!alien.isNavigable()) {
 
         Item item = player.getItem();
 
-        if (item instanceof Beer) {
+        if (item instanceof Potion) {
 
           player.dropItem();
-          guard.setNavigable(true);
-          System.out.println("Guard bribed with beer");
+          alien.setNavigable(true);
+          System.out.println("Alien bribed with potion");
 
         }
       }
@@ -334,7 +340,7 @@ public class Game {
 
       Item item = currentTile.getItem();
 
-      if (item instanceof HealthPack) {
+      if (item instanceof OxygenTank) {
         player.boostHealth();
         currentTile.setItem(null);
       }
@@ -348,7 +354,7 @@ public class Game {
     AccessibleTile currentTile = player.getTile();
 
     if (currentTile.hasItem()) {
-      return currentTile.getItem() instanceof Antidote;
+      return currentTile.getItem() instanceof SpaceShip;
     }
 
     return false;
@@ -369,14 +375,28 @@ public class Game {
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
-    currentRoom.rotateRoomClockwise();
+
+    for (int row = 0; row < board.length; row++) {
+      for (int col = 0; col < board[row].length; col++) {
+        Room room = board[row][col];
+        if(room == null) continue;
+        room.rotateRoomClockwise();
+      }
+    }
 
   }
 
   public void rotateRoomAnticlockwise() {
 
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
-    currentRoom.rotateRoomAnticlockwise();
+
+    for (int row = 0; row < board.length; row++) {
+      for (int col = 0; col < board[row].length; col++) {
+        Room room = board[row][col];
+        if(room == null) continue;
+        room.rotateRoomAnticlockwise();
+      }
+    }
 
   }
 

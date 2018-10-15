@@ -22,13 +22,6 @@ public class Player {
 
   }
 
-  public Player(Room room, int row, int col, int health, String direction) {
-
-    this.room = room;
-    this.health = (health > 0) ? health : MAX_HEALTH;
-    this.direction = directionFromString(direction);
-  }
-
   public void boostHealth() {
 
     health += HEALTH_BOOST;
@@ -100,8 +93,12 @@ public class Player {
     return item != null;
   }
 
-  public Item dropItem() {
+  public boolean hasSpecificItem(String itemName) {
+    if (!hasItem()) return false;
+    return item.getName().replaceAll("\\s+","").substring(3).equals(itemName);
+  }
 
+  public Item dropItem() {
     Item item = this.item;
     this.item = null;
     return item;

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <game row="3" col="3">
     <room row="0" col="0">
-        <door>Right</door>
-        <item row="4" col="3">Diffuser</item>
+        <portal>Right</portal>
+        <item row="4" col="3" direction ="NORTH">Diffuser</item>
     </room>
     <room row="0" col="1">
-        <door>Left</door>
-        <door>Bottom</door>
-        <challenge row="8" col="5" state="false">Bomb</challenge>
+        <portal>Left</portal>
+        <portal>Bottom</portal>
+        <challenge row="8" col="5" state="false" direction ="NORTH">Bomb</challenge>
     </room>
     <room row="1" col="1">
-        <door>Right</door>
-        <door>Top</door>
-        <door>Bottom</door>
-        <item row="1" col="4">BoltCutter</item>
+        <portal>Right</portal>
+        <portal>Top</portal>
+        <portal>Bottom</portal>
+        <item row="1" col="4" direction ="NORTH">BoltCutter</item>
     </room>
     <room row="1" col="2">
-        <door>Left</door>
-        <door>Bottom</door>
-        <challenge row="6" col="3" state="false">VendingMachine</challenge>
+        <portal>Left</portal>
+        <portal>Bottom</portal>
+        <challenge row="6" col="3" state="false" direction ="NORTH">VendingMachine</challenge>
     </room>
     <room row="2" col="0">
-        <door>Right</door>
-        <item row="1" col="5">Antidote</item>
+        <portal>Right</portal>
+        <item row="1" col="5" direction ="NORTH">SpaceShip</item>
     </room>
     <room row="2" col="1">
-        <door>Top</door>
-        <door>Left</door>
-        <door>Right</door>
-        <challenge row="5" col="1" state="false">Guard</challenge>
+        <portal>Top</portal>
+        <portal>Left</portal>
+        <portal>Right</portal>
+        <challenge row="5" col="1" state="false" direction ="NORTH">Alien</challenge>
     </room>
     <room row="2" col="2">
-        <door>Top</door>
-        <door>Left</door>
-        <item row="4" col="3">FAKEITEM</item>
+        <portal>Top</portal>
+        <portal>Left</portal>
+        <item row="4" col="3" direction ="NORTH">FAKEITEM</item>
     </room>
     <player row="1" col="5" health="100">
         <roomRow>0</roomRow>

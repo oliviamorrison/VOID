@@ -20,20 +20,20 @@ public class Renderer {
     private final static  double doorHeight = 0;
 
     private final static double playerHeight = 60;
-    private String NORTH = "src/application/north.png";
-    private String SOUTH = "src/application/south.png";
-    private String WEST = "src/application/west.png";
-    private String EAST = "src/application/east.png";
+    private String NORTH = "images/north.png";
+    private String SOUTH = "images/south.png";
+    private String WEST = "images/west.png";
+    private String EAST = "images/east.png";
 
     //Challenges
-    private String bombImage = "src/application/bomb";
-    private String vendingMachineImage = "src/application/vending-machine";
+    private String bombImage = "images/bomb";
+    private String vendingMachineImage = "images/vending-machine";
 
     //Items
-    private String diffuserImage = "src/application/diffuser.png";//TODO: needs orientation
-    private String coinImage = "src/application/coin";
-    private String boltCutterImage = "src/application/bolt-cutter";
-    private String beerImage = "src/application/beer.png";
+    private String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
+    private String coinImage = "images/coin";
+    private String boltCutterImage = "images/bolt-cutter";
+    private String beerImage = "images/beer2.png";
 
 
     private Game game;
@@ -156,7 +156,7 @@ public class Renderer {
             itemImage.setFitHeight(20);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 12);
-        } else if(item instanceof Beer){
+        } else if(item instanceof Potion){
             itemImage = getImage((beerImage));
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 5);
