@@ -2,12 +2,8 @@ package application;
 
 import gameworld.Game;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -28,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import mapeditor.MapEditor;
 import persistence.XMLParser;
 import renderer.Renderer;
 
@@ -37,14 +32,12 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 //TODO fix health bar with a longer length
 //TODO win/lose dialog
 //TODO print sensible messages to screen
 //TODO levels
-//TODO board moves up and down???
 
 
 public class GUI extends Application implements EventHandler<KeyEvent>{
@@ -274,7 +267,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // initialise the game panes
     this.game = setGame(stage);
-    this.healthBar = setHealthBar();
+    this.healthBar = setOxygenBar();
     this.inventory = setInventory();
     this.options = setOptions();
     String startMsg = "> Navigate through this unit to the safety " +
@@ -330,6 +323,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       alert.setTitle("File Error");
       alert.setContentText("Please load a valid XML file");
       alert.showAndWait();
+      System.out.println(parseError.getMessage());
     }
     setGame(stage);
     return true;
@@ -346,7 +340,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null && !file.getName().equals("easy.xml")) {
+    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XMLParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
@@ -456,11 +450,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     /////////////////////////////////////////////////////////Here Annisha
     pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
-    Task task = taskCreator(100);
+    Task task = oxygenCounter(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
     /////////////////////////////////////////////////////////
+
+
     return grid;
   }
 
@@ -469,7 +465,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * player is displayed
    * @return the resulting pane holding the health bar
    */
-  public GridPane setHealthBar() {
+  public GridPane setOxygenBar() {
     GridPane healthBar = new GridPane();
 
     healthBar.add(pBar,0,0);
@@ -485,21 +481,23 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param health the players health
    * @return
    */
-  private Task taskCreator(int health){
-    return new Task() {
-      @Override
-      protected Object call() throws Exception {
-        for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
-          Thread.sleep(1000);
-          updateProgress(currentGame.getPlayer().getHealth(), health);
-          currentGame.getPlayer().loseHealth();
-        }
-        System.out.println("Finish");
-        //TODO: game needs to end
-        return true;
+  private Task oxygenCounter(int health){
+  return new Task() {
+    @Override
+    protected Object call() throws Exception {
+      for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
+        Thread.sleep(1000);
+        updateProgress(currentGame.getPlayer().getHealth(), health);
+        currentGame.getPlayer().loseHealth();
       }
-    };
-  }
+      System.out.println("Finish");
+      //TODO: game needs to end
+      return true;
+    }
+  };
+}
+
+
 
   /**
    * Constructs the Inventory pane. This is where the inventory of the

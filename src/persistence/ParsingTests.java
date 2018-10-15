@@ -17,7 +17,9 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Using JUnit 5
+ * These tests use JUnit 5 to test the persistence package of the game
+ *
+ * @author Sam Ong 300363819
  */
 public class ParsingTests {
 
@@ -84,15 +86,15 @@ public class ParsingTests {
 
     File testFile = new File("data/testSave.xml");
     XMLParser.saveFile(new File("data/testSave.xml"), game);
+    //Check the file has been written
     assertTrue(testFile.length() > 0);
 
+    //Check the first element in the file is
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
     Document doc = dBuilder.parse("data/testSave.xml");
-
     NodeList children = doc.getChildNodes();
     Element gameElement = (Element) children.item(0);
     assertEquals(gameElement.getTagName(), "game");
   }
-
 }

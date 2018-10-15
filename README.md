@@ -1,15 +1,15 @@
 # VOID 
 ##### Created by 
-* Annisha Akosah (300399598)
-* James Del Puerto ([student_ID])
-* Latrell Whata (300417220)
-* Olivia Morrison ([student_ID])
-* Sam Ong (300363819)
+* Application   - Annisha Akosah (300399598)
+* Renderer      - James Del Puerto ([student_ID])
+* Gameworld     - Latrell Whata (300417220)
+* MapEditor     - Olivia Morrison ([student_ID])
+* Persistence   - Sam Ong (300363819)
 
 ### The Game
 VOID is a game set on a planet in space. 
 You are an astronaut that is slowly running out of oxygen.
-The aim of the game is to reach your space ship before your oxygen runs out so you can
+The aim of the game is to reach your spaceship before your oxygen runs out so you can
 keep exploring space!
 
 However, there are different challenges that you must face before all your oxygen
@@ -22,9 +22,9 @@ in order to befriend him and access your space ship
 Players have a hold limit of only 1 item at a time, and can travel through portals
 to access different rooms. Oxygen tanks can be picked up along the way to replenish your supply.
 
-(Hint: The walls will sometimes hide items, rotate the map using A and D keys!)
+(Hint: The walls will sometimes hide items, rotate your view using A and D keys!)
 
-### How to Play
+### Set up
 1. Download the project from the master branch
 2. Use an IDE to open it
 3. Navigate to src/application/GUI
