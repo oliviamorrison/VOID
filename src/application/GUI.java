@@ -302,11 +302,11 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return new Task() {
       @Override
       protected Object call() throws Exception {
-        for(int i=0; i<seconds;i++){
+        for(int i=0; i<=seconds;i++){
           Thread.sleep(1000);
-          updateProgress(seconds-i-1, seconds);
-          if(seconds-i-1 == 0){
-           // System.exit(0);
+          updateProgress(seconds-i, seconds);
+          if(seconds-i == 0){
+            System.out.println("Finish");
           }
 
         }
