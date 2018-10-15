@@ -1,5 +1,6 @@
 package gameworld;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,6 +77,11 @@ public class Game {
 
   private void connectPortals() {
 
+    final Point NORTH_PORTAL = new Point(0, 5);
+    final Point SOUTH_PORTAL = new Point(9, 5);
+    final Point EAST_PORTAL = new Point(5, 9);
+    final Point WEST_PORTAL = new Point(5, 0);
+
     Portal portal = null;
     int x = -1;
     int y = -1;
@@ -95,29 +101,29 @@ public class Game {
 
             case "NORTH":
               if (row > 0) {
-                x = Room.NORTH_PORTAL.x;
-                y = Room.NORTH_PORTAL.y;
+                x = NORTH_PORTAL.x;
+                y = NORTH_PORTAL.y;
                 portal = new Portal(x, y, board[row - 1][col], Direction.NORTH);
               }
               break;
             case "SOUTH":
               if (row < board[row].length - 1) {
-                x = Room.SOUTH_PORTAL.x;
-                y = Room.SOUTH_PORTAL.y;
+                x = SOUTH_PORTAL.x;
+                y = SOUTH_PORTAL.y;
                 portal = new Portal(x, y, board[row + 1][col], Direction.SOUTH);
               }
               break;
             case "EAST":
               if (col < board.length - 1) {
-                x = Room.EAST_PORTAL.x;
-                y = Room.EAST_PORTAL.y;
+                x = EAST_PORTAL.x;
+                y = EAST_PORTAL.y;
                 portal = new Portal(x, y, board[row][col + 1], Direction.EAST);
               }
               break;
             case "WEST":
               if (col > 0) {
-                x = Room.WEST_PORTAL.x;
-                y = Room.WEST_PORTAL.y;
+                x = WEST_PORTAL.x;
+                y = WEST_PORTAL.y;
                 portal = new Portal(x, y, board[row][col - 1], Direction.WEST);
               }
               break;
@@ -369,15 +375,27 @@ public class Game {
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
-    currentRoom.rotateRoomClockwise();
+    for (int row = 0; row < board.length; row++) {
+      for (int col = 0; col < board[row].length; col++) {
+        Room room = board[row][col];
+        if(room == null) continue;
+        room.rotateRoomClockwise();
+      }
+    }
 
   }
 
   public void rotateRoomAnticlockwise() {
 
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
-    currentRoom.rotateRoomAnticlockwise();
-
+//    currentRoom.rotateRoomAnticlockwise();
+    for (int row = 0; row < board.length; row++) {
+      for (int col = 0; col < board[row].length; col++) {
+        Room room = board[row][col];
+        if(room == null) continue;
+        room.rotateRoomAnticlockwise();
+      }
+    }
   }
 
   public Room[][] getBoard() {

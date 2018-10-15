@@ -5,7 +5,7 @@
                 <xs:element name="room" maxOccurs="9" minOccurs="3">
                     <xs:complexType>
                         <xs:choice maxOccurs="unbounded" minOccurs="0">
-                            <xs:element name="door" maxOccurs="4">
+                            <xs:element name="portal" maxOccurs="4">
                                 <xs:complexType>
                                     <xs:simpleContent>
                                         <xs:extension base="xs:string">
