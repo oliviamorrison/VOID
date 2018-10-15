@@ -375,7 +375,7 @@ public class Game {
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
-
+    rotateObjectsClockwise();
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
@@ -389,7 +389,7 @@ public class Game {
   public void rotateRoomAnticlockwise() {
 
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
-
+    rotateObjectsAnticlockwise();
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
@@ -399,6 +399,40 @@ public class Game {
     }
 
   }
+
+  public void rotateObjectsAnticlockwise(){
+      for (int row = 0; row < Room.ROOMSIZE; row++) {
+          for (int col = 0; col < Room.ROOMSIZE; col++) {
+              if(currentRoom.getTile(row, col) instanceof AccessibleTile){
+                  AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
+                  if(tile.hasItem()){
+                      Item item = tile.getItem();
+                      item.setDirection(item.getDirection().getAnticlockwiseDirection());
+                  } else if(tile.hasChallenge()){
+                      ChallengeItem challenge = tile.getChallenge();
+                      challenge.setDirection(challenge.getDirection().getAnticlockwiseDirection());
+                  }
+              }
+          }
+      }
+  }
+
+    public void rotateObjectsClockwise(){
+        for (int row = 0; row < Room.ROOMSIZE; row++) {
+            for (int col = 0; col < Room.ROOMSIZE; col++) {
+                if(currentRoom.getTile(row, col) instanceof AccessibleTile){
+                    AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
+                    if(tile.hasItem()){
+                        Item item = tile.getItem();
+                        item.setDirection(item.getDirection().getClockwiseDirection());
+                    } else if(tile.hasChallenge()){
+                        ChallengeItem challenge = tile.getChallenge();
+                        challenge.setDirection(challenge.getDirection().getClockwiseDirection());
+                    }
+                }
+            }
+        }
+    }
 
   public Room[][] getBoard() {
     return Arrays.copyOf(board, board.length);
