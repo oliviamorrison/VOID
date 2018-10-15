@@ -27,15 +27,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GUI extends Application implements EventHandler<KeyEvent> {
   public static final int WINDOW_WIDTH = 1000;
-  public static final int WINDOW_HEIGHT = 800;
+  public static final int WINDOW_HEIGHT = 750;
   private GridPane game;
   private FlowPane inventory;
+  private GridPane healthBar;
   private AnchorPane options;
   private Renderer renderer;
   private static Game currentGame;
+  private Timer timer;
 
   private Stage window;
   private Scene startScene, gameScene;
@@ -47,6 +51,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     // display the start menu first
     window.setScene(createStartScene(stage));
+    window.setResizable(false);
     window.setTitle("Void");
     window.show();
   }
@@ -143,11 +148,12 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     // initialise the game panes
     this.game = setGame(stage);
+    this.healthBar = setHealthBar();
     this.inventory = setInventory();
     this.options = setOptions();
 
     FlowPane stack = new FlowPane();
-    stack.getChildren().addAll(inventory, options);
+    stack.getChildren().addAll(healthBar,inventory, options);
 
     stack.setHgap(4);
     stack.setPrefWrapLength(WINDOW_WIDTH * 0.3); // preferred width allows for two columns
@@ -236,8 +242,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
   public void setWindowRatio() {
     //set ratios
     this.game.setPrefSize(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT);
-    this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.5);
-    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.5);
+    this.healthBar.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT *  0.2);
+    this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
+    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
   }
 
   public GridPane setGame(Stage stage) {
@@ -246,8 +253,48 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
     renderer = new Renderer(currentGame);
     GridPane grid = new GridPane();
+
+    Image image = null;
+    try {
+      image = new Image(new FileInputStream("src/application/background.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    BackgroundImage myBI= new BackgroundImage(image,BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    grid.setBackground(new Background(myBI));
     grid.add(renderer.getRoot(), 0, 1);
+    renderer.getRoot().setTranslateX(30);
+    renderer.getRoot().setTranslateY(230);
+
+    setupTimer();
     return grid;
+  }
+
+  private Label health;
+
+  public GridPane setHealthBar() {
+    GridPane grid = new GridPane();
+    grid.setStyle("-fx-background-color: red;");
+    health = new Label(currentGame.getPlayer().getHealth() + "");
+    grid.add(health,0,0);
+
+    return grid;
+  }
+
+  public void setupTimer() {
+    this.timer = new Timer();
+    this.timer.schedule(new TimerTask() {
+
+      @Override
+      public void run() {
+        currentGame.getPlayer().loseHealth();
+        //System.out.println(currentGame.getPlayer().getHealth());
+        health.setLabelFor(healthBar);
+      }
+
+    }, 0, 1000);
+
   }
 
   public FlowPane setInventory() {
@@ -262,9 +309,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     ToggleButton btn;
     ToggleGroup group = new ToggleGroup();
 
-    String[] images = new String[]{"coin.png", "bolt.png", "red-key.png", "unlit-bomb.png", "two-coins.png", "two-coins.png"};
+    String[] images = new String[]{"coin.png", "bolt.png", "diffuser2.png", "beer2.png"};
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 4; i++) {
       btn = new ToggleButton();
       btn.setFocusTraversable(false); // disables key control
       Image image = new Image(getClass().getResourceAsStream(images[i]));
@@ -277,7 +324,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       flow.getChildren().add(btn);
 
     }
-
     return flow;
   }
 
@@ -448,6 +494,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         helpDialog.show();
 
   }
+
+
 
   public static void main(String[] args) {
     Application.launch(args);
