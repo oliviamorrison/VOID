@@ -279,8 +279,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     renderer.getRoot().setTranslateY(230);
 
     /////////////////////////////////////////////////////////Here Annisha
-    pBar = new ProgressBar(1);
-    Task task = taskCreator(5);
+    pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
+    Task task = taskCreator(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
@@ -298,22 +298,39 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return grid;
   }
 
-  private Task taskCreator(int seconds){
-    return new Task() {
-      @Override
-      protected Object call() throws Exception {
-        for(int i=0; i<=seconds;i++){
-          Thread.sleep(1000);
-          updateProgress(seconds-i, seconds);
-          if(seconds-i == 0){
-            System.out.println("Finish");
-          }
-
-        }
-        return true;
+//  private Task taskCreator(int seconds){
+//    return new Task() {
+//      @Override
+//      protected Object call() throws Exception {
+//        for(int i=0; i<=seconds;i++){
+//          Thread.sleep(1000);
+//          updateProgress(seconds-i, seconds);
+//          if(seconds-i == 0){
+//            System.out.println("Finish");
+//          }
+//        }
+//        return true;
+//      }
+//    };
+//  }
+private Task taskCreator(int health){
+  return new Task() {
+    @Override
+    protected Object call() throws Exception {
+      for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
+        Thread.sleep(1000);
+        updateProgress(currentGame.getPlayer().getHealth(), health);
+        currentGame.getPlayer().loseHealth();
       }
-    };
-  }
+      System.out.println("Finish");
+      //TODO: game needs to end
+      return true;
+    }
+  };
+}
+
+
+
 
   public FlowPane setInventory() {
     FlowPane flow = new FlowPane();
