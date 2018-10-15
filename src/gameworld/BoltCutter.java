@@ -10,7 +10,7 @@ public class BoltCutter extends Item {
 
   @Override
   public String getName() {
-    return "The red bolt cutter";
+    return "The Red Bolt Cutter";
   }
 
   @Override

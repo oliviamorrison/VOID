@@ -302,11 +302,11 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return new Task() {
       @Override
       protected Object call() throws Exception {
-        for(int i=0; i<seconds;i++){
+        for(int i=0; i<=seconds;i++){
           Thread.sleep(1000);
-          updateProgress(seconds-i-1, seconds);
-          if(seconds-i-1 == 0){
-            System.exit(0);
+          updateProgress(seconds-i, seconds);
+          if(seconds-i == 0){
+            System.out.println("Finish");
           }
 
         }
@@ -328,10 +328,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     ToggleGroup group = new ToggleGroup();
 
     ArrayList<String> availableItems = new ArrayList<>();
-    availableItems.add("Coin");
-    availableItems.add("Potion");
-    availableItems.add("Diffuser");
-    availableItems.add("BoltCutter");
+    availableItems.add("GoldenCoin");
+    availableItems.add("MagicPotion");
+    availableItems.add("BombDiffuser");
+    availableItems.add("RedBoltCutter");
 
     for(String item : availableItems) {
       btn = new ToggleButton();
@@ -356,22 +356,22 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
 
     // enable button listeners
-    inventoryButtons.get("Coin").setOnAction(Event -> {
+    inventoryButtons.get("GoldenCoin").setOnAction(Event -> {
       currentGame.useVendingMachine();
       updateInventory();
       renderer.draw();
     });
-    inventoryButtons.get("BoltCutter").setOnAction(Event -> {
+    inventoryButtons.get("RedBoltCutter").setOnAction(Event -> {
       currentGame.unlockVendingMachine();
       updateInventory();
       renderer.draw();
     });
-    inventoryButtons.get("Potion").setOnAction(Event -> {
+    inventoryButtons.get("MagicPotion").setOnAction(Event -> {
       currentGame.bribeGuard();
       updateInventory();
       renderer.draw();
     });
-    inventoryButtons.get("Diffuser").setOnAction(Event -> {
+    inventoryButtons.get("BombDiffuser").setOnAction(Event -> {
       currentGame.diffuseBomb();
       updateInventory();
       renderer.draw();
@@ -540,11 +540,14 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   public void updateInventory() {
     for (Map.Entry<String, ToggleButton> buttons : inventoryButtons.entrySet()) {
       String item = buttons.getKey();
+
       ToggleButton button = buttons.getValue();
       if(!currentGame.getPlayer().hasSpecificItem(item)) {
         button.setDisable(true);
-      } else
+      } else {
         button.setDisable(false);
+
+      }
     }
   }
 

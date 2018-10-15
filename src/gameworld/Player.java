@@ -95,8 +95,7 @@ public class Player {
 
   public boolean hasSpecificItem(String itemName) {
     if (!hasItem()) return false;
-
-    return item.toString() == itemName;
+    return item.getName().replaceAll("\\s+","").substring(3).equals(itemName);
   }
 
   public Item dropItem() {
