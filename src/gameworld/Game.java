@@ -286,7 +286,7 @@ public class Game {
         if (item instanceof Coin) {
 
           player.dropItem();
-          player.addItem(new Beer(-1, -1, "NORTH"));
+          player.addItem(new Potion(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
           System.out.println("Pick up the beer that is dispensed");
 
@@ -320,7 +320,7 @@ public class Game {
 
         Item item = player.getItem();
 
-        if (item instanceof Beer) {
+        if (item instanceof Potion) {
 
           player.dropItem();
           guard.setNavigable(true);

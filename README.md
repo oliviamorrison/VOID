@@ -8,7 +8,7 @@
 
 ### The Game
 VOID is a game set on a planet in space. 
-You are an astronaut that is slowly running out of oxygen! 
+You are an astronaut that is slowly running out of oxygen.
 The aim of the game is to reach your space ship before your oxygen runs out so you can
 keep exploring space!
 

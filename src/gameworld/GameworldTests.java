@@ -40,8 +40,8 @@ public class GameworldTests {
       player = game.getPlayer();
       items = new ArrayList<>(Arrays.asList(
           new SpaceShip(-1, -1, "NORTH"),
-          new Beer(-1, -1, "NORTH"),
-          new Beer(-1, -1, "NORTH"),
+          new Potion(-1, -1, "NORTH"),
+          new Potion(-1, -1, "NORTH"),
           new BoltCutter(-1, -1, "NORTH"),
           new Bomb(-1, -1, "NORTH"),
           new Coin(-1, -1, "NORTH"),
@@ -277,7 +277,7 @@ public class GameworldTests {
     game.useVendingMachine();
 
     assertFalse(player.getItem() instanceof Coin);
-    assertTrue(player.getItem() instanceof Beer);
+    assertTrue(player.getItem() instanceof Potion);
 
     vendingMachine.setDirection(Direction.NORTH);
 
@@ -287,7 +287,7 @@ public class GameworldTests {
     game.useVendingMachine();
 
     assertTrue(player.getItem() instanceof Coin);
-    assertFalse(player.getItem() instanceof Beer);
+    assertFalse(player.getItem() instanceof Potion);
 
   }
 
@@ -295,7 +295,7 @@ public class GameworldTests {
   public void playerCanBribeGuard() {
 
     game.teleport(board[2][1], 5, 2);
-    player.addItem(new Beer(-1, -1, "NORTH"));
+    player.addItem(new Potion(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[2][1].getTile(5, 1);
     Guard guard = (Guard) tile.getChallenge();
@@ -305,15 +305,15 @@ public class GameworldTests {
     game.bribeGuard();
 
     assertTrue(guard.isNavigable());
-    assertFalse(player.getItem() instanceof Beer);
+    assertFalse(player.getItem() instanceof Potion);
 
     guard.setDirection(Direction.NORTH);
     guard.setNavigable(false);
-    player.addItem(new Beer(-1, -1, "NORTH"));
+    player.addItem(new Potion(-1, -1, "NORTH"));
 
     game.bribeGuard();
 
-    assertTrue(player.getItem() instanceof Beer);
+    assertTrue(player.getItem() instanceof Potion);
 
   }
 

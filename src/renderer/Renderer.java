@@ -156,7 +156,7 @@ public class Renderer {
             itemImage.setFitHeight(20);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 12);
-        } else if(item instanceof Beer){
+        } else if(item instanceof Potion){
             itemImage = getImage((beerImage));
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 5);
