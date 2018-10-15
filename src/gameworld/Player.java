@@ -22,13 +22,6 @@ public class Player {
 
   }
 
-  public Player(Room room, int row, int col, int health, String direction) {
-
-    this.room = room;
-    this.health = (health > 0) ? health : MAX_HEALTH;
-    this.direction = directionFromString(direction);
-  }
-
   public void boostHealth() {
 
     health += HEALTH_BOOST;
