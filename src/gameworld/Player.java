@@ -93,8 +93,13 @@ public class Player {
     return item != null;
   }
 
-  public Item dropItem() {
+  public boolean hasSpecificItem(String itemName) {
+    if (!hasItem()) return false;
 
+    return item.toString() == itemName;
+  }
+
+  public Item dropItem() {
     Item item = this.item;
     this.item = null;
     return item;

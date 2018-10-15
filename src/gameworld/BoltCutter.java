@@ -1,5 +1,7 @@
 package gameworld;
 
+import javafx.scene.image.Image;
+
 public class BoltCutter extends Item {
 
   public BoltCutter(int row, int col, String direction) {
