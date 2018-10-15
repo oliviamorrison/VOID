@@ -9,8 +9,8 @@
 ###The Game
 VOID is a game set on a planet in space. 
 You are an astronaut that is slowly running out of oxygen! 
-The aim of the game is to reach the oxygen tank before your oxygen runs out so you can
-keep exploring space.
+The aim of the game is to reach your space ship before your oxygen runs out so you can
+keep exploring space!
 
 However, there are different challenges that you must face before all your oxygen
 runs out. There is a bomb that can only be diffused using the diffuser, a vending
@@ -20,9 +20,9 @@ The vending machine will dispense a potion that players must give to an alien
 in order to befriend him and access the oxygen tank.
 
 Players have a hold limit of only 1 item at a time, and can travel through portals
-to access different rooms.
+to access different rooms. Oxygen tanks can be picked up along the way to replenish your supply.
 
-(Hint: The walls will sometimes hide items, rotate the map using A and D keys)
+(Hint: The walls will sometimes hide items, rotate the map using A and D keys!)
 
 ###How to Play
 1. Download the project from the master branch
