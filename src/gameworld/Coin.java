@@ -9,7 +9,7 @@ public class Coin extends Item {
 
   @Override
   public String getName() {
-    return "The golden coin";
+    return "The Golden Coin";
   }
 
   @Override

@@ -10,7 +10,7 @@ public class Diffuser extends Item {
 
   @Override
   public String getName() {
-    return "The bomb diffuser";
+    return "The Bomb Diffuser";
   }
 
   @Override

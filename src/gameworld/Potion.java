@@ -8,7 +8,7 @@ public class Potion extends Item {
 
   @Override
   public String getName() {
-    return "The cold beer";
+    return "The Magic Potion";
   }
 
   @Override
