@@ -26,13 +26,9 @@ public class GameworldTests {
   private List<Item> items;
 
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws XMLParser.ParseError {
 
-    try {
-      game = XMLParser.parseGame(new File("data/gameworldTestData.xml"));
-    } catch (XMLParser.ParseError parseError) {
-      parseError.printStackTrace();
-    }
+    game = XMLParser.parseGame(new File("data/gameworldTestData.xml"));
 
     if (game != null) {
 
@@ -190,11 +186,13 @@ public class GameworldTests {
     player.addItem(item);
 
     assertFalse(startTile.hasItem());
+    assertFalse(player.hasSpecificItem("Coin"));
 
     game.dropItem();
 
     assertTrue(startTile.hasItem());
     assertFalse(player.hasItem());
+    assertFalse(player.hasSpecificItem("Diffuser"));
     assertNull(player.getItem());
     assertEquals(player.getTile().getRow(), item.getRow());
     assertEquals(player.getTile().getCol(), item.getCol());

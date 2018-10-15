@@ -8,12 +8,12 @@ public class OxygenTank extends Item {
 
   @Override
   public String getName() {
-    return "The medical health pack";
+    return "The full oxygen tank";
   }
 
   @Override
   public String getDescription() {
-    return "It's a medical health pack. It'll make you feel better.";
+    return "It's a full oxygen tank. It'll help you breathe.";
   }
 
 }
