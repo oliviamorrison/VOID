@@ -392,10 +392,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   @Override
   public void handle(KeyEvent event) {
-    //TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
-//		currentGame.startTurn(event.getCode().getName());
-    //testing
-
     int dx = 0;
     int dy = 0;
 
