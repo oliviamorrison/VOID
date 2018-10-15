@@ -2,6 +2,7 @@ package application;
 
 import gameworld.Game;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -44,6 +45,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Stage window;
   private Scene startScene, gameScene;
 
+  private Label health;
+  private ProgressBar pBar;
 
   @Override
   public void start(Stage stage) {
@@ -207,12 +210,18 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null) {
+    if (file != null && !file.getName().equals("easy.xml")) {
       try {
         XMLParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
       }
+    }
+    else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Unable to save over default game files");
+      alert.setContentText("Unable to save over default game files. Please save using a different file name");
+      alert.showAndWait();
     }
   }
 
@@ -269,23 +278,42 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     renderer.getRoot().setTranslateX(30);
     renderer.getRoot().setTranslateY(230);
 
-    //setupTimer();
+    /////////////////////////////////////////////////////////Here Annisha
+    pBar = new ProgressBar(1);
+    Task task = taskCreator(5);
+    pBar.progressProperty().unbind();
+    pBar.progressProperty().bind(task.progressProperty());
+    new Thread(task).start();
+    /////////////////////////////////////////////////////////
     return grid;
   }
 
-  private Label health;
 
 
 
   public GridPane setHealthBar() {
     GridPane grid = new GridPane();
     grid.setStyle("-fx-background-color: red;");
-    health = new Label(currentGame.getPlayer().getHealth() + "");
-    grid.add(health, 0, 0);
-
+    grid.add(pBar,0,0);
     return grid;
   }
 
+  private Task taskCreator(int seconds){
+    return new Task() {
+      @Override
+      protected Object call() throws Exception {
+        for(int i=0; i<seconds;i++){
+          Thread.sleep(1000);
+          updateProgress(seconds-i-1, seconds);
+          if(seconds-i-1 == 0){
+            System.exit(0);
+          }
+
+        }
+        return true;
+      }
+    };
+  }
 
   public FlowPane setInventory() {
     FlowPane flow = new FlowPane();
@@ -404,10 +432,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
   @Override
   public void handle(KeyEvent event) {
-    //TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
-//		currentGame.startTurn(event.getCode().getName());
-    //testing
-
     int dx = 0;
     int dy = 0;
 

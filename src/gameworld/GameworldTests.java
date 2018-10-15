@@ -1,18 +1,29 @@
 package gameworld;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistence.XMLParser;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import renderer.Renderer;
 
 public class GameworldTests {
 
   private Game game;
   private Room[][] board;
   private Player player;
+  private List<Item> items;
 
   @BeforeEach
   public void setUp() {
@@ -27,6 +38,18 @@ public class GameworldTests {
 
       board = game.getBoard();
       player = game.getPlayer();
+      items = new ArrayList<>(Arrays.asList(
+          new Antidote(-1, -1, "NORTH"),
+          new Beer(-1, -1, "NORTH"),
+          new Beer(-1, -1, "NORTH"),
+          new BoltCutter(-1, -1, "NORTH"),
+          new Bomb(-1, -1, "NORTH"),
+          new Coin(-1, -1, "NORTH"),
+          new Diffuser(-1, -1, "NORTH"),
+          new Guard(-1, -1, "NORTH"),
+          new HealthPack(-1, -1, "NORTH"),
+          new VendingMachine(-1, -1, "NORTH")
+      ));
 
     }
 
@@ -71,6 +94,21 @@ public class GameworldTests {
   }
 
   @Test
+  public void playerCanTeleport() {
+
+    AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(5, 9);
+    player.setTile(startTile);
+    startTile.setPlayer(true);
+
+    Room startRoom = game.getCurrentRoom();
+
+    game.teleport();
+
+    assertNotEquals(startRoom, game.getCurrentRoom());
+
+  }
+
+  @Test
   public void playerCannotTeleportWithoutPortal() {
 
     AccessibleTile startTile = player.getTile();
@@ -81,5 +119,381 @@ public class GameworldTests {
 
   }
 
+  @Test
+  public void playerCannotTeleportWithoutNextRoom() {
+
+    AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(9, 5);
+    player.setTile(startTile);
+    startTile.setPlayer(true);
+
+    Room startRoom = game.getCurrentRoom();
+
+    game.teleport();
+
+    assertEquals(startRoom, game.getCurrentRoom());
+
+  }
+
+  @Test
+  public void playerCannotTeleportWithoutDestinationPortal() {
+
+    AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(5, 9);
+    player.getTile().setPlayer(false);
+    player.setTile(startTile);
+    startTile.setPlayer(true);
+
+    Room startRoom = game.getCurrentRoom();
+
+    Portal portal = board[0][1].getDestinationPortal(Direction.WEST);
+    board[0][1].removePortal(portal);
+
+    game.teleport();
+
+    assertEquals(startRoom, game.getCurrentRoom());
+
+  }
+
+  @Test
+  public void playerCanPickupItem() {
+
+    AccessibleTile startTile = player.getTile();
+    startTile.setItem(new BoltCutter(startTile.getRow(), startTile.getCol(), "NORTH"));
+
+    game.pickUpItem();
+
+    assertTrue(player.hasItem());
+    assertNotNull(player.getItem());
+    assertFalse(startTile.hasItem());
+
+  }
+
+  @Test
+  public void playerCanOnlyHaveOneItemAtATime() {
+
+    AccessibleTile startTile = player.getTile();
+    startTile.setItem(new BoltCutter(startTile.getRow(), startTile.getCol(), "NORTH"));
+    player.addItem(new Diffuser(-1, -1, "NORTH"));
+
+    game.pickUpItem();
+
+    assertTrue(player.hasItem());
+    assertNotNull(player.getItem());
+    assertTrue(startTile.hasItem());
+
+  }
+
+  @Test
+  public void playerCanDropItem() {
+
+    AccessibleTile startTile = player.getTile();
+    Item item = new Diffuser(-1, -1, "NORTH");
+    player.addItem(item);
+
+    assertFalse(startTile.hasItem());
+
+    game.dropItem();
+
+    assertTrue(startTile.hasItem());
+    assertFalse(player.hasItem());
+    assertNull(player.getItem());
+    assertEquals(player.getTile().getRow(), item.getRow());
+    assertEquals(player.getTile().getCol(), item.getCol());
+
+  }
+
+  @Test
+  public void playerCannotDropItemOnPortal() {
+
+    AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(5, 9);
+    player.getTile().setPlayer(false);
+    player.setTile(startTile);
+    startTile.setPlayer(true);
+
+    player.addItem(new Diffuser(-1, -1, "NORTH"));
+
+    game.dropItem();
+
+    assertTrue(player.hasItem());
+    assertNotNull(player.getItem());
+    assertFalse(startTile.hasItem());
+
+  }
+
+  @Test
+  public void playerCanDiffuseBomb() {
+
+    game.teleport(board[0][1], 7, 5);
+    player.addItem(new Diffuser(-1, -1, "NORTH"));
+
+    AccessibleTile tile = (AccessibleTile) board[0][1].getTile(8, 5);
+    Bomb bomb = (Bomb) tile.getChallenge();
+    bomb.setDirection(Direction.NORTH);
+    player.setDirection(Direction.SOUTH);
+
+    assertFalse(tile.checkNavigable());
+
+    game.diffuseBomb();
+
+    assertTrue(bomb.isNavigable());
+
+  }
+
+  @Test
+  public void playerCanUnlockVendingMachine() {
+
+    game.teleport(board[1][2], 8, 7);
+    player.addItem(new BoltCutter(-1, -1, "NORTH"));
+
+    AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
+    VendingMachine vendingMachine = (VendingMachine) tile.getChallenge();
+    vendingMachine.setDirection(Direction.WEST);
+    player.setDirection(Direction.EAST);
+
+    game.unlockVendingMachine();
+
+    assertTrue(vendingMachine.isUnlocked());
+
+    vendingMachine.setDirection(Direction.NORTH);
+    vendingMachine.setUnlocked(false);
+
+    game.unlockVendingMachine();
+
+    assertFalse(vendingMachine.isUnlocked());
+
+  }
+
+  @Test
+  public void playerCanUseVendingMachine() {
+
+    game.teleport(board[1][2], 8, 7);
+    player.addItem(new Coin(-1, -1, "NORTH"));
+
+    AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
+    VendingMachine vendingMachine = (VendingMachine) tile.getChallenge();
+    vendingMachine.setDirection(Direction.WEST);
+    vendingMachine.setUnlocked(true);
+    player.setDirection(Direction.EAST);
+
+    game.useVendingMachine();
+
+    assertFalse(player.getItem() instanceof Coin);
+    assertTrue(player.getItem() instanceof Beer);
+
+    vendingMachine.setDirection(Direction.NORTH);
+
+    player.dropItem();
+    player.addItem(new Coin(-1, -1, "NORTH"));
+
+    game.useVendingMachine();
+
+    assertTrue(player.getItem() instanceof Coin);
+    assertFalse(player.getItem() instanceof Beer);
+
+  }
+
+  @Test
+  public void playerCanBribeGuard() {
+
+    game.teleport(board[2][1], 5, 2);
+    player.addItem(new Beer(-1, -1, "NORTH"));
+
+    AccessibleTile tile = (AccessibleTile) board[2][1].getTile(5, 1);
+    Guard guard = (Guard) tile.getChallenge();
+    guard.setDirection(Direction.EAST);
+    player.setDirection(Direction.WEST);
+
+    game.bribeGuard();
+
+    assertTrue(guard.isNavigable());
+    assertFalse(player.getItem() instanceof Beer);
+
+    guard.setDirection(Direction.NORTH);
+    guard.setNavigable(false);
+    player.addItem(new Beer(-1, -1, "NORTH"));
+
+    game.bribeGuard();
+
+    assertTrue(player.getItem() instanceof Beer);
+
+  }
+
+  @Test
+  public void challengesAreNotCompletedWithoutAnAdjacentChallengeItem() {
+
+    Game game = this.game;
+
+    game.diffuseBomb();
+    game.unlockVendingMachine();
+    game.useVendingMachine();
+    game.bribeGuard();
+
+    assertSame(game, this.game);
+
+  }
+
+  @Test
+  public void playerCanUseHealthPack() {
+
+    game.teleport(board[1][1], 3, 6);
+    AccessibleTile tile = (AccessibleTile) board[1][1].getTile(4, 6);
+
+    player.setDirection(Direction.SOUTH);
+    game.movePlayer(1, 0);
+
+    assertEquals(tile, player.getTile());
+
+    game.checkForHealthPack();
+
+    assertEquals(100, player.getHealth());
+
+  }
+
+  @Test
+  public void playerWinsByFindingAntidote() {
+
+    game.teleport(board[2][0], 2, 5);
+
+    assertFalse(game.checkForAntidote());
+
+    player.setDirection(Direction.NORTH);
+    game.movePlayer(-1, 0);
+
+    assertTrue(game.checkForAntidote());
+
+  }
+
+  @Test
+  public void roomCanBeRotatedClockwise() {
+
+    player.setDirection(Direction.NORTH);
+    Direction direction = player.getDirection();
+
+    game.rotateRoomClockwise();
+
+    assertNotEquals(direction, player.getDirection());
+    assertEquals(Direction.EAST, player.getDirection());
+
+  }
+
+  @Test
+  public void roomCanBeRotatedAnticlockwise() {
+
+    player.setDirection(Direction.NORTH);
+    Direction direction = player.getDirection();
+
+    game.rotateRoomAnticlockwise();
+
+    assertNotEquals(direction, player.getDirection());
+    assertEquals(Direction.WEST, player.getDirection());
+
+  }
+
+  @Test
+  public void canCreateTestRoom() {
+
+    Room room = new Room(0, 0);
+    Tile tile = new AccessibleTile(-1, -1);
+
+    assertNotNull(room);
+    assertTrue(room.getTile(5, 5) instanceof AccessibleTile);
+    assertNull(room.getTileCoordinates(tile));
+    assertEquals(0, room.getRow());
+    assertEquals(0, room.getCol());
+
+  }
+
+  @Test
+  public void playerCannotMoveOutsideRoomBounds() {
+
+    game.teleport(board[1][1], 0, 5);
+    AccessibleTile startTile = player.getTile();
+    Room room = game.getCurrentRoom();
+
+    room.findTile(player.getTile(), Direction.NORTH);
+
+    assertEquals(room, game.getCurrentRoom());
+
+    Tile tileA = room.findNextTile(startTile, -1, 0);
+    Tile tileB = room.findNextTile(startTile, 0, 1);
+
+    assertNull(tileA);
+    assertNull(tileB);
+    assertEquals(startTile, player.getTile());
+
+  }
+
+  @Test
+  public void playerHealthCannotExceedBounds() {
+
+    player.setHealth(150);
+    player.boostHealth();
+
+    assertTrue(player.getHealth() <= 100);
+
+    player.setHealth(0);
+    player.loseHealth();
+
+    assertFalse(player.getHealth() < 0);
+
+  }
+
+  @Test
+  public void gameCanBeConnectedWithRenderer() {
+
+    Renderer renderer = new Renderer(game);
+    assertNotNull(renderer);
+
+  }
+
+  @Test
+  public void directionEnumReturnsCorrectValue() {
+
+    // opposite direction
+
+    assertEquals(Direction.SOUTH, Direction.NORTH.getOppositeDirection());
+    assertEquals(Direction.NORTH, Direction.SOUTH.getOppositeDirection());
+    assertEquals(Direction.WEST, Direction.EAST.getOppositeDirection());
+    assertEquals(Direction.EAST, Direction.WEST.getOppositeDirection());
+
+    // clockwise direction
+
+
+    assertEquals(Direction.EAST, Direction.NORTH.getClockwiseDirection());
+    assertEquals(Direction.WEST, Direction.SOUTH.getClockwiseDirection());
+    assertEquals(Direction.SOUTH, Direction.EAST.getClockwiseDirection());
+    assertEquals(Direction.NORTH, Direction.WEST.getClockwiseDirection());
+
+    // anticlockwise direction
+
+    assertEquals(Direction.WEST, Direction.NORTH.getAnticlockwiseDirection());
+    assertEquals(Direction.EAST, Direction.SOUTH.getAnticlockwiseDirection());
+    assertEquals(Direction.NORTH, Direction.EAST.getAnticlockwiseDirection());
+    assertEquals(Direction.SOUTH, Direction.WEST.getAnticlockwiseDirection());
+
+    // next direction
+
+    assertEquals(Direction.NORTH, Direction.NORTH.nextDirection(-1, 0));
+    assertEquals(Direction.SOUTH, Direction.NORTH.nextDirection(1, 0));
+    assertEquals(Direction.WEST, Direction.NORTH.nextDirection(0, -1));
+    assertEquals(Direction.EAST, Direction.NORTH.nextDirection(0, 1));
+
+    // direction from string
+
+    assertEquals(Direction.NORTH, Direction.directionFromString("NORTH"));
+    assertEquals(Direction.SOUTH, Direction.directionFromString("SOUTH"));
+    assertEquals(Direction.EAST, Direction.directionFromString("EAST"));
+    assertEquals(Direction.WEST, Direction.directionFromString("WEST"));
+
+  }
+
+  @Test
+  public void itemNamesAndDescriptionsAreImplemented() {
+
+    for (Item item : items) {
+      assertNotNull(item.getName());
+      assertNotNull(item.getDescription());
+    }
+
+  }
 
 }

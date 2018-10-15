@@ -12,17 +12,12 @@ public class Guard extends ChallengeItem {
 
   @Override
   public String getName() {
-    return "";
+    return "The guard";
   }
 
   @Override
   public String getDescription() {
-    return "";
-  }
-
-  @Override
-  public String toString() {
-    return "Guard";
+    return "He's a hardworking chap. I'm sure he could do with a beverage.";
   }
 
 }
