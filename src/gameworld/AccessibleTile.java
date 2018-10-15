@@ -91,7 +91,7 @@ public class AccessibleTile extends Tile {
 
   @Override
   public String toString() {
-    return " ";
+    return "Accessible tile: Row: " + getRow() + " Col: " + getCol();
   }
 
 }

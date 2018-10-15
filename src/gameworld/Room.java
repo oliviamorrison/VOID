@@ -208,6 +208,10 @@ public class Room {
     portals.add(portal);
   }
 
+  public void removePortal(Portal portal) {
+    portals.remove(portal);
+  }
+
   public int getRow() {
     return row;
   }
