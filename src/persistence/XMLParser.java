@@ -17,20 +17,30 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 /**
- * Using javax.xml.parsers library
- * Schema is in schema.xsd
+ * This class saves and loads XML files using the javax.xml.parsers library and DOM parser.
+ * The schema for the game's XML files is under "schema.xsd"
+ *
+ * This uses the Java DOM parser because:
+ *  - The structure of the document is important
+ *  - Elements in the document need to be sorted into specific places in collections
+ *
+ * @author Sam Ong 300363819
+ *
  */
-//TODO: Make default new game file ineditable
-//TODO: If we have time, add different difficulty levels for easy/medium/hard
+//TODO: add different difficulty levels for easy/medium/hard
 //TODO: Add README
-//TODO: Add tests
 //TODO: UML Diagram
-  //TODO: Add comments/java docs
-
 
 public class XMLParser {
   private static Schema schema;
 
+  /**
+   * Static method to save a game to an XML file using DOM parser
+   * @param file file to save to
+   * @param game game to save
+   * @throws ParserConfigurationException error thrown if parser fails
+   * @throws TransformerException error thrown is transformer fails
+   */
   public static void saveFile(File file, Game game) throws ParserConfigurationException, TransformerException {
 
     DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -45,7 +55,7 @@ public class XMLParser {
     root.setAttribute("col", board[0].length+"");
     document.appendChild(root);
 
-    //save rooms
+    //add rooms to XML file
     for(int i = 0; i < board.length; i++){
       for(int j = 0; j < board[i].length; j++){
         if(board[i][j]!=null){
@@ -54,8 +64,8 @@ public class XMLParser {
       }
     }
 
-    //save player
-    root.appendChild(savePlayer(game, document));
+    //add player to XML file
+    root.appendChild(savePlayer(game.getPlayer(), document));
 
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     Transformer transformer = transformerFactory.newTransformer();
@@ -65,33 +75,41 @@ public class XMLParser {
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
     transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-    //Save to file
+    //Save to XML file
     DOMSource source = new DOMSource(document);
     StreamResult result = new StreamResult(file);
     document.getDocumentElement().normalize();
     transformer.transform(source, result);
-
-
   }
 
-  private static Element saveRoom(Document document, int i, int j, Room room) {
+  /**
+   * Method to save a room and its properties to an element in the document
+   * @param document document to save to
+   * @param row y position of room in board
+   * @param col x position of room in board
+   * @param room Room to save
+   * @return the room element to append to the root
+   */
+  private static Element saveRoom(Document document, int row, int col, Room room) {
     Element roomElement = document.createElement("room");
-    roomElement.setAttribute("row", i+"");
-    roomElement.setAttribute("col", j+"");
+    roomElement.setAttribute("row", row+"");
+    roomElement.setAttribute("col", col+"");
 
-    for(int y = 0; y < 10; y++){
-      for(int x = 0; x < 10; x++){
+    //Go through each tile in the room and save their properties
+    for(int y = 0; y < Room.ROOMSIZE; y++){
+      for(int x = 0; x < Room.ROOMSIZE; x++){
         Tile tile = room.getTile(x,y);
+        //Save portals
         if(tile instanceof Portal){
-          Portal door = (Portal) tile;
-          Element doorElement = document.createElement("door");
-          doorElement.appendChild((document.createTextNode(door.getDirection().toString())));
-          roomElement.appendChild(doorElement);
+          Portal portal = (Portal) tile;
+          Element portalElement = document.createElement("portal");
+          portalElement.appendChild((document.createTextNode(portal.getDirection().toString())));
+          roomElement.appendChild(portalElement);
         }
         else if(tile instanceof AccessibleTile){
           AccessibleTile aTile = (AccessibleTile) tile;
 
-          //save items
+          //Save items
           if(aTile.hasItem()){
             Element item = document.createElement("item");
             item.setAttribute("row", aTile.getItem().getRow()+"");
@@ -101,7 +119,7 @@ public class XMLParser {
             roomElement.appendChild(item);
           }
 
-          //save challenges
+          //Save challenges
           if(aTile.hasChallenge()){
             ChallengeItem challengeItem = aTile.getChallenge();
             Element challenge = document.createElement("challenge");
@@ -130,36 +148,48 @@ public class XMLParser {
     return roomElement;
   }
 
-  private static Element savePlayer(Game game, Document document) {
-    Element player = document.createElement("player");
-    //Get position of player and add as attribute to player element
-    player.setAttribute("row", game.getPlayer().getTile().getRow()+"");
-    player.setAttribute("col", game.getPlayer().getTile().getCol()+"");
-    player.setAttribute("health", game.getPlayer().getHealth()+"");
-    player.setAttribute("direction", game.getPlayer().getDirection().toString());
+  /**
+   * Method to save a player and its properties to an element in the document
+   * @param player player to save
+   * @param document document to save element to
+   * @return player element to append to the root of the document
+   */
+  private static Element savePlayer(Player player, Document document) {
+    Element playerElement = document.createElement("player");
+    //Get position, health and direction of player and add as attributes to player element
+    playerElement.setAttribute("row", player.getTile().getRow()+"");
+    playerElement.setAttribute("col", player.getTile().getCol()+"");
+    playerElement.setAttribute("health", player.getHealth()+"");
+    playerElement.setAttribute("direction", player.getDirection().toString());
 
-    //Add coordinates of the room the player is in to the player element
+    //Add coordinates of the room the player is in
     Element roomRow = document.createElement("roomRow");
-    roomRow.appendChild(document.createTextNode(game.getPlayer().getRoom().getRow()+""));
+    roomRow.appendChild(document.createTextNode(player.getRoom().getRow()+""));
     Element roomCol = document.createElement("roomCol");
-    roomCol.appendChild(document.createTextNode(game.getPlayer().getRoom().getCol()+""));
-    player.appendChild(roomRow);
-    player.appendChild(roomCol);
+    roomCol.appendChild(document.createTextNode(player.getRoom().getCol()+""));
+    playerElement.appendChild(roomRow);
+    playerElement.appendChild(roomCol);
 
-    //save players item
-    Item playerItem = game.getPlayer().getItem();
+    //Save players item if they are holding one
+    Item playerItem = player.getItem();
     if(playerItem!=null){
       Element item = document.createElement("item");
-      item.setAttribute("row", -1+"");
-      item.setAttribute("col", -1+"");
-      item.setAttribute("direction", "NORTH");
+      item.setAttribute("row", playerItem.getRow()+"");
+      item.setAttribute("col", playerItem.getCol()+"");
+      item.setAttribute("direction", playerItem.getDirection().toString());
       item.appendChild(document.createTextNode(playerItem.toString()));
-      player.appendChild(item);
+      playerElement.appendChild(item);
     }
 
-    return player;
+    return playerElement;
   }
 
+  /**
+   * Method to parse an XML file into a game
+   * @param file file to parse
+   * @return the game created from file
+   * @throws ParseError throws a parse error if the file is invalid
+   */
   public static Game parseGame(File file) throws ParseError {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -198,8 +228,14 @@ public class XMLParser {
     }
   }
 
+  /**
+   * A method to parse rooms into the game
+   * @param room XML node element for the room
+   * @param board board to place room in
+   * @throws ParseError throws a parse error if room element is invalid
+   */
   private static void parseRoom(Node room, Room[][] board) throws ParseError {
-    List<String> doors = new ArrayList<>();
+    List<String> portals = new ArrayList<>();
     Element roomElement = (Element) room;
 
     Tile[][] tiles = new Tile[Room.ROOMSIZE][Room.ROOMSIZE];
@@ -216,11 +252,11 @@ public class XMLParser {
       }
     }
 
-    //parse doors
-    NodeList doorList = roomElement.getElementsByTagName("door");
-    for(int i = 0; i< doorList.getLength(); i++){
-      String door = doorList.item(i).getTextContent();
-      doors.add(door);
+    //parse portals
+    NodeList portalList = roomElement.getElementsByTagName("portal");
+    for(int i = 0; i< portalList.getLength(); i++){
+      String portal = portalList.item(i).getTextContent();
+      portals.add(portal);
     }
 
     //parse items
@@ -231,7 +267,7 @@ public class XMLParser {
     NodeList challengeList = roomElement.getElementsByTagName("challenge");
     parseChallenges(challengeList, tiles);
 
-    Room newRoom = new Room(row, col, tiles, doors);
+    Room newRoom = new Room(row, col, tiles, portals);
     board[row][col] = newRoom;
   }
 
@@ -338,14 +374,18 @@ public class XMLParser {
 
   /**
    * A method to load the schema for XML files
-   * @param fileName
+   * @param fileName name xsd file to parse
    */
-  public static void loadSchema(String fileName) throws SAXException {
+  private static void loadSchema(String fileName) throws SAXException {
     String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
     SchemaFactory factory = SchemaFactory.newInstance(language);
     schema = factory.newSchema(new File(fileName));
   }
 
+  /**
+   * A custom inner exception class to handle errors
+   * @author Sam Ong 300363819
+   */
   public static class ParseError extends Exception{
     ParseError(String message){
       super(message);

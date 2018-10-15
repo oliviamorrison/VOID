@@ -199,12 +199,18 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null) {
+    if (file != null && !file.getName().equals("easy.xml")) {
       try {
         XMLParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
       }
+    }
+    else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Unable to save over default game files");
+      alert.setContentText("Unable to save over default game files. Please save using a different file name");
+      alert.showAndWait();
     }
   }
 
