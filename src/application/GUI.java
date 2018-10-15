@@ -2,12 +2,8 @@ package application;
 
 import gameworld.Game;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -21,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -29,7 +26,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import mapeditor.MapEditor;
 import persistence.XMLParser;
 import renderer.Renderer;
 
@@ -38,7 +34,7 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
+import java.nio.file.Paths;
 import java.util.*;
 
 //TODO fix health bar with a longer length
@@ -62,6 +58,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Stage window;
   private Scene startScene, gameScene;
   private ProgressBar pBar;
+  private MediaPlayer mediaPlayer;
 
   @Override
   public void start(Stage stage) {
@@ -77,6 +74,11 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.setResizable(false);
     window.setTitle("Void");
     window.show();
+
+    Media media = new Media(Paths.get("music/space.mp3").toUri().toString());
+    mediaPlayer = new MediaPlayer(media);
+    mediaPlayer.setVolume(1);
+    mediaPlayer.play();
   }
 
   /**
@@ -223,7 +225,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // initialise the game panes
     this.game = setGame(stage);
-    this.healthBar = setHealthBar();
+    this.healthBar = setOxygenBar();
     this.inventory = setInventory();
     this.options = setOptions();
     String startMsg = "> Navigate through this unit to the safety " +
@@ -296,7 +298,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null && !file.getName().equals("easy.xml")) {
+    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XMLParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
@@ -332,7 +334,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    */
   private void startNewGame(Stage stage) {
     try {
-      currentGame = XMLParser.parseGame(new File("data/easy.xml"));
+      currentGame = XMLParser.parseGame(new File("data/hard.xml"));
       window.setScene(createGameScene(stage));
     } catch (XMLParser.ParseError parseError) {
       parseError.printStackTrace();
@@ -380,11 +382,19 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     /////////////////////////////////////////////////////////Here Annisha
     pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
-    Task task = taskCreator(100);
+    Task task = oxygenCounter(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
     /////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////// MUSIC
+//    Task music = musicCreator("music/space.mp3");
+//    music.run();
+//    new Thread(music).start();
+
+
     return grid;
   }
 
@@ -393,7 +403,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * player is displayed
    * @return the resulting pane holding the health bar
    */
-  public GridPane setHealthBar() {
+  public GridPane setOxygenBar() {
     GridPane healthBar = new GridPane();
 
     healthBar.add(pBar,0,0);
@@ -409,7 +419,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param health the players health
    * @return
    */
-  private Task taskCreator(int health){
+  private Task oxygenCounter(int health){
   return new Task() {
     @Override
     protected Object call() throws Exception {
@@ -424,6 +434,22 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
   };
 }
+
+  private Task musicCreator(String path){
+    return new Task(){
+      @Override
+      protected Object call() throws Exception {
+
+        Media media = new Media(Paths.get(path).toUri().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(1);
+        mediaPlayer.play();
+        System.out.println("Music player called");
+        return true;
+
+      }
+    };
+  }
 
   /**
    * Constructs the Inventory pane. This is where the inventory of the
