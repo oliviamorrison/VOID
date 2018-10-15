@@ -12,11 +12,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Renderer {
-    private final static Color ITColor = Color.rgb(237, 185, 177);
-    private final static Color ATColor = Color.rgb(226, 209, 206);
+    private final static Color INACCESSIBLE_COLOUR = Color.rgb(90, 90, 90);
+    private final static Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
     private final static Color DTColor = Color.rgb(161, 176, 201);
-    private  final static double floorHeight = 0;
-    private  final static double wallHeight = 1.25;
+    private final static double floorHeight = 0;
+    private final static double wallHeight = 2.0;
     private final static  double doorHeight = 0;
 
     private final static double playerHeight = 60;
@@ -100,7 +100,7 @@ public class Renderer {
 
         if(tile instanceof  AccessibleTile){
             AccessibleTile AT = (AccessibleTile) tile;
-            color = ATColor;
+            color = ACCESSIBLE_COLOUR;
             height = floorHeight;
 //            if(AT.hasItem()){
 //                color = Color.BLUE;
@@ -109,7 +109,7 @@ public class Renderer {
 //            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
-            color = ITColor;
+            color = INACCESSIBLE_COLOUR;
         }
         if(tile instanceof Portal){
             height = doorHeight;
