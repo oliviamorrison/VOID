@@ -60,7 +60,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     // title
     Image image = null;
     try {
-      image = new Image(new FileInputStream("src/application/title.png"));
+      image = new Image(new FileInputStream("images/title.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -258,7 +258,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     Image image = null;
     try {
-      image = new Image(new FileInputStream("src/application/background.png"));
+      image = new Image(new FileInputStream("images/background.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -308,7 +308,15 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     for(String item : availableItems) {
       btn = new ToggleButton();
       btn.setFocusTraversable(false); // disables key control
-      Image image = new Image(getClass().getResourceAsStream(item + ".png"));
+
+      // use images to represent buttons
+      Image image = null;
+      try {
+        image = new Image(new FileInputStream("images/" + item + ".png"));
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+
       ImageView imageView = new ImageView(image);
       imageView.setFitHeight(80);
       imageView.setFitWidth(80);
@@ -479,7 +487,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
         Image image = null;
         try {
-            image = new Image(new FileInputStream("src/application/controls.png"));
+            image = new Image(new FileInputStream("images/controls.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
