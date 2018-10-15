@@ -23,7 +23,7 @@ public class Room {
     this.portals = new ArrayList<>();
 
   }
-  
+
   public Room(int row, int col) {
     this.row = row;
     this.col = col;
@@ -179,6 +179,8 @@ public class Room {
 
       }
     }
+
+    rotateObjectsAnticlockwise();
   }
 
   public void rotateRoomAnticlockwise() {
@@ -192,7 +194,46 @@ public class Room {
     }
 
     this.tiles = tempArray;
+    rotateObjectsClockwise();
 
+  }
+
+  public void rotateObjectsAnticlockwise() {
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+        if (getTile(row, col) instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) getTile(row, col);
+          if (tile.hasItem()) {
+            Item item = tile.getItem();
+            item.setDirection(item.getDirection().getAnticlockwiseDirection());
+          } else if (tile.hasChallenge()) {
+            ChallengeItem challenge = tile.getChallenge();
+            Direction direction = challenge.getDirection();
+            challenge.setDirection(direction.getAnticlockwiseDirection());
+            System.out.println("Dir: " + challenge.getDirection());
+          }
+        }
+      }
+    }
+  }
+
+  public void rotateObjectsClockwise() {
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
+        if (getTile(row, col) instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) getTile(row, col);
+          if (tile.hasItem()) {
+            Item item = tile.getItem();
+            item.setDirection(item.getDirection().getClockwiseDirection());
+          } else if (tile.hasChallenge()) {
+            ChallengeItem challenge = tile.getChallenge();
+            Direction direction = challenge.getDirection();
+            challenge.setDirection(direction.getClockwiseDirection());
+            System.out.println("Dir: " + challenge.getDirection());
+          }
+        }
+      }
+    }
   }
 
   public void addPortal(Portal portal) {
