@@ -8,17 +8,12 @@ public class BoltCutter extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The red bolt cutter";
   }
 
   @Override
   public String getDescription() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return "BoltCutter";
+    return "It's a nice, red bolt cutter. It would be useful to break some chains.";
   }
 
 }

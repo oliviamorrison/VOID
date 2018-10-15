@@ -8,17 +8,12 @@ public class Beer extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The cold beer";
   }
 
   @Override
   public String getDescription() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return "Beer";
+    return "It's an ice-cold beer, perfect after a long day at work";
   }
 
 }

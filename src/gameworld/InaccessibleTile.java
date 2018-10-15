@@ -9,9 +9,4 @@ public class InaccessibleTile extends Tile {
     super(row, col);
   }
 
-  @Override
-  public String toString() {
-    return "Inaccessible tile: Row: " + getRow() + " Col: " + getCol();
-  }
-
 }

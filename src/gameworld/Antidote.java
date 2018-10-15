@@ -8,17 +8,12 @@ public class Antidote extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The poison antidote";
   }
 
   @Override
   public String getDescription() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return "Antidote";
+    return "It's a small bottle with a powerful punch. It could even save a life.";
   }
 
 }

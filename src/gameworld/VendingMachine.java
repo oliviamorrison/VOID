@@ -22,17 +22,12 @@ public class VendingMachine extends ChallengeItem {
 
   @Override
   public String getName() {
-    return "";
+    return "The vending machine";
   }
 
   @Override
   public String getDescription() {
-    return "";
-  }
-
-  @Override
-  public String toString() {
-    return "VendingMachine";
+    return "It's a vending machine. What goodies does it contain?";
   }
 
 }

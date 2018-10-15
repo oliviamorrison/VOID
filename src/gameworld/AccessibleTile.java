@@ -85,9 +85,4 @@ public class AccessibleTile extends Tile {
     return this.challenge != null;
   }
 
-  @Override
-  public String toString() {
-    return "Accessible tile: Row: " + getRow() + " Col: " + getCol();
-  }
-
 }
