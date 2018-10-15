@@ -339,6 +339,9 @@ public class XMLParser {
         String direction = elem.getAttribute("direction");
         Item item;
         switch(token){
+          case "Potion":
+            item = new Potion(row, col, direction);
+            break;
           case "SpaceShip":
             item = new SpaceShip(row, col, direction);
             break;
