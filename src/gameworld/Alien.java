@@ -4,9 +4,9 @@ package gameworld;
  * This class represents a guard challenge which must be bribed
  * with a beer by the player in order to access a portal.
  */
-public class Guard extends ChallengeItem {
+public class Alien extends ChallengeItem {
 
-  public Guard(int row, int col, String direction) {
+  public Alien(int row, int col, String direction) {
     super(row, col, direction);
   }
 

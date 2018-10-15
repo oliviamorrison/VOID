@@ -724,7 +724,7 @@ public class MapEditor extends Application {
                         item = new OxygenTank(k, l, "NORTH");
                         break;
                       case "guard.png":
-                        challenge = new Guard(k,l, "NORTH");
+                        challenge = new Alien(k,l, "NORTH");
                         break;
                       case "unlit-bomb.png":
                         challenge = new Bomb(k,l, "NORTH");

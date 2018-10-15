@@ -128,9 +128,9 @@ public class XMLParser {
               Bomb bomb = (Bomb) challengeItem;
               challenge.setAttribute("state", bomb.isNavigable()+"");
             }
-            else if(challengeItem instanceof Guard){
-              Guard guard = (Guard) challengeItem;
-              challenge.setAttribute("state", guard.isNavigable()+"");
+            else if(challengeItem instanceof Alien){
+              Alien alien = (Alien) challengeItem;
+              challenge.setAttribute("state", alien.isNavigable()+"");
             }
             else{
               VendingMachine vm = (VendingMachine) challengeItem;
@@ -394,16 +394,18 @@ public class XMLParser {
           bomb.setNavigable(Boolean.parseBoolean(state));
           ((AccessibleTile)tiles[row][col]).setChallenge(bomb);
           break;
-        case "Guard":
-          Guard guard = new Guard(row, col, direction);
-          guard.setNavigable(Boolean.parseBoolean(state));
-          ((AccessibleTile)tiles[row][col]).setChallenge(guard);
+        case "Alien":
+          Alien alien = new Alien(row, col, direction);
+          alien.setNavigable(Boolean.parseBoolean(state));
+          ((AccessibleTile)tiles[row][col]).setChallenge(alien);
           break;
         case "VendingMachine":
           VendingMachine vm = new VendingMachine(row,col, direction);
           vm.setUnlocked(Boolean.parseBoolean(state));
           ((AccessibleTile)tiles[row][col]).setChallenge(vm);
           break;
+        default:
+          throw new ParseError("Incorrect challenge name");
       }
     }
   }

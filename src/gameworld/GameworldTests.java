@@ -46,7 +46,7 @@ public class GameworldTests {
           new Bomb(-1, -1, "NORTH"),
           new Coin(-1, -1, "NORTH"),
           new Diffuser(-1, -1, "NORTH"),
-          new Guard(-1, -1, "NORTH"),
+          new Alien(-1, -1, "NORTH"),
           new OxygenTank(-1, -1, "NORTH"),
           new VendingMachine(-1, -1, "NORTH")
       ));
@@ -298,17 +298,17 @@ public class GameworldTests {
     player.addItem(new Potion(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[2][1].getTile(5, 1);
-    Guard guard = (Guard) tile.getChallenge();
-    guard.setDirection(Direction.EAST);
+    Alien alien = (Alien) tile.getChallenge();
+    alien.setDirection(Direction.EAST);
     player.setDirection(Direction.WEST);
 
     game.bribeGuard();
 
-    assertTrue(guard.isNavigable());
+    assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
 
-    guard.setDirection(Direction.NORTH);
-    guard.setNavigable(false);
+    alien.setDirection(Direction.NORTH);
+    alien.setNavigable(false);
     player.addItem(new Potion(-1, -1, "NORTH"));
 
     game.bribeGuard();

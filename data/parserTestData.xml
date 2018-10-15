@@ -23,7 +23,7 @@
     </room>
     <room row="2" col="0">
         <portal>EAST</portal>
-        <item row="1" col="5" direction="NORTH">Antidote</item>
+        <item row="1" col="5" direction="NORTH">SpaceShip</item>
     </room>
     <room row="2" col="1">
         <portal>NORTH</portal>

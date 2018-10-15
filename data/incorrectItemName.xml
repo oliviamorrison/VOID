@@ -22,13 +22,13 @@
     </room>
     <room row="2" col="0">
         <portal>Right</portal>
-        <item row="1" col="5" direction ="NORTH">Antidote</item>
+        <item row="1" col="5" direction ="NORTH">SpaceShip</item>
     </room>
     <room row="2" col="1">
         <portal>Top</portal>
         <portal>Left</portal>
         <portal>Right</portal>
-        <challenge row="5" col="1" state="false" direction ="NORTH">Guard</challenge>
+        <challenge row="5" col="1" state="false" direction ="NORTH">Alien</challenge>
     </room>
     <room row="2" col="2">
         <portal>Top</portal>

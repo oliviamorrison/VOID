@@ -307,24 +307,24 @@ public class Game {
       return;
     }
 
-    if (challenge instanceof Guard) {
+    if (challenge instanceof Alien) {
 
-      Guard guard = (Guard) challenge;
-      Direction guardDirection = guard.getDirection();
+      Alien alien = (Alien) challenge;
+      Direction guardDirection = alien.getDirection();
 
       if (!direction.getOppositeDirection().equals(guardDirection)) {
         return;
       }
 
-      if (!guard.isNavigable()) {
+      if (!alien.isNavigable()) {
 
         Item item = player.getItem();
 
         if (item instanceof Potion) {
 
           player.dropItem();
-          guard.setNavigable(true);
-          System.out.println("Guard bribed with beer");
+          alien.setNavigable(true);
+          System.out.println("Alien bribed with beer");
 
         }
       }
