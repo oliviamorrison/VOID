@@ -210,7 +210,6 @@ public class Room {
             ChallengeItem challenge = tile.getChallenge();
             Direction direction = challenge.getDirection();
             challenge.setDirection(direction.getAnticlockwiseDirection());
-            System.out.println("Dir: " + challenge.getDirection());
           }
         }
       }
@@ -229,7 +228,6 @@ public class Room {
             ChallengeItem challenge = tile.getChallenge();
             Direction direction = challenge.getDirection();
             challenge.setDirection(direction.getClockwiseDirection());
-            System.out.println("Dir: " + challenge.getDirection());
           }
         }
       }

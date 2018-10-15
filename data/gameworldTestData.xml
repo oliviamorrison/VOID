@@ -30,7 +30,7 @@
         <portal>NORTH</portal>
         <portal>WEST</portal>
         <portal>EAST</portal>
-        <challenge row="5" col="1" state="false" direction ="NORTH">Alien</challenge>
+        <challenge row="5" col="1" state="false" direction ="WEST">Alien</challenge>
     </room>
     <room row="2" col="2">
         <portal>NORTH</portal>

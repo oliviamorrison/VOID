@@ -25,6 +25,11 @@ public class GameworldTests {
   private Player player;
   private List<Item> items;
 
+  /**
+   * This method sets up a test scenario to ease testing.
+   *
+   * @throws XMLParser.ParseError xml parsing error
+   */
   @BeforeEach
   public void setUp() throws XMLParser.ParseError {
 
@@ -245,18 +250,21 @@ public class GameworldTests {
 
     AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
     VendingMachine vendingMachine = (VendingMachine) tile.getChallenge();
-    vendingMachine.setDirection(Direction.WEST);
+    vendingMachine.setDirection(Direction.EAST);
     player.setDirection(Direction.EAST);
 
     game.unlockVendingMachine();
-
     assertTrue(vendingMachine.isUnlocked());
 
     vendingMachine.setDirection(Direction.NORTH);
     vendingMachine.setUnlocked(false);
 
     game.unlockVendingMachine();
+    assertFalse(vendingMachine.isUnlocked());
 
+    vendingMachine.setDirection(Direction.WEST);
+
+    game.unlockVendingMachine();
     assertFalse(vendingMachine.isUnlocked());
 
   }
@@ -269,7 +277,7 @@ public class GameworldTests {
 
     AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
     VendingMachine vendingMachine = (VendingMachine) tile.getChallenge();
-    vendingMachine.setDirection(Direction.WEST);
+    vendingMachine.setDirection(Direction.EAST);
     vendingMachine.setUnlocked(true);
     player.setDirection(Direction.EAST);
 
@@ -288,6 +296,13 @@ public class GameworldTests {
     assertTrue(player.getItem() instanceof Coin);
     assertFalse(player.getItem() instanceof Potion);
 
+    vendingMachine.setDirection(Direction.WEST);
+
+    game.useVendingMachine();
+
+    assertTrue(player.getItem() instanceof Coin);
+    assertFalse(player.getItem() instanceof Potion);
+
   }
 
   @Test
@@ -298,7 +313,7 @@ public class GameworldTests {
 
     AccessibleTile tile = (AccessibleTile) board[2][1].getTile(5, 1);
     Alien alien = (Alien) tile.getChallenge();
-    alien.setDirection(Direction.EAST);
+    alien.setDirection(Direction.WEST);
     player.setDirection(Direction.WEST);
 
     game.bribeGuard();
@@ -311,7 +326,11 @@ public class GameworldTests {
     player.addItem(new Potion(-1, -1, "NORTH"));
 
     game.bribeGuard();
+    assertTrue(player.getItem() instanceof Potion);
 
+    alien.setDirection(Direction.EAST);
+
+    game.bribeGuard();
     assertTrue(player.getItem() instanceof Potion);
 
   }
@@ -431,6 +450,7 @@ public class GameworldTests {
   public void playerHealthCannotExceedBounds() {
 
     player.setHealth(150);
+    player.loseHealth();
     player.boostHealth();
 
     assertTrue(player.getHealth() <= 100);
