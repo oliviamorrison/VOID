@@ -22,7 +22,6 @@ public class Game {
     this.board = Arrays.copyOf(board, board.length);
     this.currentRoom = player.getRoom();
     connectPortals();
-    setupTimer();
 
   }
 
@@ -139,20 +138,6 @@ public class Game {
         }
       }
     }
-  }
-
-  public void setupTimer() {
-
-    timer = new Timer();
-    timer.schedule(new TimerTask() {
-
-      @Override
-      public void run() {
-        player.loseHealth();
-      }
-
-    }, 0, 1000);
-
   }
 
   public void pickUpItem() {
@@ -322,17 +307,6 @@ public class Game {
     if (challenge instanceof Alien) {
 
       Alien alien = (Alien) challenge;
-      Direction alienDirection = alien.getDirection();
-
-      if (alienDirection == Direction.EAST || alienDirection == Direction.WEST) {
-        if (!alienDirection.equals(direction)) {
-          return;
-        }
-      } else {
-        if (!direction.getOppositeDirection().equals(alienDirection)) {
-          return;
-        }
-      }
 
       if (!alien.isNavigable()) {
 
@@ -342,6 +316,10 @@ public class Game {
 
           player.dropItem();
           alien.setNavigable(true);
+          Direction nextDirection =
+              (player.getDirection() == Direction.NORTH || player.getDirection() == Direction.SOUTH) ?
+                  player.getDirection().getOppositeDirection() : player.getDirection();
+          alien.setDirection(nextDirection);
           System.out.println("Alien bribed with potion");
 
         }
