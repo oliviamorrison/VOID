@@ -99,11 +99,11 @@ public class Renderer {
             AccessibleTile AT = (AccessibleTile) tile;
             color = ACCESSIBLE_COLOUR;
             height = floorHeight;
-//            if(AT.hasItem()){
-//                color = Color.BLUE;
-//            } else if(AT.hasChallenge()){
-//                color = Color.RED;
-//            }
+            if(AT.hasItem()){
+                color = Color.BLUE;
+            } else if(AT.hasChallenge()){
+                color = Color.RED;
+            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
             color = INACCESSIBLE_COLOUR;
@@ -180,6 +180,11 @@ public class Renderer {
             itemImage.setX(c.getX() - 20);
             itemImage.setY(c.getY() - 22);
         } else if(challenge instanceof VendingMachine){
+            itemImage = getImage((vendingMachineImage+ getObjectDirection(challenge.getDirection())));
+            itemImage.setFitHeight(80);
+            itemImage.setX(c.getX() - 30);
+            itemImage.setY(c.getY() - 65);
+        } else if(challenge instanceof Alien){
             itemImage = getImage((vendingMachineImage+ getObjectDirection(challenge.getDirection())));
             itemImage.setFitHeight(80);
             itemImage.setX(c.getX() - 30);

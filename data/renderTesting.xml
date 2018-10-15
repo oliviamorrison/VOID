@@ -4,7 +4,7 @@
         <portal>EAST</portal>
         <item row="3" col="2" direction="NORTH">Diffuser</item>
         <challenge row="1" col="5" state="false" direction="NORTH">Bomb</challenge>
-        <challenge row="1" col="3" state="false" direction="NORTH">VendingMachine</challenge>
+        <challenge row="1" col="3" state="false" direction="SOUTH">VendingMachine</challenge>
         <item row="3" col="3" direction="NORTH">BoltCutter</item>
         <item row="4" col="4" direction="NORTH">OxygenTank</item>
         <item row="3" col="5" direction="NORTH">Coin</item>
@@ -42,7 +42,7 @@
         <portal>WEST</portal>
         <item row="7" col="7" direction="NORTH">Coin</item>
     </room>
-    <player row="1" col="1" health="100" direction="EAST">
+    <player row="1" col="1" health="50" direction="EAST">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
     </player>
