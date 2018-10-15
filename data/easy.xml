@@ -14,7 +14,7 @@
         <portal>NORTH</portal>
         <portal>SOUTH</portal>
         <item row="1" col="4" direction="NORTH">BoltCutter</item>
-        <item row="4" col="6" direction="NORTH">HealthPack</item>
+        <item row="4" col="6" direction="NORTH">OxygenTank</item>
     </room>
     <room row="1" col="2">
         <portal>WEST</portal>
@@ -23,13 +23,13 @@
     </room>
     <room row="2" col="0">
         <portal>EAST</portal>
-        <item row="1" col="5" direction="NORTH">Antidote</item>
+        <item row="1" col="5" direction="NORTH">SpaceShip</item>
     </room>
     <room row="2" col="1">
         <portal>NORTH</portal>
         <portal>WEST</portal>
         <portal>EAST</portal>
-        <challenge row="5" col="1" state="false" direction="EAST">Guard</challenge>
+        <challenge row="5" col="1" state="false" direction="EAST">Alien</challenge>
     </room>
     <room row="2" col="2">
         <portal>NORTH</portal>

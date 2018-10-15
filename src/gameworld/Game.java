@@ -286,7 +286,7 @@ public class Game {
         if (item instanceof Coin) {
 
           player.dropItem();
-          player.addItem(new Beer(-1, -1, "NORTH"));
+          player.addItem(new Potion(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
           System.out.println("Pick up the beer that is dispensed");
 
@@ -307,24 +307,24 @@ public class Game {
       return;
     }
 
-    if (challenge instanceof Guard) {
+    if (challenge instanceof Alien) {
 
-      Guard guard = (Guard) challenge;
-      Direction guardDirection = guard.getDirection();
+      Alien alien = (Alien) challenge;
+      Direction guardDirection = alien.getDirection();
 
       if (!direction.getOppositeDirection().equals(guardDirection)) {
         return;
       }
 
-      if (!guard.isNavigable()) {
+      if (!alien.isNavigable()) {
 
         Item item = player.getItem();
 
-        if (item instanceof Beer) {
+        if (item instanceof Potion) {
 
           player.dropItem();
-          guard.setNavigable(true);
-          System.out.println("Guard bribed with beer");
+          alien.setNavigable(true);
+          System.out.println("Alien bribed with beer");
 
         }
       }
@@ -340,7 +340,7 @@ public class Game {
 
       Item item = currentTile.getItem();
 
-      if (item instanceof HealthPack) {
+      if (item instanceof OxygenTank) {
         player.boostHealth();
         currentTile.setItem(null);
       }
@@ -354,7 +354,7 @@ public class Game {
     AccessibleTile currentTile = player.getTile();
 
     if (currentTile.hasItem()) {
-      return currentTile.getItem() instanceof Antidote;
+      return currentTile.getItem() instanceof SpaceShip;
     }
 
     return false;

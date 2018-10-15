@@ -1,8 +1,8 @@
 package gameworld;
 
-public class Antidote extends Item {
+public class SpaceShip extends Item {
 
-  public Antidote(int row, int col, String direction) {
+  public SpaceShip(int row, int col, String direction) {
     super(row, col, direction);
   }
 

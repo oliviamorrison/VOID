@@ -50,6 +50,15 @@ public class ParsingTests {
   }
 
   /**
+   * Test the parser throws an XMLParser error when a file with incorrect challenge names are loaded
+   */
+  @Test
+  public void testIncorrectChallengeName() {
+    assertThrows(XMLParser.ParseError.class,
+        ()-> XMLParser.parseGame(new File("data/incorrectChallengeName.xml")));
+  }
+
+  /**
    * Test the parser saves an XML file from a game that starts with a root node <game></game>
    */
   @Test
@@ -66,7 +75,7 @@ public class ParsingTests {
     board[0][0].setTile(new Portal(5, 9, board[0][1], Direction.NORTH), 5, 9);
     ((AccessibleTile) board[0][0].getTile(6, 5)).setItem(new Diffuser(6, 5, "NORTH"));
     ((AccessibleTile) board[0][1].getTile(4, 7)).setChallenge(new VendingMachine(4,7, "NORTH"));
-    ((AccessibleTile) board[1][0].getTile(2, 2)).setChallenge(new Guard(2,2, "NORTH"));
+    ((AccessibleTile) board[1][0].getTile(2, 2)).setChallenge(new Alien(2,2, "NORTH"));
     ((AccessibleTile) board[2][0].getTile(6, 3)).setChallenge(new Bomb(6,3, "NORTH"));
 
     player.addItem(new Diffuser(-1,-1, "NORTH"));

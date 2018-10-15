@@ -329,7 +329,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     ArrayList<String> availableItems = new ArrayList<>();
     availableItems.add("Coin");
-    availableItems.add("Beer");
+    availableItems.add("Potion");
     availableItems.add("Diffuser");
     availableItems.add("BoltCutter");
 
@@ -366,7 +366,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       updateInventory();
       renderer.draw();
     });
-    inventoryButtons.get("Beer").setOnAction(Event -> {
+    inventoryButtons.get("Potion").setOnAction(Event -> {
       currentGame.bribeGuard();
       updateInventory();
       renderer.draw();

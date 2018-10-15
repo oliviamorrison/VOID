@@ -27,9 +27,9 @@ import static java.lang.Integer.parseInt;
  * @author Sam Ong 300363819
  *
  */
-//TODO: add different difficulty levels for easy/medium/hard
-//TODO: Add README
+//TODO: Add different difficulty levels for easy/medium/hard
 //TODO: UML Diagram
+//TODO: Throw more descriptive ParseErrors
 
 public class XMLParser {
   private static Schema schema;
@@ -128,9 +128,9 @@ public class XMLParser {
               Bomb bomb = (Bomb) challengeItem;
               challenge.setAttribute("state", bomb.isNavigable()+"");
             }
-            else if(challengeItem instanceof Guard){
-              Guard guard = (Guard) challengeItem;
-              challenge.setAttribute("state", guard.isNavigable()+"");
+            else if(challengeItem instanceof Alien){
+              Alien alien = (Alien) challengeItem;
+              challenge.setAttribute("state", alien.isNavigable()+"");
             }
             else{
               VendingMachine vm = (VendingMachine) challengeItem;
@@ -332,13 +332,15 @@ public class XMLParser {
       String token = items.item(i).getTextContent().trim();
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
+        if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals("")) throw new ParseError("Item needs position attributes (row and col)");
         int row = parseInt(elem.getAttribute("row"));
         int col = parseInt(elem.getAttribute("col"));
+        if(elem.getAttribute("direction").equals("")) throw new ParseError("Item needs direction attribute");
         String direction = elem.getAttribute("direction");
         Item item;
         switch(token){
-          case "Antidote":
-            item = new Antidote(row, col, direction);
+          case "SpaceShip":
+            item = new SpaceShip(row, col, direction);
             break;
           case "BoltCutter":
             item = new BoltCutter(row, col, direction);
@@ -349,8 +351,8 @@ public class XMLParser {
           case "Diffuser":
             item = new Diffuser(row, col, direction);
             break;
-          case "HealthPack":
-            item = new HealthPack(row, col, direction);
+          case "OxygenTank":
+            item = new OxygenTank(row, col, direction);
             break;
           default:
             throw new ParseError("Incorrect item name");
@@ -373,14 +375,16 @@ public class XMLParser {
    * @param challengeList the node list to get challenges from
    * @param tiles tiles in the room that can be set with challenges
    */
-  private static void parseChallenges(NodeList challengeList, Tile[][] tiles){
+  private static void parseChallenges(NodeList challengeList, Tile[][] tiles) throws ParseError {
 
     for(int i = 0; i< challengeList.getLength(); i++){
       Node node = challengeList.item(i);
       Element elem = (Element) node;
       //Get challenge attributes
+      if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals("")) throw new ParseError("Challenge needs position attributes (row and col)");
       int row = parseInt(elem.getAttribute("row"));
       int col = parseInt(elem.getAttribute("col"));
+      if(elem.getAttribute("direction").equals("") || elem.getAttribute("state").equals("")) throw new ParseError("Challenge needs direction and state attributes");
       String state = elem.getAttribute("state");
       String direction = elem.getAttribute("direction");
 
@@ -390,16 +394,18 @@ public class XMLParser {
           bomb.setNavigable(Boolean.parseBoolean(state));
           ((AccessibleTile)tiles[row][col]).setChallenge(bomb);
           break;
-        case "Guard":
-          Guard guard = new Guard(row, col, direction);
-          guard.setNavigable(Boolean.parseBoolean(state));
-          ((AccessibleTile)tiles[row][col]).setChallenge(guard);
+        case "Alien":
+          Alien alien = new Alien(row, col, direction);
+          alien.setNavigable(Boolean.parseBoolean(state));
+          ((AccessibleTile)tiles[row][col]).setChallenge(alien);
           break;
         case "VendingMachine":
           VendingMachine vm = new VendingMachine(row,col, direction);
           vm.setUnlocked(Boolean.parseBoolean(state));
           ((AccessibleTile)tiles[row][col]).setChallenge(vm);
           break;
+        default:
+          throw new ParseError("Incorrect challenge name");
       }
     }
   }

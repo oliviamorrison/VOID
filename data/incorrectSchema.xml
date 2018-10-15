@@ -6,38 +6,38 @@
     </player>
     <room row="0" col="0">
         <portal>EAST</portal>
-        <item row="4" col="3">Diffuser</item>
+        <item row="4" col="3" direction ="NORTH">Diffuser</item>
     </room>
     <room row="0" col="1">
         <portal>WEST</portal>
         <portal>SOUTH</portal>
-        <challenge row="8" col="5" state="false">Bomb</challenge>
+        <challenge row="8" col="5" state="false" direction ="NORTH">Bomb</challenge>
     </room>
     <room row="1" col="1">
         <portal>EAST</portal>
         <portal>NORTH</portal>
         <portal>SOUTH</portal>
-        <item row="1" col="4">BoltCutter</item>
-        <item row="4" col="6">HealthPack</item>
+        <item row="1" col="4" direction ="NORTH">BoltCutter</item>
+        <item row="4" col="6" direction ="NORTH">OxygenTank</item>
     </room>
     <room row="1" col="2">
         <portal>WEST</portal>
         <portal>SOUTH</portal>
-        <challenge row="8" col="8" state="false">VendingMachine</challenge>
+        <challenge row="8" col="8" state="false" direction ="NORTH">VendingMachine</challenge>
     </room>
     <room row="2" col="0">
         <portal>EAST</portal>
-        <item row="1" col="5">Antidote</item>
+        <item row="1" col="5" direction ="NORTH">SpaceShip</item>
     </room>
     <room row="2" col="1">
         <portal>NORTH</portal>
         <portal>WEST</portal>
         <portal>EAST</portal>
-        <challenge row="5" col="1" state="false">Guard</challenge>
+        <challenge row="5" col="1" state="false" direction ="NORTH">Alien</challenge>
     </room>
     <room row="2" col="2">
         <portal>NORTH</portal>
         <portal>WEST</portal>
-        <item row="7" col="7">Coin</item>
+        <item row="7" col="7" direction ="NORTH">Coin</item>
     </room>
 </game>
