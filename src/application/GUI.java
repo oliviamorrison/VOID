@@ -37,7 +37,6 @@ import java.util.*;
 //TODO fix health bar with a longer length
 //TODO win/lose dialog
 //TODO print sensible messages to screen
-//TODO levels
 
 
 public class GUI extends Application implements EventHandler<KeyEvent>{
@@ -161,12 +160,22 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   public Scene createLevelsScreen (Stage stage) {
-    // easy
+      // title
+      Image titleImage = null;
+      try {
+          titleImage = new Image(new FileInputStream("images/selectTitle.png"));
+      } catch (FileNotFoundException e) {
+          e.printStackTrace();
+      }
+
+      ImageView titleIcon = new ImageView(titleImage);
+
+      // easy
     Button easy = new Button();
     easy.setStyle("-fx-background-color: rgba(0,0,0,0);");
     Image newImage = null;
     try {
-      newImage = new Image(new FileInputStream("images/new.png"));
+      newImage = new Image(new FileInputStream("images/easy.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -179,7 +188,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     med.setStyle("-fx-background-color: rgba(0,0,0,0);");
     Image medImage = null;
     try {
-      medImage = new Image(new FileInputStream("images/load.png"));
+      medImage = new Image(new FileInputStream("images/med.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -192,7 +201,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     hard.setStyle("-fx-background-color: rgba(0,0,0,0);");
     Image hardImage = null;
     try {
-      hardImage = new Image(new FileInputStream("images/load.png"));
+      hardImage = new Image(new FileInputStream("images/hard.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -205,8 +214,12 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     buttons.getChildren().addAll(easy, med, hard);
     buttons.setAlignment(Pos.CENTER);
 
-    levelsScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
-    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
+    VBox levels = new VBox(60);
+    levels.getChildren().addAll(titleIcon, buttons);
+    levels.setAlignment(Pos.CENTER);
+
+    levelsScene = new Scene(levels, WINDOW_WIDTH, WINDOW_HEIGHT);
+      levels.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
 
     return levelsScene;
 
