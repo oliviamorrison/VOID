@@ -10,14 +10,12 @@ public class Diffuser extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The bomb diffuser";
   }
 
   @Override
   public String getDescription() {
-    return null;
+    return "It's a funny-looking suitcase. Which button do I press to work it?";
   }
 
-  @Override
-  public String toString() { return "Diffuser"; }
 }

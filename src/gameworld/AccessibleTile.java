@@ -73,10 +73,6 @@ public class AccessibleTile extends Tile {
     this.player = player;
   }
 
-  public boolean hasPlayer() {
-    return player;
-  }
-
   public ChallengeItem getChallenge() {
     return this.challenge;
   }
@@ -87,11 +83,6 @@ public class AccessibleTile extends Tile {
 
   public boolean hasChallenge() {
     return this.challenge != null;
-  }
-
-  @Override
-  public String toString() {
-    return " ";
   }
 
 }

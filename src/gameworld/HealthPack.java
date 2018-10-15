@@ -8,17 +8,12 @@ public class HealthPack extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The medical health pack";
   }
 
   @Override
   public String getDescription() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return "HealthPack";
+    return "It's a medical health pack. It'll make you feel better.";
   }
 
 }
