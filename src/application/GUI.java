@@ -70,29 +70,70 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     ImageView imageView = new ImageView(image);
 
+    //TODO storyline???? nah aint nobody got time for that
     // new game
-    Button newGame = new Button("New Game");
-    //TODO storyline????
+    Button newGame = new Button();
+    newGame.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image newImage = null;
+    try {
+      newImage = new Image(new FileInputStream("images/new.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView newGameIcon = new ImageView(newImage);
+    newGame.setGraphic(newGameIcon);
     newGame.setOnAction(Event -> startNewGame(stage));
 
     // load
-    Button load = new Button("Load Game");
-    load.setOnAction(e -> window.setScene(createGameScene(stage)));
+    Button load = new Button();
+    load.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image loadImage = null;
+    try {
+      loadImage = new Image(new FileInputStream("images/load.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView loadIcon = new ImageView(loadImage);
+    load.setGraphic(loadIcon);
+    // only load a new game if a file was successfully chosen
+    load.setOnAction(Event -> {
+      if(loadFile(stage)) {
+        window.setScene(createGameScene(stage));
+      }
+    });
 
     // edit map
-    Button editMap = new Button("Edit Map");
     // TODO link up map editor gui
-    // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
+    Button editMap = new Button();
+    editMap.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image editImage = null;
+    try {
+      editImage = new Image(new FileInputStream("images/editmap.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView editIcon = new ImageView(editImage);
+    editMap.setGraphic(editIcon);
+    //editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
 
     // quit
-    Button quit = new Button("Quit");
+    Button quit = new Button();
+    quit.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image quitImage = null;
+    try {
+      quitImage = new Image(new FileInputStream("images/quit.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView quitIcon = new ImageView(quitImage);
+    quit.setGraphic(quitIcon);
     quit.setOnMouseClicked(mouseEvent -> {
       confirmExit();
     });
 
 
     // buttons laid out in vertical column
-    VBox buttons = new VBox(20);
+    VBox buttons = new VBox(10);
     buttons.getChildren().addAll(imageView, newGame, load, editMap, quit);
     buttons.setAlignment(Pos.CENTER);
 
@@ -124,8 +165,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     newGame.setOnAction(Event -> startNewGame(stage));
     loadGame.setOnAction(Event -> {
-      loadFile(stage);
-      window.setScene(createGameScene(stage));
+      if(loadFile(stage)) {
+        window.setScene(createGameScene(stage));
+      }
     });
     saveGame.setOnAction(Event -> saveFile(stage));
 
@@ -184,23 +226,24 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
 
-  public void loadFile(Stage stage) {
+  public boolean loadFile(Stage stage) {
     FileChooser chooser = new FileChooser();
     configureFileChooser(chooser);
     chooser.setTitle("Open Game XML File");
     File file = chooser.showOpenDialog(stage);
 
-    if (file != null) {
-      try {
-        currentGame = XMLParser.parseGame(file);
-      } catch (XMLParser.ParseError parseError) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("File Error");
-        alert.setContentText("Please load a valid XML file");
-        alert.showAndWait();
-      }
-      setGame(stage);
+    if (file == null) return false; // file loading failed
+
+    try {
+      currentGame = XMLParser.parseGame(file);
+    } catch (XMLParser.ParseError parseError) {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("File Error");
+      alert.setContentText("Please load a valid XML file");
+      alert.showAndWait();
     }
+    setGame(stage);
+    return true;
   }
 
   public void saveFile(Stage stage) {
@@ -513,44 +556,44 @@ private Task taskCreator(int health){
   }
 
 
-    public void displayHelp() {
-        // blur the GUI
-        game.setEffect(new GaussianBlur());
-        inventory.setEffect(new GaussianBlur());
-        options.setEffect(new GaussianBlur());
+  public void displayHelp() {
+    // blur the GUI
+    game.setEffect(new GaussianBlur());
+    inventory.setEffect(new GaussianBlur());
+    options.setEffect(new GaussianBlur());
 
-        VBox pauseRoot = new VBox(5);
-        pauseRoot.setPrefSize(500,200);
+    VBox pauseRoot = new VBox(5);
+    pauseRoot.setPrefSize(500,200);
 
-        pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-        pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
-        pauseRoot.setPadding(new Insets(20));
+    pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+    pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
+    pauseRoot.setPadding(new Insets(20));
 
-        Image image = null;
-        try {
-            image = new Image(new FileInputStream("images/controls.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    Image image = null;
+    try {
+      image = new Image(new FileInputStream("images/controls.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
 
-        ImageView imageView = new ImageView(image);
+    ImageView imageView = new ImageView(image);
 
-        Button resume = new Button("Resume");
-        pauseRoot.getChildren().addAll(imageView, resume);
+    Button resume = new Button("Resume");
+    pauseRoot.getChildren().addAll(imageView, resume);
 
-        Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
-        helpDialog.initOwner(window);
-        helpDialog.initModality(Modality.APPLICATION_MODAL);
-        helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
+    Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
+    helpDialog.initOwner(window);
+    helpDialog.initModality(Modality.APPLICATION_MODAL);
+    helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
 
-        resume.setOnAction(event -> {
-            game.setEffect(null);
-            inventory.setEffect(null);
-            options.setEffect(null);
-            helpDialog.hide();
-        });
+    resume.setOnAction(event -> {
+      game.setEffect(null);
+      inventory.setEffect(null);
+      options.setEffect(null);
+      helpDialog.hide();
+    });
 
-        helpDialog.show();
+    helpDialog.show();
 
   }
 
