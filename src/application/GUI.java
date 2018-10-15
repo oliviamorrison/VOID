@@ -2,6 +2,7 @@ package application;
 
 import gameworld.Game;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -44,6 +45,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
   private Stage window;
   private Scene startScene, gameScene;
 
+  private Label health;
+  private ProgressBar pBar;
 
   @Override
   public void start(Stage stage) {
@@ -267,34 +270,39 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     renderer.getRoot().setTranslateX(30);
     renderer.getRoot().setTranslateY(230);
 
-    setupTimer();
+    /////////////////////////////////////////////////////////Here Annisha
+    pBar = new ProgressBar(1);
+    Task task = taskCreator(5);
+    pBar.progressProperty().unbind();
+    pBar.progressProperty().bind(task.progressProperty());
+    new Thread(task).start();
+    /////////////////////////////////////////////////////////
     return grid;
   }
 
-  private Label health;
 
   public GridPane setHealthBar() {
     GridPane grid = new GridPane();
     grid.setStyle("-fx-background-color: red;");
-    health = new Label(currentGame.getPlayer().getHealth() + "");
-    grid.add(health,0,0);
-
+    grid.add(pBar,0,0);
     return grid;
   }
 
-  public void setupTimer() {
-    this.timer = new Timer();
-    this.timer.schedule(new TimerTask() {
-
+  private Task taskCreator(int seconds){
+    return new Task() {
       @Override
-      public void run() {
-        currentGame.getPlayer().loseHealth();
-        //System.out.println(currentGame.getPlayer().getHealth());
-        health.setLabelFor(healthBar);
+      protected Object call() throws Exception {
+        for(int i=0; i<seconds;i++){
+          Thread.sleep(1000);
+          updateProgress(seconds-i-1, seconds);
+          if(seconds-i-1 == 0){
+            System.exit(0);
+          }
+
+        }
+        return true;
       }
-
-    }, 0, 1000);
-
+    };
   }
 
   public FlowPane setInventory() {

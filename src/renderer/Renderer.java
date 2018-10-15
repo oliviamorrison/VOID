@@ -212,10 +212,6 @@ public class Renderer {
         root.getChildren().add(healthBar);
     }
 
-
-
-
-
     public void newRoom(){
         currentRoom = player.getRoom();
         root.getChildren().clear();
