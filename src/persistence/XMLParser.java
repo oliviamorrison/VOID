@@ -32,6 +32,9 @@ import static java.lang.Integer.parseInt;
 //TODO: Throw more descriptive ParseErrors
 //TODO: Add music
 //TODO: Take group pic
+//TODO: Credits
+//TODO: Pause health bar when menu is clicked
+//TODO: Bug (renderer moves down a pixel when in top corner)
 
 
 public class XMLParser {
