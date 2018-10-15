@@ -271,15 +271,27 @@ public class XMLParser {
     board[row][col] = newRoom;
   }
 
+  /**
+   * A method to parse the player into the game
+   * @param playerNode XML node element for the player
+   * @param board board to find the room to place player in
+   * @return player in the game
+   * @throws ParseError throws a parse error if player element is invalid
+   */
   private static Player parsePlayer(Node playerNode, Room[][] board) throws ParseError {
     Element playerElement = (Element) playerNode;
+    //Get the room in the board that the player is in
     int roomRow = parseInteger("roomRow", playerElement);
     int roomCol = parseInteger("roomCol", playerElement);
 
     Room playerRoom = board[roomRow][roomCol];
+
+    //Get the player position from its row and col attributes
+    if(playerElement.getAttribute("row").equals("") || playerElement.getAttribute("col").equals("")) throw new ParseError("Player needs position attributes (row and col)");
     int row= parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
+    //Get the player's health and the direction they are facing
     if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
     int health = parseInt(playerElement.getAttribute("health"));
     if(playerElement.getAttribute("direction").equals("")) throw new ParseError("Player needs direction attribute");
@@ -289,23 +301,38 @@ public class XMLParser {
     Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(row, col), health, direction);
     ((AccessibleTile) playerRoom.getTile(row, col)).setPlayer(true);
 
-    NodeList inventory = playerElement.getElementsByTagName("item");
-    parseItems(inventory, null, player);
+    //Parse the player's item
+    NodeList playerItem = playerElement.getElementsByTagName("item");
+    parseItems(playerItem, null, player);
 
     return player;
   }
 
+  /**
+   * A method to parse a number from an element
+   * @param tagName the name of the tag to search
+   * @param element the element to get the tag from
+   * @return the integer value inside the element
+   */
   private static int parseInteger(String tagName, Element element){
     NodeList n = element.getElementsByTagName(tagName);
     return parseInt(n.item(0).getTextContent());
   }
 
+  /**
+   * A method to parse items from an element
+   *
+   * @param items the node list to get the items from
+   * @param tiles tiles in the room that can be set with items
+   * @param p player to give item to
+   * @throws ParseError throws a parse error if item element is invalid
+   */
   private static void parseItems(NodeList items, Tile[][] tiles, Player p) throws ParseError {
     for(int i = 0; i< items.getLength(); i++){
       String token = items.item(i).getTextContent().trim();
       if(!token.equals("")){
         Element elem = (Element) items.item(i);
-        int row= parseInt(elem.getAttribute("row"));
+        int row = parseInt(elem.getAttribute("row"));
         int col = parseInt(elem.getAttribute("col"));
         String direction = elem.getAttribute("direction");
         Item item;
@@ -329,29 +356,34 @@ public class XMLParser {
             throw new ParseError("Incorrect item name");
         }
 
+        //Set the item for the tile at the given row and col
         if(tiles!=null){
           item.setRow(row);
           item.setCol(col);
           ((AccessibleTile) tiles[row][col]).setItem(item);
         }
-        else if(p!=null){
-          p.addItem(item);
-        }
-
+        //Give the item to the player to hold
+        else if(p!=null)p.addItem(item);
       }
     }
   }
 
-  private static void parseChallenges(NodeList items, Tile[][] tiles){
+  /**
+   * A method to parse each challenge and set their tiles
+   * @param challengeList the node list to get challenges from
+   * @param tiles tiles in the room that can be set with challenges
+   */
+  private static void parseChallenges(NodeList challengeList, Tile[][] tiles){
 
-    for(int i = 0; i< items.getLength(); i++){
-      Node node = items.item(i);
+    for(int i = 0; i< challengeList.getLength(); i++){
+      Node node = challengeList.item(i);
       Element elem = (Element) node;
-
+      //Get challenge attributes
       int row = parseInt(elem.getAttribute("row"));
       int col = parseInt(elem.getAttribute("col"));
       String state = elem.getAttribute("state");
       String direction = elem.getAttribute("direction");
+
       switch(node.getTextContent().trim()){
         case "Bomb":
           Bomb bomb = new Bomb(row, col, direction);
