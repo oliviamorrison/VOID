@@ -25,39 +25,39 @@ public class ParsingTests {
 
   /**
    * Test reading a valid XML file into a game
-   * @throws XMLParser.ParseError if it is an invalid file
+   * @throws XmlParser.ParseError if it is an invalid file
    */
   @Test
-  public void testReadGame() throws XMLParser.ParseError {
-    Game game = XMLParser.parseGame(new File("data/parserTestData.xml"));
+  public void testReadGame() throws XmlParser.ParseError {
+    Game game = XmlParser.parseGame(new File("data/parserTestData.xml"));
     assertNotNull(game);
   }
 
   /**
-   * Test the parser throws an XMLParser error when an invalid file is loaded
+   * Test the parser throws an XmlParser error when an invalid file is loaded
    */
   @Test
   public void testIncorrectSchema() {
-    assertThrows(XMLParser.ParseError.class,
-        ()-> XMLParser.parseGame(new File("data/incorrectSchema.xml")));
+    assertThrows(XmlParser.ParseError.class,
+        ()-> XmlParser.parseGame(new File("data/incorrectSchema.xml")));
   }
 
   /**
-   * Test the parser throws an XMLParser error when a file with incorrect item names are loaded
+   * Test the parser throws an XmlParser error when a file with incorrect item names are loaded
    */
   @Test
   public void testIncorrectItemName() {
-    assertThrows(XMLParser.ParseError.class,
-        ()-> XMLParser.parseGame(new File("data/incorrectItemName.xml")));
+    assertThrows(XmlParser.ParseError.class,
+        ()-> XmlParser.parseGame(new File("data/incorrectItemName.xml")));
   }
 
   /**
-   * Test the parser throws an XMLParser error when a file with incorrect challenge names are loaded
+   * Test the parser throws an XmlParser error when a file with incorrect challenge names are loaded
    */
   @Test
   public void testIncorrectChallengeName() {
-    assertThrows(XMLParser.ParseError.class,
-        ()-> XMLParser.parseGame(new File("data/incorrectChallengeName.xml")));
+    assertThrows(XmlParser.ParseError.class,
+        ()-> XmlParser.parseGame(new File("data/incorrectChallengeName.xml")));
   }
 
   /**
@@ -85,7 +85,7 @@ public class ParsingTests {
     Game game = new Game(board, player);
 
     File testFile = new File("data/testSave.xml");
-    XMLParser.saveFile(new File("data/testSave.xml"), game);
+    XmlParser.saveFile(new File("data/testSave.xml"), game);
     //Check the file has been written
     assertTrue(testFile.length() > 0);
 

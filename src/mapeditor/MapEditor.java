@@ -18,7 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import persistence.XMLParser;
+import persistence.XmlParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -771,7 +771,7 @@ public class MapEditor extends Application {
     Game game = new Game(board, player);
 
     try {
-      XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
+      XmlParser.saveFile(new File("data/testMapEditor.xml"), game);
       return true;
     } catch (ParserConfigurationException | TransformerException e) {
       e.printStackTrace();
