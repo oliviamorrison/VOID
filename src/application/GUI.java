@@ -24,7 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import persistence.XMLParser;
+import persistence.XmlParser;
 import renderer.Renderer;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,7 +50,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private GridPane screen;
   private Renderer renderer;
   private Text screenMessage;
-  private static Game currentGame;
+  private Game currentGame;
   private Stage window;
   private Scene startScene, gameScene, levelsScene;
   private ProgressBar pBar;
@@ -330,8 +330,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     if (file == null) return false; // file loading failed
 
     try {
-      currentGame = XMLParser.parseGame(file);
-    } catch (XMLParser.ParseError parseError) {
+      currentGame = XmlParser.parseGame(file);
+    } catch (XmlParser.ParseError parseError) {
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("File Error");
       alert.setContentText("Please load a valid XML file");
@@ -355,7 +355,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
-        XMLParser.saveFile(file, currentGame);
+        XmlParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
       }
@@ -415,9 +415,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    */
   private void startNewHardGame(Stage stage) {
     try {
-      currentGame = XMLParser.parseGame(new File("data/hard.xml"));
+      currentGame = XmlParser.parseGame(new File("data/hard.xml"));
       window.setScene(createGameScene(stage));
-    } catch (XMLParser.ParseError parseError) {
+    } catch (XmlParser.ParseError parseError) {
       parseError.printStackTrace();
     }
   }

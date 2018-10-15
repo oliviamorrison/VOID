@@ -14,7 +14,6 @@ public class Game {
   private Room[][] board;
   private Player player;
   private Room currentRoom;
-  private Timer timer;
 
   public Game(Room[][] board, Player player) {
 
