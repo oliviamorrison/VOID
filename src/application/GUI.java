@@ -2,12 +2,8 @@ package application;
 
 import gameworld.Game;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -28,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import mapeditor.MapEditor;
 import persistence.XMLParser;
 import renderer.Renderer;
 
@@ -37,7 +32,6 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 //TODO fix health bar with a longer length
@@ -59,7 +53,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Text screenMessage;
   private static Game currentGame;
   private Stage window;
-  private Scene startScene, gameScene;
+  private Scene startScene, gameScene, levelsScene;
   private ProgressBar pBar;
 
   @Override
@@ -94,8 +88,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     ImageView titleIcon = new ImageView(titleImage);
 
-    //TODO storyline???? nah aint nobody got time for that
-    //TODO levels????
     // new game
     Button newGame = new Button();
     newGame.setStyle("-fx-background-color: rgba(0,0,0,0);");
@@ -107,7 +99,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView newGameIcon = new ImageView(newImage);
     newGame.setGraphic(newGameIcon);
-    newGame.setOnAction(Event -> startNewGame(stage));
+    newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
 
     // load
     Button load = new Button();
@@ -139,7 +131,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView editIcon = new ImageView(editImage);
     editMap.setGraphic(editIcon);
-   // editMap.setOnAction(e -> Application.launch(MapEditor.class);
+    // editMap.setOnAction(e -> Application.launch(MapEditor.class);
 
     // quit
     Button quit = new Button();
@@ -161,11 +153,63 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     buttons.getChildren().addAll(titleIcon, newGame, load, editMap, quit);
     buttons.setAlignment(Pos.CENTER);
 
-    // create the Game Scene
+    // create the Start Scene
     startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
     buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
     startScene.setOnKeyPressed(this);
     return startScene;
+  }
+
+  public Scene createLevelsScreen (Stage stage) {
+    // easy
+    Button easy = new Button();
+    easy.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image newImage = null;
+    try {
+      newImage = new Image(new FileInputStream("images/new.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView newGameIcon = new ImageView(newImage);
+    easy.setGraphic(newGameIcon);
+    easy.setOnAction(Event -> startNewEasyGame(stage));
+
+    // medium
+    Button med = new Button();
+    med.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image medImage = null;
+    try {
+      medImage = new Image(new FileInputStream("images/load.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView medIcon = new ImageView(medImage);
+    med.setGraphic(medIcon);
+    med.setOnAction(Event -> startNewMedGame(stage));
+
+    // hard
+    Button hard = new Button();
+    hard.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image hardImage = null;
+    try {
+      hardImage = new Image(new FileInputStream("images/load.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView hardIcon = new ImageView(hardImage);
+    hard.setGraphic(hardIcon);
+    hard.setOnAction(Event -> startNewHardGame(stage));
+
+    // buttons laid out in horizontal row
+    HBox buttons = new HBox(10);
+    buttons.getChildren().addAll(easy, med, hard);
+    buttons.setAlignment(Pos.CENTER);
+
+    levelsScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
+    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
+
+    return levelsScene;
+
   }
 
   /**
@@ -193,12 +237,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     MenuItem saveGame = new MenuItem("Save Game");
     file.getItems().addAll(newGame, editMap, loadGame, saveGame);
 
-    newGame.setOnAction(Event -> startNewGame(stage));
-    loadGame.setOnAction(Event -> {
-      if(loadFile(stage)) {
-        window.setScene(createGameScene(stage));
-      }
-    });
+//    newGame.setOnAction(Event -> startNewGame(stage));
+//    loadGame.setOnAction(Event -> {
+//      if(loadFile(stage)) {
+//        window.setScene(createGameScene(stage));
+//      }
+//    });
+//
     saveGame.setOnAction(Event -> saveFile(stage));
 
     // help
@@ -222,11 +267,11 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // initialise the game panes
     this.game = setGame(stage);
-    this.healthBar = setHealthBar();
+    this.healthBar = setOxygenBar();
     this.inventory = setInventory();
     this.options = setOptions();
     String startMsg = "> Navigate through this unit to the safety " +
-            "of your ship. Hurry Major, time is of the essence!";
+            "of your ship. Hurry Commander, time is of the essence!";
     this.screen = setScreen(startMsg);
 
     updateInventory();
@@ -278,6 +323,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       alert.setTitle("File Error");
       alert.setContentText("Please load a valid XML file");
       alert.showAndWait();
+      System.out.println(parseError.getMessage());
     }
     setGame(stage);
     return true;
@@ -294,7 +340,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null && !file.getName().equals("easy.xml")) {
+    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XMLParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
@@ -325,12 +371,38 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
 
   /**
-   * Constructs a new game based on a default XML file
+   * Constructs a new EASY game based on a default XML file
    * @param stage the primary stage constructed by the platform
    */
-  private void startNewGame(Stage stage) {
+  private void startNewEasyGame(Stage stage) {
     try {
       currentGame = XMLParser.parseGame(new File("data/easy.xml"));
+      window.setScene(createGameScene(stage));
+    } catch (XMLParser.ParseError parseError) {
+      parseError.printStackTrace();
+    }
+  }
+
+  /**
+   * Constructs a new MEDIUM game based on a default XML file
+   * @param stage the primary stage constructed by the platform
+   */
+  private void startNewMedGame(Stage stage) {
+    try {
+      currentGame = XMLParser.parseGame(new File("data/medium.xml"));
+      window.setScene(createGameScene(stage));
+    } catch (XMLParser.ParseError parseError) {
+      parseError.printStackTrace();
+    }
+  }
+
+  /**
+   * Constructs a new HARD game based on a default XML file
+   * @param stage the primary stage constructed by the platform
+   */
+  private void startNewHardGame(Stage stage) {
+    try {
+      currentGame = XMLParser.parseGame(new File("data/hard.xml"));
       window.setScene(createGameScene(stage));
     } catch (XMLParser.ParseError parseError) {
       parseError.printStackTrace();
@@ -378,11 +450,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     /////////////////////////////////////////////////////////Here Annisha
     pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
-    Task task = taskCreator(100);
+    Task task = oxygenCounter(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
     /////////////////////////////////////////////////////////
+
+
     return grid;
   }
 
@@ -391,7 +465,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * player is displayed
    * @return the resulting pane holding the health bar
    */
-  public GridPane setHealthBar() {
+  public GridPane setOxygenBar() {
     GridPane healthBar = new GridPane();
 
     healthBar.add(pBar,0,0);
@@ -407,7 +481,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param health the players health
    * @return
    */
-  private Task taskCreator(int health){
+  private Task oxygenCounter(int health){
   return new Task() {
     @Override
     protected Object call() throws Exception {
@@ -422,6 +496,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
   };
 }
+
+
 
   /**
    * Constructs the Inventory pane. This is where the inventory of the
@@ -586,6 +662,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   public void handle(KeyEvent event) {
     int dx = 0;
     int dy = 0;
+    String str = "";
 
     switch (event.getCode()) {
       case UP:
@@ -607,7 +684,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         currentGame.rotateRoomClockwise();
         break;
       case Z:
-        currentGame.pickUpItem();
+        str = currentGame.pickUpItem();
         break;
       case X:
         currentGame.dropItem();
@@ -644,7 +721,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     renderer.draw();
     updateInventory();
-    updateScreen("hello"); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
+    updateScreen(str); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
 
   }
 
@@ -734,15 +811,17 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
   /**
    * Updates the Screen pane given the action take by the player
+   *
+   * @param msg the message to be displayed on the Screen pane
    */
-  public void updateScreen(String str) {
+  public void updateScreen(String msg) {
 
     // line break at every 20th letter
-    String parsedStr = str.replaceAll("(.{20})", "$1-\n");
+    String parsedStr = msg.replaceAll("(.{20})", "$1-\n");
 
     final Animation animation = new Transition() {
       {
-        setCycleDuration(Duration.millis(3000));
+        setCycleDuration(Duration.millis(800));
       }
 
       protected void interpolate(double frac) {

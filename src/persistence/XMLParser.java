@@ -30,6 +30,12 @@ import static java.lang.Integer.parseInt;
 //TODO: Add different difficulty levels for easy/medium/hard
 //TODO: UML Diagram
 //TODO: Throw more descriptive ParseErrors
+//TODO: Add music
+//TODO: Take group pic
+//TODO: Credits
+//TODO: Pause health bar when menu is clicked
+//TODO: Bug (renderer moves down a pixel when in top corner)
+
 
 public class XMLParser {
   private static Schema schema;
@@ -339,6 +345,9 @@ public class XMLParser {
         String direction = elem.getAttribute("direction");
         Item item;
         switch(token){
+          case "Potion":
+            item = new Potion(row, col, direction);
+            break;
           case "SpaceShip":
             item = new SpaceShip(row, col, direction);
             break;
