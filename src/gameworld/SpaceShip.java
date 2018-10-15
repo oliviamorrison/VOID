@@ -8,12 +8,12 @@ public class SpaceShip extends Item {
 
   @Override
   public String getName() {
-    return "The poison antidote";
+    return "The amazing spaceship";
   }
 
   @Override
   public String getDescription() {
-    return "It's a small bottle with a powerful punch. It could even save a life.";
+    return "It's an amazing spaceship. It'll help me to escape.";
   }
 
 }

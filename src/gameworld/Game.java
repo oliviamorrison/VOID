@@ -171,7 +171,7 @@ public class Game {
       tile.setItem(null);
       item.setRow(-1);
       item.setCol(-1);
-      System.out.println("Player picked up " + item.toString());
+      System.out.println("Player picked up " + item.getName());
 
     }
 
@@ -191,7 +191,7 @@ public class Game {
       item.setRow(tile.getRow());
       item.setCol(tile.getCol());
       tile.setItem(item);
-      System.out.println("Player dropped " + item.toString());
+      System.out.println("Player dropped " + item.getName());
 
     }
 
@@ -218,7 +218,7 @@ public class Game {
 
         if (item instanceof Diffuser) {
           bomb.setNavigable(true);
-          System.out.println("Bomb diffused with " + item.toString());
+          System.out.println("Bomb diffused with " + item.getName());
         }
 
       }
@@ -288,7 +288,7 @@ public class Game {
           player.dropItem();
           player.addItem(new Potion(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
-          System.out.println("Pick up the beer that is dispensed");
+          System.out.println("Pick up the potion that is dispensed");
 
         }
       }
@@ -324,7 +324,7 @@ public class Game {
 
           player.dropItem();
           alien.setNavigable(true);
-          System.out.println("Alien bribed with beer");
+          System.out.println("Alien bribed with potion");
 
         }
       }
@@ -375,6 +375,7 @@ public class Game {
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
+
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
@@ -388,7 +389,7 @@ public class Game {
   public void rotateRoomAnticlockwise() {
 
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
-//    currentRoom.rotateRoomAnticlockwise();
+
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
@@ -396,6 +397,7 @@ public class Game {
         room.rotateRoomAnticlockwise();
       }
     }
+
   }
 
   public Room[][] getBoard() {

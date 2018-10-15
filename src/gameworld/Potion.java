@@ -13,7 +13,7 @@ public class Potion extends Item {
 
   @Override
   public String getDescription() {
-    return "It's an ice-cold beer, perfect after a long day at work";
+    return "It's a magical potion. It could be useful to someone else.";
   }
 
 
