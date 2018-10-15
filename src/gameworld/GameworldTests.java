@@ -39,7 +39,7 @@ public class GameworldTests {
       board = game.getBoard();
       player = game.getPlayer();
       items = new ArrayList<>(Arrays.asList(
-          new Antidote(-1, -1, "NORTH"),
+          new SpaceShip(-1, -1, "NORTH"),
           new Beer(-1, -1, "NORTH"),
           new Beer(-1, -1, "NORTH"),
           new BoltCutter(-1, -1, "NORTH"),
@@ -47,7 +47,7 @@ public class GameworldTests {
           new Coin(-1, -1, "NORTH"),
           new Diffuser(-1, -1, "NORTH"),
           new Guard(-1, -1, "NORTH"),
-          new HealthPack(-1, -1, "NORTH"),
+          new OxygenTank(-1, -1, "NORTH"),
           new VendingMachine(-1, -1, "NORTH")
       ));
 

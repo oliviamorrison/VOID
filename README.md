@@ -1,4 +1,4 @@
-### VOID 
+# VOID 
 ##### Created by 
 * Annisha Akosah ([student_ID])
 * James Del Puerto ([student_ID])
@@ -17,7 +17,7 @@ runs out. There is a bomb that can only be diffused using the diffuser, a vendin
 machine that is locked with chains and has to be cut open using bolt cutters and 
 then unlocked with a coin. 
 The vending machine will dispense a potion that players must give to an alien
-in order to befriend him and access the oxygen tank.
+in order to befriend him and access your space ship
 
 Players have a hold limit of only 1 item at a time, and can travel through portals
 to access different rooms. Oxygen tanks can be picked up along the way to replenish your supply.

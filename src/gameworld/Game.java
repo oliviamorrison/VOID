@@ -340,7 +340,7 @@ public class Game {
 
       Item item = currentTile.getItem();
 
-      if (item instanceof HealthPack) {
+      if (item instanceof OxygenTank) {
         player.boostHealth();
         currentTile.setItem(null);
       }
@@ -354,7 +354,7 @@ public class Game {
     AccessibleTile currentTile = player.getTile();
 
     if (currentTile.hasItem()) {
-      return currentTile.getItem() instanceof Antidote;
+      return currentTile.getItem() instanceof SpaceShip;
     }
 
     return false;

@@ -1,8 +1,8 @@
 package gameworld;
 
-public class HealthPack extends Item {
+public class OxygenTank extends Item {
 
-  public HealthPack(int row, int col, String direction) {
+  public OxygenTank(int row, int col, String direction) {
     super(row, col, direction);
   }
 
