@@ -1,7 +1,13 @@
 package application;
 
 import gameworld.Game;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,10 +21,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import mapeditor.MapEditor;
 import persistence.XMLParser;
 import renderer.Renderer;
 
@@ -30,27 +40,36 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.*;
 
+//TODO fix health bar with a longer length
+//TODO win/lose dialog
+//TODO print sensible messages to screen
+//TODO levels
+
+
 public class GUI extends Application implements EventHandler<KeyEvent>{
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 750;
-  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<String, ToggleButton>();
+  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<>();
   private GridPane game;
   private FlowPane inventory;
   private GridPane healthBar;
-  private AnchorPane options;
+  private GridPane options;
+  private GridPane screen;
   private Renderer renderer;
+  private Text screenMessage;
   private static Game currentGame;
-  private Timer timer;
-
   private Stage window;
   private Scene startScene, gameScene;
-
-  private Label health;
   private ProgressBar pBar;
 
   @Override
   public void start(Stage stage) {
     window = stage;
+
+    window.setOnCloseRequest(e -> {
+      e.consume();
+      confirmExit();
+    });
 
     // display the start menu first
     window.setScene(createStartScene(stage));
@@ -59,52 +78,104 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.show();
   }
 
+  /**
+   * Constructs the initial start menu screen
+   * @param stage the primary stage constructed by the platform
+   * @return the resulting start scene
+   */
   private Scene createStartScene(Stage stage) {
     // title
-    Image image = null;
+    Image titleImage = null;
     try {
-      image = new Image(new FileInputStream("images/title.png"));
+      titleImage = new Image(new FileInputStream("images/title.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
 
-    ImageView imageView = new ImageView(image);
+    ImageView titleIcon = new ImageView(titleImage);
 
+    //TODO storyline???? nah aint nobody got time for that
+    //TODO levels????
     // new game
-    Button newGame = new Button("New Game");
-    //TODO storyline????
+    Button newGame = new Button();
+    newGame.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image newImage = null;
+    try {
+      newImage = new Image(new FileInputStream("images/new.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView newGameIcon = new ImageView(newImage);
+    newGame.setGraphic(newGameIcon);
     newGame.setOnAction(Event -> startNewGame(stage));
 
     // load
-    Button load = new Button("Load Game");
-    load.setOnAction(e -> window.setScene(createGameScene(stage)));
+    Button load = new Button();
+    load.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image loadImage = null;
+    try {
+      loadImage = new Image(new FileInputStream("images/load.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView loadIcon = new ImageView(loadImage);
+    load.setGraphic(loadIcon);
+    // only load a new game if a file was successfully chosen
+    load.setOnAction(Event -> {
+      if(loadFile(stage)) {
+        window.setScene(createGameScene(stage));
+      }
+    });
 
     // edit map
-    Button editMap = new Button("Edit Map");
     // TODO link up map editor gui
-    // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
+    Button editMap = new Button();
+    editMap.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image editImage = null;
+    try {
+      editImage = new Image(new FileInputStream("images/editmap.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView editIcon = new ImageView(editImage);
+    editMap.setGraphic(editIcon);
+   // editMap.setOnAction(e -> Application.launch(MapEditor.class);
 
     // quit
-    Button quit = new Button("Quit");
+    Button quit = new Button();
+    quit.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image quitImage = null;
+    try {
+      quitImage = new Image(new FileInputStream("images/quit.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView quitIcon = new ImageView(quitImage);
+    quit.setGraphic(quitIcon);
     quit.setOnMouseClicked(mouseEvent -> {
       confirmExit();
     });
 
-
     // buttons laid out in vertical column
-    VBox buttons = new VBox(20);
-    buttons.getChildren().addAll(imageView, newGame, load, editMap, quit);
+    VBox buttons = new VBox(10);
+    buttons.getChildren().addAll(titleIcon, newGame, load, editMap, quit);
     buttons.setAlignment(Pos.CENTER);
 
-
     // create the Game Scene
-    startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
+    startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
     buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
     startScene.setOnKeyPressed(this);
     return startScene;
   }
 
-
+  /**
+   * Constructs the game screen by building each game GUI component one at a
+   * time. Saves all of the game components (panes) as fields so they can be easily
+   * be referenced when updating the game state.
+   *
+   * @param stage the primary stage constructed by the platform
+   * @return the resulting game scene
+   */
   public Scene createGameScene(Stage stage) {
     // create the menu bar
     MenuBar menuBar = new MenuBar();
@@ -124,8 +195,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     newGame.setOnAction(Event -> startNewGame(stage));
     loadGame.setOnAction(Event -> {
-      loadFile(stage);
-      window.setScene(createGameScene(stage));
+      if(loadFile(stage)) {
+        window.setScene(createGameScene(stage));
+      }
     });
     saveGame.setOnAction(Event -> saveFile(stage));
 
@@ -145,7 +217,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     Menu quitGame = new Menu("", quit);
     menuBar.getMenus().add(quitGame);
 
-
     // disables key control
     menuBar.setFocusTraversable(false);
 
@@ -154,11 +225,14 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     this.healthBar = setHealthBar();
     this.inventory = setInventory();
     this.options = setOptions();
+    String startMsg = "> Navigate through this unit to the safety " +
+            "of your ship. Hurry Major, time is of the essence!";
+    this.screen = setScreen(startMsg);
 
     updateInventory();
 
     FlowPane stack = new FlowPane();
-    stack.getChildren().addAll(healthBar,inventory, options);
+    stack.getChildren().addAll(healthBar,inventory, options, screen);
 
     stack.setHgap(4);
     stack.setPrefWrapLength(WINDOW_WIDTH * 0.3); // preferred width allows for two columns
@@ -184,26 +258,36 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
 
-  public void loadFile(Stage stage) {
+  /**
+   * Attempts to read in a valid XML file
+   * @param stage the primary stage constructed by the platform
+   * @return true if a file was successfully loaded or false otherwise
+   */
+  public boolean loadFile(Stage stage) {
     FileChooser chooser = new FileChooser();
     configureFileChooser(chooser);
     chooser.setTitle("Open Game XML File");
     File file = chooser.showOpenDialog(stage);
 
-    if (file != null) {
-      try {
-        currentGame = XMLParser.parseGame(file);
-      } catch (XMLParser.ParseError parseError) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("File Error");
-        alert.setContentText("Please load a valid XML file");
-        alert.showAndWait();
-        System.out.println(parseError.getMessage());
-      }
-      setGame(stage);
+    if (file == null) return false; // file loading failed
+
+    try {
+      currentGame = XMLParser.parseGame(file);
+    } catch (XMLParser.ParseError parseError) {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("File Error");
+      alert.setContentText("Please load a valid XML file");
+      alert.showAndWait();
+      System.out.println(parseError.getMessage());
     }
+    setGame(stage);
+    return true;
   }
 
+  /**
+   * Attempts to write a current game state to an XML file
+   * @param stage the primary stage constructed by the platform
+   */
   public void saveFile(Stage stage) {
     FileChooser fileChooser = new FileChooser();
     configureFileChooser(fileChooser);
@@ -241,6 +325,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
 
+  /**
+   * Constructs a new game based on a default XML file
+   * @param stage the primary stage constructed by the platform
+   */
   private void startNewGame(Stage stage) {
     try {
       currentGame = XMLParser.parseGame(new File("data/easy.xml"));
@@ -251,14 +339,24 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
 
+  /**
+   * Configures the size of each game GUI pane
+   *
+   */
   public void setWindowRatio() {
-    //set ratios
     this.game.setPrefSize(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT);
-    this.healthBar.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT *  0.2);
-    this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
-    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
+    this.healthBar.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT *  0.1);
+    this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.3);
+    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.26);
+    this.screen.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.33);
   }
 
+  /**
+   * Constructs the Game pane. This is where the rendering of the
+   * actual game occurs so construct a new Renderer here.
+   * @param stage the primary stage constructed by the platform
+   * @return the resulting game pane
+   */
   public GridPane setGame(Stage stage) {
     if (currentGame == null) {
       loadFile(stage);
@@ -273,15 +371,15 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       e.printStackTrace();
     }
 
-    BackgroundImage myBI= new BackgroundImage(image,BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    BackgroundImage myBI = new BackgroundImage(image,BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
     grid.setBackground(new Background(myBI));
     grid.add(renderer.getRoot(), 0, 1);
     renderer.getRoot().setTranslateX(30);
     renderer.getRoot().setTranslateY(230);
 
     /////////////////////////////////////////////////////////Here Annisha
-    pBar = new ProgressBar(1);
-    Task task = taskCreator(5);
+    pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
+    Task task = taskCreator(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
@@ -289,41 +387,59 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return grid;
   }
 
-
-
-
+  /**
+   * Constructs the HealthBar pane. This is where the health bar of the
+   * player is displayed
+   * @return the resulting pane holding the health bar
+   */
   public GridPane setHealthBar() {
-    GridPane grid = new GridPane();
-    grid.setStyle("-fx-background-color: red;");
-    grid.add(pBar,0,0);
-    return grid;
+    GridPane healthBar = new GridPane();
+
+    healthBar.add(pBar,0,0);
+    healthBar.setStyle("-fx-border-width:5px;-fx-border-color:rgb(38,38,38);-fx-background-color: rgb(45,45,45);");
+    pBar.setPrefSize((WINDOW_WIDTH * 0.3) - 30, (WINDOW_HEIGHT * 0.1) - 30);
+    pBar.setStyle("-fx-accent: #00a57d;");
+    healthBar.setAlignment(Pos.CENTER);
+    return healthBar;
   }
 
-  private Task taskCreator(int seconds){
-    return new Task() {
-      @Override
-      protected Object call() throws Exception {
-        for(int i=0; i<=seconds;i++){
-          Thread.sleep(1000);
-          updateProgress(seconds-i, seconds);
-          if(seconds-i == 0){
-            System.out.println("Finish");
-          }
-
-        }
-        return true;
+  /**
+   * JAMES??????????
+   * @param health the players health
+   * @return
+   */
+  private Task taskCreator(int health){
+  return new Task() {
+    @Override
+    protected Object call() throws Exception {
+      for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
+        Thread.sleep(1000);
+        updateProgress(currentGame.getPlayer().getHealth(), health);
+        currentGame.getPlayer().loseHealth();
       }
-    };
-  }
+      System.out.println("Finish");
+      //TODO: game needs to end
+      return true;
+    }
+  };
+}
 
+  /**
+   * Constructs the Inventory pane. This is where the inventory of the
+   * player is displayed. The player can only hold one item at a time,
+   * so only one item is toggled on at any given moment. Users may click
+   * on the buttons to use the item if it is in the player's possession
+   *
+   * @return the resulting pane holding the inventory
+   */
   public FlowPane setInventory() {
-    FlowPane flow = new FlowPane();
-    flow.setStyle("-fx-background-color: white;");
+    FlowPane inventory = new FlowPane();
+    inventory.setStyle("-fx-border-width:5px;-fx-border-color:rgb(38,38,38);-fx-background-color: rgb(45,45,45);");
 
-    flow.setPadding(new Insets(8, 1, 1, 8));
-    flow.setVgap(4);
-    flow.setHgap(4);
-    flow.setPrefWrapLength(WINDOW_WIDTH * 0.15); // preferred width allows for two columns
+
+    inventory.setVgap(10);
+    inventory.setHgap(10);
+    inventory.setPrefWrapLength(WINDOW_WIDTH * 0.1); // preferred width allows for two columns
 
     ToggleButton btn;
     ToggleGroup group = new ToggleGroup();
@@ -351,8 +467,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       imageView.setFitWidth(80);
       btn.setGraphic(imageView);
       btn.setToggleGroup(group);
-      btn.setPrefSize(WINDOW_WIDTH * 0.14, WINDOW_HEIGHT * 0.5 * 0.23);
-      flow.getChildren().add(btn);
+      btn.setPrefWidth((WINDOW_WIDTH * 0.15) - 20);
+      inventory.getChildren().add(btn);
       inventoryButtons.put(item, btn);
     }
 
@@ -378,58 +494,94 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       renderer.draw();
     });
 
-    return flow;
+    inventory.setAlignment(Pos.CENTER);
+
+    return inventory;
   }
 
-
-  public AnchorPane setOptions() {
-    AnchorPane options = new AnchorPane();
-    Button pickupButton = new Button("Pick Up");
-    Button dropButton = new Button("Drop");
-
+  /**
+   * Constructs the Options pane. This is where the two options of picking
+   * up/dropping items is made available to the user through the use of
+   * buttons
+   *
+   * @return the resulting pane holding the pickup/drop buttons
+   */
+  public GridPane setOptions() {
+    GridPane options = new GridPane();
+    options.setStyle("-fx-border-width:5px;-fx-border-color:rgb(38,38,38);-fx-background-color: rgb(45,45,45);");
+    Button pickupButton = new Button();
+    Button dropButton = new Button();
 
     // disables key control
     pickupButton.setFocusTraversable(false);
     dropButton.setFocusTraversable(false);
 
 
-    // enable button listeners
+    // enable button listeners and add images for buttons
+    pickupButton.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image pickupImage = null;
+    try {
+      pickupImage = new Image(new FileInputStream("images/pickup.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView pickupIcon = new ImageView(pickupImage);
+    pickupButton.setGraphic(pickupIcon);
     pickupButton.setOnAction(Event -> {
       currentGame.pickUpItem();
       updateInventory();
       renderer.draw();
     });
+
+    dropButton.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image dropImage = null;
+    try {
+      dropImage = new Image(new FileInputStream("images/drop.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView dropIcon = new ImageView(dropImage);
+    dropButton.setGraphic(dropIcon);
     dropButton.setOnAction(Event -> {
       currentGame.dropItem();
       updateInventory();
       renderer.draw();
     });
 
-
-    HBox hb = new HBox();
-    hb.setPadding(new Insets(20, 0, 20, 20));
-    hb.setSpacing(10);
-    hb.getChildren().addAll(pickupButton, dropButton);
-    options.setStyle("-fx-background-color: green;");
-
-    options.getChildren().add(hb);
+    // buttons laid out in vertical column
+    VBox buttons = new VBox(10);
+    buttons.getChildren().addAll(pickupButton, dropButton);
+    options.getChildren().add(buttons);
+    buttons.setTranslateX(15);
+    buttons.setTranslateY(10);
     return options;
   }
 
+  /**
+   * Constructs the Screen pane. This is where textual feedback is given
+   * to the user following a given action.
+   *
+   * @return the resulting pane holding the screen
+   */
+  private GridPane setScreen(String str) {
+    GridPane screen = new GridPane();
+    screen.setStyle("-fx-border-width:5px;-fx-border-color:rgb(38,38,38);-fx-background-color: rgb(45,45,45);");
+    Text text = new Text();
+    this.screenMessage = text;
 
-  public void confirmExit() {
-    Alert alert = new Alert(AlertType.CONFIRMATION);
-    alert.setTitle("Quit Game");
-    alert.setHeaderText("Are you sure?");
+    // format the displayed text
+    text.setFont(Font.font ("Andale Mono", 20));
+    text.setFill(Color.WHITE);
+    VBox root = new VBox(text);
+    root.setTranslateX(20);
+    root.setTranslateY(20);
+    root.setAlignment(Pos.CENTER);
+    screen.getChildren().add(root);
 
-    Optional<ButtonType> result = alert.showAndWait();
-
-    if (result.get() == ButtonType.OK) {
-      System.exit(0); // exit application
-    } else {
-      //do nothing..
-    }
+    updateScreen(str);
+    return screen;
   }
+
 
   @Override
   public void handle(KeyEvent event) {
@@ -493,51 +645,80 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     renderer.draw();
     updateInventory();
+    updateScreen("hello"); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
 
   }
 
+  /**
+   * Displays a popup control menu to assist the user with keyboard control
+   */
+  public void displayHelp() {
+    // blur the GUI
+    game.setEffect(new GaussianBlur());
+    healthBar.setEffect(new GaussianBlur());
+    inventory.setEffect(new GaussianBlur());
+    options.setEffect(new GaussianBlur());
+    screen.setEffect(new GaussianBlur());
 
-    public void displayHelp() {
-        // blur the GUI
-        game.setEffect(new GaussianBlur());
-        inventory.setEffect(new GaussianBlur());
-        options.setEffect(new GaussianBlur());
+    VBox pauseRoot = new VBox(5);
+    pauseRoot.setPrefSize(500,200);
 
-        VBox pauseRoot = new VBox(5);
-        pauseRoot.setPrefSize(500,200);
+    pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+    pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
+    pauseRoot.setPadding(new Insets(20));
 
-        pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-        pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
-        pauseRoot.setPadding(new Insets(20));
+    Image image = null;
+    try {
+      image = new Image(new FileInputStream("images/controls.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
 
-        Image image = null;
-        try {
-            image = new Image(new FileInputStream("images/controls.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    ImageView imageView = new ImageView(image);
 
-        ImageView imageView = new ImageView(image);
+    Button resume = new Button("Resume");
+    pauseRoot.getChildren().addAll(imageView, resume);
 
-        Button resume = new Button("Resume");
-        pauseRoot.getChildren().addAll(imageView, resume);
+    Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
+    helpDialog.initOwner(window);
+    helpDialog.initModality(Modality.APPLICATION_MODAL);
+    helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
 
-        Stage helpDialog = new Stage(StageStyle.TRANSPARENT);
-        helpDialog.initOwner(window);
-        helpDialog.initModality(Modality.APPLICATION_MODAL);
-        helpDialog.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
+    resume.setOnAction(event -> {
+      game.setEffect(null);
+      healthBar.setEffect(null);
+      inventory.setEffect(null);
+      options.setEffect(null);
+      screen.setEffect(null);
+      helpDialog.hide();
+    });
 
-        resume.setOnAction(event -> {
-            game.setEffect(null);
-            inventory.setEffect(null);
-            options.setEffect(null);
-            helpDialog.hide();
-        });
-
-        helpDialog.show();
+    helpDialog.show();
 
   }
 
+  /**
+   * Displays a dialog box to confirm exit from the program
+   *
+   */
+  public void confirmExit() {
+    Alert alert = new Alert(AlertType.CONFIRMATION);
+    alert.setTitle("Quit Game");
+    alert.setHeaderText("Are you sure?");
+
+    Optional<ButtonType> result = alert.showAndWait();
+
+    if (result.get() == ButtonType.OK) {
+      System.exit(0); // exit application
+    } else {
+      //do nothing..
+    }
+  }
+
+  /**
+   * Updates the Inventory pane given the state of the player's
+   * inventory.
+   */
   public void updateInventory() {
     for (Map.Entry<String, ToggleButton> buttons : inventoryButtons.entrySet()) {
       String item = buttons.getKey();
@@ -552,6 +733,27 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
   }
 
+  /**
+   * Updates the Screen pane given the action take by the player
+   */
+  public void updateScreen(String str) {
+
+    // line break at every 20th letter
+    String parsedStr = str.replaceAll("(.{20})", "$1-\n");
+
+    final Animation animation = new Transition() {
+      {
+        setCycleDuration(Duration.millis(3000));
+      }
+
+      protected void interpolate(double frac) {
+        final int length = parsedStr.length();
+        final int n = Math.round(length * (float) frac);
+        screenMessage.setText(parsedStr.substring(0, n));
+      }
+    };
+    animation.play();
+  }
 
   public static void main(String[] args) {
     Application.launch(args);

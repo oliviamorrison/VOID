@@ -1,6 +1,6 @@
 package gameworld;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,7 +22,6 @@ public class Game {
     this.board = Arrays.copyOf(board, board.length);
     this.currentRoom = player.getRoom();
     connectPortals();
-    setupTimer();
 
   }
 
@@ -77,10 +76,10 @@ public class Game {
 
   private void connectPortals() {
 
-    final Point NORTH_PORTAL = new Point(0, 5);
-    final Point SOUTH_PORTAL = new Point(9, 5);
-    final Point EAST_PORTAL = new Point(5, 9);
-    final Point WEST_PORTAL = new Point(5, 0);
+    final Point northPortal = new Point(0, 5);
+    final Point southPortal = new Point(9, 5);
+    final Point eastPortal = new Point(5, 9);
+    final Point westPortal = new Point(5, 0);
 
     Portal portal = null;
     int x = -1;
@@ -101,29 +100,29 @@ public class Game {
 
             case "NORTH":
               if (row > 0) {
-                x = NORTH_PORTAL.x;
-                y = NORTH_PORTAL.y;
+                x = northPortal.x;
+                y = northPortal.y;
                 portal = new Portal(x, y, board[row - 1][col], Direction.NORTH);
               }
               break;
             case "SOUTH":
               if (row < board[row].length - 1) {
-                x = SOUTH_PORTAL.x;
-                y = SOUTH_PORTAL.y;
+                x = southPortal.x;
+                y = southPortal.y;
                 portal = new Portal(x, y, board[row + 1][col], Direction.SOUTH);
               }
               break;
             case "EAST":
               if (col < board.length - 1) {
-                x = EAST_PORTAL.x;
-                y = EAST_PORTAL.y;
+                x = eastPortal.x;
+                y = eastPortal.y;
                 portal = new Portal(x, y, board[row][col + 1], Direction.EAST);
               }
               break;
             case "WEST":
               if (col > 0) {
-                x = WEST_PORTAL.x;
-                y = WEST_PORTAL.y;
+                x = westPortal.x;
+                y = westPortal.y;
                 portal = new Portal(x, y, board[row][col - 1], Direction.WEST);
               }
               break;
@@ -139,20 +138,6 @@ public class Game {
         }
       }
     }
-  }
-
-  public void setupTimer() {
-
-    timer = new Timer();
-    timer.schedule(new TimerTask() {
-
-      @Override
-      public void run() {
-        player.loseHealth();
-      }
-
-    }, 0, 1000);
-
   }
 
   public void pickUpItem() {
@@ -241,8 +226,14 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
-      if (!direction.getOppositeDirection().equals(vmDirection)) {
-        return;
+      if (vmDirection == Direction.EAST || vmDirection == Direction.WEST) {
+        if (!vmDirection.equals(direction)) {
+          return;
+        }
+      } else {
+        if (!direction.getOppositeDirection().equals(vmDirection)) {
+          return;
+        }
       }
 
       if (!vendingMachine.isUnlocked()) {
@@ -275,8 +266,14 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
-      if (!direction.getOppositeDirection().equals(vmDirection)) {
-        return;
+      if (vmDirection == Direction.EAST || vmDirection == Direction.WEST) {
+        if (!vmDirection.equals(direction)) {
+          return;
+        }
+      } else {
+        if (!direction.getOppositeDirection().equals(vmDirection)) {
+          return;
+        }
       }
 
       if (vendingMachine.isUnlocked()) {
@@ -310,11 +307,6 @@ public class Game {
     if (challenge instanceof Alien) {
 
       Alien alien = (Alien) challenge;
-      Direction guardDirection = alien.getDirection();
-
-      if (!direction.getOppositeDirection().equals(guardDirection)) {
-        return;
-      }
 
       if (!alien.isNavigable()) {
 
@@ -324,6 +316,10 @@ public class Game {
 
           player.dropItem();
           alien.setNavigable(true);
+          Direction nextDirection =
+              (player.getDirection() == Direction.NORTH || player.getDirection() == Direction.SOUTH) ?
+                  player.getDirection().getOppositeDirection() : player.getDirection();
+          alien.setDirection(nextDirection);
           System.out.println("Alien bribed with potion");
 
         }
@@ -361,7 +357,7 @@ public class Game {
 
   }
 
-  public void teleport(Room room, int row, int col) {
+  public void directTeleport(Room room, int row, int col) {
 
     AccessibleTile tile = player.getTile();
     AccessibleTile nextTile = (AccessibleTile) room.getTile(row, col);
@@ -375,11 +371,12 @@ public class Game {
   public void rotateRoomClockwise() {
 
     player.setDirection(player.getDirection().getClockwiseDirection());
-
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
-        if(room == null) continue;
+        if (room == null) {
+          continue;
+        }
         room.rotateRoomClockwise();
       }
     }
@@ -389,11 +386,12 @@ public class Game {
   public void rotateRoomAnticlockwise() {
 
     player.setDirection(player.getDirection().getAnticlockwiseDirection());
-
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
-        if(room == null) continue;
+        if (room == null) {
+          continue;
+        }
         room.rotateRoomAnticlockwise();
       }
     }

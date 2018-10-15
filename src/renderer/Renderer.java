@@ -6,7 +6,6 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,24 +15,24 @@ public class Renderer {
     private final static Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
     private final static Color DTColor = Color.rgb(161, 176, 201);
     private final static double floorHeight = 0;
-    private final static double wallHeight = 2.0;
-    private final static  double doorHeight = 0;
+    private final static double wallHeight = 0;
+    private final static double doorHeight = 0;
 
     private final static double playerHeight = 60;
-    private String NORTH = "images/north.png";
-    private String SOUTH = "images/south.png";
-    private String WEST = "images/west.png";
-    private String EAST = "images/east.png";
+    private final String NORTH = "images/north.png";
+    private final String SOUTH = "images/south.png";
+    private final String WEST = "images/west.png";
+    private final String EAST = "images/east.png";
 
     //Challenges
-    private String bombImage = "images/bomb";
-    private String vendingMachineImage = "images/vending-machine";
+    private final String bombImage = "images/bomb";
+    private final String vendingMachineImage = "images/vending-machine";
 
     //Items
-    private String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
-    private String coinImage = "images/coin";
-    private String boltCutterImage = "images/bolt-cutter";
-    private String beerImage = "images/beer2.png";
+    private final String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
+    private final String coinImage = "images/coin";
+    private final String boltCutterImage = "images/bolt-cutter";
+    private final String beerImage = "images/beer2.png";
 
 
     private Game game;
@@ -89,8 +88,6 @@ public class Renderer {
                 }
             }
         }
-//        drawHealthBar();
-
     }
 
     public void drawPolygonBlock(int row, int col){
@@ -102,11 +99,11 @@ public class Renderer {
             AccessibleTile AT = (AccessibleTile) tile;
             color = ACCESSIBLE_COLOUR;
             height = floorHeight;
-//            if(AT.hasItem()){
-//                color = Color.BLUE;
-//            } else if(AT.hasChallenge()){
-//                color = Color.RED;
-//            }
+            if(AT.hasItem()){
+                color = Color.BLUE;
+            } else if(AT.hasChallenge()){
+                color = Color.RED;
+            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
             color = INACCESSIBLE_COLOUR;
@@ -137,6 +134,8 @@ public class Renderer {
             drawPlayer();
         }
     }
+
+
     public ImageView getItemImage(AccessibleTile tile){
         Item item = tile.getItem();
         ImageView itemImage = null;
@@ -147,12 +146,18 @@ public class Renderer {
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 22);
         } else if(item instanceof Coin){
-            itemImage = getImage((coinImage+"1.png"));
+            String direction ="";
+            if(item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH){
+                direction = "1.png";
+            } else {
+                direction = "2.png";
+            }
+            itemImage = getImage((coinImage+direction));
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 13);
             itemImage.setY(c.getY() - 22);
         } else if(item instanceof BoltCutter){
-            itemImage = getImage((boltCutterImage+"1.png"));
+            itemImage = getImage((boltCutterImage+ getObjectDirection(item.getDirection())));
             itemImage.setFitHeight(20);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 12);
@@ -170,18 +175,38 @@ public class Renderer {
         ImageView itemImage = null;
         Point2D c = tile.getCenter();
         if(challenge instanceof Bomb){
-            itemImage = getImage((bombImage+"1.png"));
+            itemImage = getImage((bombImage+ getObjectDirection(challenge.getDirection())));
             itemImage.setFitHeight(35);
             itemImage.setX(c.getX() - 20);
             itemImage.setY(c.getY() - 22);
         } else if(challenge instanceof VendingMachine){
-            itemImage = getImage((vendingMachineImage+"1.png"));
+            itemImage = getImage((vendingMachineImage+ getObjectDirection(challenge.getDirection())));
+            itemImage.setFitHeight(80);
+            itemImage.setX(c.getX() - 30);
+            itemImage.setY(c.getY() - 65);
+        } else if(challenge instanceof Alien){
+            itemImage = getImage((vendingMachineImage+ getObjectDirection(challenge.getDirection())));
             itemImage.setFitHeight(80);
             itemImage.setX(c.getX() - 30);
             itemImage.setY(c.getY() - 65);
         }
         return itemImage;
 
+    }
+
+    public String getObjectDirection(Direction direction){
+        switch (direction){
+            case NORTH:
+                return "N.png";
+            case SOUTH:
+                return "S.png";
+            case WEST:
+                return "W.png";
+            case EAST:
+                return "E.png";
+            default:
+                return null;
+        }
     }
 
     public ImageView getImage(String imageName){
@@ -196,30 +221,10 @@ public class Renderer {
         return imageView;
     }
 
-
-    public void drawHealthBar(){
-        //TODO: Need to fix this.
-        System.out.println(game.getPlayer().getHealth());
-        double height = 20;
-        double width = (game.getPlayer().getHealth()) * 2;
-//        double width = 200;
-        Rectangle healthBar =  new Rectangle();
-        healthBar.setX(20);
-        healthBar.setY(20);
-        healthBar.setHeight(height);
-        healthBar.setWidth(width);
-//        healthBar.setFill(Color.RED);
-        root.getChildren().add(healthBar);
-    }
-
     public void newRoom(){
         currentRoom = player.getRoom();
         root.getChildren().clear();
         draw();
-    }
-
-    public Color randomColor() {
-        return Color.rgb((int) (255 * Math.random()), (int) (255 * Math.random()), (int) (255 * Math.random()));
     }
 
 }
