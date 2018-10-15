@@ -6,7 +6,7 @@
 * Olivia Morrison ([student_ID])
 * Sam Ong (300363819)
 
-###The Game
+### The Game
 VOID is a game set on a planet in space. 
 You are an astronaut that is slowly running out of oxygen! 
 The aim of the game is to reach your space ship before your oxygen runs out so you can
@@ -24,7 +24,7 @@ to access different rooms. Oxygen tanks can be picked up along the way to replen
 
 (Hint: The walls will sometimes hide items, rotate the map using A and D keys!)
 
-###How to Play
+### How to Play
 1. Download the project from the master branch
 2. Use an IDE to open it
 3. Navigate to src/application/GUI
@@ -33,7 +33,7 @@ to access different rooms. Oxygen tanks can be picked up along the way to replen
     6. Or load an existing saved file
     7. Or access the map editor to create your own version of the game
 
-###Keys
+### Keys
 * Arrow keys for player movement
 * A and D to view the room from different angles
 * Z to pick up an item
