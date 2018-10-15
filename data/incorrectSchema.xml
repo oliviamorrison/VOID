@@ -5,39 +5,39 @@
         <roomCol>0</roomCol>
     </player>
     <room row="0" col="0">
-        <door>EAST</door>
+        <portal>EAST</portal>
         <item row="4" col="3">Diffuser</item>
     </room>
     <room row="0" col="1">
-        <door>WEST</door>
-        <door>SOUTH</door>
+        <portal>WEST</portal>
+        <portal>SOUTH</portal>
         <challenge row="8" col="5" state="false">Bomb</challenge>
     </room>
     <room row="1" col="1">
-        <door>EAST</door>
-        <door>NORTH</door>
-        <door>SOUTH</door>
+        <portal>EAST</portal>
+        <portal>NORTH</portal>
+        <portal>SOUTH</portal>
         <item row="1" col="4">BoltCutter</item>
         <item row="4" col="6">HealthPack</item>
     </room>
     <room row="1" col="2">
-        <door>WEST</door>
-        <door>SOUTH</door>
+        <portal>WEST</portal>
+        <portal>SOUTH</portal>
         <challenge row="8" col="8" state="false">VendingMachine</challenge>
     </room>
     <room row="2" col="0">
-        <door>EAST</door>
+        <portal>EAST</portal>
         <item row="1" col="5">Antidote</item>
     </room>
     <room row="2" col="1">
-        <door>NORTH</door>
-        <door>WEST</door>
-        <door>EAST</door>
+        <portal>NORTH</portal>
+        <portal>WEST</portal>
+        <portal>EAST</portal>
         <challenge row="5" col="1" state="false">Guard</challenge>
     </room>
     <room row="2" col="2">
-        <door>NORTH</door>
-        <door>WEST</door>
+        <portal>NORTH</portal>
+        <portal>WEST</portal>
         <item row="7" col="7">Coin</item>
     </room>
 </game>
