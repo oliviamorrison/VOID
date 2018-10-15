@@ -1,8 +1,6 @@
 package mapeditor;
 
-import gameworld.*;
-import gameworld.SpaceShip;
-
+import gameworld.*;;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +42,7 @@ public class MapEditor extends Application {
 
     setUp();
 
-    itemGrid = initItemSpaces();
+    itemGrid = initItemSpaces(false);
     itemGrid.setStyle("-fx-background-color: lightblue");
 
     initaliseItems();
@@ -79,7 +77,7 @@ public class MapEditor extends Application {
   }
 
 
-  public GridPane initItemSpaces() {
+  public GridPane initItemSpaces(boolean test) {
     GridPane items = new GridPane();
 
     int rows = 2;
@@ -105,7 +103,11 @@ public class MapEditor extends Application {
       }
     }
 
-    items = setOptions(items);
+    if (!test) {
+      items = setOptions(items);
+    } else {
+      itemGrid = items;
+    }
     // Return the GridPane
     return items;
   }
@@ -730,7 +732,7 @@ public class MapEditor extends Application {
                         challenge = new Bomb(k,l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k,l, "NORTH");
+                        challenge = new VendingMachine(k,l, "WESTind");
                         break;
                       case "player.png":
                         player = new Player(room,tile,100,"NORTH");
