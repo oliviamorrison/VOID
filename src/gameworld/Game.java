@@ -171,7 +171,7 @@ public class Game {
       tile.setItem(null);
       item.setRow(-1);
       item.setCol(-1);
-      System.out.println("Player picked up " + item.getName());
+      System.out.println("Player picked up " + item.toString());
 
     }
 
@@ -191,7 +191,7 @@ public class Game {
       item.setRow(tile.getRow());
       item.setCol(tile.getCol());
       tile.setItem(item);
-      System.out.println("Player dropped " + item.getName());
+      System.out.println("Player dropped " + item.toString());
 
     }
 
@@ -218,7 +218,7 @@ public class Game {
 
         if (item instanceof Diffuser) {
           bomb.setNavigable(true);
-          System.out.println("Bomb diffused with " + item.getName());
+          System.out.println("Bomb diffused with diffuser");
         }
 
       }

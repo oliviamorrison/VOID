@@ -86,6 +86,7 @@ public class GameworldTests {
 
     assertNotEquals(startTile, nextTile);
     assertEquals(nextTile, game.getCurrentRoom().getTile(6, 5));
+    assertTrue(nextTile.hasPlayer());
 
   }
 
@@ -490,7 +491,11 @@ public class GameworldTests {
     for (Item item : items) {
       assertNotNull(item.getName());
       assertNotNull(item.getDescription());
+      assertNotNull(item.toString());
+
     }
+
+    assertNotNull(new Portal(-1, -1, null, Direction.NORTH).toString());
 
   }
 

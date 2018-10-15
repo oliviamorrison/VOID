@@ -30,4 +30,9 @@ public class VendingMachine extends ChallengeItem {
     return "It's a vending machine. What goodies does it contain?";
   }
 
+  @Override
+  public String toString() {
+    return "VendingMachine";
+  }
+
 }

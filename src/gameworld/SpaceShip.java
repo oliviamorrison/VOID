@@ -16,4 +16,9 @@ public class SpaceShip extends Item {
     return "It's an amazing spaceship. It'll help me to escape.";
   }
 
+  @Override
+  public String toString() {
+    return "Spaceship";
+  }
+
 }
