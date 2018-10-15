@@ -1,6 +1,6 @@
 # VOID 
 ##### Created by 
-* Annisha Akosah ([student_ID])
+* Annisha Akosah (300399598)
 * James Del Puerto ([student_ID])
 * Latrell Whata (300417220)
 * Olivia Morrison ([student_ID])
