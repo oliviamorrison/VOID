@@ -1,9 +1,13 @@
 package gameworld;
 
 import java.io.File;
+
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import persistence.XMLParser;
+import renderer.PolygonBlock;
+import renderer.Renderer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -163,13 +167,16 @@ public class GameworldTests {
   public void playerCanDropItem() {
 
     AccessibleTile startTile = player.getTile();
-    player.addItem(new Diffuser(-1, -1, "NORTH"));
+    Item item = new Diffuser(-1, -1, "NORTH");
+    player.addItem(item);
 
     game.dropItem();
 
     assertFalse(player.hasItem());
     assertNull(player.getItem());
     assertTrue(startTile.hasItem());
+    assertEquals(player.getTile().getRow(), item.getRow());
+    assertEquals(player.getTile().getCol(), item.getCol());
 
   }
 
@@ -201,6 +208,8 @@ public class GameworldTests {
     Bomb bomb = (Bomb) tile.getChallenge();
     bomb.setDirection(Direction.NORTH);
     player.setDirection(Direction.SOUTH);
+
+    assertFalse(tile.checkNavigable());
 
     game.diffuseBomb();
 
@@ -354,6 +363,63 @@ public class GameworldTests {
 
     assertNotEquals(direction, player.getDirection());
     assertEquals(Direction.WEST, player.getDirection());
+
+  }
+
+  @Test
+  public void canCreateTestRoom() {
+
+    Room room = new Room(0, 0);
+    Tile tile = new AccessibleTile(-1, -1);
+
+    assertNotNull(room);
+    assertTrue(room.getTile(5, 5) instanceof AccessibleTile);
+    assertNull(room.getTileCoordinates(tile));
+    assertEquals(0, room.getRow());
+    assertEquals(0, room.getCol());
+
+  }
+
+  @Test
+  public void playerCannotMoveOutsideRoomBounds() {
+
+    game.teleport(board[1][1], 0, 5);
+    AccessibleTile startTile = player.getTile();
+    Room room = game.getCurrentRoom();
+
+    room.findTile(player.getTile(), Direction.NORTH);
+
+    assertEquals(room, game.getCurrentRoom());
+
+    Tile tileA = room.findNextTile(startTile, -1, 0);
+    Tile tileB = room.findNextTile(startTile, 0, 1);
+
+    assertNull(tileA);
+    assertNull(tileB);
+    assertEquals(startTile, player.getTile());
+
+  }
+
+  @Test
+  public void playerHealthCannotExceedBounds() {
+
+    player.setHealth(150);
+    player.boostHealth();
+
+    assertTrue(player.getHealth() <= 100);
+
+    player.setHealth(0);
+    player.loseHealth();
+
+    assertFalse(player.getHealth() < 0);
+
+  }
+
+  @Test
+  public void gameCanBeConnectedWithRenderer() {
+
+    Renderer renderer = new Renderer(game);
+    assertNotNull(renderer);
 
   }
 

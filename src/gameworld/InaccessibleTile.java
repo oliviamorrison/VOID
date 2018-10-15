@@ -11,7 +11,7 @@ public class InaccessibleTile extends Tile {
 
   @Override
   public String toString() {
-    return "X";
+    return "Inaccessible tile: Row: " + getRow() + " Col: " + getCol();
   }
 
 }

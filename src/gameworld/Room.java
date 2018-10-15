@@ -88,7 +88,7 @@ public class Room {
 
   }
 
-  private int[] getTileCoordinates(Tile tile) {
+  public int[] getTileCoordinates(Tile tile) {
 
     for (int i = 0; i < ROOMSIZE; i++) {
       for (int j = 0; j < ROOMSIZE; j++) {
@@ -104,8 +104,7 @@ public class Room {
 
   }
 
-  // find tile in a given direction
-  private Tile findTile(AccessibleTile tile, Direction direction) {
+  public Tile findTile(AccessibleTile tile, Direction direction) {
 
     int[] coordinates = getTileCoordinates(tile);
 
