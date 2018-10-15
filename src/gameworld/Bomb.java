@@ -12,17 +12,12 @@ public class Bomb extends ChallengeItem {
 
   @Override
   public String getName() {
-    return "";
+    return "The bomb";
   }
 
   @Override
   public String getDescription() {
-    return "";
-  }
-
-  @Override
-  public String toString() {
-    return "Bomb";
+    return "It looks dangerous, probably best to keep your distance.";
   }
 
 }

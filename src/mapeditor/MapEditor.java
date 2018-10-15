@@ -1,20 +1,6 @@
 package mapeditor;
 
-import gameworld.AccessibleTile;
-import gameworld.Antidote;
-import gameworld.BoltCutter;
-import gameworld.Bomb;
-import gameworld.ChallengeItem;
-import gameworld.Coin;
-import gameworld.Diffuser;
-import gameworld.Game;
-import gameworld.Guard;
-import gameworld.HealthPack;
-import gameworld.InaccessibleTile;
-import gameworld.Item;
-import gameworld.Player;
-import gameworld.Room;
-import gameworld.VendingMachine;
+import gameworld.*;;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +23,7 @@ import persistence.XMLParser;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-//testing
+
 public class MapEditor extends Application {
 
   private final int boardSize = 800;
@@ -725,7 +711,7 @@ public class MapEditor extends Application {
 
                     switch (mapItem.getImageName()) {
                       case "antidote.png":
-                        item = new Antidote(k, l, "NORTH");
+                        item = new SpaceShip(k, l, "NORTH");
                         break;
                       case "cutters.png":
                         item = new BoltCutter(k, l, "NORTH");
@@ -737,10 +723,10 @@ public class MapEditor extends Application {
                         item = new Coin(k, l, "NORTH");
                         break;
                       case "healthpack.png":
-                        item = new HealthPack(k, l, "NORTH");
+                        item = new OxygenTank(k, l, "NORTH");
                         break;
                       case "guard.png":
-                        challenge = new Guard(k,l, "EAST");
+                        challenge = new Alien(k,l, "NORTH");
                         break;
                       case "unlit-bomb.png":
                         challenge = new Bomb(k,l, "NORTH");

@@ -13,10 +13,10 @@ public class PolygonBlock {
     private double z;
     private double center = 350;
 
-    private final double tileWidth = 80;
-    private final double tileHeight = 40;
+    private final double tileWidth = 64;
+    private final double tileHeight = 32;
     private final double strokeWidth = 1;
-    private final Color strokeColor = Color.GRAY;
+    private final Color strokeColor = Color.rgb(80, 80, 80);
 
     private List<Polygon> polygons;
 
@@ -70,7 +70,8 @@ public class PolygonBlock {
 
         top.getPoints().addAll(topPoints);
         top.setFill(this.topColor);
-        top.setStroke(strokeColor);
+        top.setStroke(topColor);
+
         top.setStrokeWidth(strokeWidth);
         polygons.add(top);
     }
@@ -97,7 +98,7 @@ public class PolygonBlock {
 
         left.getPoints().addAll(leftPoints);
         left.setFill(this.leftColor);
-        left.setStroke(strokeColor);
+        left.setStroke(leftColor);
         left.setStrokeWidth(strokeWidth);
         polygons.add(left);
 
@@ -125,7 +126,7 @@ public class PolygonBlock {
 
         right.getPoints().addAll(rightPoints);
         right.setFill(this.rightColor);
-        right.setStroke(strokeColor);
+        right.setStroke(rightColor);
         right.setStrokeWidth(strokeWidth);
         polygons.add(right);
     }

@@ -1,5 +1,7 @@
 package gameworld;
 
+import javafx.scene.image.Image;
+
 public class Coin extends Item {
   public Coin(int row, int col, String direction) {
     super(row, col, direction);
@@ -7,17 +9,12 @@ public class Coin extends Item {
 
   @Override
   public String getName() {
-    return null;
+    return "The Golden Coin";
   }
 
   @Override
   public String getDescription() {
-    return null;
-  }
-
-  @Override
-  public String toString() {
-    return "Coin";
+    return "It's a shiny, gold coin. It could probably buy something nice to drink.";
   }
 
 }

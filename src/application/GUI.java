@@ -2,6 +2,7 @@ package application;
 
 import gameworld.Game;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,20 +27,26 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 
-public class GUI extends Application implements EventHandler<KeyEvent> {
+public class GUI extends Application implements EventHandler<KeyEvent>{
   public static final int WINDOW_WIDTH = 1000;
-  public static final int WINDOW_HEIGHT = 800;
+  public static final int WINDOW_HEIGHT = 750;
+  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<String, ToggleButton>();
   private GridPane game;
   private FlowPane inventory;
+  private GridPane healthBar;
   private AnchorPane options;
   private Renderer renderer;
   private static Game currentGame;
+  private Timer timer;
 
   private Stage window;
   private Scene startScene, gameScene;
 
+  private Label health;
+  private ProgressBar pBar;
 
   @Override
   public void start(Stage stage) {
@@ -47,6 +54,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     // display the start menu first
     window.setScene(createStartScene(stage));
+    window.setResizable(false);
     window.setTitle("Void");
     window.show();
   }
@@ -55,7 +63,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     // title
     Image image = null;
     try {
-      image = new Image(new FileInputStream("src/application/title.png"));
+      image = new Image(new FileInputStream("images/title.png"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -73,7 +81,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     // edit map
     Button editMap = new Button("Edit Map");
-    //TODO link up map editor gui
+    // TODO link up map editor gui
     // editMap.setOnAction(e -> window.setScene(createGameScene(stage)));
 
     // quit
@@ -116,7 +124,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     newGame.setOnAction(Event -> startNewGame(stage));
     loadGame.setOnAction(Event -> {
-      currentGame = null;
+      loadFile(stage);
       window.setScene(createGameScene(stage));
     });
     saveGame.setOnAction(Event -> saveFile(stage));
@@ -143,11 +151,14 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     // initialise the game panes
     this.game = setGame(stage);
+    this.healthBar = setHealthBar();
     this.inventory = setInventory();
     this.options = setOptions();
 
+    updateInventory();
+
     FlowPane stack = new FlowPane();
-    stack.getChildren().addAll(inventory, options);
+    stack.getChildren().addAll(healthBar,inventory, options);
 
     stack.setHgap(4);
     stack.setPrefWrapLength(WINDOW_WIDTH * 0.3); // preferred width allows for two columns
@@ -163,10 +174,10 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     setWindowRatio();
 
-    // Set the size of the window
+    // set the size of the window
     grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    // Create the Game Scene
+    // create the Game Scene
     gameScene = new Scene(grid);
     gameScene.setOnKeyPressed(this);
     return gameScene;
@@ -199,12 +210,18 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null) {
+    if (file != null && !file.getName().equals("easy.xml")) {
       try {
         XMLParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
       }
+    }
+    else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Unable to save over default game files");
+      alert.setContentText("Unable to save over default game files. Please save using a different file name");
+      alert.showAndWait();
     }
   }
 
@@ -236,8 +253,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
   public void setWindowRatio() {
     //set ratios
     this.game.setPrefSize(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT);
-    this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.5);
-    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.5);
+    this.healthBar.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT *  0.2);
+    this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
+    this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.4);
   }
 
   public GridPane setGame(Stage stage) {
@@ -246,13 +264,60 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
     renderer = new Renderer(currentGame);
     GridPane grid = new GridPane();
+
+    Image image = null;
+    try {
+      image = new Image(new FileInputStream("images/background.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    BackgroundImage myBI= new BackgroundImage(image,BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    grid.setBackground(new Background(myBI));
     grid.add(renderer.getRoot(), 0, 1);
+    renderer.getRoot().setTranslateX(30);
+    renderer.getRoot().setTranslateY(230);
+
+    /////////////////////////////////////////////////////////Here Annisha
+    pBar = new ProgressBar(1);
+    Task task = taskCreator(5);
+    pBar.progressProperty().unbind();
+    pBar.progressProperty().bind(task.progressProperty());
+    new Thread(task).start();
+    /////////////////////////////////////////////////////////
     return grid;
+  }
+
+
+
+
+  public GridPane setHealthBar() {
+    GridPane grid = new GridPane();
+    grid.setStyle("-fx-background-color: red;");
+    grid.add(pBar,0,0);
+    return grid;
+  }
+
+  private Task taskCreator(int seconds){
+    return new Task() {
+      @Override
+      protected Object call() throws Exception {
+        for(int i=0; i<=seconds;i++){
+          Thread.sleep(1000);
+          updateProgress(seconds-i, seconds);
+          if(seconds-i == 0){
+            System.out.println("Finish");
+          }
+
+        }
+        return true;
+      }
+    };
   }
 
   public FlowPane setInventory() {
     FlowPane flow = new FlowPane();
-    flow.setStyle("-fx-background-color: blue;");
+    flow.setStyle("-fx-background-color: white;");
 
     flow.setPadding(new Insets(8, 1, 1, 8));
     flow.setVgap(4);
@@ -262,12 +327,24 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     ToggleButton btn;
     ToggleGroup group = new ToggleGroup();
 
-    String[] images = new String[]{"key.png", "green-key.png", "red-key.png", "unlit-bomb.png", "two-coins.png", "two-coins.png"};
+    ArrayList<String> availableItems = new ArrayList<>();
+    availableItems.add("GoldenCoin");
+    availableItems.add("MagicPotion");
+    availableItems.add("BombDiffuser");
+    availableItems.add("RedBoltCutter");
 
-    for (int i = 0; i < 6; i++) {
+    for(String item : availableItems) {
       btn = new ToggleButton();
       btn.setFocusTraversable(false); // disables key control
-      Image image = new Image(getClass().getResourceAsStream(images[i]));
+
+      // use images to represent buttons
+      Image image = null;
+      try {
+        image = new Image(new FileInputStream("images/" + item + ".png"));
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+
       ImageView imageView = new ImageView(image);
       imageView.setFitHeight(80);
       imageView.setFitWidth(80);
@@ -275,40 +352,55 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       btn.setToggleGroup(group);
       btn.setPrefSize(WINDOW_WIDTH * 0.14, WINDOW_HEIGHT * 0.5 * 0.23);
       flow.getChildren().add(btn);
-
+      inventoryButtons.put(item, btn);
     }
+
+    // enable button listeners
+    inventoryButtons.get("GoldenCoin").setOnAction(Event -> {
+      currentGame.useVendingMachine();
+      updateInventory();
+      renderer.draw();
+    });
+    inventoryButtons.get("RedBoltCutter").setOnAction(Event -> {
+      currentGame.unlockVendingMachine();
+      updateInventory();
+      renderer.draw();
+    });
+    inventoryButtons.get("MagicPotion").setOnAction(Event -> {
+      currentGame.bribeGuard();
+      updateInventory();
+      renderer.draw();
+    });
+    inventoryButtons.get("BombDiffuser").setOnAction(Event -> {
+      currentGame.diffuseBomb();
+      updateInventory();
+      renderer.draw();
+    });
 
     return flow;
   }
+
 
   public AnchorPane setOptions() {
     AnchorPane options = new AnchorPane();
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
-    Button diffuseButton = new Button("Diffuse");
-    Button unlockButton = new Button("Unlock");
+
 
     // disables key control
     pickupButton.setFocusTraversable(false);
     dropButton.setFocusTraversable(false);
-    diffuseButton.setFocusTraversable(false);
-    unlockButton.setFocusTraversable(false);
 
-    // button listeners
+
+    // enable button listeners
     pickupButton.setOnAction(Event -> {
       currentGame.pickUpItem();
+      updateInventory();
       renderer.draw();
     });
     dropButton.setOnAction(Event -> {
       currentGame.dropItem();
-      renderer.draw();
-    });
-    diffuseButton.setOnAction(Event -> {
-      currentGame.diffuseBomb();
-      renderer.draw();
-    });
-    unlockButton.setOnAction(Event -> {
-      currentGame.unlockVendingMachine();
+      updateInventory();
       renderer.draw();
     });
 
@@ -316,7 +408,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox hb = new HBox();
     hb.setPadding(new Insets(20, 0, 20, 20));
     hb.setSpacing(10);
-    hb.getChildren().addAll(pickupButton, dropButton, diffuseButton, unlockButton);
+    hb.getChildren().addAll(pickupButton, dropButton);
     options.setStyle("-fx-background-color: green;");
 
     options.getChildren().add(hb);
@@ -340,10 +432,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   @Override
   public void handle(KeyEvent event) {
-    //TODO: Should we give the keyboard inputs to game or handle that in the GUI class?
-//		currentGame.startTurn(event.getCode().getName());
-    //testing
-
     int dx = 0;
     int dy = 0;
 
@@ -403,9 +491,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
 
     renderer.draw();
+    updateInventory();
 
   }
-
 
 
     public void displayHelp() {
@@ -423,7 +511,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
         Image image = null;
         try {
-            image = new Image(new FileInputStream("src/application/controls.png"));
+            image = new Image(new FileInputStream("images/controls.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -448,6 +536,21 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         helpDialog.show();
 
   }
+
+  public void updateInventory() {
+    for (Map.Entry<String, ToggleButton> buttons : inventoryButtons.entrySet()) {
+      String item = buttons.getKey();
+
+      ToggleButton button = buttons.getValue();
+      if(!currentGame.getPlayer().hasSpecificItem(item)) {
+        button.setDisable(true);
+      } else {
+        button.setDisable(false);
+
+      }
+    }
+  }
+
 
   public static void main(String[] args) {
     Application.launch(args);
