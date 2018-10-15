@@ -198,6 +198,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         alert.setTitle("File Error");
         alert.setContentText("Please load a valid XML file");
         alert.showAndWait();
+        System.out.println(parseError.getMessage());
       }
       setGame(stage);
     }

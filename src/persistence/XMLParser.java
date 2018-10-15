@@ -30,6 +30,9 @@ import static java.lang.Integer.parseInt;
 //TODO: Add different difficulty levels for easy/medium/hard
 //TODO: UML Diagram
 //TODO: Throw more descriptive ParseErrors
+//TODO: Add music
+//TODO: Take group pic
+
 
 public class XMLParser {
   private static Schema schema;

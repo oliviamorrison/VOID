@@ -35,6 +35,7 @@
         <portal>NORTH</portal>
         <portal>WEST</portal>
         <item row="7" col="7" direction="NORTH">Coin</item>
+        <item row="1" col="5" direction ="NORTH">Potion</item>
     </room>
     <player row="1" col="1" health="100" direction="EAST">
         <roomRow>0</roomRow>
