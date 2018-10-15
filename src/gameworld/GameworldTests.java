@@ -86,6 +86,7 @@ public class GameworldTests {
 
     assertNotEquals(startTile, nextTile);
     assertEquals(nextTile, game.getCurrentRoom().getTile(6, 5));
+    assertTrue(nextTile.hasPlayer());
 
   }
 
@@ -220,7 +221,7 @@ public class GameworldTests {
   @Test
   public void playerCanDiffuseBomb() {
 
-    game.teleport(board[0][1], 7, 5);
+    game.directTeleport(board[0][1], 7, 5);
     player.addItem(new Diffuser(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[0][1].getTile(8, 5);
@@ -239,7 +240,7 @@ public class GameworldTests {
   @Test
   public void playerCanUnlockVendingMachine() {
 
-    game.teleport(board[1][2], 8, 7);
+    game.directTeleport(board[1][2], 8, 7);
     player.addItem(new BoltCutter(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
@@ -263,7 +264,7 @@ public class GameworldTests {
   @Test
   public void playerCanUseVendingMachine() {
 
-    game.teleport(board[1][2], 8, 7);
+    game.directTeleport(board[1][2], 8, 7);
     player.addItem(new Coin(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
@@ -292,7 +293,7 @@ public class GameworldTests {
   @Test
   public void playerCanBribeGuard() {
 
-    game.teleport(board[2][1], 5, 2);
+    game.directTeleport(board[2][1], 5, 2);
     player.addItem(new Potion(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[2][1].getTile(5, 1);
@@ -332,7 +333,7 @@ public class GameworldTests {
   @Test
   public void playerCanUseHealthPack() {
 
-    game.teleport(board[1][1], 3, 6);
+    game.directTeleport(board[1][1], 3, 6);
     AccessibleTile tile = (AccessibleTile) board[1][1].getTile(4, 6);
 
     player.setDirection(Direction.SOUTH);
@@ -349,7 +350,7 @@ public class GameworldTests {
   @Test
   public void playerWinsByFindingAntidote() {
 
-    game.teleport(board[2][0], 2, 5);
+    game.directTeleport(board[2][0], 2, 5);
 
     assertFalse(game.checkForAntidote());
 
@@ -363,6 +364,9 @@ public class GameworldTests {
   @Test
   public void roomCanBeRotatedClockwise() {
 
+    AccessibleTile tile = player.getTile();
+    tile.setChallenge(new Bomb(-1, -1, "NORTH"));
+
     player.setDirection(Direction.NORTH);
     Direction direction = player.getDirection();
 
@@ -375,6 +379,9 @@ public class GameworldTests {
 
   @Test
   public void roomCanBeRotatedAnticlockwise() {
+
+    AccessibleTile tile = player.getTile();
+    tile.setChallenge(new Bomb(-1, -1, "NORTH"));
 
     player.setDirection(Direction.NORTH);
     Direction direction = player.getDirection();
@@ -403,7 +410,7 @@ public class GameworldTests {
   @Test
   public void playerCannotMoveOutsideRoomBounds() {
 
-    game.teleport(board[1][1], 0, 5);
+    game.directTeleport(board[1][1], 0, 5);
     AccessibleTile startTile = player.getTile();
     Room room = game.getCurrentRoom();
 
@@ -490,7 +497,11 @@ public class GameworldTests {
     for (Item item : items) {
       assertNotNull(item.getName());
       assertNotNull(item.getDescription());
+      assertNotNull(item.toString());
+
     }
+
+    assertNotNull(new Portal(-1, -1, null, Direction.NORTH).toString());
 
   }
 

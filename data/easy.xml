@@ -19,7 +19,7 @@
     <room row="1" col="2">
         <portal>WEST</portal>
         <portal>SOUTH</portal>
-        <challenge row="8" col="8" state="false" direction="EAST">VendingMachine</challenge>
+        <challenge row="8" col="8" state="false" direction="NORTH">VendingMachine</challenge>
     </room>
     <room row="2" col="0">
         <portal>EAST</portal>

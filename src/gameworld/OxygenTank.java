@@ -16,4 +16,9 @@ public class OxygenTank extends Item {
     return "It's a full oxygen tank. It'll help you breathe.";
   }
 
+  @Override
+  public String toString() {
+    return "OxygenTank";
+  }
+
 }

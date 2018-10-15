@@ -20,4 +20,9 @@ public class Alien extends ChallengeItem {
     return "It's a strange alien. I'm sure he could do with a beverage.";
   }
 
+  @Override
+  public String toString() {
+    return "Alien";
+  }
+
 }

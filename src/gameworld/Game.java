@@ -1,6 +1,6 @@
 package gameworld;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -77,10 +77,10 @@ public class Game {
 
   private void connectPortals() {
 
-    final Point NORTH_PORTAL = new Point(0, 5);
-    final Point SOUTH_PORTAL = new Point(9, 5);
-    final Point EAST_PORTAL = new Point(5, 9);
-    final Point WEST_PORTAL = new Point(5, 0);
+    final Point northPortal = new Point(0, 5);
+    final Point southPortal = new Point(9, 5);
+    final Point eastPortal = new Point(5, 9);
+    final Point westPortal = new Point(5, 0);
 
     Portal portal = null;
     int x = -1;
@@ -101,29 +101,29 @@ public class Game {
 
             case "NORTH":
               if (row > 0) {
-                x = NORTH_PORTAL.x;
-                y = NORTH_PORTAL.y;
+                x = northPortal.x;
+                y = northPortal.y;
                 portal = new Portal(x, y, board[row - 1][col], Direction.NORTH);
               }
               break;
             case "SOUTH":
               if (row < board[row].length - 1) {
-                x = SOUTH_PORTAL.x;
-                y = SOUTH_PORTAL.y;
+                x = southPortal.x;
+                y = southPortal.y;
                 portal = new Portal(x, y, board[row + 1][col], Direction.SOUTH);
               }
               break;
             case "EAST":
               if (col < board.length - 1) {
-                x = EAST_PORTAL.x;
-                y = EAST_PORTAL.y;
+                x = eastPortal.x;
+                y = eastPortal.y;
                 portal = new Portal(x, y, board[row][col + 1], Direction.EAST);
               }
               break;
             case "WEST":
               if (col > 0) {
-                x = WEST_PORTAL.x;
-                y = WEST_PORTAL.y;
+                x = westPortal.x;
+                y = westPortal.y;
                 portal = new Portal(x, y, board[row][col - 1], Direction.WEST);
               }
               break;
@@ -171,7 +171,7 @@ public class Game {
       tile.setItem(null);
       item.setRow(-1);
       item.setCol(-1);
-      System.out.println("Player picked up " + item.getName());
+      System.out.println("Player picked up " + item.toString());
 
     }
 
@@ -191,7 +191,7 @@ public class Game {
       item.setRow(tile.getRow());
       item.setCol(tile.getCol());
       tile.setItem(item);
-      System.out.println("Player dropped " + item.getName());
+      System.out.println("Player dropped " + item.toString());
 
     }
 
@@ -218,7 +218,7 @@ public class Game {
 
         if (item instanceof Diffuser) {
           bomb.setNavigable(true);
-          System.out.println("Bomb diffused with " + item.getName());
+          System.out.println("Bomb diffused with diffuser");
         }
 
       }
@@ -361,7 +361,7 @@ public class Game {
 
   }
 
-  public void teleport(Room room, int row, int col) {
+  public void directTeleport(Room room, int row, int col) {
 
     AccessibleTile tile = player.getTile();
     AccessibleTile nextTile = (AccessibleTile) room.getTile(row, col);
@@ -379,7 +379,9 @@ public class Game {
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
-        if(room == null) continue;
+        if (room == null) {
+          continue;
+        }
         room.rotateRoomClockwise();
       }
     }
@@ -393,46 +395,48 @@ public class Game {
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
-        if(room == null) continue;
+        if (room == null) {
+          continue;
+        }
         room.rotateRoomAnticlockwise();
       }
     }
 
   }
 
-  public void rotateObjectsAnticlockwise(){
-      for (int row = 0; row < Room.ROOMSIZE; row++) {
-          for (int col = 0; col < Room.ROOMSIZE; col++) {
-              if(currentRoom.getTile(row, col) instanceof AccessibleTile){
-                  AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
-                  if(tile.hasItem()){
-                      Item item = tile.getItem();
-                      item.setDirection(item.getDirection().getAnticlockwiseDirection());
-                  } else if(tile.hasChallenge()){
-                      ChallengeItem challenge = tile.getChallenge();
-                      challenge.setDirection(challenge.getDirection().getAnticlockwiseDirection());
-                  }
-              }
+  public void rotateObjectsAnticlockwise() {
+    for (int row = 0; row < Room.ROOMSIZE; row++) {
+      for (int col = 0; col < Room.ROOMSIZE; col++) {
+        if (currentRoom.getTile(row, col) instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
+          if (tile.hasItem()) {
+            Item item = tile.getItem();
+            item.setDirection(item.getDirection().getAnticlockwiseDirection());
+          } else if (tile.hasChallenge()) {
+            ChallengeItem challenge = tile.getChallenge();
+            challenge.setDirection(challenge.getDirection().getAnticlockwiseDirection());
           }
+        }
       }
+    }
   }
 
-    public void rotateObjectsClockwise(){
-        for (int row = 0; row < Room.ROOMSIZE; row++) {
-            for (int col = 0; col < Room.ROOMSIZE; col++) {
-                if(currentRoom.getTile(row, col) instanceof AccessibleTile){
-                    AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
-                    if(tile.hasItem()){
-                        Item item = tile.getItem();
-                        item.setDirection(item.getDirection().getClockwiseDirection());
-                    } else if(tile.hasChallenge()){
-                        ChallengeItem challenge = tile.getChallenge();
-                        challenge.setDirection(challenge.getDirection().getClockwiseDirection());
-                    }
-                }
-            }
+  public void rotateObjectsClockwise() {
+    for (int row = 0; row < Room.ROOMSIZE; row++) {
+      for (int col = 0; col < Room.ROOMSIZE; col++) {
+        if (currentRoom.getTile(row, col) instanceof AccessibleTile) {
+          AccessibleTile tile = (AccessibleTile) currentRoom.getTile(row, col);
+          if (tile.hasItem()) {
+            Item item = tile.getItem();
+            item.setDirection(item.getDirection().getClockwiseDirection());
+          } else if (tile.hasChallenge()) {
+            ChallengeItem challenge = tile.getChallenge();
+            challenge.setDirection(challenge.getDirection().getClockwiseDirection());
+          }
         }
+      }
     }
+  }
 
   public Room[][] getBoard() {
     return Arrays.copyOf(board, board.length);

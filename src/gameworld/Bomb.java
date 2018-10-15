@@ -20,4 +20,10 @@ public class Bomb extends ChallengeItem {
     return "It looks dangerous, probably best to keep your distance.";
   }
 
+
+  @Override
+  public String toString() {
+    return "Bomb";
+  }
+
 }

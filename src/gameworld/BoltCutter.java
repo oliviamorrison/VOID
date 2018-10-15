@@ -1,7 +1,5 @@
 package gameworld;
 
-import javafx.scene.image.Image;
-
 public class BoltCutter extends Item {
 
   public BoltCutter(int row, int col, String direction) {
@@ -15,7 +13,12 @@ public class BoltCutter extends Item {
 
   @Override
   public String getDescription() {
-    return "It's a nice, red bolt cutter. It would be useful to break some chains.";
+    return "It's a red bolt cutter. It would be useful to break some chains.";
+  }
+
+  @Override
+  public String toString() {
+    return "BoltCutter";
   }
 
 }
