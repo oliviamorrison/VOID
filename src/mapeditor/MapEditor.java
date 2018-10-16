@@ -709,7 +709,7 @@ public class MapEditor extends Application {
               if (t instanceof TilePane) {
 
                 TilePane tilePane = (TilePane) t;
-                if (tilePane.isAccessible()) {
+                if (tilePane.isAccessible() || tilePane.hasMapItem() && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
                   AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if (mapItem != null) {
@@ -739,7 +739,7 @@ public class MapEditor extends Application {
                         challenge = new Bomb(k, l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k, l, "WEST");
+                        challenge = new VendingMachine(k, l, "SOUTH");
                         break;
                       case "player.png":
                         player = new Player(room, tile, 100, "NORTH");
@@ -751,7 +751,6 @@ public class MapEditor extends Application {
                     if (mapItem.getImageName() != null) {
                       tile.setItem(item);
                       tile.setChallenge(challenge);
-                      System.out.println(mapItem.getImageName());
                     }
 
                     room.setTile(tile, k, l);
