@@ -254,9 +254,12 @@ public class Game {
           return "Bomb successfully diffused";
         }
 
-      } else {
+      }
+
+      if (bomb.isNavigable()) {
         return "You have already diffused the bomb, it is safe to walk over";
       }
+
     }
 
     return "You do not have a diffuser to diffuse the bomb!";
@@ -298,9 +301,12 @@ public class Game {
           vendingMachine.setUnlocked(true);
           return "Vending machine successfully unlocked and ready to use";
         }
-      } else {
+      }
+
+      if (vendingMachine.isUnlocked()) {
         return "You have already unlocked the vending machine!";
       }
+
     }
 
     return "You do not have the bolt cutter to unlock the vending machine!";
@@ -388,7 +394,8 @@ public class Game {
           return "Alien successfully befriended";
 
         }
-      } else {
+      }
+      if (alien.isNavigable()) {
         return "You have already made friends with the Alien, you may pass.";
       }
     }

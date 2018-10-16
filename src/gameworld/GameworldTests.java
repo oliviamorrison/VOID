@@ -318,6 +318,8 @@ public class GameworldTests {
     game.unlockVendingMachine();
     assertTrue(vendingMachine.isUnlocked());
 
+    game.unlockVendingMachine();
+
     // challenge = null case
 
     vendingMachine.setDirection(Direction.WEST);
@@ -390,6 +392,9 @@ public class GameworldTests {
 
     assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
+
+    alien.setNavigable(true);
+    game.befriendAlien();
 
     // challenge = null case
 
@@ -559,6 +564,8 @@ public class GameworldTests {
     player.loseOxygen();
 
     assertFalse(player.getOxygen() < 0);
+
+    game.checkForOxygenTank();
 
   }
 
