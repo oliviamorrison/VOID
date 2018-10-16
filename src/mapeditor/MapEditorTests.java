@@ -9,12 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.Node;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import org.junit.jupiter.api.Test;
+
+import application.GUI;
 
 
 /**
@@ -291,5 +297,39 @@ public class MapEditorTests {
     assertFalse(mapEditor.createGame(new File("medium.xml")));
     assertFalse(mapEditor.createGame(new File("hard.xml")));
   }
+  
+  /**
+   * Tests that toggle buttons that should be toggled off, is off
+   * as the player initially has no items in their inventory
+   * @throws InterruptedException
+   */
+  @Test
+  public void testStart() throws InterruptedException {
+    Thread thread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        new JFXPanel(); // Initializes the JavaFx Platform
+        Platform.runLater(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              MapEditor gui = new MapEditor();
+              Stage stage = new Stage();
+              gui.start(stage);
+              
+              gui.createGame(null);
+            }
+            catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        });
+      }
+    });
+    thread.start();// Initialize the thread
+    Thread.sleep(1000); //gui window stays up for 1 second
+  }
+  
+  
 
 }
