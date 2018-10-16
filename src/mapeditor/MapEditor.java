@@ -3,6 +3,7 @@ package mapeditor;
 import static application.GUI.configureFileChooser;
 
 import application.GUI;
+
 import gameworld.AccessibleTile;
 import gameworld.Alien;
 import gameworld.BoltCutter;
@@ -40,7 +41,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import persistence.XmlParser;
-
 
 /**
  * MapEditor class displays a stand alone application allowing one to
@@ -176,6 +176,7 @@ public class MapEditor extends Application {
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
     Button makeGame = new Button("Make Game");
+
     final Button backToMain = new Button("Back to game");
 
     pickupButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -528,6 +529,7 @@ public class MapEditor extends Application {
    *
    * @param row row of room to implement
    * @param col col of room to implement
+   *
    * @return GridPane the grid of all tiles in the room
    */
   private GridPane initRoom(int row, int col) {
@@ -658,8 +660,8 @@ public class MapEditor extends Application {
   /**
    * This method returns the node at the given row and column of the given gridPane.
    *
-   * @param row row which node will be at
-   * @param column col which node will be at
+   * @param row      row which node will be at
+   * @param column   col which node will be at
    * @param gridPane grid to find node in
    * @return Node which is at row and col
    */
@@ -784,7 +786,11 @@ public class MapEditor extends Application {
   }
 
   /**
+   * <<<<<<< HEAD
+   * Attempts to write a current game state to an XML file
+   * =======
    * Attempts to write a current game state to an XML file.
+   * >>>>>>> 5c12fef23e828ea3957e9d3ee6b1e601e44077f4
    *
    * @param game the game to save to a file
    * @return whether the game was successfully saved
