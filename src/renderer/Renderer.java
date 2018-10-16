@@ -15,7 +15,7 @@ public class Renderer {
     private final static Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
     private final static Color DTColor = Color.rgb(161, 176, 201);
     private final static double floorHeight = 0;
-    private final static double wallHeight = 2;
+    private final static double wallHeight = 0;
     private final static double doorHeight = 0;
 
     private final static double playerHeight = 60;
@@ -27,12 +27,15 @@ public class Renderer {
     //Challenges
     private final static String bombImage = "images/bomb";
     private final static String vendingMachineImage = "images/vending-machine";
+    private final static String alienImage = "images/alien";
 
     //Items
-    private final static String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
-    private final static String coinImage = "images/coin";
+    private final static String diffuserImage = "images/diffuser";//TODO: needs orientation
     private final static String boltCutterImage = "images/bolt-cutter";
-    private final static String beerImage = "images/beer2.png";
+    private final static String coinImage = "images/coin";
+    private final static String potionImage = "images/potion.png";
+    private final static String spaceshipImage = "images/spaceship";
+    private final static String oxygenTankImage = "images/oxygen-tank.png";
 
 
     private Player player;
@@ -123,7 +126,6 @@ public class Renderer {
                 gameObject = getChallengeImage(AT);
             }
         }
-//Testing again again
         root.getChildren().addAll(poly.getPolygons());
         if(gameObject != null){
             root.getChildren().add(gameObject);
@@ -160,7 +162,17 @@ public class Renderer {
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 12);
         } else if(item instanceof Potion){
-            itemImage = getImage((beerImage));
+            itemImage = getImage((potionImage));
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 5);
+            itemImage.setY(c.getY() - 25);
+        } else if(item instanceof OxygenTank){
+            itemImage = getImage((oxygenTankImage));
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 5);
+            itemImage.setY(c.getY() - 25);
+        } else if(item instanceof SpaceShip){
+            itemImage = getImage((spaceshipImage+ getObjectDirection(item.getDirection())));
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 5);
             itemImage.setY(c.getY() - 25);
@@ -183,7 +195,7 @@ public class Renderer {
             itemImage.setX(c.getX() - 30);
             itemImage.setY(c.getY() - 65);
         } else if(challenge instanceof Alien){
-            itemImage = getImage((vendingMachineImage+ getObjectDirection(challenge.getDirection())));
+            itemImage = getImage((alienImage+ getObjectDirection(challenge.getDirection())));
             itemImage.setFitHeight(80);
             itemImage.setX(c.getX() - 30);
             itemImage.setY(c.getY() - 65);
@@ -199,9 +211,9 @@ public class Renderer {
             case SOUTH:
                 return "S.png";
             case WEST:
-                return "W.png";
-            case EAST:
                 return "E.png";
+            case EAST:
+                return "W.png";
             default:
                 return null;
         }
