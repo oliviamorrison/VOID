@@ -62,7 +62,6 @@ import org.xml.sax.SAXException;
  */
 
 //TODO: UML Diagram
-//TODO: Throw more descriptive ParseErrors
 //TODO: Add music
 //TODO: Take group pic
 //TODO: Pause health bar when menu is clicked
@@ -320,21 +319,11 @@ public class XmlParser {
     Element playerElement = (Element) playerNode;
 
     //Get the player position from its row and col attributes
-    if (playerElement.getAttribute("row").equals("")
-        || playerElement.getAttribute("col").equals("")) {
-      throw new ParseError("Player needs position attributes (row and col)");
-    }
     int row = parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
     //Get the player's health and the direction they are facing
-    if (playerElement.getAttribute("oxygen").equals("")) {
-      throw new ParseError("Player needs oxygen attribute");
-    }
-    int health = parseInt(playerElement.getAttribute("oxygen"));
-    if (playerElement.getAttribute("direction").equals("")) {
-      throw new ParseError("Player needs direction attribute");
-    }
+    int oxygen = parseInt(playerElement.getAttribute("oxygen"));
     String direction = playerElement.getAttribute("direction");
 
     //Get the room in the board that the player is in
@@ -342,7 +331,7 @@ public class XmlParser {
     int roomCol = parseInteger("roomCol", playerElement);
     Room playerRoom = board[roomRow][roomCol];
     AccessibleTile playerTile = (AccessibleTile) playerRoom.getTile(row, col);
-    Player player = new Player(playerRoom, playerTile, health, direction);
+    Player player = new Player(playerRoom, playerTile, oxygen, direction);
     playerTile.setPlayer(true);
 
     //Parse the player's item
@@ -376,15 +365,8 @@ public class XmlParser {
       String token = items.item(i).getTextContent().trim();
       if (!token.equals("")) {
         Element elem = (Element) items.item(i);
-        if (elem.getAttribute("row").equals("")
-            || elem.getAttribute("col").equals("")) {
-          throw new ParseError("Item needs position attributes (row and col)");
-        }
         int row = parseInt(elem.getAttribute("row"));
         int col = parseInt(elem.getAttribute("col"));
-        if (elem.getAttribute("direction").equals("")) {
-          throw new ParseError("Item needs direction attribute");
-        }
         String direction = elem.getAttribute("direction");
         Item item;
         switch (token) {
