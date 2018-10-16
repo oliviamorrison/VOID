@@ -235,6 +235,9 @@ public class Game {
         }
 
       }
+      else {
+        return "You have already diffused the bomb, it is safe to walk over";
+      }
     }
 
     return "You do not have a diffuser to diffuse the bomb!";
