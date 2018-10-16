@@ -788,17 +788,17 @@ public class MapEditor extends Application {
    * @return whether the game was successfully saved
    */
   public boolean saveFile(Game game, boolean test) {
-	File file = null;
-	if(test) {
-		file = new File("test.xml");
-	} else {
-		FileChooser fileChooser = new FileChooser();
-		configureFileChooser(fileChooser);
-		//Show save file dialog
-	    file = fileChooser.showSaveDialog(stage);
-	}
+    File file = null;
+    if (test) {
+      file = new File("test.xml");
+    } else {
+      FileChooser fileChooser = new FileChooser();
+      configureFileChooser(fileChooser);
+      //Show save file dialog
+      file = fileChooser.showSaveDialog(stage);
+    }
 
-    
+
     if (file != null && !file.getName().equals("easy.xml")
         && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
