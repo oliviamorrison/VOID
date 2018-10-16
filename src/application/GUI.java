@@ -28,7 +28,6 @@ import javafx.util.Duration;
 import mapeditor.MapEditor;
 import persistence.XmlParser;
 import renderer.Renderer;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.File;
@@ -37,7 +36,13 @@ import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.*;
 
-//TODO win/lose dialog
+/**
+ * This class represents the graphical user interface, which is responsible for
+ * managing the functionality of the game including starting new games, loading
+ * and saving games, event handling and the management of various application windows.
+ *
+ * @author Annisha Akosah 300399598
+ */
 
 public class GUI extends Application implements EventHandler<KeyEvent>{
   public static final int WINDOW_WIDTH = 1000;
@@ -46,13 +51,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   // GUI components
   private GridPane game;
   private FlowPane inventory;
-  private GridPane healthBar;
+  private GridPane oxygenBar;
   private GridPane options;
   private GridPane screen;
   private Text screenMessage;
   private HashMap<String, ToggleButton> inventoryButtons = new HashMap<>();
   private Stage window;
-  private Scene startScene, gameScene, levelsScene;
+  private Scene startScene, gameScene, levelsScene, winLoseScene;
   private ProgressBar pBar;
   private Boolean pause = false;
 
@@ -74,7 +79,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.setResizable(false);
     window.setTitle("Void");
     window.show();
-
   }
 
   @Override
@@ -132,13 +136,15 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       currentGame.movePlayer(dx, dy);
 
       if (currentGame.checkForSpaceship()) {
-        System.out.println("Winner winner");
-        System.exit(0);
+        window.setScene(createWinLoseScene("win"));
       }
       currentGame.checkForSpaceship();
-      currentGame.checkForOxygenTank();
+      str = currentGame.checkForOxygenTank();
     }
 
+    if(currentGame.getPlayer().getOxygen() == 0) {
+      window.setScene(createWinLoseScene("lose"));
+    }
     renderer.draw();
     updateInventory();
     updateScreen(str);
@@ -233,11 +239,20 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // create the Start Scene
     startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
-    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
+    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38),
+            CornerRadii.EMPTY, Insets.EMPTY)));
     startScene.setOnKeyPressed(this);
     return startScene;
   }
 
+
+  /**
+   * Constructs the Levels screen which gives users the ability to select
+   * a given difficulty level when starting a new game.
+   *
+   * @param stage the primary stage constructed by the platform
+   * @return the resulting levels scene
+   */
   public Scene createLevelsScreen (Stage stage) {
     // title
     Image titleImage = null;
@@ -298,7 +313,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     levels.setAlignment(Pos.CENTER);
 
     levelsScene = new Scene(levels, WINDOW_WIDTH, WINDOW_HEIGHT);
-    levels.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
+    levels.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38),
+            CornerRadii.EMPTY, Insets.EMPTY)));
 
     return levelsScene;
 
@@ -375,17 +391,17 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // initialise the game panes
     this.game = setGame(stage);
-    this.healthBar = setOxygenBar();
+    this.oxygenBar = setOxygenBar();
     this.inventory = setInventory();
     this.options = setOptions();
-    String startMsg = "> Navigate through this unit to the safety "
-        + "of your ship. Hurry Commander, time is of the essence!";
+    String startMsg = "Navigate through this unit to the safety "
+            + "of your ship. Hurry Commander, time is of the essence!";
     this.screen = setScreen(startMsg);
 
     updateInventory();
 
     FlowPane stack = new FlowPane();
-    stack.getChildren().addAll(healthBar,inventory, options, screen);
+    stack.getChildren().addAll(oxygenBar,inventory, options, screen);
 
     stack.setHgap(4);
     stack.setPrefWrapLength(WINDOW_WIDTH * 0.3); // preferred width allows for two columns
@@ -408,6 +424,70 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     gameScene = new Scene(grid);
     gameScene.setOnKeyPressed(this);
     return gameScene;
+  }
+
+
+
+  /**
+   * Constructs a screen displaying a win or lose message. Give the user
+   * the option to play a new game (returning to the start screen), or quit.
+   *
+   * @param status a string denoting whether the user won or lost the game
+   * @return the resulting win/lose scene
+   */
+  private Scene createWinLoseScene(String status) {
+    String fileName = "images/" + status + ".png";
+    // title
+    Image titleImage = null;
+    try {
+      titleImage = new Image(new FileInputStream(fileName));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    ImageView titleIcon = new ImageView(titleImage);
+
+    // play again
+    Button play = new Button();
+    play.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image newImage = null;
+    try {
+      newImage = new Image(new FileInputStream("images/play.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView newGameIcon = new ImageView(newImage);
+    play.setGraphic(newGameIcon);
+    play.setOnAction(Event -> window.setScene(startScene));
+
+    // quit
+    Button quit = new Button();
+    quit.setStyle("-fx-background-color: rgba(0,0,0,0);");
+    Image hardImage = null;
+    try {
+      hardImage = new Image(new FileInputStream("images/quit.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView hardIcon = new ImageView(hardImage);
+    quit.setGraphic(hardIcon);
+    quit.setOnAction(Event -> confirmExit());
+
+    // buttons laid out in horizontal row
+    HBox buttons = new HBox(10);
+    buttons.getChildren().addAll(play, quit);
+    buttons.setAlignment(Pos.CENTER);
+
+    VBox options = new VBox(90);
+    options.getChildren().addAll(titleIcon, buttons);
+    options.setAlignment(Pos.CENTER);
+
+    winLoseScene = new Scene(options, WINDOW_WIDTH, WINDOW_HEIGHT);
+    options.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38),
+            CornerRadii.EMPTY, Insets.EMPTY)));
+
+    return winLoseScene;
+
   }
 
 
@@ -448,7 +528,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
 
-    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
+    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml")
+            && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, currentGame);
       } catch (ParserConfigurationException | TransformerException e) {
@@ -522,7 +603,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    */
   public void setWindowRatio() {
     this.game.setPrefSize(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT);
-    this.healthBar.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT *  0.1);
+    this.oxygenBar.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT *  0.1);
     this.inventory.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.3);
     this.options.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.26);
     this.screen.setPrefSize(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.33);
@@ -548,20 +629,22 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       e.printStackTrace();
     }
 
-    BackgroundImage myBI = new BackgroundImage(image,BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-    grid.setBackground(new Background(myBI));
+    // add the background image to the games scene
+    BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.REPEAT,
+            BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    grid.setBackground(new Background(background));
     grid.add(renderer.getRoot(), 0, 1);
     renderer.getRoot().setTranslateX(30);
     renderer.getRoot().setTranslateY(230);
 
-    /////////////////////////////////////////////////////////Here Annisha
+    // construct a new progress bar to show decreasing oxygen level
     pBar = new ProgressBar(currentGame.getPlayer().getOxygen()/100);
     Task task = oxygenCounter(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
-    /////////////////////////////////////////////////////////
 
+    //Add music
     String path = "music/space.wav";
     AudioClip audio = new AudioClip(Paths.get(path).toUri().toString());
     audio.setCycleCount(10);
@@ -571,19 +654,18 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * Constructs the HealthBar pane. This is where the health bar of the
+   * Constructs the OxygenBar pane. This is where the health bar of the
    * player is displayed
    * @return the resulting pane holding the health bar
    */
   public GridPane setOxygenBar() {
-    GridPane healthBar = new GridPane();
-
-    healthBar.add(pBar,0,0);
-    healthBar.setStyle("-fx-border-width:5px;-fx-border-color:rgb(38,38,38);-fx-background-color: rgb(45,45,45);");
+    GridPane oxygenBar = new GridPane();
+    oxygenBar.add(pBar,0,0);
+    oxygenBar.setStyle("-fx-border-width:5px;-fx-border-color:rgb(38,38,38);-fx-background-color: rgb(45,45,45);");
     pBar.setPrefSize((WINDOW_WIDTH * 0.3) - 30, (WINDOW_HEIGHT * 0.1) - 30);
     pBar.setStyle("-fx-accent: #00a57d;");
-    healthBar.setAlignment(Pos.CENTER);
-    return healthBar;
+    oxygenBar.setAlignment(Pos.CENTER);
+    return oxygenBar;
   }
 
   /**
@@ -597,17 +679,15 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       @Override
       protected Object call() throws Exception {
         for(int i = currentGame.getPlayer().getOxygen(); i > 0; i = currentGame.getPlayer().getOxygen()){
-          Thread.sleep(1000);
+          Thread.sleep(1000); // CHANGE FOR DIFFERENT TIMERS
           updateProgress(currentGame.getPlayer().getOxygen(), oxygen);
           if (!pause) currentGame.getPlayer().loseOxygen();
         }
-        //END GAME
         return true;
       }
+
     };
   }
-
-
 
   /**
    * Constructs the Inventory pane. This is where the inventory of the
@@ -705,7 +785,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     pickupButton.setFocusTraversable(false);
     dropButton.setFocusTraversable(false);
 
-
     // enable button listeners and add images for buttons
     pickupButton.setStyle("-fx-background-color: rgba(0,0,0,0);");
     Image pickupImage = null;
@@ -779,7 +858,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   public void displayHelp() {
     // blur the GUI
     game.setEffect(new GaussianBlur());
-    healthBar.setEffect(new GaussianBlur());
+    oxygenBar.setEffect(new GaussianBlur());
     inventory.setEffect(new GaussianBlur());
     options.setEffect(new GaussianBlur());
     screen.setEffect(new GaussianBlur());
@@ -810,7 +889,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     resume.setOnAction(event -> {
       game.setEffect(null);
-      healthBar.setEffect(null);
+      oxygenBar.setEffect(null);
       inventory.setEffect(null);
       options.setEffect(null);
       screen.setEffect(null);
@@ -830,6 +909,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     Alert alert = new Alert(AlertType.CONFIRMATION);
     alert.setTitle("Quit Game");
     alert.setHeaderText("Are you sure?");
+
+    ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText("Yes");
+    ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
 
     Optional<ButtonType> result = alert.showAndWait();
 
@@ -853,20 +935,22 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         button.setDisable(true);
       } else {
         button.setDisable(false);
-
       }
     }
   }
 
   /**
-   * Updates the Screen pane given the action taken by the player
+   * Updates the Screen pane to display textual feedback based on
+   * an action taken by the player (if there was one)
    *
    * @param msg the message to be displayed on the Screen pane
    */
   public void updateScreen(String msg) {
+    if(msg.equals("")) return;
 
     // line break at every 20th character
-    String parsedStr = msg.replaceAll("(.{20})", "$1-\n");
+    String str = "> " + msg;
+    String parsedStr = str.replaceAll("(.{20})", "$1-\n");
 
     final Animation animation = new Transition() {
       {
@@ -881,8 +965,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     };
     animation.play();
   }
-
-
 
   public static void main(String[] args) {
     Application.launch(args);

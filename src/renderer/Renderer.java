@@ -140,6 +140,7 @@ public class Renderer {
         gameObject = getChallengeImage(at);
       }
     }
+
     root.getChildren().addAll(poly.getPolygons());
     if (gameObject != null) {
       root.getChildren().add(gameObject);
@@ -153,24 +154,18 @@ public class Renderer {
     Item item = tile.getItem();
     ImageView itemImage = null;
     Point2D c = tile.getCenter();
+    String direction = "";
+    if (item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH) {
+      direction = "1.png";
+    } else {
+      direction = "2.png";
+    }
     if (item instanceof Diffuser) {
-      String direction = "";
-      if (item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH) {
-        direction = "1.png";
-      } else {
-        direction = "2.png";
-      }
       itemImage = getImage(diffuserImage + direction);
       itemImage.setFitHeight(30);
       itemImage.setX(c.getX() - 14);
       itemImage.setY(c.getY() - 22);
     } else if (item instanceof Coin) {
-      String direction = "";
-      if (item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH) {
-        direction = "1.png";
-      } else {
-        direction = "2.png";
-      }
       itemImage = getImage((coinImage + direction));
       itemImage.setFitHeight(30);
       itemImage.setX(c.getX() - 13);
@@ -230,10 +225,8 @@ public class Renderer {
         return "S.png";
       case WEST:
         return "E.png";
-      case EAST:
-        return "W.png";
       default:
-        return null;
+        return "W.png";
     }
   }
 

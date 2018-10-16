@@ -59,36 +59,32 @@ class TilePane extends Pane {
   }
 
   /**
-   * This method returns the direction of the door.
-   *
-   * @return String direction
+   * A method to get the direction.
+   * @return the direction
    */
   public String getDirection() {
     return direction;
   }
 
   /**
-   * This method returns if the tile is a door or not.
-   *
-   * @return boolean
+   * A method to get if it is a door.
+   * @return the direction
    */
   public boolean isDoor() {
     return door;
   }
 
   /**
-   * This method returns the room which the tile is in.
-   *
-   * @return GridPane
+   * A method to get room.
+   * @return the room
    */
   public GridPane getRoom() {
     return room;
   }
 
   /**
-   * This method returns if the tile is accessible or not.
-   *
-   * @return boolean
+   * A method returns if the tile is accessible.
+   * @return the accessible
    */
   public boolean isAccessible() {
     return accessible;
@@ -113,27 +109,24 @@ class TilePane extends Pane {
 
 
   /**
-   * This method returns the image view of the tile.
-   *
-   * @return ImageView
+   * A method to get the image view.
+   * @return the imageView
    */
   public ImageView getImageView() {
     return imageView;
   }
 
   /**
-   * This method returns the map item (if any) in the tile.
-   *
-   * @return MapItem
+   * A method to getMapItem from tile.
+   * @return the mapItem
    */
   public MapItem getMapItem() {
     return mapItem;
   }
 
   /**
-   * This method returns if the tile has a map item in it.
-   *
-   * @return boolean
+   * A method to return if the tile has a map tile.
+   * @return the if the map has an item
    */
   public boolean hasMapItem() {
     return mapItem != null;

@@ -38,9 +38,8 @@ class ItemSpace extends Pane {
   }
 
   /**
-   * This method returns the map item associated with this item space.
-   *
-   * @return MapItem
+   * A method returns the map item associated with this item space.
+   * @return the mapItem
    */
   public MapItem getMapItem() {
     return mapItem;
@@ -55,9 +54,8 @@ class ItemSpace extends Pane {
   }
 
   /**
-   * This method returns the image view associated with this image space.
-   *
-   * @return ImageView
+   * A method to return the image view associated with the item space.
+   * @return the image view
    */
   public ImageView getImageView() {
     return imageView;
@@ -79,9 +77,8 @@ class ItemSpace extends Pane {
   }
 
   /**
-   * This method returns if this item space has an item in it.
-   *
-   * @return boolean
+   * A method check if the item space has a map item.
+   * @return if the item space has an item
    */
   public boolean hasItem() {
     return mapItem != null;
