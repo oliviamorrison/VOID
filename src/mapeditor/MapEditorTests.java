@@ -78,12 +78,12 @@ public class MapEditorTests {
 
         assertTrue(node instanceof TilePane);
         tile = (TilePane) node;
-        tile.setMapItem(new MapItem("antidote.png",
-                   new Image(getClass().getResourceAsStream("antidote.png"),
+        tile.setMapItem(new MapItem("spaceship.png",
+                   new Image(getClass().getResourceAsStream("spaceship.png"),
                            17, 17, false, false)));
         
         assertNotNull(tile);
-        assertTrue(mapEditor.isInAntidoteRoom(tile));
+        assertTrue(mapEditor.isInSpaceShipRoom(tile));
         
         
     }
@@ -118,7 +118,7 @@ public class MapEditorTests {
     		MapEditor mapEditor = new MapEditor();
         mapEditor.setUp();
         mapEditor.initaliseItems();
-        assertTrue(mapEditor.createGame());
+        assertTrue(mapEditor.createGame(true));
         
     }
     
@@ -203,8 +203,8 @@ public class MapEditorTests {
           
           assertNull(itemSpace.getMapItem());
     	      
-          itemSpace.setMapItem(new MapItem("antidote.png",
-                  new Image(getClass().getResourceAsStream("antidote.png"),
+          itemSpace.setMapItem(new MapItem("spaceship.png",
+                  new Image(getClass().getResourceAsStream("spaceship.png"),
                           17, 17, false, false)));
           MapItem first = itemSpace.getMapItem();
           assertNotNull(first);
@@ -237,8 +237,8 @@ public class MapEditorTests {
               
           assertNull(itemSpace.getMapItem());
         	      
-          itemSpace.setMapItem(new MapItem("antidote.png",
-                 new Image(getClass().getResourceAsStream("antidote.png"),
+          itemSpace.setMapItem(new MapItem("spaceship.png",
+                 new Image(getClass().getResourceAsStream("spaceship.png"),
                           17, 17, false, false)));
           
           assertFalse(mapEditor.noItemsInItemGrid());
