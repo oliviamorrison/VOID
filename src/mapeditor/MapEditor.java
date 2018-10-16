@@ -133,8 +133,8 @@ public class MapEditor extends Application {
     int rows = 2;
     int cols = 4;
 
-    double itemWidth = this.itemWidth / rows;
-    double itemHeight = this.itemHeight / cols;
+    double itemWidth = (double) this.itemWidth / rows;
+    double itemHeight = (double) this.itemHeight / cols;
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
@@ -533,8 +533,8 @@ public class MapEditor extends Application {
 
 
     int roomNum = 3;
-    double roomWidth = boardSize / roomNum;
-    double roomHeight = boardSize / roomNum;
+    double roomWidth = (double) boardSize / roomNum;
+    double roomHeight = (double) boardSize / roomNum;
 
     int tileNum = 10;
     double tileWidth = roomWidth / tileNum;

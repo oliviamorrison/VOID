@@ -100,7 +100,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   // Game components
   private Renderer renderer;
-  private static Game currentGame;
+  private Game currentGame;
 
   /**
    * Gets the current primary Stage.
@@ -200,7 +200,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       if (currentGame.checkForSpaceship()) {
         window.setScene(createWinLoseScene("win"));
       }
-      currentGame.checkForSpaceship();
       str = currentGame.checkForOxygenTank();
     }
 
@@ -355,6 +354,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     editMap.setOnAction(e -> {
       try {
+        pause = true;
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Are you sure?");
         alert.setContentText("Proceed to edit map?");
@@ -362,6 +362,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         if (result.isPresent() && result.get() == ButtonType.OK) {
           new MapEditor().start(stage);
         }
+        pause = false;
       } catch (Exception e1) {
         e1.printStackTrace();
       }
@@ -479,12 +480,14 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return true if a file was successfully loaded or false otherwise
    */
   public boolean loadFile(Stage stage) {
+    pause = true;
     FileChooser chooser = new FileChooser();
     configureFileChooser(chooser);
     chooser.setTitle("Open Game XML File");
     File file = chooser.showOpenDialog(stage);
 
     if (file == null) {
+      pause = false;
       return false; // file loading failed
     }
 
@@ -498,6 +501,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       System.out.println(parseError.getMessage());
     }
     setGame(stage);
+    pause = false;
     return true;
   }
 
@@ -506,6 +510,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @param stage the primary stage constructed by the platform
    */
   public void saveFile(Stage stage) {
+    pause = true;
     FileChooser fileChooser = new FileChooser();
     configureFileChooser(fileChooser);
 
@@ -526,6 +531,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
           + "Please save using a different file name");
       alert.showAndWait();
     }
+    pause = false;
   }
 
   /**
@@ -624,7 +630,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     renderer.getRoot().setTranslateY(230);
 
     // construct a new progress bar to show decreasing oxygen level
-    progressBar = new ProgressBar(currentGame.getPlayer().getOxygen() / 100);
+    progressBar = new ProgressBar( (double) currentGame.getPlayer().getOxygen() / 100);
     Task task = oxygenCounter(100);
     progressBar.progressProperty().unbind();
     progressBar.progressProperty().bind(task.progressProperty());
@@ -667,7 +673,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       @Override
       protected Object call() throws Exception {
         int oxygen = currentGame.getPlayer().getOxygen();
-        for (int i = oxygen; i > 0; i = oxygen) {
+        while (currentGame.getPlayer().getOxygen() > 0) {
           Thread.sleep(1000); // CHANGE FOR DIFFERENT TIMERS
           updateProgress(currentGame.getPlayer().getOxygen(), oxygen);
           if (!pause) {
@@ -874,6 +880,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    *
    */
   public void confirmExit() {
+    pause = true;
     Alert alert = new Alert(AlertType.CONFIRMATION);
     alert.setTitle("Quit Game");
     alert.setHeaderText("Are you sure?");
@@ -886,6 +893,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     if (result.get() == ButtonType.OK) {
       System.exit(0); // exit application
     } else {
+      pause = false;
       //do nothing..
     }
   }
