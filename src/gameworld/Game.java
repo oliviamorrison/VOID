@@ -147,7 +147,7 @@ public class Game {
 
       if (player.hasItem()) {
         System.out.println("Player may only have one item at a time");
-        return "Player may only have one item at a time";
+        return "You may only carry one item at a time";
       }
 
       Item item = tile.getItem();
@@ -156,20 +156,20 @@ public class Game {
       item.setRow(-1);
       item.setCol(-1);
       System.out.println("Player picked up " + item.toString());
-      return "player picked up";
+      return "You picked up " + item.getName();
 
     }
 
     else
-      return "tile does not have item";
+      return "Tile does not have an item you can pick up";
   }
 
-  public void dropItem() {
+  public String dropItem() {
 
     AccessibleTile tile = player.getTile();
 
     if (tile instanceof Portal) {
-      return;
+      return "You can't drop an item on a portal!";
     }
 
     if (!tile.hasItem() && !tile.hasChallenge() && player.hasItem()) {
@@ -179,12 +179,14 @@ public class Game {
       item.setCol(tile.getCol());
       tile.setItem(item);
       System.out.println("Player dropped " + item.toString());
-
+      return "You dropped " + item.getName();
     }
+
+    return "You don't have any items to drop";
 
   }
 
-  public void diffuseBomb() {
+  public String diffuseBomb() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
@@ -192,7 +194,7 @@ public class Game {
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
-      return;
+      return "There is no bomb to be diffused";
     }
 
     if (challenge instanceof Bomb) {
@@ -205,14 +207,15 @@ public class Game {
 
         if (item instanceof Diffuser) {
           bomb.setNavigable(true);
-          System.out.println("Bomb diffused with diffuser");
+          return "Bomb successfully diffused";
         }
 
       }
     }
+    return "You do not have a diffuser to diffuse the bomb!";
   }
 
-  public void unlockVendingMachine() {
+  public String unlockVendingMachine() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
@@ -220,7 +223,7 @@ public class Game {
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
-      return;
+      return "There is no vending machine to be unlocked";
     }
 
     if (challenge instanceof VendingMachine) {
@@ -230,11 +233,11 @@ public class Game {
 
       if (vmDirection == Direction.EAST || vmDirection == Direction.WEST) {
         if (!vmDirection.equals(direction)) {
-          return;
+          return "";
         }
       } else {
         if (!direction.getOppositeDirection().equals(vmDirection)) {
-          return;
+          return "";
         }
       }
 
@@ -244,15 +247,15 @@ public class Game {
 
         if (item instanceof BoltCutter) {
           vendingMachine.setUnlocked(true);
-          System.out.println("Chains are removed from Vending machine");
-          System.out.println("Vending machine is available for use");
+          return "Vending machine successfully unlocked and ready to use";
         }
 
       }
     }
+    return "You do not have the bolt cutter to unlock the vending machine!";
   }
 
-  public void useVendingMachine() {
+  public String useVendingMachine() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
@@ -260,7 +263,7 @@ public class Game {
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
-      return;
+      return "There is no vending machine to be used";
     }
 
     if (challenge instanceof VendingMachine) {
@@ -270,11 +273,11 @@ public class Game {
 
       if (vmDirection == Direction.EAST || vmDirection == Direction.WEST) {
         if (!vmDirection.equals(direction)) {
-          return;
+          return "";
         }
       } else {
         if (!direction.getOppositeDirection().equals(vmDirection)) {
-          return;
+          return "";
         }
       }
 
@@ -288,14 +291,15 @@ public class Game {
           player.addItem(new Potion(-1, -1, "NORTH"));
           System.out.println("Placed coin into vending machine...");
           System.out.println("Pick up the potion that is dispensed");
+          return "Magic potion successfully dispensed from vending machine";
 
         }
       }
     }
-
+    return "You do not have a coin to unlock the vending machine!";
   }
 
-  public void bribeGuard() {
+  public String bribeGuard() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
@@ -303,7 +307,7 @@ public class Game {
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
-      return;
+      return "There is no Alien to befriend";
     }
 
     if (challenge instanceof Alien) {
@@ -322,12 +326,13 @@ public class Game {
               (player.getDirection() == Direction.NORTH || player.getDirection() == Direction.SOUTH) ?
                   player.getDirection().getOppositeDirection() : player.getDirection();
           alien.setDirection(nextDirection);
-          System.out.println("Alien bribed with potion");
+          System.out.println("Alien befriended with potion");
+          return "Alien successfully befriended";
 
         }
       }
     }
-
+    return "You do not have the magic potion to befriend the Alien!";
   }
 
   public void checkForHealthPack() {
