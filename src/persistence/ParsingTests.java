@@ -48,7 +48,7 @@ public class ParsingTests {
   }
 
   /**
-   * Test the parser saves an XML file from a game that starts with a root node <game></game>.
+   * Test the parser saves an XML file from a game that starts with a root node "game".
    *
    * @throws TransformerException exception thrown if transformer fails
    * @throws ParserConfigurationException exception thrown if parser fails
