@@ -33,6 +33,7 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -47,15 +48,17 @@ import java.util.*;
 public class GUI extends Application implements EventHandler<KeyEvent>{
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 750;
+  public static final String BUTTON_STYLE = "-fx-background-color: rgba(0,0,0,0);";
+  public static final Color BACKGROUND_COLOUR = Color.rgb(38,38,38);
 
   // GUI components
+  HashMap<String, ToggleButton> inventoryButtons = new HashMap<>();
   private GridPane game;
   private FlowPane inventory;
   private GridPane oxygenBar;
   private GridPane options;
   private GridPane screen;
   private Text screenMessage;
-  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<>();
   private Stage window;
   private Scene startScene, gameScene, levelsScene, winLoseScene;
   private ProgressBar pBar;
@@ -65,6 +68,31 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   // Game components
   private Renderer renderer;
   private static Game currentGame;
+
+  /**
+   * Gets the current primary Stage.
+   * @return the main application window
+   */
+  public Stage getWindow() {
+    return window;
+  }
+
+  /**
+   * Gets an ImageView based on a specified file name.
+   * @param imageName the file name for the image
+   * @return the resulting ImageView object
+   */
+  public ImageView getImage(String imageName) {
+    Image image = null;
+    try {
+      image = new Image(new FileInputStream("images/"+ imageName));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    ImageView imageView = new ImageView(image);
+    //imageView.setPreserveRatio(true);
+    return imageView;
+  }
 
   @Override
   public void start(Stage stage) {
@@ -133,9 +161,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     }
     if (!(dx == 0 && dy == 0)) {
-
       currentGame.movePlayer(dx, dy);
 
+      // player wins when they find space ship
       if (currentGame.checkForSpaceship()) {
         window.setScene(createWinLoseScene("win"));
       }
@@ -143,6 +171,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       str = currentGame.checkForOxygenTank();
     }
 
+    // player loses when they run out of oxygen
     if(currentGame.getPlayer().getOxygen() == 0) {
       window.setScene(createWinLoseScene("lose"));
     }
@@ -157,40 +186,21 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param stage the primary stage constructed by the platform
    * @return the resulting start scene
    */
-  private Scene createStartScene(Stage stage) {
+  public Scene createStartScene(Stage stage) {
     // title
-    Image titleImage = null;
-    try {
-      titleImage = new Image(new FileInputStream("images/title.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    ImageView titleIcon = new ImageView(titleImage);
+    ImageView titleIcon = getImage("title.png");
 
     // new game
     Button newGame = new Button();
-    newGame.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image newImage = null;
-    try {
-      newImage = new Image(new FileInputStream("images/new.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView newGameIcon = new ImageView(newImage);
+    newGame.setStyle(BUTTON_STYLE);
+    ImageView newGameIcon = getImage("new.png");
     newGame.setGraphic(newGameIcon);
     newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
 
     // load
     Button load = new Button();
-    load.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image loadImage = null;
-    try {
-      loadImage = new Image(new FileInputStream("images/load.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView loadIcon = new ImageView(loadImage);
+    load.setStyle(BUTTON_STYLE);
+    ImageView loadIcon = getImage("load.png");
     load.setGraphic(loadIcon);
     // only load a new game if a file was successfully chosen
     load.setOnAction(Event -> {
@@ -201,14 +211,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // edit map
     Button editMap = new Button();
-    editMap.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image editImage = null;
-    try {
-      editImage = new Image(new FileInputStream("images/editmap.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView editIcon = new ImageView(editImage);
+    editMap.setStyle(BUTTON_STYLE);
+    ImageView editIcon = getImage("editmap.png");
     editMap.setGraphic(editIcon);
     editMap.setOnAction(e -> {
       try {
@@ -220,14 +224,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // quit
     Button quit = new Button();
-    quit.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image quitImage = null;
-    try {
-      quitImage = new Image(new FileInputStream("images/quit.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView quitIcon = new ImageView(quitImage);
+    quit.setStyle(BUTTON_STYLE);
+    ImageView quitIcon = getImage("quit.png");
     quit.setGraphic(quitIcon);
     quit.setOnMouseClicked(mouseEvent -> {
       confirmExit();
@@ -240,7 +238,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // create the Start Scene
     startScene = new Scene(buttons, WINDOW_WIDTH, WINDOW_HEIGHT);
-    buttons.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38),
+    buttons.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOUR,
             CornerRadii.EMPTY, Insets.EMPTY)));
     startScene.setOnKeyPressed(this);
     return startScene;
@@ -254,53 +252,28 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param stage the primary stage constructed by the platform
    * @return the resulting levels scene
    */
-  public Scene createLevelsScreen (Stage stage) {
+  public Scene createLevelsScreen(Stage stage) {
     // title
-    Image titleImage = null;
-    try {
-      titleImage = new Image(new FileInputStream("images/selectTitle.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    ImageView titleIcon = new ImageView(titleImage);
+    ImageView titleIcon = getImage("selectTitle.png");
 
     // easy
     Button easy = new Button();
-    easy.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image newImage = null;
-    try {
-      newImage = new Image(new FileInputStream("images/easy.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView newGameIcon = new ImageView(newImage);
+    easy.setStyle(BUTTON_STYLE);
+    ImageView newGameIcon = getImage("easy.png");
     easy.setGraphic(newGameIcon);
     easy.setOnAction(Event -> startNewEasyGame(stage));
 
     // medium
     Button med = new Button();
-    med.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image medImage = null;
-    try {
-      medImage = new Image(new FileInputStream("images/med.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView medIcon = new ImageView(medImage);
+    med.setStyle(BUTTON_STYLE);
+    ImageView medIcon = getImage("med.png");
     med.setGraphic(medIcon);
     med.setOnAction(Event -> startNewMedGame(stage));
 
     // hard
     Button hard = new Button();
-    hard.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image hardImage = null;
-    try {
-      hardImage = new Image(new FileInputStream("images/hard.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView hardIcon = new ImageView(hardImage);
+    hard.setStyle(BUTTON_STYLE);
+    ImageView hardIcon = getImage("hard.png");
     hard.setGraphic(hardIcon);
     hard.setOnAction(Event -> startNewHardGame(stage));
 
@@ -314,7 +287,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     levels.setAlignment(Pos.CENTER);
 
     levelsScene = new Scene(levels, WINDOW_WIDTH, WINDOW_HEIGHT);
-    levels.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38),
+    levels.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOUR,
             CornerRadii.EMPTY, Insets.EMPTY)));
 
     return levelsScene;
@@ -427,8 +400,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return gameScene;
   }
 
-
-
   /**
    * Constructs a screen displaying a win or lose message. Give the user
    * the option to play a new game (returning to the start screen), or quit.
@@ -436,41 +407,20 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param status a string denoting whether the user won or lost the game
    * @return the resulting win/lose scene
    */
-  private Scene createWinLoseScene(String status) {
-    String fileName = "images/" + status + ".png";
-    // title
-    Image titleImage = null;
-    try {
-      titleImage = new Image(new FileInputStream(fileName));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    ImageView titleIcon = new ImageView(titleImage);
+  public Scene createWinLoseScene(String status) {
+    ImageView titleIcon = getImage(status + ".png");
 
     // play again
     Button play = new Button();
-    play.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image newImage = null;
-    try {
-      newImage = new Image(new FileInputStream("images/play.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView newGameIcon = new ImageView(newImage);
+    play.setStyle(BUTTON_STYLE);
+    ImageView newGameIcon = getImage("play.png");
     play.setGraphic(newGameIcon);
     play.setOnAction(Event -> window.setScene(startScene));
 
     // quit
     Button quit = new Button();
-    quit.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image hardImage = null;
-    try {
-      hardImage = new Image(new FileInputStream("images/quit.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView hardIcon = new ImageView(hardImage);
+    quit.setStyle(BUTTON_STYLE);
+    ImageView hardIcon = getImage("quit.png");
     quit.setGraphic(hardIcon);
     quit.setOnAction(Event -> confirmExit());
 
@@ -484,7 +434,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     options.setAlignment(Pos.CENTER);
 
     winLoseScene = new Scene(options, WINDOW_WIDTH, WINDOW_HEIGHT);
-    options.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38),
+    options.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOUR,
             CornerRadii.EMPTY, Insets.EMPTY)));
 
     return winLoseScene;
@@ -563,7 +513,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * Constructs a new EASY game based on a default XML file
    * @param stage the primary stage constructed by the platform
    */
-  private void startNewEasyGame(Stage stage) {
+  public void startNewEasyGame(Stage stage) {
     try {
       currentGame = XmlParser.parseGame(new File("data/easy.xml"));
       window.setScene(createGameScene(stage));
@@ -576,7 +526,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * Constructs a new MEDIUM game based on a default XML file
    * @param stage the primary stage constructed by the platform
    */
-  private void startNewMedGame(Stage stage) {
+  public void startNewMedGame(Stage stage) {
     try {
       currentGame = XmlParser.parseGame(new File("data/medium.xml"));
       window.setScene(createGameScene(stage));
@@ -589,7 +539,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * Constructs a new HARD game based on a default XML file
    * @param stage the primary stage constructed by the platform
    */
-  private void startNewHardGame(Stage stage) {
+  public void startNewHardGame(Stage stage) {
     try {
       currentGame = XmlParser.parseGame(new File("data/hard.xml"));
       window.setScene(createGameScene(stage));
@@ -645,7 +595,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
 
-    //Add music
+    // add music
     if(audio!=null) audio.stop();
     String path = "music/space.wav";
     audio = new AudioClip(Paths.get(path).toUri().toString());
@@ -722,14 +672,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       btn.setFocusTraversable(false); // disables key control
 
       // use images to represent buttons
-      Image image = null;
-      try {
-        image = new Image(new FileInputStream("images/" + item + ".png"));
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      }
-
-      ImageView imageView = new ImageView(image);
+      ImageView imageView = getImage(item + ".png");
       imageView.setFitHeight(80);
       imageView.setFitWidth(80);
       btn.setGraphic(imageView);
@@ -773,7 +716,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   /**
    * Constructs the Options pane. This is where the two options of picking
    * up/dropping items is made available to the user through the use of
-   * buttons
+   * buttons.
    *
    * @return the resulting pane holding the pickup/drop buttons
    */
@@ -788,14 +731,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     dropButton.setFocusTraversable(false);
 
     // enable button listeners and add images for buttons
-    pickupButton.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image pickupImage = null;
-    try {
-      pickupImage = new Image(new FileInputStream("images/pickup.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView pickupIcon = new ImageView(pickupImage);
+    pickupButton.setStyle(BUTTON_STYLE);
+    ImageView pickupIcon = getImage("pickup.png");
     pickupButton.setGraphic(pickupIcon);
     pickupButton.setOnAction(Event -> {
       String str = currentGame.pickUpItem();
@@ -804,14 +741,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       renderer.draw();
     });
 
-    dropButton.setStyle("-fx-background-color: rgba(0,0,0,0);");
-    Image dropImage = null;
-    try {
-      dropImage = new Image(new FileInputStream("images/drop.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    ImageView dropIcon = new ImageView(dropImage);
+    dropButton.setStyle(BUTTON_STYLE);
+    ImageView dropIcon = getImage("drop.png");
     dropButton.setGraphic(dropIcon);
     dropButton.setOnAction(Event -> {
       String str = currentGame.dropItem();
@@ -855,7 +786,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * Displays a popup control menu to assist the user with keyboard control
+   * Displays a popup control menu to assist the user with keyboard control.
    */
   public void displayHelp() {
     // blur the GUI
@@ -872,14 +803,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     pauseRoot.setAlignment(Pos.BOTTOM_CENTER);
     pauseRoot.setPadding(new Insets(20));
 
-    Image image = null;
-    try {
-      image = new Image(new FileInputStream("images/controls.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    ImageView imageView = new ImageView(image);
+    ImageView imageView = getImage("controls.png");
 
     Button resume = new Button("Resume");
     pauseRoot.getChildren().addAll(imageView, resume);
@@ -904,7 +828,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * Displays a dialog box to confirm exit from the program
+   * Displays a dialog box to confirm exit from the program.
    *
    */
   public void confirmExit() {
