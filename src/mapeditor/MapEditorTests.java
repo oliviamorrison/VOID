@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 
 import org.junit.jupiter.api.Test;
 
-import application.GUI;
 
 
 /**
@@ -270,25 +269,34 @@ public class MapEditorTests {
     assertEquals(mapEditor.findFirstEmptyItem(), itemSpace);
 
   }
-  
+
+  /**
+   * This method tests if the mapEditor finds the first empty item space correctly.
+   */
   @Test
   public void testFindItem() {
-	  MapEditor mapEditor = new MapEditor();
-	  mapEditor.setUp();
-	  assertNull(mapEditor.findItemInBoard(""));
+    MapEditor mapEditor = new MapEditor();
+    mapEditor.setUp();
+    assertNull(mapEditor.findItemInBoard(""));
   }
 
+  /**
+   * This method tests if the mapEditor saves files correctly.
+   */
   @Test
-  public void testSaveFiles(){
+  public void testSaveFiles() {
     MapEditor mapEditor = new MapEditor();
     mapEditor.setUp();
 
     mapEditor.initaliseItems();
     assertTrue(mapEditor.createGame(new File("test.xml")));
   }
-  
+
+  /**
+   * This method tests if the mapEditor saves bad files correctly.
+   */
   @Test
-  public void testBadSaveFiles(){
+  public void testBadSaveFiles() {
     MapEditor mapEditor = new MapEditor();
     mapEditor.setUp();
 
@@ -297,11 +305,11 @@ public class MapEditorTests {
     assertFalse(mapEditor.createGame(new File("medium.xml")));
     assertFalse(mapEditor.createGame(new File("hard.xml")));
   }
-  
+
   /**
-   * Tests that toggle buttons that should be toggled off, is off
-   * as the player initially has no items in their inventory
-   * @throws InterruptedException
+   * Tests that start works.
+   *
+   * @throws InterruptedException interupted exception
    */
   @Test
   public void testStart() throws InterruptedException {
@@ -316,10 +324,9 @@ public class MapEditorTests {
               MapEditor gui = new MapEditor();
               Stage stage = new Stage();
               gui.start(stage);
-              
+
               gui.createGame(null);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -329,7 +336,6 @@ public class MapEditorTests {
     thread.start();// Initialize the thread
     Thread.sleep(1000); //gui window stays up for 1 second
   }
-  
-  
+
 
 }
