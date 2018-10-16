@@ -31,7 +31,7 @@
         <challenge row="5" col="1" state="false" direction="WEST">Alien</challenge>
         <item row="8" col="8" direction="NORTH">BoltCutter</item>
     </room>
-    <player row="8" col="1" health="75" direction="NORTH">
+    <player row="8" col="1" oxygen="75" direction="NORTH">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
     </player>
