@@ -33,16 +33,20 @@ public class Renderer {
   private static final double doorHeight = 0;
   private static final double floorHeight = 0;
   private static final double playerHeight = 60;
-  private static final double wallHeight = 2;
+  private static final double wallHeight = 0;
 
   private static final Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
   private static final Color INACCESSIBLE_COLOUR = Color.rgb(90, 90, 90);
   private static final Color DTColor = Color.rgb(161, 176, 201);
 
+  //Player Orientation
   private static final String NORTH = "images/north.png";
   private static final String SOUTH = "images/south.png";
   private static final String WEST = "images/west.png";
   private static final String EAST = "images/east.png";
+
+  //Portal
+  private static final String portalImage = "images/portal";
 
   //Challenges
   private static final String bombImage = "images/bomb";
@@ -131,8 +135,25 @@ public class Renderer {
     }
     PolygonBlock poly = new PolygonBlock(col, row, height, color);
     tile.setTilePolygon(poly);
+    drawObjects(tile, poly);
+  }
+
+  public void drawObjects(Tile tile, PolygonBlock poly){
     ImageView gameObject = null;
-    if (tile instanceof AccessibleTile) {
+    if(tile instanceof Portal){
+      AccessibleTile at = (AccessibleTile) tile;
+      Direction dir = ((Portal) tile).getDirection();
+      if(dir == Direction.NORTH || dir == Direction.NORTH){
+        gameObject = getImage(portalImage+"1.png");
+      } else {
+        gameObject = getImage(portalImage+"2.png");
+      }
+      Point2D c = at.getCenter();
+      gameObject.setPreserveRatio(true);
+      gameObject.setFitHeight(80);
+      gameObject.setX(c.getX() - 20);
+      gameObject.setY(c.getY() - 70);
+    } else if (tile instanceof AccessibleTile) {
       AccessibleTile at = (AccessibleTile) tile;
       if (at.hasItem()) {
         gameObject = getItemImage(at);
