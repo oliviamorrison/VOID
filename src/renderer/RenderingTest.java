@@ -1,16 +1,22 @@
 package renderer;
 
-import gameworld.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import gameworld.AccessibleTile;
+import gameworld.Direction;
+import gameworld.Game;
+import gameworld.Player;
+import gameworld.Room;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import persistence.XmlParser;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RenderingTest {
 
@@ -45,7 +51,7 @@ public class RenderingTest {
   }
 
   @Test
-  public void getRootTest(){
+  public void getRootTest() {
     assertNotNull(renderer.getRoot());
   }
 

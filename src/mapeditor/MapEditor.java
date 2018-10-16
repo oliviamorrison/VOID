@@ -92,7 +92,6 @@ public class MapEditor extends Application {
 
   /**
    * A method that returns the board.
-   *
    * @return the boardGrid
    */
   public GridPane getBoardGrid() {
@@ -101,7 +100,6 @@ public class MapEditor extends Application {
 
   /**
    * A method that returns the item spaces.
-   *
    * @return the item grid
    */
   public GridPane getItemGrid() {
@@ -268,7 +266,6 @@ public class MapEditor extends Application {
 
   /**
    * A method check if there are not items in the item Grid.
-   *
    * @return if there are no items in the item grid
    */
   public boolean noItemsInItemGrid() {
@@ -659,8 +656,8 @@ public class MapEditor extends Application {
   /**
    * A method to return the node of the gridPane at the given row and column.
    *
-   * @param row      given row to find
-   * @param column   given column to find
+   * @param row given row to find
+   * @param column given column to find
    * @param gridPane given GridPane to find node in
    * @return the node at the row and col index
    */
