@@ -10,6 +10,8 @@ import javafx.scene.shape.Polygon;
  * This is the PolygonBlock which represents the tiles in the game as visual
  * blocks in the game. A PolygonBlock consist of three polygon which is drawn
  * into a 3D block.
+ *
+ * @author James Del Puerto 300375073
  */
 public class PolygonBlock {
 
