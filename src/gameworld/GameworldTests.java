@@ -243,6 +243,13 @@ public class GameworldTests {
     assertEquals(player.getTile().getRow(), item.getRow());
     assertEquals(player.getTile().getCol(), item.getCol());
 
+    Item nextItem = new Coin(-1, -1, "NORTH");
+    player.addItem(nextItem);
+
+    game.dropItem();
+
+    assertTrue(player.getItem() instanceof Coin);
+
   }
 
   /**
@@ -286,6 +293,9 @@ public class GameworldTests {
 
     assertTrue(bomb.isNavigable());
 
+    String notification = game.diffuseBomb();
+    assertNotNull(notification);
+
   }
 
   /**
@@ -307,6 +317,8 @@ public class GameworldTests {
 
     game.unlockVendingMachine();
     assertTrue(vendingMachine.isUnlocked());
+
+    game.unlockVendingMachine();
 
     // challenge = null case
 
@@ -380,6 +392,9 @@ public class GameworldTests {
 
     assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
+
+    alien.setNavigable(true);
+    game.befriendAlien();
 
     // challenge = null case
 
@@ -549,6 +564,8 @@ public class GameworldTests {
     player.loseOxygen();
 
     assertFalse(player.getOxygen() < 0);
+
+    game.checkForOxygenTank();
 
   }
 

@@ -182,16 +182,23 @@ public class Game {
     }
   }
 
+  /**
+   * This method picks up an item from the tile.
+   *
+   * @return a notification message for the user
+   */
   public String pickUpItem() {
 
     AccessibleTile tile = player.getTile();
 
     if (tile.hasItem()) {
 
+      // player has a pack weight limit of one
       if (player.hasItem()) {
         return "You may only carry one item at a time";
       }
 
+      // add item to player, remove from tile
       Item item = tile.getItem();
       player.addItem(item);
       tile.setItem(null);
@@ -204,6 +211,11 @@ public class Game {
     }
   }
 
+  /**
+   * This method drops an item from a player to a tile.
+   *
+   * @return a notification message for the user
+   */
   public String dropItem() {
 
     AccessibleTile tile = player.getTile();
@@ -211,9 +223,10 @@ public class Game {
     if (tile instanceof Portal) {
       return "You can't drop an item on a portal!";
     }
+
+    // limit of one item per tile
     if (tile.hasItem()) {
       return "You can't drop an item on another item!";
-
     }
 
     if (!tile.hasItem() && !tile.hasChallenge() && player.hasItem()) {
@@ -229,11 +242,17 @@ public class Game {
 
   }
 
+  /**
+   * This method diffuses a bomb challenge.
+   *
+   * @return a notification message for the user
+   */
   public String diffuseBomb() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -244,6 +263,7 @@ public class Game {
 
       Bomb bomb = (Bomb) challenge;
 
+      // confirm bomb hasn't already been diffused
       if (!bomb.isNavigable()) {
 
         Item item = player.getItem();
@@ -253,19 +273,29 @@ public class Game {
           return "Bomb successfully diffused";
         }
 
-      } else {
+      }
+
+      if (bomb.isNavigable()) {
         return "You have already diffused the bomb, it is safe to walk over";
       }
+
     }
 
     return "You do not have a diffuser to diffuse the bomb!";
+
   }
 
+  /**
+   * This method unlocks a vending machine challenge.
+   *
+   * @return a notification message for the user
+   */
   public String unlockVendingMachine() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -277,6 +307,7 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
+      // vending machine must be facing towards the player to interact with it
       if (!direction.getOppositeDirection().equals(vmDirection)) {
         return "";
       }
@@ -289,19 +320,29 @@ public class Game {
           vendingMachine.setUnlocked(true);
           return "Vending machine successfully unlocked and ready to use";
         }
-      } else {
+      }
+
+      if (vendingMachine.isUnlocked()) {
         return "You have already unlocked the vending machine!";
       }
+
     }
 
     return "You do not have the bolt cutter to unlock the vending machine!";
+
   }
 
+  /**
+   * This method uses a vending machine challenge.
+   *
+   * @return a notification message for the user
+   */
   public String useVendingMachine() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -313,6 +354,7 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
+      // vending machine must be facing towards the player to interact with it
       if (!direction.getOppositeDirection().equals(vmDirection)) {
         return "";
       }
@@ -333,11 +375,17 @@ public class Game {
     return "You do not have a coin to unlock the vending machine!";
   }
 
+  /**
+   * This method befriends an alien challenge.
+   *
+   * @return a notification message for the user
+   */
   public String befriendAlien() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -356,6 +404,8 @@ public class Game {
 
           player.dropItem();
           alien.setNavigable(true);
+
+          // update the alien direction so that it is facing the player
           Direction nextDirection =
               (direction == Direction.NORTH || direction == Direction.SOUTH)
                   ? direction.getOppositeDirection() : direction;
@@ -363,13 +413,21 @@ public class Game {
           return "Alien successfully befriended";
 
         }
-      } else {
+      }
+      if (alien.isNavigable()) {
         return "You have already made friends with the Alien, you may pass.";
       }
     }
+
     return "You do not have the magic potion to befriend the Alien!";
+
   }
 
+  /**
+   * This method checks for a oxygen tank where the player is located.
+   *
+   * @return a notification message for the user
+   */
   public String checkForOxygenTank() {
 
     AccessibleTile currentTile = player.getTile();
@@ -383,8 +441,8 @@ public class Game {
         currentTile.setItem(null);
         return "You replenished your oxygen supply";
       }
-
     }
+
     return "";
 
   }
