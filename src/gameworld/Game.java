@@ -33,6 +33,12 @@ public class Game {
     initialRotate(initDir);
   }
 
+  /**
+   * This method sets up the rooms and their rotations to the state from the XML file.
+   *
+   * @param initDir the initial direction tells the room when
+   *                to stop rotating to get back to its initial state
+   */
   private void initialRotate(String initDir) {
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
@@ -558,10 +564,20 @@ public class Game {
     return currentRoom;
   }
 
+  /**
+   * This method is a getter for the current direction of the game.
+   *
+   * @return the current direction of the game
+   */
   public Direction getDirection() {
     return direction;
   }
 
+  /**
+   * This method is a getter for the initial rotation of the game.
+   *
+   * @return the initial rotation of the game
+   */
   public Direction getInitialDirection() {
     return initialDirection;
   }
