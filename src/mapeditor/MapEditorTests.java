@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -121,7 +123,7 @@ public class MapEditorTests {
     MapEditor mapEditor = new MapEditor();
     mapEditor.setUp();
     mapEditor.initaliseItems();
-    assertTrue(mapEditor.createGame(true));
+    assertTrue(mapEditor.createGame(new File("test.xml")));
 
   }
 
@@ -262,6 +264,32 @@ public class MapEditorTests {
     assertEquals(mapEditor.findFirstEmptyItem(), itemSpace);
 
   }
+  
+  @Test
+  public void testFindItem() {
+	  MapEditor mapEditor = new MapEditor();
+	  mapEditor.setUp();
+	  assertNull(mapEditor.findItemInBoard(""));
+  }
 
+  @Test
+  public void testSaveFiles(){
+    MapEditor mapEditor = new MapEditor();
+    mapEditor.setUp();
+
+    mapEditor.initaliseItems();
+    assertTrue(mapEditor.createGame(new File("test.xml")));
+  }
+  
+  @Test
+  public void testBadSaveFiles(){
+    MapEditor mapEditor = new MapEditor();
+    mapEditor.setUp();
+
+    mapEditor.initaliseItems();
+    assertFalse(mapEditor.createGame(new File("easy.xml")));
+    assertFalse(mapEditor.createGame(new File("medium.xml")));
+    assertFalse(mapEditor.createGame(new File("hard.xml")));
+  }
 
 }
