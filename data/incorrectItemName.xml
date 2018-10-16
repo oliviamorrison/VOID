@@ -35,7 +35,7 @@
         <portal>Left</portal>
         <item row="4" col="3" direction ="NORTH">FAKEITEM</item>
     </room>
-    <player row="1" col="5" health="100">
+    <player row="1" col="5" oxygen="100">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
     </player>

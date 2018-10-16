@@ -3,12 +3,22 @@ package mapeditor;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+/**
+ * ItemSpace represents each tile on the board.
+ * @author oliviamorrison
+ *
+ */
 class ItemSpace extends Pane {
     private MapItem mapItem;
     private ImageView imageView;
     private MapEditor mapEditor;
 
-    public ItemSpace(int x, int y, MapEditor m) {
+    /**
+     * Constructor which creates a new ItemSpace with a given map editor.
+     * 
+     * @param m
+     */
+    public ItemSpace(MapEditor m) {
         imageView = new ImageView();
         mapEditor = m;
         setOnMouseClicked(e -> {
@@ -27,19 +37,36 @@ class ItemSpace extends Pane {
         });
     }
 
+    /**
+     * This method returns the map item associated with this item space.
+     * 
+     * @return MapItem
+     */
     public MapItem getMapItem() {
         return mapItem;
     }
 
+    /**
+     * This method resets the image view of the itemSpace to empty.
+     */
     public void resetImageView() {
         this.getChildren().remove(imageView);
         imageView = new ImageView();
     }
 
+    /**
+     * This method returns the image view associated with this image space.
+     * 
+     * @return ImageView
+     */
     public ImageView getImageView() {
         return imageView;
     }
 
+    /**
+     * This method sets the map item of this item space.
+     * @param mapItem
+     */
     public void setMapItem(MapItem mapItem) {
         this.mapItem = mapItem;
 
@@ -50,6 +77,11 @@ class ItemSpace extends Pane {
         }
     }
 
+    /**
+     * This method returns if this item space has an item in it.
+     * 
+     * @return boolean
+     */
     public boolean hasItem() {
         return mapItem != null;
     }
