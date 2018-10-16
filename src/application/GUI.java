@@ -74,73 +74,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.show();
   }
 
-  @Override
-  public void handle(KeyEvent event) {
-    int dx = 0;
-    int dy = 0;
-    String str = "";
-
-    switch (event.getCode()) {
-      case UP:
-        dx = -1;
-        break;
-      case LEFT:
-        dy = -1;
-        break;
-      case DOWN:
-        dx = 1;
-        break;
-      case RIGHT:
-        dy = 1;
-        break;
-      case A:
-        currentGame.rotateRoomAnticlockwise();
-        break;
-      case D:
-        currentGame.rotateRoomClockwise();
-        break;
-      case Z:
-        str = currentGame.pickUpItem();
-        break;
-      case X:
-        str = currentGame.dropItem();
-        break;
-      case N:
-        str = currentGame.diffuseBomb();
-        break;
-      case C:
-        str = currentGame.unlockVendingMachine();
-        break;
-      case V:
-        currentGame.useVendingMachine();
-        break;
-      case SPACE:
-        currentGame.teleport();
-        renderer.newRoom();
-        break;
-      case B:
-        currentGame.bribeGuard();
-        break;
-      default:
-
-    }
-    if (!(dx == 0 && dy == 0)) {
-
-      currentGame.movePlayer(dx, dy);
-
-      if (currentGame.checkForAntidote()) {
-        System.out.println("Winner winner");
-        System.exit(0);
-      }
-      currentGame.checkForHealthPack();
-    }
-
-    renderer.draw();
-    updateInventory();
-    updateScreen(str);
-
-  }
-
   /**
    * Constructs the initial start menu screen
    * @param stage the primary stage constructed by the platform
@@ -535,7 +468,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     renderer.getRoot().setTranslateY(230);
 
     /////////////////////////////////////////////////////////Here Annisha
-    pBar = new ProgressBar(currentGame.getPlayer().getHealth()/100);
+    pBar = new ProgressBar(currentGame.getPlayer().getOxygen()/100);
     Task task = oxygenCounter(100);
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
@@ -571,10 +504,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return new Task() {
       @Override
       protected Object call() throws Exception {
-        for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
+        for(int i = currentGame.getPlayer().getOxygen(); i > 0; i = currentGame.getPlayer().getOxygen()){
           Thread.sleep(1000);
-          updateProgress(currentGame.getPlayer().getHealth(), health);
-          currentGame.getPlayer().loseHealth();
+          updateProgress(currentGame.getPlayer().getOxygen(), health);
+          currentGame.getPlayer().loseOxygen();
         }
        //END GAME
         return true;
@@ -646,7 +579,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       renderer.draw();
     });
     inventoryButtons.get("MagicPotion").setOnAction(Event -> {
-      String str = currentGame.bribeGuard();
+      String str = currentGame.befriendAlien();
       updateInventory();
       updateScreen(str);
       renderer.draw();
@@ -748,6 +681,72 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return screen;
   }
 
+
+  @Override
+  public void handle(KeyEvent event) {
+    int dx = 0;
+    int dy = 0;
+
+    switch (event.getCode()) {
+      case UP:
+        dx = -1;
+        break;
+      case LEFT:
+        dy = -1;
+        break;
+      case DOWN:
+        dx = 1;
+        break;
+      case RIGHT:
+        dy = 1;
+        break;
+      case A:
+        currentGame.rotateRoomAnticlockwise();
+        break;
+      case D:
+        currentGame.rotateRoomClockwise();
+        break;
+      case Z:
+        currentGame.pickUpItem();
+        break;
+      case X:
+        currentGame.dropItem();
+        break;
+      case N:
+        currentGame.diffuseBomb();
+        break;
+      case C:
+        currentGame.unlockVendingMachine();
+        break;
+      case V:
+        currentGame.useVendingMachine();
+        break;
+      case SPACE:
+        currentGame.teleport();
+        renderer.newRoom();
+        break;
+      case B:
+        currentGame.befriendAlien();
+        break;
+      default:
+
+    }
+    if (!(dx == 0 && dy == 0)) {
+
+      currentGame.movePlayer(dx, dy);
+
+      if (currentGame.checkForSpaceship()) {
+        System.out.println("Winner winner");
+        System.exit(0);
+      }
+      currentGame.checkForOxygenTank();
+    }
+
+    renderer.draw();
+    updateInventory();
+    updateScreen("hello"); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
+
+  }
 
   /**
    * Displays a popup control menu to assist the user with keyboard control
