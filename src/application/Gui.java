@@ -75,7 +75,7 @@ import renderer.Renderer;
  * @author Annisha Akosah 300399598
  */
 
-public class GUI extends Application implements EventHandler<KeyEvent> {
+public class Gui extends Application implements EventHandler<KeyEvent> {
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 750;
   public static final String BUTTON_STYLE = "-fx-background-color: rgba(0,0,0,0);";
@@ -118,13 +118,20 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
   public ImageView getImage(String imageName) {
     Image image = null;
     try {
-      image = new Image(new FileInputStream("images/"+ imageName));
+      image = new Image(new FileInputStream("images/" + imageName));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
     ImageView imageView = new ImageView(image);
     //imageView.setPreserveRatio(true);
     return imageView;
+  }
+
+  /**
+   * Turns off the music
+   */
+  public void muteAudio() {
+    audio.stop();
   }
 
   @Override
@@ -204,7 +211,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     }
 
     // player loses when they run out of oxygen
-    if(currentGame.getPlayer().getOxygen() == 0) {
+    if (currentGame.getPlayer().getOxygen() == 0) {
       window.setScene(createWinLoseScene("lose"));
     }
     renderer.draw();
@@ -219,9 +226,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return the resulting start scene
    */
   public Scene createStartScene(Stage stage) {
-    // title
-    ImageView titleIcon = getImage("title.png");
-
     // new game
     Button newGame = new Button();
     newGame.setStyle(BUTTON_STYLE);
@@ -263,6 +267,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       confirmExit();
     });
 
+    // title
+    ImageView titleIcon = getImage("title.png");
+
     // buttons laid out in vertical column
     VBox buttons = new VBox(10);
     buttons.getChildren().addAll(titleIcon, newGame, load, editMap, quit);
@@ -285,9 +292,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return the resulting levels scene
    */
   public Scene createLevelsScreen(Stage stage) {
-    // title
-    ImageView titleIcon = getImage("selectTitle.png");
-
     // easy
     Button easy = new Button();
     easy.setStyle(BUTTON_STYLE);
@@ -313,6 +317,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox buttons = new HBox(10);
     buttons.getChildren().addAll(easy, med, hard);
     buttons.setAlignment(Pos.CENTER);
+
+    // title
+    ImageView titleIcon = getImage("selectTitle.png");
 
     VBox levels = new VBox(60);
     levels.getChildren().addAll(titleIcon, buttons);
@@ -440,8 +447,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return the resulting win/lose scene
    */
   public Scene createWinLoseScene(String status) {
-    ImageView titleIcon = getImage(status + ".png");
-
     // play again
     Button play = new Button();
     play.setStyle(BUTTON_STYLE);
@@ -460,6 +465,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox buttons = new HBox(10);
     buttons.getChildren().addAll(play, quit);
     buttons.setAlignment(Pos.CENTER);
+
+    ImageView titleIcon = getImage(status + ".png");
 
     VBox options = new VBox(90);
     options.getChildren().addAll(titleIcon, buttons);
@@ -637,7 +644,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     new Thread(task).start();
 
     // add music
-    if(audio!=null) audio.stop();
+    if (audio != null) {
+      audio.stop();
+    }
     String path = "music/space.wav";
     audio = new AudioClip(Paths.get(path).toUri().toString());
     audio.setCycleCount(10);
