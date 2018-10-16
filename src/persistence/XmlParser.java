@@ -1,25 +1,58 @@
 package persistence;
-import gameworld.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+
+import static java.lang.Integer.parseInt;
+
+import gameworld.AccessibleTile;
+import gameworld.Alien;
+import gameworld.BoltCutter;
+import gameworld.Bomb;
+import gameworld.ChallengeItem;
+import gameworld.Coin;
+import gameworld.Diffuser;
+import gameworld.Game;
+import gameworld.InaccessibleTile;
+import gameworld.Item;
+import gameworld.OxygenTank;
+import gameworld.Player;
+import gameworld.Portal;
+import gameworld.Potion;
+import gameworld.Room;
+import gameworld.SpaceShip;
+import gameworld.Tile;
+import gameworld.VendingMachine;
+
+import java.io.File;
+import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import static java.lang.Integer.parseInt;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * This class saves and loads XML files using the javax.xml.parsers library and DOM parser.
  * The schema for the game's XML files is under "schema.xsd"
- *
+ *<p></p>
  * This uses the Java DOM parser because:
  *  - The structure of the document is important
  *  - Elements in the document need to be sorted into specific places in collections
@@ -27,27 +60,26 @@ import static java.lang.Integer.parseInt;
  * @author Sam Ong 300363819
  *
  */
-//TODO: Add different difficulty levels for easy/medium/hard
+
 //TODO: UML Diagram
 //TODO: Throw more descriptive ParseErrors
 //TODO: Add music
 //TODO: Take group pic
-//TODO: Credits
 //TODO: Pause health bar when menu is clicked
-//TODO: Bug (renderer moves down a pixel when in top corner)
 
-
-public class XMLParser {
+public class XmlParser {
   private static Schema schema;
 
   /**
-   * Static method to save a game to an XML file using DOM parser
-   * @param file file to save to
+   * Static method to save a game to an XML file using DOM parser.
+   * It constructs a tree of nodes under the document builder
+   * @param file file to save the XML to
    * @param game game to save
-   * @throws ParserConfigurationException error thrown if parser fails
-   * @throws TransformerException error thrown is transformer fails
+   * @throws ParserConfigurationException exception thrown if parser fails
+   * @throws TransformerException exception thrown is transformer fails
    */
-  public static void saveFile(File file, Game game) throws ParserConfigurationException, TransformerException {
+  public static void saveFile(File file, Game game)
+      throws ParserConfigurationException, TransformerException {
 
     DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
@@ -57,14 +89,14 @@ public class XMLParser {
 
     //add root to XML file
     Element root = document.createElement("game");
-    root.setAttribute("row", board.length+"");
-    root.setAttribute("col", board[0].length+"");
+    root.setAttribute("row", board.length + "");
+    root.setAttribute("col", board[0].length + "");
     document.appendChild(root);
 
     //add rooms to XML file
-    for(int i = 0; i < board.length; i++){
-      for(int j = 0; j < board[i].length; j++){
-        if(board[i][j]!=null){
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        if (board[i][j] != null) {
           root.appendChild(saveRoom(document, i, j, board[i][j]));
         }
       }
@@ -89,7 +121,7 @@ public class XMLParser {
   }
 
   /**
-   * Method to save a room and its properties to an element in the document
+   * Method to save a room and its properties to an element in the document.
    * @param document document to save to
    * @param row y position of room in board
    * @param col x position of room in board
@@ -98,54 +130,52 @@ public class XMLParser {
    */
   private static Element saveRoom(Document document, int row, int col, Room room) {
     Element roomElement = document.createElement("room");
-    roomElement.setAttribute("row", row+"");
-    roomElement.setAttribute("col", col+"");
+    roomElement.setAttribute("row", row + "");
+    roomElement.setAttribute("col", col + "");
 
     //Go through each tile in the room and save their properties
-    for(int y = 0; y < Room.ROOMSIZE; y++){
-      for(int x = 0; x < Room.ROOMSIZE; x++){
+    for (int y = 0; y < Room.ROOMSIZE; y++) {
+      for (int x = 0; x < Room.ROOMSIZE; x++) {
         Tile tile = room.getTile(x,y);
         //Save portals
-        if(tile instanceof Portal){
+        if (tile instanceof Portal) {
           Portal portal = (Portal) tile;
           Element portalElement = document.createElement("portal");
           portalElement.appendChild((document.createTextNode(portal.getDirection().toString())));
           roomElement.appendChild(portalElement);
-        }
-        else if(tile instanceof AccessibleTile){
-          AccessibleTile aTile = (AccessibleTile) tile;
+        } else if (tile instanceof AccessibleTile) {
+          AccessibleTile accessibleTile = (AccessibleTile) tile;
 
           //Save items
-          if(aTile.hasItem()){
+          if (accessibleTile.hasItem()) {
             Element item = document.createElement("item");
-            item.setAttribute("row", aTile.getItem().getRow()+"");
-            item.setAttribute("col", aTile.getItem().getCol()+"");
-            item.setAttribute("direction", aTile.getItem().getDirection().toString());
-            item.appendChild(document.createTextNode(aTile.getItem().toString()));
+            item.setAttribute("row", accessibleTile.getItem().getRow() + "");
+            item.setAttribute("col", accessibleTile.getItem().getCol() + "");
+            item.setAttribute("direction", accessibleTile.getItem().getDirection().toString());
+            item.appendChild(document.createTextNode(accessibleTile.getItem().toString()));
             roomElement.appendChild(item);
           }
 
           //Save challenges
-          if(aTile.hasChallenge()){
-            ChallengeItem challengeItem = aTile.getChallenge();
+          if (accessibleTile.hasChallenge()) {
+            ChallengeItem challengeItem = accessibleTile.getChallenge();
             Element challenge = document.createElement("challenge");
 
-            if(challengeItem instanceof Bomb) {
+            if (challengeItem instanceof Bomb) {
               Bomb bomb = (Bomb) challengeItem;
-              challenge.setAttribute("state", bomb.isNavigable()+"");
-            }
-            else if(challengeItem instanceof Alien){
+              challenge.setAttribute("state", bomb.isNavigable() + "");
+            } else if (challengeItem instanceof Alien) {
               Alien alien = (Alien) challengeItem;
-              challenge.setAttribute("state", alien.isNavigable()+"");
-            }
-            else{
+              challenge.setAttribute("state", alien.isNavigable() + "");
+            } else {
               VendingMachine vm = (VendingMachine) challengeItem;
-              challenge.setAttribute("state", vm.isUnlocked()+"");
+              challenge.setAttribute("state", vm.isUnlocked() + "");
             }
-            challenge.setAttribute("row", challengeItem.getRow()+"");
-            challenge.setAttribute("col", challengeItem.getCol()+"");
+            challenge.setAttribute("row", challengeItem.getRow() + "");
+            challenge.setAttribute("col", challengeItem.getCol() + "");
             challenge.setAttribute("direction", challengeItem.getDirection().toString());
-            challenge.appendChild(document.createTextNode(aTile.getChallenge().toString()));
+            String challengeName = accessibleTile.getChallenge().toString();
+            challenge.appendChild(document.createTextNode(challengeName));
             roomElement.appendChild(challenge);
           }
         }
@@ -155,7 +185,7 @@ public class XMLParser {
   }
 
   /**
-   * Method to save a player and its properties to an element in the document
+   * Method to save a player and its properties to an element in the document.
    * @param player player to save
    * @param document document to save element to
    * @return player element to append to the root of the document
@@ -163,25 +193,25 @@ public class XMLParser {
   private static Element savePlayer(Player player, Document document) {
     Element playerElement = document.createElement("player");
     //Get position, health and direction of player and add as attributes to player element
-    playerElement.setAttribute("row", player.getTile().getRow()+"");
-    playerElement.setAttribute("col", player.getTile().getCol()+"");
-    playerElement.setAttribute("health", player.getHealth()+"");
+    playerElement.setAttribute("row", player.getTile().getRow() + "");
+    playerElement.setAttribute("col", player.getTile().getCol() + "");
+    playerElement.setAttribute("health", player.getHealth() + "");
     playerElement.setAttribute("direction", player.getDirection().toString());
 
     //Add coordinates of the room the player is in
     Element roomRow = document.createElement("roomRow");
-    roomRow.appendChild(document.createTextNode(player.getRoom().getRow()+""));
+    roomRow.appendChild(document.createTextNode(player.getRoom().getRow() + ""));
     Element roomCol = document.createElement("roomCol");
-    roomCol.appendChild(document.createTextNode(player.getRoom().getCol()+""));
+    roomCol.appendChild(document.createTextNode(player.getRoom().getCol() + ""));
     playerElement.appendChild(roomRow);
     playerElement.appendChild(roomCol);
 
     //Save players item if they are holding one
     Item playerItem = player.getItem();
-    if(playerItem!=null){
+    if (playerItem != null) {
       Element item = document.createElement("item");
-      item.setAttribute("row", playerItem.getRow()+"");
-      item.setAttribute("col", playerItem.getCol()+"");
+      item.setAttribute("row", playerItem.getRow() + "");
+      item.setAttribute("col", playerItem.getCol() + "");
       item.setAttribute("direction", playerItem.getDirection().toString());
       item.appendChild(document.createTextNode(playerItem.toString()));
       playerElement.appendChild(item);
@@ -191,7 +221,7 @@ public class XMLParser {
   }
 
   /**
-   * Method to parse an XML file into a game
+   * Method to parse an XML file into a game.
    * @param file file to parse
    * @return the game created from file
    * @throws ParseError throws a parse error if the file is invalid
@@ -199,9 +229,9 @@ public class XMLParser {
   public static Game parseGame(File file) throws ParseError {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder dBuilder = factory.newDocumentBuilder();
+      DocumentBuilder dbBuilder = factory.newDocumentBuilder();
 
-      Document doc = dBuilder.parse(file);
+      Document doc = dbBuilder.parse(file);
 
       DOMSource source = new DOMSource(doc);
 
@@ -220,22 +250,22 @@ public class XMLParser {
 
       //parse rooms
       NodeList roomList = doc.getElementsByTagName("room");
-      for(int i = 0; i < roomList.getLength(); i++) parseRoom(roomList.item(i), board);
+      for (int i = 0; i < roomList.getLength(); i++) {
+        parseRoom(roomList.item(i), board);
+      }
 
       //parse player
       Node playerNode = doc.getElementsByTagName("player").item(0);
       Player player = parsePlayer(playerNode, board);
 
-      Game game = new Game(board, player);
-      return game;
-    }
-    catch (ParserConfigurationException | SAXException | IOException e) {
+      return new Game(board, player);
+    } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new ParseError("Invalid XML File!");
     }
   }
 
   /**
-   * A method to parse rooms into the game
+   * A method to parse rooms into the game.
    * @param room XML node element for the room
    * @param board board to place room in
    * @throws ParseError throws a parse error if room element is invalid
@@ -246,21 +276,19 @@ public class XMLParser {
 
     Tile[][] tiles = new Tile[Room.ROOMSIZE][Room.ROOMSIZE];
 
-    //parse row and col
-    int row= parseInt(roomElement.getAttribute("row"));
-    int col = parseInt(roomElement.getAttribute("col"));
-
-    for(int i = 0; i < Room.ROOMSIZE; i++){
-      for(int j = 0; j < Room.ROOMSIZE; j++){
-        if (i == 0 || j == 0 || j == Room.ROOMSIZE - 1 || i == Room.ROOMSIZE - 1)
+    for (int i = 0; i < Room.ROOMSIZE; i++) {
+      for (int j = 0; j < Room.ROOMSIZE; j++) {
+        if (i == 0 || j == 0 || j == Room.ROOMSIZE - 1 || i == Room.ROOMSIZE - 1) {
           tiles[i][j] = new InaccessibleTile(i, j);
-        else tiles[i][j] = new AccessibleTile(i, j);
+        } else {
+          tiles[i][j] = new AccessibleTile(i, j);
+        }
       }
     }
 
     //parse portals
     NodeList portalList = roomElement.getElementsByTagName("portal");
-    for(int i = 0; i< portalList.getLength(); i++){
+    for (int i = 0; i < portalList.getLength(); i++) {
       String portal = portalList.item(i).getTextContent();
       portals.add(portal);
     }
@@ -273,12 +301,16 @@ public class XMLParser {
     NodeList challengeList = roomElement.getElementsByTagName("challenge");
     parseChallenges(challengeList, tiles);
 
+    //parse row and col
+    int row = parseInt(roomElement.getAttribute("row"));
+    int col = parseInt(roomElement.getAttribute("col"));
+
     Room newRoom = new Room(row, col, tiles, portals);
     board[row][col] = newRoom;
   }
 
   /**
-   * A method to parse the player into the game
+   * A method to parse the player into the game.
    * @param playerNode XML node element for the player
    * @param board board to find the room to place player in
    * @return player in the game
@@ -286,26 +318,32 @@ public class XMLParser {
    */
   private static Player parsePlayer(Node playerNode, Room[][] board) throws ParseError {
     Element playerElement = (Element) playerNode;
-    //Get the room in the board that the player is in
-    int roomRow = parseInteger("roomRow", playerElement);
-    int roomCol = parseInteger("roomCol", playerElement);
-
-    Room playerRoom = board[roomRow][roomCol];
 
     //Get the player position from its row and col attributes
-    if(playerElement.getAttribute("row").equals("") || playerElement.getAttribute("col").equals("")) throw new ParseError("Player needs position attributes (row and col)");
-    int row= parseInt(playerElement.getAttribute("row"));
+    if (playerElement.getAttribute("row").equals("")
+        || playerElement.getAttribute("col").equals("")) {
+      throw new ParseError("Player needs position attributes (row and col)");
+    }
+    int row = parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
     //Get the player's health and the direction they are facing
-    if(playerElement.getAttribute("health").equals("")) throw new ParseError("Player needs health attribute");
+    if (playerElement.getAttribute("health").equals("")) {
+      throw new ParseError("Player needs health attribute");
+    }
     int health = parseInt(playerElement.getAttribute("health"));
-    if(playerElement.getAttribute("direction").equals("")) throw new ParseError("Player needs direction attribute");
+    if (playerElement.getAttribute("direction").equals("")) {
+      throw new ParseError("Player needs direction attribute");
+    }
     String direction = playerElement.getAttribute("direction");
 
-    //TODO: Fix saving and loading a player on a door tile
-    Player player = new Player(playerRoom, (AccessibleTile) playerRoom.getTile(row, col), health, direction);
-    ((AccessibleTile) playerRoom.getTile(row, col)).setPlayer(true);
+    //Get the room in the board that the player is in
+    int roomRow = parseInteger("roomRow", playerElement);
+    int roomCol = parseInteger("roomCol", playerElement);
+    Room playerRoom = board[roomRow][roomCol];
+    AccessibleTile playerTile = (AccessibleTile) playerRoom.getTile(row, col);
+    Player player = new Player(playerRoom, playerTile, health, direction);
+    playerTile.setPlayer(true);
 
     //Parse the player's item
     NodeList playerItem = playerElement.getElementsByTagName("item");
@@ -315,18 +353,18 @@ public class XMLParser {
   }
 
   /**
-   * A method to parse a number from an element
+   * A method to parse a number from an element.
    * @param tagName the name of the tag to search
    * @param element the element to get the tag from
    * @return the integer value inside the element
    */
-  private static int parseInteger(String tagName, Element element){
+  private static int parseInteger(String tagName, Element element) {
     NodeList n = element.getElementsByTagName(tagName);
     return parseInt(n.item(0).getTextContent());
   }
 
   /**
-   * A method to parse items from an element
+   * A method to parse items from an element.
    *
    * @param items the node list to get the items from
    * @param tiles tiles in the room that can be set with items
@@ -334,17 +372,22 @@ public class XMLParser {
    * @throws ParseError throws a parse error if item element is invalid
    */
   private static void parseItems(NodeList items, Tile[][] tiles, Player p) throws ParseError {
-    for(int i = 0; i< items.getLength(); i++){
+    for (int i = 0; i < items.getLength(); i++) {
       String token = items.item(i).getTextContent().trim();
-      if(!token.equals("")){
+      if (!token.equals("")) {
         Element elem = (Element) items.item(i);
-        if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals("")) throw new ParseError("Item needs position attributes (row and col)");
+        if (elem.getAttribute("row").equals("")
+            || elem.getAttribute("col").equals("")) {
+          throw new ParseError("Item needs position attributes (row and col)");
+        }
         int row = parseInt(elem.getAttribute("row"));
         int col = parseInt(elem.getAttribute("col"));
-        if(elem.getAttribute("direction").equals("")) throw new ParseError("Item needs direction attribute");
+        if (elem.getAttribute("direction").equals("")) {
+          throw new ParseError("Item needs direction attribute");
+        }
         String direction = elem.getAttribute("direction");
         Item item;
-        switch(token){
+        switch (token) {
           case "Potion":
             item = new Potion(row, col, direction);
             break;
@@ -368,36 +411,42 @@ public class XMLParser {
         }
 
         //Set the item for the tile at the given row and col
-        if(tiles!=null){
+        if (tiles != null) {
           item.setRow(row);
           item.setCol(col);
           ((AccessibleTile) tiles[row][col]).setItem(item);
+        } else if (p != null) {
+          p.addItem(item); //Give the item to the player to hold
         }
-        //Give the item to the player to hold
-        else if(p!=null)p.addItem(item);
       }
     }
   }
 
   /**
-   * A method to parse each challenge and set their tiles
+   * A method to parse each challenge and set their tiles.
    * @param challengeList the node list to get challenges from
    * @param tiles tiles in the room that can be set with challenges
    */
   private static void parseChallenges(NodeList challengeList, Tile[][] tiles) throws ParseError {
 
-    for(int i = 0; i< challengeList.getLength(); i++){
+    for (int i = 0; i < challengeList.getLength(); i++) {
       Node node = challengeList.item(i);
       Element elem = (Element) node;
       //Get challenge attributes
-      if(elem.getAttribute("row").equals("") || elem.getAttribute("col").equals("")) throw new ParseError("Challenge needs position attributes (row and col)");
+      if (elem.getAttribute("row").equals("")
+          || elem.getAttribute("col").equals("")) {
+        throw new ParseError("Challenge needs position attributes (row and col)");
+      }
       int row = parseInt(elem.getAttribute("row"));
       int col = parseInt(elem.getAttribute("col"));
-      if(elem.getAttribute("direction").equals("") || elem.getAttribute("state").equals("")) throw new ParseError("Challenge needs direction and state attributes");
+      if (elem.getAttribute("direction").equals("")
+          || elem.getAttribute("state").equals("")) {
+        throw new ParseError("Challenge needs direction and state attributes");
+      }
       String state = elem.getAttribute("state");
       String direction = elem.getAttribute("direction");
 
-      switch(node.getTextContent().trim()){
+      switch (node.getTextContent().trim()) {
         case "Bomb":
           Bomb bomb = new Bomb(row, col, direction);
           bomb.setNavigable(Boolean.parseBoolean(state));
@@ -420,7 +469,7 @@ public class XMLParser {
   }
 
   /**
-   * A method to load the schema for XML files
+   * A method to load the schema for XML files.
    * @param fileName name xsd file to parse
    */
   private static void loadSchema(String fileName) throws SAXException {
@@ -430,11 +479,11 @@ public class XMLParser {
   }
 
   /**
-   * A custom inner exception class to handle errors
+   * A custom inner exception class to handle errors.
    * @author Sam Ong 300363819
    */
-  public static class ParseError extends Exception{
-    ParseError(String message){
+  public static class ParseError extends Exception {
+    ParseError(String message) {
       super(message);
     }
   }

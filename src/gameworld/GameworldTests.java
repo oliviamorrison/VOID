@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import persistence.XMLParser;
+import persistence.XmlParser;
 import renderer.Renderer;
 
 public class GameworldTests {
@@ -28,12 +28,12 @@ public class GameworldTests {
   /**
    * This method sets up a test scenario to ease testing.
    *
-   * @throws XMLParser.ParseError xml parsing error
+   * @throws XmlParser.ParseError xml parsing error
    */
   @BeforeEach
-  public void setUp() throws XMLParser.ParseError {
+  public void setUp() throws XmlParser.ParseError {
 
-    game = XMLParser.parseGame(new File("data/gameworldTestData.xml"));
+    game = XmlParser.parseGame(new File("data/gameworldTestData.xml"));
 
     if (game != null) {
 
