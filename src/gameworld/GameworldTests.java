@@ -18,6 +18,11 @@ import org.junit.jupiter.api.Test;
 import persistence.XmlParser;
 import renderer.Renderer;
 
+/**
+ * This class tests all of the gameworld logic.
+ *
+ * @author Latrell Whata 300417220
+ */
 public class GameworldTests {
 
   private Game game;
@@ -56,6 +61,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the game is created correctly.
+   */
   @Test
   public void gameCreatedCorrectly() {
 
@@ -65,6 +73,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can change directions.
+   */
   @Test
   public void playerCanChangeDirection() {
 
@@ -79,6 +90,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can move.
+   */
   @Test
   public void playerCanMove() {
 
@@ -95,6 +109,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can teleport.
+   */
   @Test
   public void playerCanTeleport() {
 
@@ -110,6 +127,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player cannot teleport without portal.
+   */
   @Test
   public void playerCannotTeleportWithoutPortal() {
 
@@ -121,6 +141,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player cannot teleport without an adjacent room.
+   */
   @Test
   public void playerCannotTeleportWithoutNextRoom() {
 
@@ -136,6 +159,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player cannot teleport without a destination portal.
+   */
   @Test
   public void playerCannotTeleportWithoutDestinationPortal() {
 
@@ -155,6 +181,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can pick up an item.
+   */
   @Test
   public void playerCanPickupItem() {
 
@@ -169,6 +198,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can only pick up one item at a time.
+   */
   @Test
   public void playerCanOnlyHaveOneItemAtATime() {
 
@@ -184,6 +216,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can drop an item.
+   */
   @Test
   public void playerCanDropItem() {
 
@@ -205,6 +240,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player cannot drop an item on a portal.
+   */
   @Test
   public void playerCannotDropItemOnPortal() {
 
@@ -223,6 +261,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can diffuse a bomb.
+   */
   @Test
   public void playerCanDiffuseBomb() {
 
@@ -242,8 +283,13 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can unlock a vending machine.
+   */
   @Test
   public void playerCanUnlockVendingMachine() {
+
+    // best case scenario
 
     game.directTeleport(board[1][2], 8, 7);
     player.addItem(new BoltCutter(-1, -1, "NORTH"));
@@ -255,6 +301,8 @@ public class GameworldTests {
 
     game.unlockVendingMachine();
     assertTrue(vendingMachine.isUnlocked());
+
+    // challenge = null case
 
     vendingMachine.setDirection(Direction.NORTH);
     vendingMachine.setUnlocked(false);
@@ -269,6 +317,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can use a vending machine.
+   */
   @Test
   public void playerCanUseVendingMachine() {
 
@@ -305,8 +356,13 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests the player can befriend an alien.
+   */
   @Test
-  public void playerCanBribeGuard() {
+  public void playerCanBefriendAlien() {
+
+    // best case scenario
 
     game.directTeleport(board[2][1], 5, 2);
     player.addItem(new Potion(-1, -1, "NORTH"));
@@ -316,25 +372,34 @@ public class GameworldTests {
     alien.setDirection(Direction.WEST);
     player.setDirection(Direction.WEST);
 
-    game.bribeGuard();
+    game.befriendAlien();
 
     assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
 
-    alien.setDirection(Direction.NORTH);
-    alien.setNavigable(false);
+    // challenge = null case
+
+    player.setDirection(Direction.EAST);
     player.addItem(new Potion(-1, -1, "NORTH"));
 
-    game.bribeGuard();
+    game.befriendAlien();
     assertTrue(player.getItem() instanceof Potion);
 
+    // alien changes direction case
+
+    game.directTeleport(board[2][1], 4, 1);
+    player.setDirection(Direction.SOUTH);
     alien.setDirection(Direction.EAST);
+    alien.setNavigable(false);
 
-    game.bribeGuard();
-    assertTrue(player.getItem() instanceof Potion);
+    game.befriendAlien();
+    assertFalse(player.getItem() instanceof Potion);
 
   }
 
+  /**
+   * This method tests player must be adjacent to a challenge.
+   */
   @Test
   public void challengesAreNotCompletedWithoutAnAdjacentChallengeItem() {
 
@@ -343,14 +408,17 @@ public class GameworldTests {
     game.diffuseBomb();
     game.unlockVendingMachine();
     game.useVendingMachine();
-    game.bribeGuard();
+    game.befriendAlien();
 
     assertSame(game, this.game);
 
   }
 
+  /**
+   * This method tests player can use oxygen tank.
+   */
   @Test
-  public void playerCanUseHealthPack() {
+  public void playerCanUseOxygenTank() {
 
     game.directTeleport(board[1][1], 3, 6);
     AccessibleTile tile = (AccessibleTile) board[1][1].getTile(4, 6);
@@ -360,26 +428,32 @@ public class GameworldTests {
 
     assertEquals(tile, player.getTile());
 
-    game.checkForHealthPack();
+    game.checkForOxygenTank();
 
-    assertEquals(100, player.getHealth());
+    assertEquals(100, player.getOxygen());
 
   }
 
+  /**
+   * This method tests game wins when the spaceship is found.
+   */
   @Test
-  public void playerWinsByFindingAntidote() {
+  public void playerWinsByFindingSpaceShip() {
 
     game.directTeleport(board[2][0], 2, 5);
 
-    assertFalse(game.checkForAntidote());
+    assertFalse(game.checkForSpaceship());
 
     player.setDirection(Direction.NORTH);
     game.movePlayer(-1, 0);
 
-    assertTrue(game.checkForAntidote());
+    assertTrue(game.checkForSpaceship());
 
   }
 
+  /**
+   * This method tests a room can be rotated clockwise.
+   */
   @Test
   public void roomCanBeRotatedClockwise() {
 
@@ -396,6 +470,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests a room can be rotated anticlockwise.
+   */
   @Test
   public void roomCanBeRotatedAnticlockwise() {
 
@@ -412,6 +489,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests a room can create a test room.
+   */
   @Test
   public void canCreateTestRoom() {
 
@@ -426,6 +506,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests a player stays within room boundaries.
+   */
   @Test
   public void playerCannotMoveOutsideRoomBounds() {
 
@@ -446,22 +529,28 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests player's oxygen stays within bounds.
+   */
   @Test
-  public void playerHealthCannotExceedBounds() {
+  public void playerOxygenCannotExceedBounds() {
 
-    player.setHealth(150);
-    player.loseHealth();
-    player.boostHealth();
+    player.setOxygen(150);
+    player.loseOxygen();
+    player.boostOxygen();
 
-    assertTrue(player.getHealth() <= 100);
+    assertTrue(player.getOxygen() <= 100);
 
-    player.setHealth(0);
-    player.loseHealth();
+    player.setOxygen(0);
+    player.loseOxygen();
 
-    assertFalse(player.getHealth() < 0);
+    assertFalse(player.getOxygen() < 0);
 
   }
 
+  /**
+   * This method tests a game can be connected with a renderer.
+   */
   @Test
   public void gameCanBeConnectedWithRenderer() {
 
@@ -470,6 +559,9 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests directions are implemented correctly.
+   */
   @Test
   public void directionEnumReturnsCorrectValue() {
 
@@ -511,6 +603,10 @@ public class GameworldTests {
 
   }
 
+  /**
+   * This method tests items implement getName(), getDescription()
+   * and toString().
+   */
   @Test
   public void itemNamesAndDescriptionsAreImplemented() {
 

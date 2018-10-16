@@ -192,10 +192,10 @@ public class XmlParser {
    */
   private static Element savePlayer(Player player, Document document) {
     Element playerElement = document.createElement("player");
-    //Get position, health and direction of player and add as attributes to player element
-    playerElement.setAttribute("row", player.getTile().getRow() + "");
-    playerElement.setAttribute("col", player.getTile().getCol() + "");
-    playerElement.setAttribute("health", player.getHealth() + "");
+    //Get position, oxygen and direction of player and add as attributes to player element
+    playerElement.setAttribute("row", player.getTile().getRow()+"");
+    playerElement.setAttribute("col", player.getTile().getCol()+"");
+    playerElement.setAttribute("oxygen", player.getOxygen()+"");
     playerElement.setAttribute("direction", player.getDirection().toString());
 
     //Add coordinates of the room the player is in
@@ -328,10 +328,10 @@ public class XmlParser {
     int col = parseInt(playerElement.getAttribute("col"));
 
     //Get the player's health and the direction they are facing
-    if (playerElement.getAttribute("health").equals("")) {
-      throw new ParseError("Player needs health attribute");
+    if (playerElement.getAttribute("oxygen").equals("")) {
+      throw new ParseError("Player needs oxygen attribute");
     }
-    int health = parseInt(playerElement.getAttribute("health"));
+    int health = parseInt(playerElement.getAttribute("oxygen"));
     if (playerElement.getAttribute("direction").equals("")) {
       throw new ParseError("Player needs direction attribute");
     }
