@@ -170,7 +170,6 @@ public class Game {
     if (tile.hasItem()) {
 
       if (player.hasItem()) {
-        System.out.println("Player may only have one item at a time");
         return "You may only carry one item at a time";
       }
 
@@ -179,13 +178,11 @@ public class Game {
       tile.setItem(null);
       item.setRow(-1);
       item.setCol(-1);
-      System.out.println("Player picked up " + item.toString());
       return "You picked up " + item.getName();
 
-    }
-
-    else
+    } else {
       return "Tile does not have an item you can pick up";
+    }
   }
 
   public String dropItem() {
@@ -202,7 +199,6 @@ public class Game {
       item.setRow(tile.getRow());
       item.setCol(tile.getCol());
       tile.setItem(item);
-      System.out.println("Player dropped " + item.toString());
       return "You dropped " + item.getName();
     }
 
@@ -236,6 +232,7 @@ public class Game {
 
       }
     }
+
     return "You do not have a diffuser to diffuse the bomb!";
   }
 
@@ -313,8 +310,6 @@ public class Game {
 
           player.dropItem();
           player.addItem(new Potion(-1, -1, "NORTH"));
-          System.out.println("Placed coin into vending machine...");
-          System.out.println("Pick up the potion that is dispensed");
           return "Magic potion successfully dispensed from vending machine";
 
         }
@@ -350,7 +345,6 @@ public class Game {
               (direction == Direction.NORTH || direction == Direction.SOUTH)
                   ? direction.getOppositeDirection() : direction;
           alien.setDirection(nextDirection);
-          System.out.println("Alien befriended with potion");
           return "Alien successfully befriended";
 
         }
