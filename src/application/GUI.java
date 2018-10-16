@@ -630,7 +630,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     renderer.getRoot().setTranslateY(230);
 
     // construct a new progress bar to show decreasing oxygen level
-    progressBar = new ProgressBar(currentGame.getPlayer().getOxygen() / 100);
+    progressBar = new ProgressBar( (double) currentGame.getPlayer().getOxygen() / 100);
     Task task = oxygenCounter(100);
     progressBar.progressProperty().unbind();
     progressBar.progressProperty().bind(task.progressProperty());
