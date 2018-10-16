@@ -76,6 +76,16 @@ public class ParsingTests {
   }
 
   /**
+   * Test the parser throws an XmlParser error when a file with incorrect challenge
+   * names are loaded.
+   */
+  @Test
+  public void testIncorrectPlayerProperties() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("data/incorrectPlayerProperties.xml")));
+  }
+
+  /**
    * Test the parser saves an XML file from a game that starts with a root node <game></game>.
    *
    * @throws TransformerException exception thrown if transformer fails
