@@ -29,7 +29,7 @@ public class RenderingTest {
   @BeforeEach
   public void setUp() throws XmlParser.ParseError {
 
-    game = XmlParser.parseGame(new File("data/gameworldTestData.xml"));
+    game = XmlParser.parseGame(new File("test_data/gameworldTestData.xml"));
 
     if (game != null) {
       board = game.getBoard();

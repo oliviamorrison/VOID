@@ -1,7 +1,24 @@
 package mapeditor;
 
+import static application.GUI.configureFileChooser;
+
 import application.GUI;
-import gameworld.*;
+
+import gameworld.AccessibleTile;
+import gameworld.Alien;
+import gameworld.BoltCutter;
+import gameworld.Bomb;
+import gameworld.ChallengeItem;
+import gameworld.Coin;
+import gameworld.Diffuser;
+import gameworld.Game;
+import gameworld.InaccessibleTile;
+import gameworld.Item;
+import gameworld.OxygenTank;
+import gameworld.Player;
+import gameworld.Room;
+import gameworld.SpaceShip;
+import gameworld.VendingMachine;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,13 +36,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import persistence.XmlParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import static application.GUI.configureFileChooser;
-
+import persistence.XmlParser;
 
 /**
  * MapEditor class displays a stand alone application allowing one to
@@ -36,9 +51,9 @@ import static application.GUI.configureFileChooser;
  */
 public class MapEditor extends Application {
 
-  private final static int boardSize = 800;
-  private final static int itemWidth = 200;
-  private final static int itemHeight = 800;
+  private static final int boardSize = 800;
+  private static final int itemWidth = 200;
+  private static final int itemHeight = 800;
 
   /**
    * The tilePane which is currently selected.
@@ -161,7 +176,8 @@ public class MapEditor extends Application {
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
     Button makeGame = new Button("Make Game");
-    Button backToMain = new Button("Back to game");
+
+    final Button backToMain = new Button("Back to game");
 
     pickupButton.setOnAction(new EventHandler<ActionEvent>() {
       @Override
@@ -186,7 +202,7 @@ public class MapEditor extends Application {
           MapItem i = selectedItem.getMapItem();
 
           //if there is nothing in the selected tile
-          if (selectedTilePane.getMapItem() == null && !isInAntidoteRoom(selectedTilePane)) {
+          if (selectedTilePane.getMapItem() == null && !isInSpaceShipRoom(selectedTilePane)) {
             //swap items
             String name = i.getImageName();
 
@@ -221,7 +237,7 @@ public class MapEditor extends Application {
 
     makeGame.setOnAction(event -> {
       if (noItemsInItemGrid()) {
-        createGame();
+        createGame(false);
       } else {
         //if there are still items in the item spaces panel
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -278,8 +294,8 @@ public class MapEditor extends Application {
    * @param find TilePane to check if the spaceship is in this room
    * @return boolean which represents if the spaceship is in the room
    */
-  public boolean isInAntidoteRoom(TilePane find) {
-    TilePane t = findItemInBoard("antidote.png");
+  public boolean isInSpaceShipRoom(TilePane find) {
+    TilePane t = findItemInBoard("spaceship.png");
     return t.getRoom() == find.getRoom();
   }
 
@@ -448,8 +464,8 @@ public class MapEditor extends Application {
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
-        i.setMapItem(new MapItem("antidote.png",
-            new Image(getClass().getResourceAsStream("antidote.png"),
+        i.setMapItem(new MapItem("spaceship.png",
+            new Image(getClass().getResourceAsStream("spaceship.png"),
                 17, 17, false, false)));
         i.setAccessible(false);
       }
@@ -511,8 +527,9 @@ public class MapEditor extends Application {
    * This method creates a GridPane which initializes all of the rooms with
    * 100 tiles in each room.
    *
-   * @param row
-   * @param col
+   * @param row row of room to implement
+   * @param col col of room to implement
+   *
    * @return GridPane the grid of all tiles in the room
    */
   private GridPane initRoom(int row, int col) {
@@ -567,7 +584,8 @@ public class MapEditor extends Application {
         }
 
         boolean challenge = false;
-        if ((row == 0 && col == 1 && i == 8 && j == 5) || (row == 2 && col == 1 && i == 5 && j == 1)) {
+        if ((row == 0 && col == 1 && i == 8 && j == 5)
+            || (row == 2 && col == 1 && i == 5 && j == 1)) {
           challenge = true;
         }
 
@@ -621,7 +639,7 @@ public class MapEditor extends Application {
   /**
    * This method finds and returns the first empty tile in a given room.
    *
-   * @param room
+   * @param room gridpane of room to find first empty tile
    * @return TilePane
    */
   public TilePane findFirstEmptyTile(GridPane room) {
@@ -642,10 +660,10 @@ public class MapEditor extends Application {
   /**
    * This method returns the node at the given row and column of the given gridPane.
    *
-   * @param row
-   * @param column
-   * @param gridPane
-   * @return Node
+   * @param row      row which node will be at
+   * @param column   col which node will be at
+   * @param gridPane grid to find node in
+   * @return Node which is at row and col
    */
   public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
     Node result = null;
@@ -665,9 +683,10 @@ public class MapEditor extends Application {
    * This method creates a game from the current state of the board and creates an XML file
    * from that game to be able to run from the application window.
    *
+   * @param test boolean to show if a test is calling this method.
    * @return boolean to check if create game was successfully loaded.
    */
-  public boolean createGame() {
+  public boolean createGame(boolean test) {
     Room[][] board = new Room[3][3];
     Player player = null;
 
@@ -692,7 +711,8 @@ public class MapEditor extends Application {
               if (t instanceof TilePane) {
 
                 TilePane tilePane = (TilePane) t;
-                if (tilePane.isAccessible()) {
+                if (tilePane.isAccessible() || tilePane.hasMapItem()
+                    && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
                   AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if (mapItem != null) {
@@ -700,7 +720,7 @@ public class MapEditor extends Application {
                     ChallengeItem challenge = null;
 
                     switch (mapItem.getImageName()) {
-                      case "antidote.png":
+                      case "spaceship.png":
                         item = new SpaceShip(k, l, "NORTH");
                         break;
                       case "cutters.png":
@@ -722,10 +742,11 @@ public class MapEditor extends Application {
                         challenge = new Bomb(k, l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k, l, "WESTind");
+                        challenge = new VendingMachine(k, l, "SOUTH");
                         break;
                       case "player.png":
                         player = new Player(room, tile, 100, "NORTH");
+                        break;
                       default:
                         continue;
                     }
@@ -733,7 +754,6 @@ public class MapEditor extends Application {
                     if (mapItem.getImageName() != null) {
                       tile.setItem(item);
                       tile.setChallenge(challenge);
-                      System.out.println(mapItem.getImageName());
                     }
 
                     room.setTile(tile, k, l);
@@ -749,23 +769,28 @@ public class MapEditor extends Application {
               }
 
             }
+
+            room.getDoors().addAll(doors);
+
           }
-
-          room.getDoors().addAll(doors);
-
         }
-
       }
     }
 
     Game game = new Game(board, player);
-
+    if (test) {
+      return true;
+    }
 
     return saveFile(game);
   }
 
   /**
+   * <<<<<<< HEAD
    * Attempts to write a current game state to an XML file
+   * =======
+   * Attempts to write a current game state to an XML file.
+   * >>>>>>> 5c12fef23e828ea3957e9d3ee6b1e601e44077f4
    *
    * @param game the game to save to a file
    * @return whether the game was successfully saved
@@ -776,10 +801,11 @@ public class MapEditor extends Application {
 
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
-    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
+    if (file != null && !file.getName().equals("easy.xml")
+        && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("File saved!");
         alert.setContentText("File successfully saved");
         alert.showAndWait();
@@ -791,7 +817,8 @@ public class MapEditor extends Application {
     } else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Unable to save over default game files");
-      alert.setContentText("Unable to save over default game files. Please save using a different file name");
+      alert.setContentText("Unable to save over default game files. "
+          + "Please save using a different file name");
       alert.showAndWait();
       return false;
     }

@@ -169,7 +169,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView newGameIcon = new ImageView(newImage);
     newGame.setGraphic(newGameIcon);
-      newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
+    newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
 
     // load
     Button load = new Button();
@@ -200,13 +200,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView editIcon = new ImageView(editImage);
     editMap.setGraphic(editIcon);
-     editMap.setOnAction(e -> {
-       try {
-         new MapEditor().start(stage);
-       } catch (Exception e1) {
-         e1.printStackTrace();
-       }
-     });
+    editMap.setOnAction(e -> {
+      try {
+        new MapEditor().start(stage);
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
+    });
 
     // quit
     Button quit = new Button();
@@ -327,6 +327,21 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     file.getItems().addAll(newGame, editMap, loadGame, saveGame);
 
     newGame.setOnAction(Event -> window.setScene(levelsScene));
+
+    editMap.setOnAction(e -> {
+      try {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Are you sure?");
+        alert.setContentText("Proceed to edit map?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+          new MapEditor().start(stage);
+        }
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
+    });
+
     loadGame.setOnAction(Event -> {
       if(loadFile(stage)) {
         window.setScene(createGameScene(stage));
@@ -579,7 +594,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
           updateProgress(currentGame.getPlayer().getOxygen(), oxygen);
           if (!pause) currentGame.getPlayer().loseOxygen();
         }
-       //END GAME
+        //END GAME
         return true;
       }
     };
