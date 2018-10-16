@@ -119,7 +119,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         renderer.newRoom();
         break;
       case B:
-        str = currentGame.bribeGuard();
+        str = currentGame.befriendAlien();
         break;
       default:
 
@@ -128,11 +128,11 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
       currentGame.movePlayer(dx, dy);
 
-      if (currentGame.checkForAntidote()) {
+      if (currentGame.checkForSpaceship()) {
         System.out.println("Winner winner");
         System.exit(0);
       }
-      currentGame.checkForHealthPack();
+      currentGame.checkForOxygenTank();
     }
 
     renderer.draw();
@@ -168,7 +168,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView newGameIcon = new ImageView(newImage);
     newGame.setGraphic(newGameIcon);
-    newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
+      newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
 
     // load
     Button load = new Button();
@@ -575,8 +575,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       protected Object call() throws Exception {
         for(int i = currentGame.getPlayer().getOxygen(); i > 0; i = currentGame.getPlayer().getOxygen()){
           Thread.sleep(1000);
-          updateProgress(currentGame.getPlayer().getHealth(), health);
-          if (!pause) currentGame.getPlayer().loseHealth();
+          updateProgress(currentGame.getPlayer().getOxygen(), health);
+          if (!pause) currentGame.getPlayer().loseOxygen();
         }
        //END GAME
         return true;
@@ -750,72 +750,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return screen;
   }
 
-
-  @Override
-  public void handle(KeyEvent event) {
-    int dx = 0;
-    int dy = 0;
-
-    switch (event.getCode()) {
-      case UP:
-        dx = -1;
-        break;
-      case LEFT:
-        dy = -1;
-        break;
-      case DOWN:
-        dx = 1;
-        break;
-      case RIGHT:
-        dy = 1;
-        break;
-      case A:
-        currentGame.rotateRoomAnticlockwise();
-        break;
-      case D:
-        currentGame.rotateRoomClockwise();
-        break;
-      case Z:
-        currentGame.pickUpItem();
-        break;
-      case X:
-        currentGame.dropItem();
-        break;
-      case N:
-        currentGame.diffuseBomb();
-        break;
-      case C:
-        currentGame.unlockVendingMachine();
-        break;
-      case V:
-        currentGame.useVendingMachine();
-        break;
-      case SPACE:
-        currentGame.teleport();
-        renderer.newRoom();
-        break;
-      case B:
-        currentGame.befriendAlien();
-        break;
-      default:
-
-    }
-    if (!(dx == 0 && dy == 0)) {
-
-      currentGame.movePlayer(dx, dy);
-
-      if (currentGame.checkForSpaceship()) {
-        System.out.println("Winner winner");
-        System.exit(0);
-      }
-      currentGame.checkForOxygenTank();
-    }
-
-    renderer.draw();
-    updateInventory();
-    updateScreen("hello"); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
-
-  }
 
   /**
    * Displays a popup control menu to assist the user with keyboard control
