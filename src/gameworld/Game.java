@@ -14,7 +14,6 @@ public class Game {
   private Room[][] board;
   private Player player;
   private Room currentRoom;
-  private Timer timer;
 
   public Game(Room[][] board, Player player) {
 
@@ -75,7 +74,6 @@ public class Game {
   }
 
   private void connectPortals() {
-
     final Point northPortal = new Point(0, 5);
     final Point southPortal = new Point(9, 5);
     final Point eastPortal = new Point(5, 9);
@@ -140,7 +138,7 @@ public class Game {
     }
   }
 
-  public void pickUpItem() {
+  public String pickUpItem() {
 
     AccessibleTile tile = player.getTile();
 
@@ -148,7 +146,7 @@ public class Game {
 
       if (player.hasItem()) {
         System.out.println("Player may only have one item at a time");
-        return;
+        return "Player may only have one item at a time";
       }
 
       Item item = tile.getItem();
@@ -157,9 +155,12 @@ public class Game {
       item.setRow(-1);
       item.setCol(-1);
       System.out.println("Player picked up " + item.toString());
+      return "player picked up";
 
     }
 
+    else
+      return "tile does not have item";
   }
 
   public void dropItem() {

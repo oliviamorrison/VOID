@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import persistence.XMLParser;
+import persistence.XmlParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -26,21 +26,21 @@ import javax.xml.transform.TransformerException;
  * MapEditor class displays a stand alone application allowing one to
  * create and edit map files. This should display the map being edited in a top-down graphical
  * fashion, allowing the user to add and remove items.
- * 
+ *
  * @author oliviamorrison
  *
  */
 public class MapEditor extends Application {
 
-  private final int boardSize = 800;
-  private final int itemWidth = 200;
-  private final int itemHeight = 800;
+  private final static int boardSize = 800;
+  private final static int itemWidth = 200;
+  private final static int itemHeight = 800;
 
   /**
  * The tilePane which is currently selected.
  */
 public TilePane selectedTilePane;
-  
+
 /**
  * The ItemSpace which is currently selected.
  */
@@ -88,7 +88,7 @@ public ItemSpace selectedItem;
 
   /**
  * This method sets up the board with rooms in it and sets the preferable size.
- * 
+ *
  */
   public void setUp() {
 
@@ -104,7 +104,7 @@ public ItemSpace selectedItem;
 
   /**
    * This method initialized item spaces on the right side of the panel.
-   * 
+   *
  * @param test boolean which represents if a test is calling the method
  * @return the current state of the item spaces GridPane
  */
@@ -145,13 +145,13 @@ public GridPane initItemSpaces(boolean test) {
 
   /**
    * This method adds the option buttons on the end of the item spaces.
-   * 
+   *
  * @param items GridPane of the current state of the items gridPane
  * @param test boolean which represents if a test is calling the method
  * @return GridPane of the itemSpaces plus the buttons
  */
 public GridPane setOptions(GridPane items, boolean test ) {
-	
+
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
     Button makeGame = new Button("Make Game");
@@ -209,7 +209,7 @@ public GridPane setOptions(GridPane items, boolean test ) {
         }
       }
     });
-    
+
     makeGame.setOnAction(event -> {
       if (noItemsInItemGrid()) {
         createGame();
@@ -222,7 +222,7 @@ public GridPane setOptions(GridPane items, boolean test ) {
         alert.showAndWait();
       }
     });
-    
+
     if(!test) {
     		items.add(pickupButton,0,4);
     		items.add(dropButton,1,4);
@@ -234,7 +234,7 @@ public GridPane setOptions(GridPane items, boolean test ) {
 
   /**
    * This method returns whether the item spaces is empty or not.
-   * 
+   *
  * @return boolean of if there are items in the item grid
  */
 public boolean noItemsInItemGrid() {
@@ -256,7 +256,7 @@ public boolean noItemsInItemGrid() {
 
   /**
    *  This method checks if tile which is passed is in the same room as the spaceship.
-   *  
+   *
  * @param find TilePane to check if the spaceship is in this room
  * @return boolean which represents if the spaceship is in the room
  */
@@ -267,7 +267,7 @@ public boolean isInAntidoteRoom(TilePane find) {
 
   /**
    * This method finds a given item in the board and returns which tile it is on.
-   * 
+   *
  * @param name a string which represents the name of the item which is being looked for.
  * @return TilePane the tile which the item is on.
  */
@@ -339,7 +339,7 @@ private GridPane initBoard() {
   }
 
 
-  
+
   /**
  * This method sets all of the items in their default tiles. Therefore initializing the items.
  */
@@ -489,10 +489,10 @@ private GridPane initNullRoom() {
   }
 
   /**
-   * This method creates a GridPane which initializes all of the rooms with 
-   * 100 tiles in each room. 
-   * 
- * @param row 
+   * This method creates a GridPane which initializes all of the rooms with
+   * 100 tiles in each room.
+   *
+ * @param row
  * @param col
  * @return GridPane the grid of all tiles in the room
  */
@@ -582,8 +582,8 @@ private GridPane initRoom(int row, int col) {
 
   /**
    * This method finds and returns the first empty ItemSpace.
-   * 
- * @return ItemSpace 
+   *
+ * @return ItemSpace
  */
 public ItemSpace findFirstEmptyItem() {
     ObservableList<Node> children = itemGrid.getChildren();
@@ -602,9 +602,9 @@ public ItemSpace findFirstEmptyItem() {
 
   /**
    * This method finds and returns the first empty tile in a given room.
-   * 
+   *
  * @param room
- * @return TilePane 
+ * @return TilePane
  */
 public TilePane findFirstEmptyTile(GridPane room) {
     ObservableList<Node> children = room.getChildren();
@@ -623,11 +623,11 @@ public TilePane findFirstEmptyTile(GridPane room) {
 
   /**
    * This method returns the node at the given row and column of the given gridPane.
-   * 
+   *
  * @param row
  * @param column
  * @param gridPane
- * @return Node 
+ * @return Node
  */
 public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
     Node result = null;
@@ -646,7 +646,7 @@ public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gr
   /**
    * This method creates a game from the current state of the board and creates an XML file
    * from that game to be able to run from the application window.
-   * 
+   *
  * @return boolean to check if create game was successfully loaded.
  */
 public boolean createGame() {
@@ -743,7 +743,7 @@ public boolean createGame() {
     Game game = new Game(board, player);
 
     try {
-      XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
+      XmlParser.saveFile(new File("data/testMapEditor.xml"), game);
       return true;
     } catch (ParserConfigurationException | TransformerException e) {
       e.printStackTrace();
