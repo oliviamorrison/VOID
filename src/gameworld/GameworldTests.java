@@ -96,8 +96,6 @@ public class GameworldTests {
   @Test
   public void playerCanMove() {
 
-    AccessibleTile startTile = player.getTile();
-
     game.movePlayer(1, 0);
     game.movePlayer(1, 0);
 
@@ -106,6 +104,7 @@ public class GameworldTests {
     game.pickUpItem();
     game.dropItem();
 
+    AccessibleTile startTile = player.getTile();
     AccessibleTile nextTile = player.getTile();
 
     assertNotEquals(startTile, nextTile);
