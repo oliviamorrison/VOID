@@ -132,6 +132,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         System.out.println("Winner winner");
         System.exit(0);
       }
+      currentGame.checkForSpaceship();
       currentGame.checkForOxygenTank();
     }
 
@@ -566,16 +567,16 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   /**
    * Updates the length of the health bar based on time. Each second represents
    * a drop in the health bar.
-   * @param health the players health
+   * @param oxygen the players health
    * @return a new task to keep track of time passing
    */
-  private Task oxygenCounter(int health){
+  private Task oxygenCounter(int oxygen){
     return new Task() {
       @Override
       protected Object call() throws Exception {
         for(int i = currentGame.getPlayer().getOxygen(); i > 0; i = currentGame.getPlayer().getOxygen()){
           Thread.sleep(1000);
-          updateProgress(currentGame.getPlayer().getOxygen(), health);
+          updateProgress(currentGame.getPlayer().getOxygen(), oxygen);
           if (!pause) currentGame.getPlayer().loseOxygen();
         }
        //END GAME
@@ -749,7 +750,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     updateScreen(str);
     return screen;
   }
-
 
   /**
    * Displays a popup control menu to assist the user with keyboard control
