@@ -123,7 +123,7 @@ public class Renderer {
                 gameObject = getChallengeImage(AT);
             }
         }
-//Testing again
+//Testing again again
         root.getChildren().addAll(poly.getPolygons());
         if(gameObject != null){
             root.getChildren().add(gameObject);
