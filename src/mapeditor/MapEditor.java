@@ -1,7 +1,25 @@
 package mapeditor;
 
+import static application.GUI.configureFileChooser;
+
 import application.GUI;
-import gameworld.*;
+
+import gameworld.AccessibleTile;
+import gameworld.Alien;
+import gameworld.BoltCutter;
+import gameworld.Bomb;
+import gameworld.ChallengeItem;
+import gameworld.Coin;
+import gameworld.Diffuser;
+import gameworld.Game;
+import gameworld.InaccessibleTile;
+import gameworld.Item;
+import gameworld.OxygenTank;
+import gameworld.Player;
+import gameworld.Room;
+import gameworld.SpaceShip;
+import gameworld.VendingMachine;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +36,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import persistence.XmlParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import static application.GUI.configureFileChooser;
-
+import persistence.XmlParser;
 
 /**
  * MapEditor class displays a stand alone application allowing one to
@@ -32,23 +48,22 @@ import static application.GUI.configureFileChooser;
  * fashion, allowing the user to add and remove items.
  *
  * @author oliviamorrison
- *
  */
 public class MapEditor extends Application {
 
-  private final static int boardSize = 800;
-  private final static int itemWidth = 200;
-  private final static int itemHeight = 800;
+  private static final int boardSize = 800;
+  private static final int itemWidth = 200;
+  private static final int itemHeight = 800;
 
   /**
- * The tilePane which is currently selected.
- */
-public TilePane selectedTilePane;
+   * The tilePane which is currently selected.
+   */
+  public TilePane selectedTilePane;
 
-/**
- * The ItemSpace which is currently selected.
- */
-public ItemSpace selectedItem;
+  /**
+   * The ItemSpace which is currently selected.
+   */
+  public ItemSpace selectedItem;
 
   private GridPane boardGrid;
   private GridPane mainPane;
@@ -67,8 +82,8 @@ public ItemSpace selectedItem;
 
     // Use a StackPane to display the Image and the Grid
     mainPane = new GridPane();
-    mainPane.add(boardGrid, 0,0);
-    mainPane.add(itemGrid,1,0);
+    mainPane.add(boardGrid, 0, 0);
+    mainPane.add(itemGrid, 1, 0);
 
     primaryStage.setScene(new Scene(mainPane));
     primaryStage.setResizable(false);
@@ -77,24 +92,25 @@ public ItemSpace selectedItem;
 
   /**
    * This method returns the current board grid. Used for testing purposes.
- * @return GridPane of the boardGrid
- */
+   *
+   * @return GridPane of the boardGrid
+   */
   public GridPane getBoardGrid() {
     return boardGrid;
   }
 
   /**
    * This method returns the current item grid. Used for testing purposes.
- * @return GridPane of the itemGrid
- */
+   *
+   * @return GridPane of the itemGrid
+   */
   public GridPane getItemGrid() {
     return itemGrid;
   }
 
   /**
- * This method sets up the board with rooms in it and sets the preferable size.
- *
- */
+   * This method sets up the board with rooms in it and sets the preferable size.
+   */
   public void setUp() {
 
     // Initialize the grid
@@ -110,10 +126,10 @@ public ItemSpace selectedItem;
   /**
    * This method initialized item spaces on the right side of the panel.
    *
- * @param test boolean which represents if a test is calling the method
- * @return the current state of the item spaces GridPane
- */
-public GridPane initItemSpaces(boolean test) {
+   * @param test boolean which represents if a test is calling the method
+   * @return the current state of the item spaces GridPane
+   */
+  public GridPane initItemSpaces(boolean test) {
     GridPane items = new GridPane();
 
     int rows = 2;
@@ -151,26 +167,28 @@ public GridPane initItemSpaces(boolean test) {
   /**
    * This method adds the option buttons on the end of the item spaces.
    *
- * @param items GridPane of the current state of the items gridPane
- * @param test boolean which represents if a test is calling the method
- * @return GridPane of the itemSpaces plus the buttons
- */
-public GridPane setOptions(GridPane items, boolean test) {
+   * @param items GridPane of the current state of the items gridPane
+   * @param test  boolean which represents if a test is calling the method
+   * @return GridPane of the itemSpaces plus the buttons
+   */
+  public GridPane setOptions(GridPane items, boolean test) {
 
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
-  Button makeGame = new Button("Make Game");
-  Button backToMain = new Button("Back to game");
+    Button makeGame = new Button("Make Game");
+
+    final Button backToMain = new Button("Back to game");
 
     pickupButton.setOnAction(new EventHandler<ActionEvent>() {
-      @Override public void handle(ActionEvent e) {
+      @Override
+      public void handle(ActionEvent e) {
         if (selectedTilePane != null && selectedTilePane.getMapItem() != null) {
           MapItem i = selectedTilePane.getMapItem();
           ItemSpace itemSpace = findFirstEmptyItem();
           //swap items
           String name = i.getImageName();
           itemSpace.setMapItem(new MapItem(name, new Image(getClass().getResourceAsStream(name),
-                  100, 100, false, false)));
+              100, 100, false, false)));
           selectedTilePane.setMapItem(null);
           selectedTilePane.resetImageView();
         }
@@ -178,12 +196,13 @@ public GridPane setOptions(GridPane items, boolean test) {
     });
 
     dropButton.setOnAction(new EventHandler<ActionEvent>() {
-      @Override public void handle(ActionEvent e) {
+      @Override
+      public void handle(ActionEvent e) {
         if (selectedItem != null && selectedItem.getMapItem() != null) {
           MapItem i = selectedItem.getMapItem();
 
           //if there is nothing in the selected tile
-          if (selectedTilePane.getMapItem() == null && !isInAntidoteRoom(selectedTilePane)) {
+          if (selectedTilePane.getMapItem() == null && !isInSpaceShipRoom(selectedTilePane)) {
             //swap items
             String name = i.getImageName();
 
@@ -200,14 +219,14 @@ public GridPane setOptions(GridPane items, boolean test) {
               TilePane moveFrom = findItemInBoard(otherName);
 
               moveTo.setMapItem(new MapItem(otherName,
-                      new Image(getClass().getResourceAsStream(otherName),
+                  new Image(getClass().getResourceAsStream(otherName),
                       20, 20, false, false)));
               moveFrom.setMapItem(null);
               moveFrom.resetImageView();
             }
 
             selectedTilePane.setMapItem(new MapItem(name,
-                    new Image(getClass().getResourceAsStream(name),
+                new Image(getClass().getResourceAsStream(name),
                     20, 20, false, false)));
             selectedItem.setMapItem(null);
             selectedItem.resetImageView();
@@ -218,9 +237,9 @@ public GridPane setOptions(GridPane items, boolean test) {
 
     makeGame.setOnAction(event -> {
       if (noItemsInItemGrid()) {
-        createGame();
+        createGame(false);
       } else {
-    	  	//if there are still items in the item spaces panel
+        //if there are still items in the item spaces panel
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error");
         alert.setHeaderText("You cannot make a game until all items are placed on the board");
@@ -229,19 +248,19 @@ public GridPane setOptions(GridPane items, boolean test) {
       }
     });
 
-  backToMain.setOnAction(e -> {
-    try {
-      new GUI().start(stage);
-    } catch (Exception e1) {
-      e1.printStackTrace();
-    }
-  });
+    backToMain.setOnAction(e -> {
+      try {
+        new GUI().start(stage);
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
+    });
 
-    if(!test) {
-    		items.add(pickupButton,0,4);
-    		items.add(dropButton,1,4);
-    		items.add(makeGame, 2,4);
-    		items.add(backToMain,3, 4);
+    if (!test) {
+      items.add(pickupButton, 0, 4);
+      items.add(dropButton, 1, 4);
+      items.add(makeGame, 2, 4);
+      items.add(backToMain, 3, 4);
     }
 
     return items;
@@ -250,9 +269,9 @@ public GridPane setOptions(GridPane items, boolean test) {
   /**
    * This method returns whether the item spaces is empty or not.
    *
- * @return boolean of if there are items in the item grid
- */
-public boolean noItemsInItemGrid() {
+   * @return boolean of if there are items in the item grid
+   */
+  public boolean noItemsInItemGrid() {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 4; j++) {
         Node n = getNodeByRowColumnIndex(i, j, itemGrid);
@@ -270,32 +289,32 @@ public boolean noItemsInItemGrid() {
   }
 
   /**
-   *  This method checks if tile which is passed is in the same room as the spaceship.
+   * This method checks if tile which is passed is in the same room as the spaceship.
    *
- * @param find TilePane to check if the spaceship is in this room
- * @return boolean which represents if the spaceship is in the room
- */
-public boolean isInAntidoteRoom(TilePane find) {
-    TilePane t = findItemInBoard("antidote.png");
+   * @param find TilePane to check if the spaceship is in this room
+   * @return boolean which represents if the spaceship is in the room
+   */
+  public boolean isInSpaceShipRoom(TilePane find) {
+    TilePane t = findItemInBoard("spaceship.png");
     return t.getRoom() == find.getRoom();
   }
 
   /**
    * This method finds a given item in the board and returns which tile it is on.
    *
- * @param name a string which represents the name of the item which is being looked for.
- * @return TilePane the tile which the item is on.
- */
-private TilePane findItemInBoard(String name) {
+   * @param name a string which represents the name of the item which is being looked for.
+   * @return TilePane the tile which the item is on.
+   */
+  private TilePane findItemInBoard(String name) {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
-        Node n = getNodeByRowColumnIndex(i,j,boardGrid);
+        Node n = getNodeByRowColumnIndex(i, j, boardGrid);
         if (n instanceof GridPane) {
           GridPane room = (GridPane) n;
 
           for (int k = 0; k < 10; k++) {
             for (int l = 0; l < 10; l++) {
-              Node tn = getNodeByRowColumnIndex(k,l,room);
+              Node tn = getNodeByRowColumnIndex(k, l, room);
 
               if (tn instanceof TilePane) {
                 TilePane t = (TilePane) tn;
@@ -322,9 +341,10 @@ private TilePane findItemInBoard(String name) {
 
   /**
    * This method initializes the board to have 9 rooms.
- * @return GridPane the full initialized board
- */
-private GridPane initBoard() {
+   *
+   * @return GridPane the full initialized board
+   */
+  private GridPane initBoard() {
     GridPane board = new GridPane();
 
     int roomNum = 3;
@@ -334,9 +354,9 @@ private GridPane initBoard() {
 
         //null rooms
         if (i == 0 && j == 2 || i == 1 && j == 0) {
-          board.add(initNullRoom(),j,i);
+          board.add(initNullRoom(), j, i);
         } else {
-          GridPane room = initRoom(i,j);
+          GridPane room = initRoom(i, j);
 
           room.setStyle("-fx-padding: 0;"
               + "-fx-border-style: solid inside;"
@@ -354,14 +374,13 @@ private GridPane initBoard() {
   }
 
 
-
   /**
- * This method sets all of the items in their default tiles. Therefore initializing the items.
- */
-public void initaliseItems() {
+   * This method sets all of the items in their default tiles. Therefore initializing the items.
+   */
+  public void initaliseItems() {
 
     //room 1
-    Node node = getNodeByRowColumnIndex(0,0, boardGrid);
+    Node node = getNodeByRowColumnIndex(0, 0, boardGrid);
     if (node instanceof GridPane) {
       GridPane room1 = (GridPane) node;
       node = getNodeByRowColumnIndex(1, 1, room1);
@@ -369,24 +388,24 @@ public void initaliseItems() {
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("player.png",
-                new Image(getClass().getResourceAsStream("player.png"),
-                        17, 17, false, false)));
+            new Image(getClass().getResourceAsStream("player.png"),
+                17, 17, false, false)));
       }
 
-      node = getNodeByRowColumnIndex(1,2,room1);
+      node = getNodeByRowColumnIndex(1, 2, room1);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("diffuser.png",
-                new Image(getClass().getResourceAsStream("diffuser.png"),
-                        17,17,false,false)));
+            new Image(getClass().getResourceAsStream("diffuser.png"),
+                17, 17, false, false)));
 
       }
 
     }
 
     //room 2
-    node = getNodeByRowColumnIndex(0,1, boardGrid);
+    node = getNodeByRowColumnIndex(0, 1, boardGrid);
     if (node instanceof GridPane) {
       GridPane room2 = (GridPane) node;
       node = getNodeByRowColumnIndex(8, 5, room2);
@@ -394,13 +413,13 @@ public void initaliseItems() {
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("unlit-bomb.png",
-                new Image(getClass().getResourceAsStream("unlit-bomb.png"),
-                        17, 17, false, false)));
+            new Image(getClass().getResourceAsStream("unlit-bomb.png"),
+                17, 17, false, false)));
       }
     }
 
     //room 5
-    node = getNodeByRowColumnIndex(1,1, boardGrid);
+    node = getNodeByRowColumnIndex(1, 1, boardGrid);
     if (node instanceof GridPane) {
       GridPane room5 = (GridPane) node;
       node = getNodeByRowColumnIndex(7, 2, room5);
@@ -408,23 +427,23 @@ public void initaliseItems() {
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("cutters.png",
-                new Image(getClass().getResourceAsStream("cutters.png"),
-                        17, 17, false, false)));
+            new Image(getClass().getResourceAsStream("cutters.png"),
+                17, 17, false, false)));
       }
 
-      node = getNodeByRowColumnIndex(2,5,room5);
+      node = getNodeByRowColumnIndex(2, 5, room5);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("healthpack.png",
-                new Image(getClass().getResourceAsStream("healthpack.png"),
-                        17,17,false,false)));
+            new Image(getClass().getResourceAsStream("healthpack.png"),
+                17, 17, false, false)));
       }
 
     }
 
     //room 6
-    node = getNodeByRowColumnIndex(1,2, boardGrid);
+    node = getNodeByRowColumnIndex(1, 2, boardGrid);
     if (node instanceof GridPane) {
       GridPane room6 = (GridPane) node;
       node = getNodeByRowColumnIndex(2, 7, room6);
@@ -432,42 +451,42 @@ public void initaliseItems() {
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("vending-machine.png",
-                new Image(getClass().getResourceAsStream("vending-machine.png"),
-                        17, 17, false, false)));
+            new Image(getClass().getResourceAsStream("vending-machine.png"),
+                17, 17, false, false)));
       }
     }
 
     //room 7
-    node = getNodeByRowColumnIndex(2,0, boardGrid);
+    node = getNodeByRowColumnIndex(2, 0, boardGrid);
     if (node instanceof GridPane) {
       GridPane room7 = (GridPane) node;
       node = getNodeByRowColumnIndex(5, 5, room7);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
-        i.setMapItem(new MapItem("antidote.png",
-                new Image(getClass().getResourceAsStream("antidote.png"),
-                        17, 17, false, false)));
+        i.setMapItem(new MapItem("spaceship.png",
+            new Image(getClass().getResourceAsStream("spaceship.png"),
+                17, 17, false, false)));
         i.setAccessible(false);
       }
     }
 
     //room 8
-    node = getNodeByRowColumnIndex(2,1, boardGrid);
+    node = getNodeByRowColumnIndex(2, 1, boardGrid);
     if (node instanceof GridPane) {
       GridPane room8 = (GridPane) node;
-      node = getNodeByRowColumnIndex(5,1, room8);
+      node = getNodeByRowColumnIndex(5, 1, room8);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("guard.png",
-                new Image(getClass().getResourceAsStream("guard.png"),
-                        17, 17, false, false)));
+            new Image(getClass().getResourceAsStream("guard.png"),
+                17, 17, false, false)));
       }
     }
 
     //room 9
-    node = getNodeByRowColumnIndex(2,2, boardGrid);
+    node = getNodeByRowColumnIndex(2, 2, boardGrid);
     if (node instanceof GridPane) {
       GridPane room9 = (GridPane) node;
       node = getNodeByRowColumnIndex(5, 5, room9);
@@ -475,17 +494,17 @@ public void initaliseItems() {
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("two-coins.png",
-                new Image(getClass().getResourceAsStream("two-coins.png"),
-                        17, 17, false, false)));
+            new Image(getClass().getResourceAsStream("two-coins.png"),
+                17, 17, false, false)));
       }
 
-      node = getNodeByRowColumnIndex(7,2,room9);
+      node = getNodeByRowColumnIndex(7, 2, room9);
 
       if (node instanceof TilePane) {
         TilePane i = (TilePane) node;
         i.setMapItem(new MapItem("healthpack.png",
-                new Image(getClass().getResourceAsStream("healthpack.png"),
-                        17,17,false,false)));
+            new Image(getClass().getResourceAsStream("healthpack.png"),
+                17, 17, false, false)));
       }
 
     }
@@ -494,9 +513,10 @@ public void initaliseItems() {
 
   /**
    * This method initializes a null room which does not have tiles in it.
- * @return GridPane a null room.
- */
-private GridPane initNullRoom() {
+   *
+   * @return GridPane a null room.
+   */
+  private GridPane initNullRoom() {
     GridPane room = new GridPane();
 
     room.setStyle("-fx-background-color: gray");
@@ -507,11 +527,12 @@ private GridPane initNullRoom() {
    * This method creates a GridPane which initializes all of the rooms with
    * 100 tiles in each room.
    *
- * @param row
- * @param col
- * @return GridPane the grid of all tiles in the room
- */
-private GridPane initRoom(int row, int col) {
+   * @param row row of room to implement
+   * @param col col of room to implement
+   *
+   * @return GridPane the grid of all tiles in the room
+   */
+  private GridPane initRoom(int row, int col) {
     GridPane room = new GridPane();
 
 
@@ -539,7 +560,7 @@ private GridPane initRoom(int row, int col) {
 
             //if its on the perimeter of the board its not a door
             if (row == 2 && col == 0 && i == 0 || row == 0 && col == 0 && i == 9
-                    || col == 1 && row == 1 && j == 0) {
+                || col == 1 && row == 1 && j == 0) {
               door = false;
             } else if (row == 0 && col == 1 && j == 9 || row == 1 && col == 2 && i == 0) {
               door = false;
@@ -549,12 +570,12 @@ private GridPane initRoom(int row, int col) {
               door = false;
             } else {
               door = true;
-              if (i == 0){
+              if (i == 0) {
                 direction = "NORTH";
-              } else if (i == 9){
+              } else if (i == 9) {
                 direction = "SOUTH";
-              } else if (j == 0){
-                direction  = "WEST";
+              } else if (j == 0) {
+                direction = "WEST";
               } else {
                 direction = "EAST";
               }
@@ -563,7 +584,8 @@ private GridPane initRoom(int row, int col) {
         }
 
         boolean challenge = false;
-        if ((row == 0 && col == 1 && i == 8 && j == 5) || (row == 2 && col == 1 && i == 5 && j == 1)) {
+        if ((row == 0 && col == 1 && i == 8 && j == 5)
+            || (row == 2 && col == 1 && i == 5 && j == 1)) {
           challenge = true;
         }
 
@@ -590,7 +612,6 @@ private GridPane initRoom(int row, int col) {
     }
 
 
-
     // Return the GridPane
     return room;
   }
@@ -598,9 +619,9 @@ private GridPane initRoom(int row, int col) {
   /**
    * This method finds and returns the first empty ItemSpace.
    *
- * @return ItemSpace
- */
-public ItemSpace findFirstEmptyItem() {
+   * @return ItemSpace
+   */
+  public ItemSpace findFirstEmptyItem() {
     ObservableList<Node> children = itemGrid.getChildren();
 
     for (Node node : children) {
@@ -618,10 +639,10 @@ public ItemSpace findFirstEmptyItem() {
   /**
    * This method finds and returns the first empty tile in a given room.
    *
- * @param room
- * @return TilePane
- */
-public TilePane findFirstEmptyTile(GridPane room) {
+   * @param room gridpane of room to find first empty tile
+   * @return TilePane
+   */
+  public TilePane findFirstEmptyTile(GridPane room) {
     ObservableList<Node> children = room.getChildren();
 
     for (Node node : children) {
@@ -639,12 +660,12 @@ public TilePane findFirstEmptyTile(GridPane room) {
   /**
    * This method returns the node at the given row and column of the given gridPane.
    *
- * @param row
- * @param column
- * @param gridPane
- * @return Node
- */
-public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+   * @param row      row which node will be at
+   * @param column   col which node will be at
+   * @param gridPane grid to find node in
+   * @return Node which is at row and col
+   */
+  public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
     Node result = null;
     ObservableList<Node> childrens = gridPane.getChildren();
 
@@ -662,9 +683,10 @@ public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gr
    * This method creates a game from the current state of the board and creates an XML file
    * from that game to be able to run from the application window.
    *
- * @return boolean to check if create game was successfully loaded.
- */
-public boolean createGame() {
+   * @param test boolean to show if a test is calling this method.
+   * @return boolean to check if create game was successfully loaded.
+   */
+  public boolean createGame(boolean test) {
     Room[][] board = new Room[3][3];
     Player player = null;
 
@@ -672,8 +694,8 @@ public boolean createGame() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
 
-        Node roomNode = getNodeByRowColumnIndex(i,j,boardGrid);
-        Room room = new Room(i,j);
+        Node roomNode = getNodeByRowColumnIndex(i, j, boardGrid);
+        Room room = new Room(i, j);
         board[i][j] = room;
         List<String> doors = new ArrayList<>();
 
@@ -682,14 +704,15 @@ public boolean createGame() {
 
 
           for (int k = 0; k < 10; k++) {
-            for (int l = 0; l < 10;l++) {
+            for (int l = 0; l < 10; l++) {
 
-              Node t = getNodeByRowColumnIndex(k,l,roomGrid);
+              Node t = getNodeByRowColumnIndex(k, l, roomGrid);
 
               if (t instanceof TilePane) {
 
                 TilePane tilePane = (TilePane) t;
-                if (tilePane.isAccessible()) {
+                if (tilePane.isAccessible() || tilePane.hasMapItem()
+                    && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
                   AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if (mapItem != null) {
@@ -697,7 +720,7 @@ public boolean createGame() {
                     ChallengeItem challenge = null;
 
                     switch (mapItem.getImageName()) {
-                      case "antidote.png":
+                      case "spaceship.png":
                         item = new SpaceShip(k, l, "NORTH");
                         break;
                       case "cutters.png":
@@ -713,16 +736,17 @@ public boolean createGame() {
                         item = new OxygenTank(k, l, "NORTH");
                         break;
                       case "guard.png":
-                        challenge = new Alien(k,l, "NORTH");
+                        challenge = new Alien(k, l, "NORTH");
                         break;
                       case "unlit-bomb.png":
-                        challenge = new Bomb(k,l, "NORTH");
+                        challenge = new Bomb(k, l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k,l, "WESTind");
+                        challenge = new VendingMachine(k, l, "SOUTH");
                         break;
                       case "player.png":
-                        player = new Player(room,tile,100,"NORTH");
+                        player = new Player(room, tile, 100, "NORTH");
+                        break;
                       default:
                         continue;
                     }
@@ -730,10 +754,9 @@ public boolean createGame() {
                     if (mapItem.getImageName() != null) {
                       tile.setItem(item);
                       tile.setChallenge(challenge);
-                      System.out.println(mapItem.getImageName());
                     }
 
-                    room.setTile(tile, k,l);
+                    room.setTile(tile, k, l);
                   }
                 } else {
                   //if it is a door add its direction
@@ -741,28 +764,34 @@ public boolean createGame() {
                     doors.add(tilePane.getDirection());
                   }
 
-                  room.setTile(new InaccessibleTile(k, l),k,l);
+                  room.setTile(new InaccessibleTile(k, l), k, l);
                 }
               }
 
             }
+
+            room.getDoors().addAll(doors);
+
           }
-
-          room.getDoors().addAll(doors);
-
         }
-
       }
     }
 
     Game game = new Game(board, player);
-
+    if (test) {
+      return true;
+    }
 
     return saveFile(game);
   }
 
   /**
+   * <<<<<<< HEAD
    * Attempts to write a current game state to an XML file
+   * =======
+   * Attempts to write a current game state to an XML file.
+   * >>>>>>> 5c12fef23e828ea3957e9d3ee6b1e601e44077f4
+   *
    * @param game the game to save to a file
    * @return whether the game was successfully saved
    */
@@ -772,10 +801,11 @@ public boolean createGame() {
 
     //Show save file dialog
     File file = fileChooser.showSaveDialog(stage);
-    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
+    if (file != null && !file.getName().equals("easy.xml")
+        && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("File saved!");
         alert.setContentText("File successfully saved");
         alert.showAndWait();
@@ -787,7 +817,8 @@ public boolean createGame() {
     } else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Unable to save over default game files");
-      alert.setContentText("Unable to save over default game files. Please save using a different file name");
+      alert.setContentText("Unable to save over default game files. "
+          + "Please save using a different file name");
       alert.showAndWait();
       return false;
     }

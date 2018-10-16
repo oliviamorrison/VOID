@@ -38,7 +38,7 @@ public class GameworldTests {
   @BeforeEach
   public void setUp() throws XmlParser.ParseError {
 
-    game = XmlParser.parseGame(new File("data/gameworldTestData.xml"));
+    game = XmlParser.parseGame(new File("test_data/gameworldTestData.xml"));
 
     if (game != null) {
 
@@ -296,26 +296,22 @@ public class GameworldTests {
 
     // best case scenario
 
-    game.directTeleport(board[1][2], 8, 7);
+    game.directTeleport(board[1][2], 7, 8);
     player.addItem(new BoltCutter(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
     VendingMachine vendingMachine = (VendingMachine) tile.getChallenge();
-    vendingMachine.setDirection(Direction.EAST);
-    player.setDirection(Direction.EAST);
+    vendingMachine.setDirection(Direction.NORTH);
+    vendingMachine.setUnlocked(false);
+    player.setDirection(Direction.SOUTH);
 
     game.unlockVendingMachine();
     assertTrue(vendingMachine.isUnlocked());
 
     // challenge = null case
 
-    vendingMachine.setDirection(Direction.NORTH);
-    vendingMachine.setUnlocked(false);
-
-    game.unlockVendingMachine();
-    assertFalse(vendingMachine.isUnlocked());
-
     vendingMachine.setDirection(Direction.WEST);
+    vendingMachine.setUnlocked(false);
 
     game.unlockVendingMachine();
     assertFalse(vendingMachine.isUnlocked());
@@ -328,14 +324,14 @@ public class GameworldTests {
   @Test
   public void playerCanUseVendingMachine() {
 
-    game.directTeleport(board[1][2], 8, 7);
+    game.directTeleport(board[1][2], 7, 8);
     player.addItem(new Coin(-1, -1, "NORTH"));
 
     AccessibleTile tile = (AccessibleTile) board[1][2].getTile(8, 8);
     VendingMachine vendingMachine = (VendingMachine) tile.getChallenge();
-    vendingMachine.setDirection(Direction.EAST);
+    vendingMachine.setDirection(Direction.NORTH);
     vendingMachine.setUnlocked(true);
-    player.setDirection(Direction.EAST);
+    player.setDirection(Direction.SOUTH);
 
     game.useVendingMachine();
 
@@ -346,17 +342,10 @@ public class GameworldTests {
     assertFalse(player.getItem() instanceof Coin);
     assertTrue(player.getItem() instanceof Potion);
 
-    vendingMachine.setDirection(Direction.NORTH);
+    vendingMachine.setDirection(Direction.WEST);
 
     player.dropItem();
-    player.addItem(new Coin(-1, -1, "NORTH"));
-
-    game.useVendingMachine();
-
-    assertTrue(player.getItem() instanceof Coin);
-    assertFalse(player.getItem() instanceof Potion);
-
-    vendingMachine.setDirection(Direction.WEST);
+    player.addItem(new Coin(-1, -1, "EAST"));
 
     game.useVendingMachine();
 

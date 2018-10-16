@@ -62,9 +62,6 @@ import org.xml.sax.SAXException;
  */
 
 //TODO: UML Diagram
-//TODO: Add music
-//TODO: Take group pic
-//TODO: Pause health bar when menu is clicked
 
 public class XmlParser {
   private static Schema schema;
@@ -192,9 +189,9 @@ public class XmlParser {
   private static Element savePlayer(Player player, Document document) {
     Element playerElement = document.createElement("player");
     //Get position, oxygen and direction of player and add as attributes to player element
-    playerElement.setAttribute("row", player.getTile().getRow()+"");
-    playerElement.setAttribute("col", player.getTile().getCol()+"");
-    playerElement.setAttribute("oxygen", player.getOxygen()+"");
+    playerElement.setAttribute("row", player.getTile().getRow() + "");
+    playerElement.setAttribute("col", player.getTile().getCol() + "");
+    playerElement.setAttribute("oxygen", player.getOxygen() + "");
     playerElement.setAttribute("direction", player.getDirection().toString());
 
     //Add coordinates of the room the player is in
@@ -319,11 +316,22 @@ public class XmlParser {
     Element playerElement = (Element) playerNode;
 
     //Get the player position from its row and col attributes
+    if (playerElement.getAttribute("row").equals("")
+        || playerElement.getAttribute("col").equals("")) {
+      throw new ParseError("Player needs position attributes (row and col)");
+    }
     int row = parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
     //Get the player's health and the direction they are facing
+    if (playerElement.getAttribute("oxygen").equals("")) {
+      throw new ParseError("Player needs oxygen attribute");
+    }
     int oxygen = parseInt(playerElement.getAttribute("oxygen"));
+
+    if (playerElement.getAttribute("direction").equals("")) {
+      throw new ParseError("Player needs direction attribute");
+    }
     String direction = playerElement.getAttribute("direction");
 
     //Get the room in the board that the player is in
@@ -365,6 +373,10 @@ public class XmlParser {
       String token = items.item(i).getTextContent().trim();
       if (!token.equals("")) {
         Element elem = (Element) items.item(i);
+        if (elem.getAttribute("row").equals("")
+            || elem.getAttribute("col").equals("")) {
+          throw new ParseError("Item needs position attributes (row and col)");
+        }
         int row = parseInt(elem.getAttribute("row"));
         int col = parseInt(elem.getAttribute("col"));
         String direction = elem.getAttribute("direction");
