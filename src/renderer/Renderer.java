@@ -27,12 +27,15 @@ public class Renderer {
     //Challenges
     private final static String bombImage = "images/bomb";
     private final static String vendingMachineImage = "images/vending-machine";
+    private final static String alienImage = "images/alien";
 
     //Items
-    private final static String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
-    private final static String coinImage = "images/coin";
+    private final static String diffuserImage = "images/diffuser";//TODO: needs orientation
     private final static String boltCutterImage = "images/bolt-cutter";
-    private final static String beerImage = "images/beer2.png";
+    private final static String coinImage = "images/coin";
+    private final static String potionImage = "images/potion.png";
+    private final static String spaceshipImage = "images/spaceship";
+    private final static String oxygenTankImage = "images/oxygen-tank.png";
 
 
     private Player player;
@@ -97,11 +100,6 @@ public class Renderer {
             AccessibleTile AT = (AccessibleTile) tile;
             color = ACCESSIBLE_COLOUR;
             height = floorHeight;
-//            if(AT.hasItem()){
-//                color = Color.BLUE;
-//            } else if(AT.hasChallenge()){
-//                color = Color.RED;
-//            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
             color = INACCESSIBLE_COLOUR;
@@ -123,7 +121,6 @@ public class Renderer {
                 gameObject = getChallengeImage(AT);
             }
         }
-//Testing again again
         root.getChildren().addAll(poly.getPolygons());
         if(gameObject != null){
             root.getChildren().add(gameObject);
@@ -139,7 +136,13 @@ public class Renderer {
         ImageView itemImage = null;
         Point2D c = tile.getCenter();
         if(item instanceof Diffuser){
-            itemImage = getImage(diffuserImage);
+            String direction ="";
+            if(item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH){
+                direction = "1.png";
+            } else {
+                direction = "2.png";
+            }
+            itemImage = getImage(diffuserImage+direction);
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 22);
@@ -160,7 +163,17 @@ public class Renderer {
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 12);
         } else if(item instanceof Potion){
-            itemImage = getImage((beerImage));
+            itemImage = getImage((potionImage));
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 5);
+            itemImage.setY(c.getY() - 25);
+        } else if(item instanceof OxygenTank){
+            itemImage = getImage((oxygenTankImage));
+            itemImage.setFitHeight(30);
+            itemImage.setX(c.getX() - 5);
+            itemImage.setY(c.getY() - 25);
+        } else if(item instanceof SpaceShip){
+            itemImage = getImage((spaceshipImage+ getObjectDirection(item.getDirection())));
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 5);
             itemImage.setY(c.getY() - 25);
@@ -183,7 +196,7 @@ public class Renderer {
             itemImage.setX(c.getX() - 30);
             itemImage.setY(c.getY() - 65);
         } else if(challenge instanceof Alien){
-            itemImage = getImage((vendingMachineImage+ getObjectDirection(challenge.getDirection())));
+            itemImage = getImage((alienImage+ getObjectDirection(challenge.getDirection())));
             itemImage.setFitHeight(80);
             itemImage.setX(c.getX() - 30);
             itemImage.setY(c.getY() - 65);
@@ -199,9 +212,9 @@ public class Renderer {
             case SOUTH:
                 return "S.png";
             case WEST:
-                return "W.png";
-            case EAST:
                 return "E.png";
+            case EAST:
+                return "W.png";
             default:
                 return null;
         }
