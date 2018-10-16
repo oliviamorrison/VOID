@@ -9,8 +9,15 @@ import static gameworld.Direction.directionFromString;
  */
 public class Player {
 
+  /**
+   * Boost the player's oxygen level.
+   */
   private static final int OXYGEN_BOOST = 20;
-  private static final int MAX_OXYGEN = 140;
+
+  /**
+   * Maximum level for player's oxygen.
+   */
+  private static final int MAX_OXYGEN = 100;
 
   private AccessibleTile tile;
   private Item item = null;
