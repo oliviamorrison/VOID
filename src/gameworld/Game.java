@@ -256,14 +256,8 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
-      if (vmDirection == Direction.EAST || vmDirection == Direction.WEST) {
-        if (!vmDirection.equals(direction)) {
-          return "";
-        }
-      } else {
-        if (!direction.getOppositeDirection().equals(vmDirection)) {
-          return "";
-        }
+      if (!direction.getOppositeDirection().equals(vmDirection)) {
+        return "";
       }
 
       if (!vendingMachine.isUnlocked()) {
@@ -296,14 +290,8 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
-      if (vmDirection == Direction.EAST || vmDirection == Direction.WEST) {
-        if (!vmDirection.equals(direction)) {
-          return "";
-        }
-      } else {
-        if (!direction.getOppositeDirection().equals(vmDirection)) {
-          return "";
-        }
+      if (!direction.getOppositeDirection().equals(vmDirection)) {
+        return "";
       }
 
       if (vendingMachine.isUnlocked()) {

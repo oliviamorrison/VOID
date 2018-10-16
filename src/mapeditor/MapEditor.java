@@ -3,6 +3,7 @@ package mapeditor;
 import static application.GUI.configureFileChooser;
 
 import application.GUI;
+
 import gameworld.AccessibleTile;
 import gameworld.Alien;
 import gameworld.BoltCutter;
@@ -40,7 +41,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import persistence.XmlParser;
-
 
 /**
  * MapEditor class displays a stand alone application allowing one to
@@ -91,18 +91,16 @@ public class MapEditor extends Application {
   }
 
   /**
-   * This method returns the current board grid. Used for testing purposes.
-   *
-   * @return GridPane of the boardGrid
+   * A method that returns the board.
+   * @return the boardGrid
    */
   public GridPane getBoardGrid() {
     return boardGrid;
   }
 
   /**
-   * This method returns the current item grid. Used for testing purposes.
-   *
-   * @return GridPane of the itemGrid
+   * A method that returns the item spaces.
+   * @return the item grid
    */
   public GridPane getItemGrid() {
     return itemGrid;
@@ -176,6 +174,7 @@ public class MapEditor extends Application {
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
     Button makeGame = new Button("Make Game");
+
     final Button backToMain = new Button("Back to game");
 
     pickupButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -266,9 +265,8 @@ public class MapEditor extends Application {
   }
 
   /**
-   * This method returns whether the item spaces is empty or not.
-   *
-   * @return boolean of if there are items in the item grid
+   * A method check if there are not items in the item Grid.
+   * @return if there are no items in the item grid
    */
   public boolean noItemsInItemGrid() {
     for (int i = 0; i < 2; i++) {
@@ -656,12 +654,12 @@ public class MapEditor extends Application {
   }
 
   /**
-   * This method returns the node at the given row and column of the given gridPane.
+   * A method to return the node of the gridPane at the given row and column.
    *
-   * @param row row which node will be at
-   * @param column col which node will be at
-   * @param gridPane grid to find node in
-   * @return Node which is at row and col
+   * @param row given row to find
+   * @param column given column to find
+   * @param gridPane given GridPane to find node in
+   * @return the node at the row and col index
    */
   public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
     Node result = null;
@@ -709,7 +707,8 @@ public class MapEditor extends Application {
               if (t instanceof TilePane) {
 
                 TilePane tilePane = (TilePane) t;
-                if (tilePane.isAccessible()) {
+                if (tilePane.isAccessible() || tilePane.hasMapItem()
+                    && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
                   AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if (mapItem != null) {
@@ -739,7 +738,7 @@ public class MapEditor extends Application {
                         challenge = new Bomb(k, l, "NORTH");
                         break;
                       case "vending-machine.png":
-                        challenge = new VendingMachine(k, l, "WEST");
+                        challenge = new VendingMachine(k, l, "SOUTH");
                         break;
                       case "player.png":
                         player = new Player(room, tile, 100, "NORTH");
@@ -751,7 +750,6 @@ public class MapEditor extends Application {
                     if (mapItem.getImageName() != null) {
                       tile.setItem(item);
                       tile.setChallenge(challenge);
-                      System.out.println(mapItem.getImageName());
                     }
 
                     room.setTile(tile, k, l);
@@ -799,7 +797,7 @@ public class MapEditor extends Application {
         && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("File saved!");
         alert.setContentText("File successfully saved");
         alert.showAndWait();

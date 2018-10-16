@@ -346,6 +346,20 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     newGame.setOnAction(Event -> window.setScene(levelsScene));
 
+    editMap.setOnAction(e -> {
+      try {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Are you sure?");
+        alert.setContentText("Proceed to edit map?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+          new MapEditor().start(stage);
+        }
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
+    });
+
     loadGame.setOnAction(Event -> {
       if(loadFile(stage)) {
         window.setScene(createGameScene(stage));

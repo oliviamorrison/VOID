@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<game col="3" row="3">
+    <room col="0" row="0">
+        <item col="5" direction="NORTH" row="6">Diffuser</item>
+        <portal>NORTH</portal>
+    </room>
+    <room col="1" row="0">
+        <challenge col="7" direction="NORTH" row="4" state="false">VendingMachine</challenge>
+    </room>
+    <room col="2" row="0"/>
+    <room col="0" row="1">
+        <challenge col="2" direction="NORTH" row="2" state="false">Alien</challenge>
+    </room>
+    <room col="1" row="1"/>
+    <room col="2" row="1"/>
+    <room col="0" row="2">
+        <challenge col="3" direction="NORTH" row="6" state="false">Bomb</challenge>
+    </room>
+    <room col="1" row="2"/>
+    <room col="2" row="2"/>
+    <player col="5" direction="NORTH" oxygen="100" row="5">
+        <roomRow>2</roomRow>
+        <roomCol>2</roomCol>
+        <item col="-1" direction="NORTH" row="-1">Diffuser</item>
+    </player>
+</game>
