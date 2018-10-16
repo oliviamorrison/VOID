@@ -26,12 +26,12 @@ public class SpaceShip extends Item {
 
   @Override
   public String getDescription() {
-    return "It's an amazing spaceship. It'll help me to escape.";
+    return "It's an amazing spaceship. I can go explore space!";
   }
 
   @Override
   public String toString() {
-    return "Spaceship";
+    return "SpaceShip";
   }
 
 }

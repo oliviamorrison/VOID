@@ -19,29 +19,27 @@ public class Renderer {
     private final static double doorHeight = 0;
 
     private final static double playerHeight = 60;
-    private final String NORTH = "images/north.png";
-    private final String SOUTH = "images/south.png";
-    private final String WEST = "images/west.png";
-    private final String EAST = "images/east.png";
+    private final static String NORTH = "images/north.png";
+    private final static String SOUTH = "images/south.png";
+    private final static String WEST = "images/west.png";
+    private final static String EAST = "images/east.png";
 
     //Challenges
-    private final String bombImage = "images/bomb";
-    private final String vendingMachineImage = "images/vending-machine";
+    private final static String bombImage = "images/bomb";
+    private final static String vendingMachineImage = "images/vending-machine";
 
     //Items
-    private final String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
-    private final String coinImage = "images/coin";
-    private final String boltCutterImage = "images/bolt-cutter";
-    private final String beerImage = "images/beer2.png";
+    private final static String diffuserImage = "images/diffuser2.png";//TODO: needs orientation
+    private final static String coinImage = "images/coin";
+    private final static String boltCutterImage = "images/bolt-cutter";
+    private final static String beerImage = "images/beer2.png";
 
 
-    private Game game;
-    private static Player player;
-    private static Room currentRoom;
-    private static Group root;
+    private Player player;
+    private Room currentRoom;
+    private Group root;
 
     public Renderer(Game game) {
-        this.game = game;
         player = game.getPlayer();
         currentRoom = player.getRoom();
         root = new Group();
@@ -99,11 +97,11 @@ public class Renderer {
             AccessibleTile AT = (AccessibleTile) tile;
             color = ACCESSIBLE_COLOUR;
             height = floorHeight;
-            if(AT.hasItem()){
-                color = Color.BLUE;
-            } else if(AT.hasChallenge()){
-                color = Color.RED;
-            }
+//            if(AT.hasItem()){
+//                color = Color.BLUE;
+//            } else if(AT.hasChallenge()){
+//                color = Color.RED;
+//            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
             color = INACCESSIBLE_COLOUR;
@@ -125,7 +123,7 @@ public class Renderer {
                 gameObject = getChallengeImage(AT);
             }
         }
-
+//Testing again
         root.getChildren().addAll(poly.getPolygons());
         if(gameObject != null){
             root.getChildren().add(gameObject);

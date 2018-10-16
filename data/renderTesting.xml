@@ -3,12 +3,14 @@
     <room row="0" col="0">
         <portal>EAST</portal>
         <item row="3" col="2" direction="NORTH">Diffuser</item>
-        <challenge row="1" col="5" state="false" direction="NORTH">Bomb</challenge>
-        <challenge row="1" col="3" state="false" direction="SOUTH">VendingMachine</challenge>
         <item row="3" col="3" direction="NORTH">BoltCutter</item>
-        <item row="4" col="4" direction="NORTH">OxygenTank</item>
+        <item row="3" col="4" direction="NORTH">OxygenTank</item>
         <item row="3" col="5" direction="NORTH">Coin</item>
-        <item row="4" col="6" direction="NORTH">SpaceShip</item>
+        <item row="3" col="6" direction="NORTH">SpaceShip</item>
+        <item row="3" col="7" direction="NORTH">Potion</item>
+        <challenge row="1" col="3" state="false" direction="SOUTH">VendingMachine</challenge>
+        <challenge row="1" col="4" state="false" direction="SOUTH">Alien</challenge>
+        <challenge row="1" col="5" state="false" direction="NORTH">Bomb</challenge>
     </room>
     <room row="0" col="1">
         <portal>WEST</portal>

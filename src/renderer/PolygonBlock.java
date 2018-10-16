@@ -13,9 +13,9 @@ public class PolygonBlock {
     private double z;
     private double center = 350;
 
-    private final double tileWidth = 64;
-    private final double tileHeight = 32;
-    private final double strokeWidth = 1;
+    private final static double tileWidth = 64;
+    private final static double tileHeight = 32;
+    private final static double strokeWidth = 1;
     private final Color strokeColor = Color.rgb(80, 80, 80);
 
     private List<Polygon> polygons;
