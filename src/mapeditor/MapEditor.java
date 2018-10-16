@@ -92,6 +92,7 @@ public class MapEditor extends Application {
 
   /**
    * A method that returns the board.
+   *
    * @return the boardGrid
    */
   public GridPane getBoardGrid() {
@@ -100,6 +101,7 @@ public class MapEditor extends Application {
 
   /**
    * A method that returns the item spaces.
+   *
    * @return the item grid
    */
   public GridPane getItemGrid() {
@@ -266,18 +268,19 @@ public class MapEditor extends Application {
 
   /**
    * A method check if there are not items in the item Grid.
+   *
    * @return if there are no items in the item grid
    */
   public boolean noItemsInItemGrid() {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 4; j++) {
         Node n = getNodeByRowColumnIndex(i, j, itemGrid);
-        assert(n instanceof ItemSpace);
+        if (n instanceof ItemSpace) {
           ItemSpace itemSpace = (ItemSpace) n;
           if (itemSpace.hasItem()) {
             return false;
           }
-        
+        }
       }
     }
 
@@ -656,8 +659,8 @@ public class MapEditor extends Application {
   /**
    * A method to return the node of the gridPane at the given row and column.
    *
-   * @param row given row to find
-   * @param column given column to find
+   * @param row      given row to find
+   * @param column   given column to find
    * @param gridPane given GridPane to find node in
    * @return the node at the row and col index
    */
@@ -785,25 +788,25 @@ public class MapEditor extends Application {
    * @return whether the game was successfully saved
    */
   public boolean saveFile(Game game, File test) {
-	File file = null;
-	if (test != null) {
-		file = test;
-	} else {
-		FileChooser fileChooser = new FileChooser();
-		configureFileChooser(fileChooser);
-		//Show save file dialog
-	    file = fileChooser.showSaveDialog(stage);
-	}
+    File file = null;
+    if (test != null) {
+      file = test;
+    } else {
+      FileChooser fileChooser = new FileChooser();
+      configureFileChooser(fileChooser);
+      //Show save file dialog
+      file = fileChooser.showSaveDialog(stage);
+    }
 
     if (file != null && !file.getName().equals("easy.xml")
         && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
         if (file != test) {
-	        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	        alert.setTitle("File saved!");
-	        alert.setContentText("File successfully saved");
-	        alert.showAndWait();
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("File saved!");
+          alert.setContentText("File successfully saved");
+          alert.showAndWait();
         }
         return true;
       } catch (ParserConfigurationException | TransformerException e) {
@@ -811,13 +814,13 @@ public class MapEditor extends Application {
         return false;
       }
     } else {
-    	  if (file != test) {	
-	      Alert alert = new Alert(Alert.AlertType.ERROR);
-	      alert.setTitle("Unable to save over default game files");
-	      alert.setContentText("Unable to save over default game files. "
-	          + "Please save using a different file name");
-	      alert.showAndWait();
-    	  }
+      if (file != test) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Unable to save over default game files");
+        alert.setContentText("Unable to save over default game files. "
+            + "Please save using a different file name");
+        alert.showAndWait();
+      }
       return false;
     }
   }
