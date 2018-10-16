@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class Room {
 
+  /**
+   * Width/Height of the room.
+   */
   public static final int ROOMSIZE = 10;
 
   private int row;
@@ -22,8 +25,8 @@ public class Room {
   /**
    * This constructor creates a room.
    *
-   * @param row the row value of the room within the game board
-   * @param col the column value of the room within the game board
+   * @param row   the row value of the room within the game board
+   * @param col   the column value of the room within the game board
    * @param tiles the tiles within the room
    * @param doors a list of doors that are within the room
    */
@@ -76,8 +79,8 @@ public class Room {
    * the current tile.
    *
    * @param currentTile the starting tile
-   * @param dx the change in the row value
-   * @param dy the change in the column value
+   * @param dx          the change in the row value
+   * @param dy          the change in the column value
    * @return the next tile
    */
   public AccessibleTile findNextTile(Tile currentTile, int dx, int dy) {
@@ -115,10 +118,10 @@ public class Room {
   }
 
   /**
-   * This method iterates through the tiles array to find the
+   * This method iterates through the tiles array to find the tile.
    *
-   * @param tile
-   * @return
+   * @param tile the tile being searched for
+   * @return the row, col value for the tile
    */
   public int[] getTileCoordinates(Tile tile) {
 
@@ -136,6 +139,14 @@ public class Room {
 
   }
 
+  /**
+   * This method finds destination tile from a starting tile and
+   * travelling in a particular direction.
+   *
+   * @param tile      the starting tile
+   * @param direction the direction to travel from the start tile
+   * @return the destination tile
+   */
   public Tile findTile(AccessibleTile tile, Direction direction) {
 
     int[] coordinates = getTileCoordinates(tile);
@@ -163,6 +174,7 @@ public class Room {
 
     }
 
+    // stay within bounds
     if (row < 0 || col < 0 || row >= 10 || col >= 10) {
       return null;
     }
@@ -171,6 +183,13 @@ public class Room {
 
   }
 
+  /**
+   * This method finds the adjacent challenge to the tile.
+   *
+   * @param currentTile the start tile
+   * @param direction   the direction to search from the start tile
+   * @return the challenge on the adjacent tile
+   */
   public ChallengeItem getAdjacentChallenge(AccessibleTile currentTile, Direction direction) {
 
     Tile adjacentTile = findTile(currentTile, direction);
@@ -189,6 +208,12 @@ public class Room {
 
   }
 
+  /**
+   * This method finds the portal of a room.
+   *
+   * @param direction the direction of the portal within the room
+   * @return the portal in the direction
+   */
   public Portal getDestinationPortal(Direction direction) {
 
     for (Portal portal : portals) {
@@ -203,6 +228,9 @@ public class Room {
 
   }
 
+  /**
+   * This method rotates the room clockwise.
+   */
   public void rotateRoomClockwise() {
 
     int x = ROOMSIZE / 2;
@@ -220,9 +248,13 @@ public class Room {
       }
     }
 
+    // rotate the direction of each object anticlockwise
     rotateObjects(false);
   }
 
+  /**
+   * This method rotates the room anticlockwise.
+   */
   public void rotateRoomAnticlockwise() {
 
     Tile[][] tempArray = new Tile[ROOMSIZE][ROOMSIZE];
@@ -234,10 +266,17 @@ public class Room {
     }
 
     this.tiles = tempArray;
+
+    // rotate the direction of each object clockwise
     rotateObjects(true);
 
   }
 
+  /**
+   * This method rotates the direction of each object.
+   *
+   * @param clockwise whether items should be rotated clockwise or anticlockwise
+   */
   public void rotateObjects(boolean clockwise) {
 
     for (int row = 0; row < ROOMSIZE; row++) {
@@ -264,30 +303,69 @@ public class Room {
 
   }
 
+  /**
+   * This method adds a portal to the list of portals.
+   *
+   * @param portal the new value of the portal
+   */
   public void addPortal(Portal portal) {
     portals.add(portal);
   }
 
+  /**
+   * This method removes a portal from the list of portals.
+   *
+   * @param portal the value of the portal to remove
+   */
   public void removePortal(Portal portal) {
     portals.remove(portal);
   }
 
+  /**
+   * This method is a getter for the row value.
+   *
+   * @return the row value of the room within the board
+   */
   public int getRow() {
     return row;
   }
 
+  /**
+   * This method is a getter for the column value.
+   *
+   * @return the column value of the room within the board
+   */
   public int getCol() {
     return col;
   }
 
+  /**
+   * This method is a getter for a tile within the room.
+   *
+   * @param row the row value of the tile
+   * @param col the column value of the tile
+   * @return the resulting tile
+   */
   public Tile getTile(int row, int col) {
     return tiles[row][col];
   }
 
+  /**
+   * This method is a getter for a tile within the room.
+   *
+   * @param tile the new tile value to set the tile to
+   * @param row  the row value of the tile
+   * @param col  the column value of the tile
+   */
   public void setTile(Tile tile, int row, int col) {
     tiles[row][col] = tile;
   }
 
+  /**
+   * This method is a getter for the portals.
+   *
+   * @return a list of portals
+   */
   public List<String> getDoors() {
     return doors;
   }
