@@ -133,6 +133,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         System.exit(0);
       }
       currentGame.checkForSpaceship();
+      currentGame.checkForOxygenTank();
     }
 
     renderer.draw();
@@ -168,7 +169,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView newGameIcon = new ImageView(newImage);
     newGame.setGraphic(newGameIcon);
-    newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
+      newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
 
     // load
     Button load = new Button();
