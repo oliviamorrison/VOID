@@ -15,7 +15,7 @@ public class Renderer {
     private final static Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
     private final static Color DTColor = Color.rgb(161, 176, 201);
     private final static double floorHeight = 0;
-    private final static double wallHeight = 2;
+    private final static double wallHeight = 0;
     private final static double doorHeight = 0;
 
     private final static double playerHeight = 60;
@@ -97,11 +97,11 @@ public class Renderer {
             AccessibleTile AT = (AccessibleTile) tile;
             color = ACCESSIBLE_COLOUR;
             height = floorHeight;
-            if(AT.hasItem()){
-                color = Color.BLUE;
-            } else if(AT.hasChallenge()){
-                color = Color.RED;
-            }
+//            if(AT.hasItem()){
+//                color = Color.BLUE;
+//            } else if(AT.hasChallenge()){
+//                color = Color.RED;
+//            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
             color = INACCESSIBLE_COLOUR;
