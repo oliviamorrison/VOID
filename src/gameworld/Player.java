@@ -5,7 +5,7 @@ import static gameworld.Direction.directionFromString;
 public class Player {
 
   private static final int HEALTH_BOOST = 20;
-  private static final int MAX_HEALTH = 100;
+  private static final int MAX_HEALTH = 140;
 
   private AccessibleTile tile;
   private Item item = null;

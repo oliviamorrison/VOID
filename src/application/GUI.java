@@ -34,7 +34,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-//TODO fix health bar with a longer length
 //TODO win/lose dialog
 
 public class GUI extends Application implements EventHandler<KeyEvent>{
@@ -52,6 +51,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Stage window;
   private Scene startScene, gameScene, levelsScene;
   private ProgressBar pBar;
+  private Boolean pause = false;
 
   // Game components
   private Renderer renderer;
@@ -111,14 +111,14 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         str = currentGame.unlockVendingMachine();
         break;
       case V:
-        currentGame.useVendingMachine();
+        str = currentGame.useVendingMachine();
         break;
       case SPACE:
         currentGame.teleport();
         renderer.newRoom();
         break;
       case B:
-        currentGame.bribeGuard();
+        str = currentGame.bribeGuard();
         break;
       default:
 
@@ -331,6 +331,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     // help
     Label help = new Label("Help");
     help.setOnMouseClicked(mouseEvent -> {
+      pause = true;
       displayHelp();
     });
     Menu helpMenu = new Menu("", help);
@@ -558,9 +559,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * Dec
+   * Updates the length of the health bar based on time. Each second represents
+   * a drop in the health bar.
    * @param health the players health
-   * @return
+   * @return a new task to keep track of time passing
    */
   private Task oxygenCounter(int health){
     return new Task() {
@@ -569,7 +571,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
           Thread.sleep(1000);
           updateProgress(currentGame.getPlayer().getHealth(), health);
-          currentGame.getPlayer().loseHealth();
+          if (!pause) currentGame.getPlayer().loseHealth();
         }
        //END GAME
         return true;
@@ -786,6 +788,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       options.setEffect(null);
       screen.setEffect(null);
       helpDialog.hide();
+      pause = false;
     });
 
     helpDialog.show();
