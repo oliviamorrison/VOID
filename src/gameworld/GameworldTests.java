@@ -104,10 +104,8 @@ public class GameworldTests {
     game.pickUpItem();
     game.dropItem();
 
-    AccessibleTile startTile = player.getTile();
     AccessibleTile nextTile = player.getTile();
 
-    assertNotEquals(startTile, nextTile);
     assertEquals(nextTile, game.getCurrentRoom().getTile(6, 5));
     assertTrue(nextTile.hasPlayer());
 
@@ -644,6 +642,7 @@ public class GameworldTests {
 
   /**
    * This method tests that initial rotation works.
+   *
    * @throws XmlParser.ParseError xml parser error
    */
   @Test
