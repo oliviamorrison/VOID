@@ -14,24 +14,37 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import persistence.XMLParser;
+import persistence.XmlParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 
+/**
+ * MapEditor class displays a stand alone application allowing one to
+ * create and edit map files. This should display the map being edited in a top-down graphical
+ * fashion, allowing the user to add and remove items.
+ *
+ * @author oliviamorrison
+ *
+ */
 public class MapEditor extends Application {
 
-  private final int boardSize = 800;
-  private final int itemWidth = 200;
-  private final int itemHeight = 800;
+  private final static int boardSize = 800;
+  private final static int itemWidth = 200;
+  private final static int itemHeight = 800;
 
-  private TilePane selectedTilePane;
-  private ItemSpace selectedItem;
+  /**
+ * The tilePane which is currently selected.
+ */
+public TilePane selectedTilePane;
+
+/**
+ * The ItemSpace which is currently selected.
+ */
+public ItemSpace selectedItem;
 
   private GridPane boardGrid;
   private GridPane mainPane;
@@ -57,14 +70,26 @@ public class MapEditor extends Application {
     primaryStage.show();
   }
 
+  /**
+   * This method returns the current board grid. Used for testing purposes.
+ * @return GridPane of the boardGrid
+ */
   public GridPane getBoardGrid() {
     return boardGrid;
   }
 
+  /**
+   * This method returns the current item grid. Used for testing purposes.
+ * @return GridPane of the itemGrid
+ */
   public GridPane getItemGrid() {
     return itemGrid;
   }
 
+  /**
+ * This method sets up the board with rooms in it and sets the preferable size.
+ *
+ */
   public void setUp() {
 
     // Initialize the grid
@@ -77,7 +102,13 @@ public class MapEditor extends Application {
   }
 
 
-  public GridPane initItemSpaces(boolean test) {
+  /**
+   * This method initialized item spaces on the right side of the panel.
+   *
+ * @param test boolean which represents if a test is calling the method
+ * @return the current state of the item spaces GridPane
+ */
+public GridPane initItemSpaces(boolean test) {
     GridPane items = new GridPane();
 
     int rows = 2;
@@ -88,7 +119,7 @@ public class MapEditor extends Application {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        MapEditor.ItemSpace tile = new MapEditor.ItemSpace(i, j);
+        ItemSpace tile = new ItemSpace(i, j,this);
 
         // Set each 'TilePane' the width and height
         tile.setPrefSize(itemWidth, itemHeight);
@@ -104,7 +135,7 @@ public class MapEditor extends Application {
     }
 
     if (!test) {
-      items = setOptions(items);
+      items = setOptions(items, false);
     } else {
       itemGrid = items;
     }
@@ -112,7 +143,14 @@ public class MapEditor extends Application {
     return items;
   }
 
-  public GridPane setOptions(GridPane items ) {
+  /**
+   * This method adds the option buttons on the end of the item spaces.
+   *
+ * @param items GridPane of the current state of the items gridPane
+ * @param test boolean which represents if a test is calling the method
+ * @return GridPane of the itemSpaces plus the buttons
+ */
+public GridPane setOptions(GridPane items, boolean test ) {
 
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
@@ -176,6 +214,7 @@ public class MapEditor extends Application {
       if (noItemsInItemGrid()) {
         createGame();
       } else {
+    	  	//if there are still items in the item spaces panel
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error");
         alert.setHeaderText("You cannot make a game until all items are placed on the board");
@@ -184,14 +223,21 @@ public class MapEditor extends Application {
       }
     });
 
-    items.add(pickupButton,0,4);
-    items.add(dropButton,1,4);
-    items.add(makeGame, 2,4);
+    if(!test) {
+    		items.add(pickupButton,0,4);
+    		items.add(dropButton,1,4);
+    		items.add(makeGame, 2,4);
+    }
 
     return items;
   }
 
-  public boolean noItemsInItemGrid() {
+  /**
+   * This method returns whether the item spaces is empty or not.
+   *
+ * @return boolean of if there are items in the item grid
+ */
+public boolean noItemsInItemGrid() {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 4; j++) {
         Node n = getNodeByRowColumnIndex(i, j, itemGrid);
@@ -208,12 +254,24 @@ public class MapEditor extends Application {
 
   }
 
-  public boolean isInAntidoteRoom(TilePane find) {
+  /**
+   *  This method checks if tile which is passed is in the same room as the spaceship.
+   *
+ * @param find TilePane to check if the spaceship is in this room
+ * @return boolean which represents if the spaceship is in the room
+ */
+public boolean isInAntidoteRoom(TilePane find) {
     TilePane t = findItemInBoard("antidote.png");
     return t.getRoom() == find.getRoom();
   }
 
-  private TilePane findItemInBoard(String name) {
+  /**
+   * This method finds a given item in the board and returns which tile it is on.
+   *
+ * @param name a string which represents the name of the item which is being looked for.
+ * @return TilePane the tile which the item is on.
+ */
+private TilePane findItemInBoard(String name) {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         Node n = getNodeByRowColumnIndex(i,j,boardGrid);
@@ -247,7 +305,11 @@ public class MapEditor extends Application {
     return null;
   }
 
-  private GridPane initBoard() {
+  /**
+   * This method initializes the board to have 9 rooms.
+ * @return GridPane the full initialized board
+ */
+private GridPane initBoard() {
     GridPane board = new GridPane();
 
     int roomNum = 3;
@@ -277,8 +339,11 @@ public class MapEditor extends Application {
   }
 
 
-  //hard coded items
-  public void initaliseItems() {
+
+  /**
+ * This method sets all of the items in their default tiles. Therefore initializing the items.
+ */
+public void initaliseItems() {
 
     //room 1
     Node node = getNodeByRowColumnIndex(0,0, boardGrid);
@@ -412,15 +477,26 @@ public class MapEditor extends Application {
 
   }
 
-  private GridPane initNullRoom() {
+  /**
+   * This method initializes a null room which does not have tiles in it.
+ * @return GridPane a null room.
+ */
+private GridPane initNullRoom() {
     GridPane room = new GridPane();
-    int roomNum = 3;
 
     room.setStyle("-fx-background-color: gray");
     return room;
   }
 
-  private GridPane initRoom(int row, int col) {
+  /**
+   * This method creates a GridPane which initializes all of the rooms with
+   * 100 tiles in each room.
+   *
+ * @param row
+ * @param col
+ * @return GridPane the grid of all tiles in the room
+ */
+private GridPane initRoom(int row, int col) {
     GridPane room = new GridPane();
 
 
@@ -477,7 +553,7 @@ public class MapEditor extends Application {
         }
 
 
-        TilePane tilePane = new TilePane(accessible, room, door, direction, challenge);
+        TilePane tilePane = new TilePane(accessible, room, door, direction, challenge, this);
         // Set each 'TilePane' the width and height
         tilePane.setPrefSize(tileWidth, tileHeight);
 
@@ -504,7 +580,12 @@ public class MapEditor extends Application {
     return room;
   }
 
-  public ItemSpace findFirstEmptyItem() {
+  /**
+   * This method finds and returns the first empty ItemSpace.
+   *
+ * @return ItemSpace
+ */
+public ItemSpace findFirstEmptyItem() {
     ObservableList<Node> children = itemGrid.getChildren();
 
     for (Node node : children) {
@@ -519,7 +600,13 @@ public class MapEditor extends Application {
     return null;
   }
 
-  public TilePane findFirstEmptyTile(GridPane room) {
+  /**
+   * This method finds and returns the first empty tile in a given room.
+   *
+ * @param room
+ * @return TilePane
+ */
+public TilePane findFirstEmptyTile(GridPane room) {
     ObservableList<Node> children = room.getChildren();
 
     for (Node node : children) {
@@ -534,7 +621,15 @@ public class MapEditor extends Application {
     return null;
   }
 
-  public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+  /**
+   * This method returns the node at the given row and column of the given gridPane.
+   *
+ * @param row
+ * @param column
+ * @param gridPane
+ * @return Node
+ */
+public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
     Node result = null;
     ObservableList<Node> childrens = gridPane.getChildren();
 
@@ -548,140 +643,13 @@ public class MapEditor extends Application {
     return result;
   }
 
-  class TilePane extends Pane {
-    private MapItem mapItem;
-    private ImageView imageView;
-    private boolean accessible;
-    private GridPane room;
-    private boolean door;
-    private String direction;
-    private boolean challenge;
-
-    public TilePane(boolean a, GridPane r, boolean d, String dir, boolean c) {
-      imageView = new ImageView();
-      accessible = a;
-      room = r;
-      door = d;
-      direction = dir;
-      challenge = c;
-
-      setOnMouseClicked(e -> {
-        if (accessible && !challenge) {
-          if (selectedTilePane != null) {
-            selectedTilePane.setStyle("-fx-padding: 0;"
-                    + "-fx-border-style: solid inside;"
-                    + "-fx-border-width: 0.5;"
-                    + "-fx-border-color: black;");
-          }
-
-          selectedTilePane = this;
-          this.setStyle("-fx-padding: 0;"
-                  + "-fx-border-style: solid inside;"
-                  + "-fx-border-width: 2;"
-                  + "-fx-border-color: red;");
-        }
-      });
-
-    }
-
-    public String getDirection() {
-      return direction;
-    }
-
-    public boolean isDoor() {
-      return door;
-    }
-
-    public GridPane getRoom() {
-      return room;
-    }
-
-    public boolean isAccessible() {
-      return accessible;
-    }
-
-    public void setAccessible(boolean b) {
-      accessible = b;
-    }
-
-    public void resetImageView() {
-      this.getChildren().remove(imageView);
-      imageView = new ImageView();
-    }
-    
-    public ImageView getImageView() {
-    		return imageView;
-    }
-
-    public MapItem getMapItem() {
-      return mapItem;
-    }
-
-    public boolean hasMapItem() {
-      return mapItem != null;
-    }
-
-    public void setMapItem(MapItem mapItem) {
-      this.mapItem = mapItem;
-
-      if (mapItem != null) {
-        imageView = new ImageView(mapItem.getImage());
-        this.getChildren().add(imageView);
-      }
-    }
-  }
-
-  class ItemSpace extends Pane {
-    private int positionX;
-    private int positionY;
-    private MapItem mapItem;
-    private ImageView imageView;
-
-    public ItemSpace(int x, int y) {
-      positionX = x;
-      positionY = y;
-      imageView = new ImageView();
-      setOnMouseClicked(e -> {
-        if (selectedItem != null) {
-          selectedItem.setStyle("-fx-padding: 0;"
-              + "-fx-border-style: solid inside;"
-              + "-fx-border-width: 0.5;"
-              + "-fx-border-color: black;");
-        }
-
-        selectedItem = this;
-        this.setStyle("-fx-padding: 0;"
-            + "-fx-border-style: solid inside;"
-            + "-fx-border-width: 2;"
-            + "-fx-border-color: red;");
-      });
-    }
-
-    public MapItem getMapItem() {
-      return mapItem;
-    }
-
-    public void resetImageView() {
-      this.getChildren().remove(imageView);
-      imageView = new ImageView();
-    }
-
-    public void setMapItem(MapItem mapItem) {
-      this.mapItem = mapItem;
-
-      if (mapItem != null) {
-        imageView = new ImageView(mapItem.getImage());
-
-        this.getChildren().add(imageView);
-      }
-    }
-
-    public boolean hasItem() {
-      return mapItem != null;
-    }
-  }
-
-  public boolean createGame() {
+  /**
+   * This method creates a game from the current state of the board and creates an XML file
+   * from that game to be able to run from the application window.
+   *
+ * @return boolean to check if create game was successfully loaded.
+ */
+public boolean createGame() {
     Room[][] board = new Room[3][3];
     Player player = null;
 
@@ -775,7 +743,7 @@ public class MapEditor extends Application {
     Game game = new Game(board, player);
 
     try {
-      XMLParser.saveFile(new File("data/testMapEditor.xml"), game);
+      XmlParser.saveFile(new File("data/testMapEditor.xml"), game);
       return true;
     } catch (ParserConfigurationException | TransformerException e) {
       e.printStackTrace();
