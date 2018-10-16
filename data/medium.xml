@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<game row="3" col="3" direction="NORTH">
+<game row="3" col="3" initDirection ="NORTH" direction="NORTH">
     <room row="0" col="0">
         <portal>EAST</portal>
         <item row="4" col="3" direction="EAST">Diffuser</item>

@@ -75,7 +75,7 @@ public class ParsingTests {
 
     player.addItem(new Diffuser(-1,-1, "NORTH"));
 
-    Game game = new Game(board, player, "NORTH");
+    Game game = new Game(board, player, "NORTH", "NORTH");
 
     File testFile = new File("test_data/testSave.xml");
     XmlParser.saveFile(new File("test_data/testSave.xml"), game);

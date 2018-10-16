@@ -88,6 +88,7 @@ public class XmlParser {
     root.setAttribute("row", board.length + "");
     root.setAttribute("col", board[0].length + "");
     root.setAttribute("direction", game.getDirection().toString());
+    root.setAttribute("initDirection", game.getInitialDirection().toString());
     document.appendChild(root);
 
     //add rooms to XML file
@@ -255,7 +256,11 @@ public class XmlParser {
       Node playerNode = doc.getElementsByTagName("player").item(0);
       Player player = parsePlayer(playerNode, board);
 
-      return new Game(board, player, doc.getDocumentElement().getAttribute("direction"));
+      //parse directions
+      String dir = doc.getDocumentElement().getAttribute("direction");
+      String initDir = doc.getDocumentElement().getAttribute("initDirection");
+
+      return new Game(board, player, initDir, dir);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new ParseError("Invalid XML File!");
     }
