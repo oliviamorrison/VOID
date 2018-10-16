@@ -13,8 +13,8 @@ public class Game {
   private Room[][] board;
   private Player player;
   private Room currentRoom;
-  Direction initialDirection;
-  Direction direction;
+  private Direction initialDirection;
+  private Direction direction;
 
   /**
    * This constructor creates a new void game.
