@@ -37,7 +37,6 @@ public class Room {
     this.tiles = Arrays.copyOf(tiles, tiles.length);
     this.doors = doors;
     this.portals = new ArrayList<>();
-
   }
 
   /**
@@ -247,9 +246,6 @@ public class Room {
 
       }
     }
-
-    // rotate the direction of each object anticlockwise
-    rotateObjects(false);
   }
 
   /**
@@ -266,10 +262,6 @@ public class Room {
     }
 
     this.tiles = tempArray;
-
-    // rotate the direction of each object clockwise
-    rotateObjects(true);
-
   }
 
   /**

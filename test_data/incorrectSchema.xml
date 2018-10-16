@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<game row="3" col="3">
+<game row="3" col="3" direction="NORTH">
     <player row="1" col="1" oxygen="100" direction="EAST">
         <roomRow>0</roomRow>
         <roomCol>0</roomCol>
