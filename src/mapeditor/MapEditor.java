@@ -773,7 +773,7 @@ public class MapEditor extends Application {
       }
     }
 
-    Game game = new Game(board, player);
+    Game game = new Game(board, player, "NORTH");
     if (test) {
       return true;
     }
