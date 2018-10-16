@@ -737,6 +737,12 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
       if (currentGame.checkForSpaceship()) {
         System.out.println("Winner winner");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success!");
+        alert.setContentText("You made it back to your space ship! Go and explore space");
+        alert.showAndWait();
+        window.setScene(startScene);
+        //TODO: Link back to home screen (with a message saying you won);
         System.exit(0);
       }
       currentGame.checkForOxygenTank();

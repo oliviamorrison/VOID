@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <game col="3" row="3">
     <room col="0" row="0">
-        <item col="5" direction="NORTH" row="6">Diffuser</item>
-        <portal>NORTH</portal>
+        <item col="2" direction="NORTH" row="1">Diffuser</item>
+        <portal>EAST</portal>
     </room>
     <room col="1" row="0">
-        <challenge col="7" direction="NORTH" row="4" state="false">VendingMachine</challenge>
+        <portal>WEST</portal>
+        <challenge col="5" direction="NORTH" row="8" state="false">Bomb</challenge>
+        <portal>SOUTH</portal>
     </room>
     <room col="2" row="0"/>
-    <room col="0" row="1">
-        <challenge col="2" direction="NORTH" row="2" state="false">Alien</challenge>
+    <room col="0" row="1"/>
+    <room col="1" row="1">
+        <item col="2" direction="NORTH" row="7">BoltCutter</item>
+        <portal>NORTH</portal>
+        <item col="5" direction="NORTH" row="2">OxygenTank</item>
+        <portal>SOUTH</portal>
+        <portal>EAST</portal>
     </room>
-    <room col="1" row="1"/>
-    <room col="2" row="1"/>
+    <room col="2" row="1">
+        <portal>WEST</portal>
+        <portal>SOUTH</portal>
+        <challenge col="7" direction="WEST" row="2" state="false">VendingMachine</challenge>
+    </room>
     <room col="0" row="2">
-        <challenge col="3" direction="NORTH" row="6" state="false">Bomb</challenge>
+        <portal>EAST</portal>
     </room>
-    <room col="1" row="2"/>
-    <room col="2" row="2"/>
-    <player col="5" direction="NORTH" oxygen="100" row="5">
-        <roomRow>2</roomRow>
-        <roomCol>2</roomCol>
-        <item col="-1" direction="NORTH" row="-1">Diffuser</item>
+    <room col="1" row="2">
+        <portal>WEST</portal>
+        <challenge col="1" direction="NORTH" row="5" state="false">Alien</challenge>
+        <portal>NORTH</portal>
+        <portal>EAST</portal>
+    </room>
+    <room col="2" row="2">
+        <portal>WEST</portal>
+        <item col="2" direction="NORTH" row="7">OxygenTank</item>
+        <portal>NORTH</portal>
+        <item col="5" direction="NORTH" row="5">Coin</item>
+    </room>
+    <player col="1" direction="NORTH" oxygen="100" row="1">
+        <roomRow>0</roomRow>
+        <roomCol>0</roomCol>
     </player>
 </game>

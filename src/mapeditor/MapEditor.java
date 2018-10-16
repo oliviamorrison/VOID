@@ -775,7 +775,7 @@ public boolean createGame() {
     if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("File saved!");
         alert.setContentText("File successfully saved");
         alert.showAndWait();

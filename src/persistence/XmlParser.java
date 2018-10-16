@@ -62,9 +62,6 @@ import org.xml.sax.SAXException;
  */
 
 //TODO: UML Diagram
-//TODO: Add music
-//TODO: Take group pic
-//TODO: Pause health bar when menu is clicked
 
 public class XmlParser {
   private static Schema schema;
@@ -192,9 +189,9 @@ public class XmlParser {
   private static Element savePlayer(Player player, Document document) {
     Element playerElement = document.createElement("player");
     //Get position, oxygen and direction of player and add as attributes to player element
-    playerElement.setAttribute("row", player.getTile().getRow()+"");
-    playerElement.setAttribute("col", player.getTile().getCol()+"");
-    playerElement.setAttribute("oxygen", player.getOxygen()+"");
+    playerElement.setAttribute("row", player.getTile().getRow() + "");
+    playerElement.setAttribute("col", player.getTile().getCol() + "");
+    playerElement.setAttribute("oxygen", player.getOxygen() + "");
     playerElement.setAttribute("direction", player.getDirection().toString());
 
     //Add coordinates of the room the player is in
@@ -322,7 +319,7 @@ public class XmlParser {
     int row = parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
-    //Get the player's health and the direction they are facing
+    //Get the player's oxygen level and the direction they are facing
     int oxygen = parseInt(playerElement.getAttribute("oxygen"));
     String direction = playerElement.getAttribute("direction");
 
