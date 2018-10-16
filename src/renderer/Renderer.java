@@ -47,6 +47,7 @@ public class Renderer {
   //Challenges
   private static final String bombImage = "images/bomb";
   private static final String vendingMachineImage = "images/vending-machine";
+  private static final String chainedVendingMachineImage = "images/chained-vending-machine";
   private static final String alienImage = "images/alien";
 
   //Items
@@ -204,7 +205,11 @@ public class Renderer {
       itemImage.setX(c.getX() - 20);
       itemImage.setY(c.getY() - 22);
     } else if (challenge instanceof VendingMachine) {
-      itemImage = getImage((vendingMachineImage + getObjectDirection(challenge.getDirection())));
+      if(((VendingMachine) challenge).isUnlocked()){
+        itemImage = getImage((vendingMachineImage + getObjectDirection(challenge.getDirection())));
+      } else {
+        itemImage = getImage((chainedVendingMachineImage + getObjectDirection(challenge.getDirection())));
+      }
       itemImage.setFitHeight(80);
       itemImage.setX(c.getX() - 30);
       itemImage.setY(c.getY() - 65);
