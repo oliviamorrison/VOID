@@ -4,8 +4,6 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import mapeditor.MapEditor.ItemSpace;
-import mapeditor.MapEditor.TilePane;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +15,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
+/**
+ * MapEditor Test Class holds the test suites for the MapEditor class.
+ * 
+ * @author oliviamorrison
+ *
+ */
 public class MapEditorTests {
 
 
+    /**
+     * This tests that the board is set up correctly which rooms in all 9 spaces.
+     */
     @Test
     public void testBoardSetUp(){
         MapEditor mapEditor = new MapEditor();
@@ -30,6 +37,9 @@ public class MapEditorTests {
         assertNotNull(mapEditor.getNodeByRowColumnIndex(0,0,board));
     }
 
+    /**
+     * This tests that the map editor sets up the item spaces correctly.
+     */
     @Test
     public void testItemSetUp(){
         MapEditor mapEditor = new MapEditor();
@@ -41,6 +51,9 @@ public class MapEditorTests {
         assertNotNull(mapEditor.getNodeByRowColumnIndex(0,0,itemGrid));
     }
 
+    /**
+     * This tests that the map editor sets up the mapItem spaces correctly.
+     */
     @Test
     public void testMapItem(){
         Image img = new Image(getClass().getResourceAsStream("cutters.png"));
@@ -51,8 +64,12 @@ public class MapEditorTests {
 
     }
     
+    
+    /**
+     * This tests that the map editor checks if the spaceShip room correctly.
+     */
     @Test
-    public void testAntidoteRoom() {
+    public void testIsInSpaceShipRoom() {
     		MapEditor mapEditor = new MapEditor();
         mapEditor.setUp();
         
@@ -69,7 +86,6 @@ public class MapEditorTests {
         tile.setMapItem(new MapItem("antidote.png",
                    new Image(getClass().getResourceAsStream("antidote.png"),
                            17, 17, false, false)));
-          
         
         assertNotNull(tile);
         assertTrue(mapEditor.isInAntidoteRoom(tile));
@@ -77,6 +93,9 @@ public class MapEditorTests {
         
     }
     
+    /**
+     * This tests that the map editor sets up the items in t correctly
+     */
     @Test
     public void testInitaliseItems() {
     		MapEditor mapEditor = new MapEditor();
@@ -96,6 +115,9 @@ public class MapEditorTests {
         
     }
     
+    /**
+     * This tests that the map editor creates the XML file and game successfully.
+     */
     @Test
     public void createGameXML() {
     		MapEditor mapEditor = new MapEditor();
@@ -105,23 +127,9 @@ public class MapEditorTests {
         
     }
     
-//    @Test
-//    public void testSetMapItem() {
-//    		MapEditor mapEditor = new MapEditor();
-//        mapEditor.setUp();
-//        mapEditor.initaliseItems();
-//        
-//        ItemSpace tile = null;
-//        
-//        Node node = mapEditor.getNodeByRowColumnIndex(0,0, mapEditor.getO());
-//        assertTrue(node instanceof GridPane);
-//        GridPane room1 = (GridPane) node;
-//        node = mapEditor.getNodeByRowColumnIndex(1, 1, room1);
-//
-//        assertTrue(node instanceof ItemSpace);
-//        tile = (ItemSpace) node;
-//        
-//    }
+    /**
+     * This tests that the map editor finds first empty tile successfully.
+     */
     	  @Test
     	  public void testFindFirstEmptyTile() {
     		  MapEditor mapEditor = new MapEditor();
@@ -134,8 +142,11 @@ public class MapEditorTests {
     	      assertNotNull(mapEditor.findFirstEmptyTile(room1));
     	  }
     	  
+    	  /**
+    	    * This tests that the map editor resets the image view on a tile successfully.
+    	  */
     	  @Test
-    	  public void testResetImageView() {
+    	  public void testResetImageViewTile() {
     		  MapEditor mapEditor = new MapEditor();
     	      mapEditor.setUp();
     	      
@@ -156,8 +167,36 @@ public class MapEditorTests {
     	      
     	  }
     	  
+    	  /**
+   	    * This tests that the map editor resets the image view on a image space successfully.
+   	  */
     	  @Test
-    	  public void testImageSpace() {
+    	  public void testResetImageViewImageSpace() {
+    		  MapEditor mapEditor = new MapEditor();
+    	      mapEditor.setUp();
+    	      
+    	      mapEditor.initItemSpaces(true);
+              
+          Node node = mapEditor.getNodeByRowColumnIndex(0,0, mapEditor.getItemGrid());
+          assertTrue(node instanceof ItemSpace);
+          ItemSpace itemSpace = (ItemSpace) node;
+          
+          ImageView first = itemSpace.getImageView();
+          
+          itemSpace.resetImageView();
+          
+          ImageView second = itemSpace.getImageView();
+          
+          assertNotEquals(first,second);
+    	      
+    	  }
+    	  
+    	  /**
+   	    * This tests that the map editor uses hasItem, getItem and setItem successfully
+   	    * on an itemSpace.
+   	  */
+    	  @Test
+    	  public void testItemSpace() {
     		  MapEditor mapEditor = new MapEditor();
     	      mapEditor.setUp();
     	      
@@ -183,7 +222,12 @@ public class MapEditorTests {
           assertFalse(itemSpace.hasItem());
     	  }
     	  
-    	  @Test
+    	  
+    	  
+    	/**
+    	 * This method tests if the noItemsInItemGrid works successfully.
+    	 */
+    	@Test
     	  public void testNoItemSpace() {
     		  MapEditor mapEditor = new MapEditor();
     	      mapEditor.setUp();
@@ -205,4 +249,34 @@ public class MapEditorTests {
           assertFalse(mapEditor.noItemsInItemGrid());
     	      
     	  }
+    	  
+    	/**
+    	 * This method tests if the mapEditor finds the first empty item space correctly.
+    	 */
+    	  @Test
+    	  public void testEmptyItemSpace() {
+    		  MapEditor mapEditor = new MapEditor();
+    	      mapEditor.setUp();
+    	      
+    	      mapEditor.initItemSpaces(true);
+    	      Node node = mapEditor.getNodeByRowColumnIndex(0,0, mapEditor.getItemGrid());
+          assertTrue(node instanceof ItemSpace);
+          ItemSpace itemSpace = (ItemSpace) node;
+    	      assertEquals(mapEditor.findFirstEmptyItem(),itemSpace);
+    		  
+    	  }
+    	  
+//    	  /**
+//      	* This method tests if the noItemsInItemGrid works successfully.
+//      */
+//    	  @Test
+//    	  public void testOptionGrid() {
+//    		  MapEditor mapEditor = new MapEditor();
+//    	      mapEditor.setUp();
+//    	      mapEditor.initItemSpaces(true);
+//    	      
+////    	      mapEditor.setOptions(mapEditor.getItemGrid(),true);
+//    	      
+//    	  }
+    	
 }
