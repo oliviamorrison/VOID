@@ -9,6 +9,9 @@ import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+
 /**
  * Test cases for the Application package.
  *
@@ -305,7 +308,7 @@ public class ApplicationTests {
               Stage stage = new Stage();
               gui.start(stage);
               gui.loadFile(stage);
-              gui.muteAudio();
+              //gui.muteAudio();
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -380,6 +383,7 @@ public class ApplicationTests {
     thread.start();// Initialize the thread
     Thread.sleep(1000); //gui window stays up for 1 second
   }
+
   /**
    * Tests that toggle buttons that can be clicked
    * @throws InterruptedException thrown
@@ -413,4 +417,5 @@ public class ApplicationTests {
     thread.start();// Initialize the thread
     Thread.sleep(1000); //gui window stays up for 1 second
   }
+
 }
