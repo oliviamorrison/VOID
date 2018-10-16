@@ -536,7 +536,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
       }
-    } else {
+    } else if(file != null) {
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("Unable to save over default game files");
       alert.setContentText("Unable to save over default game files. Please save using a different file name");
@@ -933,7 +933,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       String item = buttons.getKey();
 
       ToggleButton button = buttons.getValue();
-      if(!currentGame.getPlayer().hasSpecificItem(item)) {
+      if (!currentGame.getPlayer().hasSpecificItem(item)) {
         button.setDisable(true);
       } else {
         button.setDisable(false);
@@ -948,7 +948,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    * @param msg the message to be displayed on the Screen pane
    */
   public void updateScreen(String msg) {
-    if(msg.equals("")) return;
+    if (msg.equals("")) {
+      return;
+    }
 
     // line break at every 20th character
     String str = "> " + msg;
