@@ -272,12 +272,12 @@ public class MapEditor extends Application {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 4; j++) {
         Node n = getNodeByRowColumnIndex(i, j, itemGrid);
-        assert(n instanceof ItemSpace);
-        ItemSpace itemSpace = (ItemSpace) n;
-        if (itemSpace.hasItem()) {
-          return false;
+        if (n instanceof ItemSpace) {
+          ItemSpace itemSpace = (ItemSpace) n;
+          if (itemSpace.hasItem()) {
+            return false;
+          }
         }
-
       }
     }
 
