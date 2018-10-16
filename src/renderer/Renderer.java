@@ -15,7 +15,7 @@ public class Renderer {
     private final static Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
     private final static Color DTColor = Color.rgb(161, 176, 201);
     private final static double floorHeight = 0;
-    private final static double wallHeight = 0;
+    private final static double wallHeight = 2;
     private final static double doorHeight = 0;
 
     private final static double playerHeight = 60;
@@ -100,11 +100,6 @@ public class Renderer {
             AccessibleTile AT = (AccessibleTile) tile;
             color = ACCESSIBLE_COLOUR;
             height = floorHeight;
-//            if(AT.hasItem()){
-//                color = Color.BLUE;
-//            } else if(AT.hasChallenge()){
-//                color = Color.RED;
-//            }
         } else if (tile instanceof InaccessibleTile){
             height = wallHeight;
             color = INACCESSIBLE_COLOUR;
@@ -141,7 +136,13 @@ public class Renderer {
         ImageView itemImage = null;
         Point2D c = tile.getCenter();
         if(item instanceof Diffuser){
-            itemImage = getImage(diffuserImage);
+            String direction ="";
+            if(item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH){
+                direction = "1.png";
+            } else {
+                direction = "2.png";
+            }
+            itemImage = getImage(diffuserImage+direction);
             itemImage.setFitHeight(30);
             itemImage.setX(c.getX() - 14);
             itemImage.setY(c.getY() - 22);
