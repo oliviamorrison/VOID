@@ -1,14 +1,16 @@
 package application;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Test cases for the Application package
+ * Test cases for the Application package.
  *
  * @author Annisha Akosah 300399598
  */
@@ -16,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ApplicationTests {
 
   /**
-   * Attempts to launch the start menu for 1 second
-   * @throws InterruptedException
+   * Attempts to launch the start menu for 1 second.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchStartMenu() throws InterruptedException {
@@ -29,11 +31,10 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -46,8 +47,8 @@ public class ApplicationTests {
 
 
   /**
-   * Attempts to launch the levels menu for 1 second
-   * @throws InterruptedException
+   * Attempts to launch the levels menu for 1 second.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchLevelsScreen() throws InterruptedException {
@@ -59,12 +60,11 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.getWindow().setScene(gui.createLevelsScreen(stage));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -77,8 +77,8 @@ public class ApplicationTests {
 
 
   /**
-   * Attempts to launch the game scene with no file given to it
-   * @throws InterruptedException
+   * Attempts to launch the game scene with no file given to it.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchGameWithNoFile() throws InterruptedException {
@@ -90,13 +90,12 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.getWindow().setScene(gui.createGameScene(stage));
-              //assertEquals(gui.currentGame, null); // no game has been parsed yet
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -108,8 +107,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to launch an Easy game with a provided file
-   * @throws InterruptedException
+   * Attempts to launch an Easy game with a provided file.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchEasyGame() throws InterruptedException {
@@ -121,14 +120,12 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.startNewEasyGame(stage);
-             // gui.start(stage);
-              //gui.getWindow().setScene(gui.createGameScene(stage));
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -140,8 +137,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to launch an Medium game with a provided file
-   * @throws InterruptedException
+   * Attempts to launch an Medium game with a provided file.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchMedGame() throws InterruptedException {
@@ -153,12 +150,12 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.startNewMedGame(stage);
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -170,8 +167,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to launch an Hard game with a provided file
-   * @throws InterruptedException
+   * Attempts to launch an Hard game with a provided file.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchHardGame() throws InterruptedException {
@@ -183,12 +180,12 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.startNewHardGame(stage);
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -201,8 +198,8 @@ public class ApplicationTests {
 
 
   /**
-   * Attempts to launch the help dialog within a game
-   * @throws InterruptedException
+   * Attempts to launch the help dialog within a game.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchHelpDialog() throws InterruptedException {
@@ -214,13 +211,13 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.startNewEasyGame(stage);
               gui.displayHelp();
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -232,8 +229,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to launch a confirm quit dialog within a game
-   * @throws InterruptedException
+   * Attempts to launch a confirm quit dialog within a game.
+   * @throws InterruptedException thrown
    */
   @Test
   public void launchConfirmQuitDialog() throws InterruptedException {
@@ -245,12 +242,12 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.confirmExit();
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -262,8 +259,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to display the win/lose scene
-   * @throws InterruptedException
+   * Attempts to display the win/lose scene.
+   * @throws InterruptedException thrown
    */
   @Test
   public void displayWinLoseScene() throws InterruptedException {
@@ -275,12 +272,11 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.getWindow().setScene(gui.createWinLoseScene("win"));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -292,8 +288,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to load a game
-   * @throws InterruptedException
+   * Attempts to load a game.
+   * @throws InterruptedException thrown
    */
   @Test
   public void loadGame() throws InterruptedException {
@@ -305,12 +301,12 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.loadFile(stage);
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -322,8 +318,8 @@ public class ApplicationTests {
   }
 
   /**
-   * Attempts to save a current game state
-   * @throws InterruptedException
+   * Attempts to save a current game state.
+   * @throws InterruptedException thrown
    */
   @Test
   public void saveGame() throws InterruptedException {
@@ -335,15 +331,13 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.startNewEasyGame(stage); // start a new game
-              //gui.getCurrentGame().getPlayer().
-
+              gui.muteAudio();
               gui.saveFile(stage); // save dialog should appear
-            }
-            catch (Exception e) {
+            }  catch (Exception e) {
               e.printStackTrace();
             }
           }
@@ -356,8 +350,8 @@ public class ApplicationTests {
 
   /**
    * Tests that toggle buttons that should be toggled off, is off
-   * as the player initially has no items in their inventory
-   * @throws InterruptedException
+   * as the player initially has no items in their inventory.
+   * @throws InterruptedException thrown
    */
   @Test
   public void testToggleButtons() throws InterruptedException {
@@ -369,14 +363,14 @@ public class ApplicationTests {
           @Override
           public void run() {
             try {
-              GUI gui = new GUI();
+              Gui gui = new Gui();
               Stage stage = new Stage();
               gui.start(stage);
               gui.startNewEasyGame(stage); // start a new game
               ToggleButton button = gui.inventoryButtons.get("GoldenCoin");
-              assertTrue(button.isDisabled()); // button should be disabled since player doesn't have coin
-            }
-            catch (Exception e) {
+              gui.muteAudio();
+              assertTrue(button.isDisabled()); // button should be disabled
+            }  catch (Exception e) {           //since player doesn't have coin
               e.printStackTrace();
             }
           }
@@ -386,8 +380,37 @@ public class ApplicationTests {
     thread.start();// Initialize the thread
     Thread.sleep(1000); //gui window stays up for 1 second
   }
+  /**
+   * Tests that toggle buttons that can be clicked
+   * @throws InterruptedException thrown
+   */
+  @Test
+  public void testToggleButtonsClicks() throws InterruptedException {
+    Thread thread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        new JFXPanel(); // Initializes the JavaFx Platform
+        Platform.runLater(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              Gui gui = new Gui();
+              Stage stage = new Stage();
+              gui.start(stage);
+              gui.startNewEasyGame(stage); // start a new game
+              gui.muteAudio();
+              for(ToggleButton btn : gui.inventoryButtons.values()) {
+                btn.fireEvent(new ActionEvent());
+              }
 
-
-
-
+            }  catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        });
+      }
+    });
+    thread.start();// Initialize the thread
+    Thread.sleep(1000); //gui window stays up for 1 second
+  }
 }

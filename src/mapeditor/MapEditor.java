@@ -1,8 +1,8 @@
 package mapeditor;
 
-import static application.GUI.configureFileChooser;
+import static application.Gui.configureFileChooser;
 
-import application.GUI;
+import application.Gui;
 
 import gameworld.AccessibleTile;
 import gameworld.Alien;
@@ -248,7 +248,7 @@ public class MapEditor extends Application {
 
     backToMain.setOnAction(e -> {
       try {
-        new GUI().start(stage);
+        new Gui().start(stage);
       } catch (Exception e1) {
         e1.printStackTrace();
       }
