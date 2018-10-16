@@ -28,33 +28,43 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
+/**
+ * This is the Renderer class which helps render the game into
+ * the GUI.
+ *
+ * @author James Del Puerto 300375073
+ */
 public class Renderer {
 
+  //Tile heights.
   private static final double doorHeight = 0;
   private static final double floorHeight = 0;
-  private static final double playerHeight = 60;
   private static final double wallHeight = 2;
 
+  //Tile colors.
   private static final Color ACCESSIBLE_COLOUR = Color.rgb(120, 120, 120);
   private static final Color INACCESSIBLE_COLOUR = Color.rgb(90, 90, 90);
   private static final Color DTColor = Color.rgb(161, 176, 201);
 
-  //Player Orientation
+  //Player height.
+  private static final double playerHeight = 60;
+
+  //Player Orientation.
   private static final String NORTH = "images/north.png";
   private static final String SOUTH = "images/south.png";
   private static final String WEST = "images/west.png";
   private static final String EAST = "images/east.png";
 
-  //Portal
+  //Portal.
   private static final String portalImage = "images/portal.png";
 
-  //Challenges
+  //Challenges.
   private static final String bombImage = "images/bomb";
   private static final String vendingMachineImage = "images/vending-machine";
   private static final String chainedVendingMachineImage = "images/chained-vending-machine";
   private static final String alienImage = "images/alien";
 
-  //Items
+  //Items.
   private static final String diffuserImage = "images/diffuser";
   private static final String boltCutterImage = "images/bolt-cutter";
   private static final String coinImage = "images/coin";
@@ -62,10 +72,16 @@ public class Renderer {
   private static final String spaceshipImage = "images/spaceship";
   private static final String oxygenTankImage = "images/oxygen-tank.png";
 
+  //Games fields.
   private Player player;
   private Room currentRoom;
   private Group root;
 
+  /**
+   * This is the constructor which takes in the game parameter
+   * so it knows what to render.
+   * @param game the current game that is being played
+   */
   public Renderer(Game game) {
     player = game.getPlayer();
     currentRoom = player.getRoom();
@@ -73,10 +89,20 @@ public class Renderer {
     draw();
   }
 
+  /**
+   * Returns the root which contains all the images, shapes and polygons
+   * that will be drawn into the GUI.
+   * @return A group of all images and polygons
+   */
   public Group getRoot() {
     return root;
   }
 
+  /**
+   * Draws the player by adding the player image (in respect of the
+   * player's direction) into the root. Method also determines the position
+   * of the image in the graphic pane.
+   */
   public void drawPlayer() {
     ImageView playerImage = null;
     switch (player.getDirection()) {
@@ -102,6 +128,10 @@ public class Renderer {
     root.getChildren().add(playerImage);
   }
 
+  /**
+   * This draws the whole game by iterating through each tile in
+   * the game and drawing the tiles as well objects on top of those tiles.
+   */
   public void draw() {
     root.getChildren().clear();
     int w = 10;
@@ -116,6 +146,15 @@ public class Renderer {
     }
   }
 
+  /**
+   * Draws the tile (PolygonBlock) for each tile and stores it in the
+   * tile's field. Creates a PolygonBlock and adds it to the root as
+   * calling the drawObject() method.
+   * @param row The row position of the current tile that is to be populated
+   *            with a PolygonBlock
+   * @param col The col position of the current tile that is to be populated
+   *            with a PolygonBlock
+   */
   public void drawPolygonBlock(int row, int col) {
     Tile tile = currentRoom.getTile(row, col);
     Color color = Color.BLACK;
@@ -138,6 +177,12 @@ public class Renderer {
     drawObjects(tile, poly);
   }
 
+  /**
+   * Draws the objects on top of the the tile given and the position
+   * of object is determined by the position of the tile's PolygonBlock.
+   * @param tile The tile that an object is to be drawn on top of
+   * @param poly The tile's PolygonBlock
+   */
   public void drawObjects(Tile tile, PolygonBlock poly){
     ImageView gameObject = null;
     if(tile instanceof Portal){
@@ -168,6 +213,12 @@ public class Renderer {
     }
   }
 
+  /**
+   * Gets the ImageView of an Item of a given tile that has an item
+   * on top of it.
+   * @param tile The tile that has an item on top of it
+   * @return The ImageView of the image of the item on top of the tile
+   */
   public ImageView getItemImage(AccessibleTile tile) {
     Item item = tile.getItem();
     ImageView itemImage = null;
@@ -212,6 +263,12 @@ public class Renderer {
     return itemImage;
   }
 
+  /**
+   * Gets the ImageView of a Challenge of a given tile that has a challenge
+   * on top of it.
+   * @param tile The tile that has an item on top of it
+   * @return The ImageView of the image of the item on top of the tile
+   */
   public ImageView getChallengeImage(AccessibleTile tile) {
     Item challenge = tile.getChallenge();
     ImageView itemImage = null;
@@ -239,6 +296,11 @@ public class Renderer {
     return itemImage;
   }
 
+  /**
+   * Gets the last suffix of an image path in respect of the direction given.
+   * @param direction The direction of the image it is facing.
+   * @return The last suffix (letters) of the image's path
+   */
   public String getObjectDirection(Direction direction) {
     switch (direction) {
       case NORTH:
@@ -252,6 +314,13 @@ public class Renderer {
     }
   }
 
+  /**
+   * Takes in a image path which is used to create an Image which is then
+   * used to create an ImageView which contains the image of the object that is
+   * to be drawn in respect of the image path.
+   * @param imageName The image path of the image to be drawn
+   * @return The ImageView of the image to be drawn
+   */
   public ImageView getImage(String imageName) {
     Image image = null;
     try {
@@ -264,6 +333,11 @@ public class Renderer {
     return imageView;
   }
 
+  /**
+   * Clears the root and updates the currentRoom that the renderer
+   * will be rendering when the player has moved from one room to another.
+   * Draws the new room.
+   */
   public void newRoom() {
     currentRoom = player.getRoom();
     root.getChildren().clear();

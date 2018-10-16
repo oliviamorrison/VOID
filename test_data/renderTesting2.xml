@@ -11,6 +11,7 @@
         <item row="3" col="6" direction="NORTH">SpaceShip</item>
         <item row="3" col="5" direction="NORTH">Potion</item>
         <challenge row="1" col="3" state="false" direction="SOUTH">VendingMachine</challenge>
+        <challenge row="1" col="6" state="true" direction="SOUTH">VendingMachine</challenge>
         <challenge row="1" col="4" state="false" direction="SOUTH">Alien</challenge>
         <challenge row="1" col="5" state="false" direction="NORTH">Bomb</challenge>
     </room>
