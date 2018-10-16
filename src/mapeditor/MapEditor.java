@@ -3,6 +3,7 @@ package mapeditor;
 import static application.GUI.configureFileChooser;
 
 import application.GUI;
+
 import gameworld.AccessibleTile;
 import gameworld.Alien;
 import gameworld.BoltCutter;
@@ -40,7 +41,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import persistence.XmlParser;
-
 
 /**
  * MapEditor class displays a stand alone application allowing one to
@@ -174,6 +174,7 @@ public class MapEditor extends Application {
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
     Button makeGame = new Button("Make Game");
+
     final Button backToMain = new Button("Back to game");
 
     pickupButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -706,7 +707,8 @@ public class MapEditor extends Application {
               if (t instanceof TilePane) {
 
                 TilePane tilePane = (TilePane) t;
-                if (tilePane.isAccessible() || tilePane.hasMapItem() && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
+                if (tilePane.isAccessible() || tilePane.hasMapItem()
+                    && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
                   AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if (mapItem != null) {
@@ -795,7 +797,7 @@ public class MapEditor extends Application {
         && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("File saved!");
         alert.setContentText("File successfully saved");
         alert.showAndWait();
