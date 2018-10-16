@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class represents a room. The game consists of a series of connected rooms.
+ *
+ * @author Latrell Whata 300417220
+ */
 public class Room {
 
   public static final int ROOMSIZE = 10;
@@ -14,6 +19,14 @@ public class Room {
   private List<String> doors;
   private List<Portal> portals;
 
+  /**
+   * This constructor creates a room.
+   *
+   * @param row the row value of the room within the game board
+   * @param col the column value of the room within the game board
+   * @param tiles the tiles within the room
+   * @param doors a list of doors that are within the room
+   */
   public Room(int row, int col, Tile[][] tiles, List<String> doors) {
 
     this.row = row;
@@ -24,6 +37,12 @@ public class Room {
 
   }
 
+  /**
+   * This constructor creates a room for the test class.
+   *
+   * @param row the row value of the room within the game board
+   * @param col the column value of the room within the game board
+   */
   public Room(int row, int col) {
     this.row = row;
     this.col = col;
@@ -35,8 +54,12 @@ public class Room {
 
   }
 
+  /**
+   * This method is used to setup the default values of the tiles of a room.
+   */
   private void setupTestRoom() {
 
+    // default all border tiles to inaccessible tiles, all others to accessible tiles
     for (int row = 0; row < ROOMSIZE; row++) {
       for (int col = 0; col < ROOMSIZE; col++) {
         if (row == 0 || col == 0 || col == ROOMSIZE - 1 || row == ROOMSIZE - 1) {
@@ -48,6 +71,15 @@ public class Room {
     }
   }
 
+  /**
+   * This method finds the resulting tile from translating by dx, dy from
+   * the current tile.
+   *
+   * @param currentTile the starting tile
+   * @param dx the change in the row value
+   * @param dy the change in the column value
+   * @return the next tile
+   */
   public AccessibleTile findNextTile(Tile currentTile, int dx, int dy) {
 
     int[] coordinates = getTileCoordinates(currentTile);
@@ -60,6 +92,7 @@ public class Room {
     int newX = x + dx;
     int newY = y + dy;
 
+    // stay within bounds
     if (newX < 0 || newY < 0 || newX >= 10 || newY >= 10) {
       return null;
     }
@@ -70,6 +103,7 @@ public class Room {
 
       AccessibleTile nextTile = (AccessibleTile) tile;
 
+      // cannot move onto a challenge which is not yet navigable
       if (nextTile.checkNavigable()) {
         return nextTile;
       }
@@ -80,13 +114,19 @@ public class Room {
 
   }
 
+  /**
+   * This method iterates through the tiles array to find the
+   *
+   * @param tile
+   * @return
+   */
   public int[] getTileCoordinates(Tile tile) {
 
-    for (int i = 0; i < ROOMSIZE; i++) {
-      for (int j = 0; j < ROOMSIZE; j++) {
+    for (int row = 0; row < ROOMSIZE; row++) {
+      for (int col = 0; col < ROOMSIZE; col++) {
 
-        if (tiles[i][j].equals(tile)) {
-          return new int[]{i, j};
+        if (tiles[row][col].equals(tile)) {
+          return new int[]{row, col};
         }
 
       }
