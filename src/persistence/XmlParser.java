@@ -60,21 +60,23 @@ import org.xml.sax.SAXException;
  * @author Sam Ong 300363819
  *
  */
+
 //TODO: UML Diagram
 //TODO: Throw more descriptive ParseErrors
 //TODO: Add music
 //TODO: Take group pic
-//TODO: Credits
 //TODO: Pause health bar when menu is clicked
 
 public class XmlParser {
   private static Schema schema;
 
-  /** Static method to save a game to an XML file using DOM parser.
-   * @param file file to save to
+  /**
+   * Static method to save a game to an XML file using DOM parser.
+   * It constructs a tree of nodes under the document builder
+   * @param file file to save the XML to
    * @param game game to save
-   * @throws ParserConfigurationException error thrown if parser fails
-   * @throws TransformerException error thrown is transformer fails
+   * @throws ParserConfigurationException exception thrown if parser fails
+   * @throws TransformerException exception thrown is transformer fails
    */
   public static void saveFile(File file, Game game)
       throws ParserConfigurationException, TransformerException {
@@ -118,7 +120,8 @@ public class XmlParser {
     transformer.transform(source, result);
   }
 
-  /**Method to save a room and its properties to an element in the document.
+  /**
+   * Method to save a room and its properties to an element in the document.
    * @param document document to save to
    * @param row y position of room in board
    * @param col x position of room in board
@@ -181,7 +184,8 @@ public class XmlParser {
     return roomElement;
   }
 
-  /** Method to save a player and its properties to an element in the document.
+  /**
+   * Method to save a player and its properties to an element in the document.
    * @param player player to save
    * @param document document to save element to
    * @return player element to append to the root of the document
@@ -216,7 +220,8 @@ public class XmlParser {
     return playerElement;
   }
 
-  /** Method to parse an XML file into a game.
+  /**
+   * Method to parse an XML file into a game.
    * @param file file to parse
    * @return the game created from file
    * @throws ParseError throws a parse error if the file is invalid
@@ -259,7 +264,8 @@ public class XmlParser {
     }
   }
 
-  /**A method to parse rooms into the game.
+  /**
+   * A method to parse rooms into the game.
    * @param room XML node element for the room
    * @param board board to place room in
    * @throws ParseError throws a parse error if room element is invalid
@@ -303,7 +309,8 @@ public class XmlParser {
     board[row][col] = newRoom;
   }
 
-  /**A method to parse the player into the game.
+  /**
+   * A method to parse the player into the game.
    * @param playerNode XML node element for the player
    * @param board board to find the room to place player in
    * @return player in the game
@@ -345,7 +352,8 @@ public class XmlParser {
     return player;
   }
 
-  /** A method to parse a number from an element.
+  /**
+   * A method to parse a number from an element.
    * @param tagName the name of the tag to search
    * @param element the element to get the tag from
    * @return the integer value inside the element
@@ -355,7 +363,8 @@ public class XmlParser {
     return parseInt(n.item(0).getTextContent());
   }
 
-  /**A method to parse items from an element.
+  /**
+   * A method to parse items from an element.
    *
    * @param items the node list to get the items from
    * @param tiles tiles in the room that can be set with items
@@ -413,7 +422,8 @@ public class XmlParser {
     }
   }
 
-  /**A method to parse each challenge and set their tiles.
+  /**
+   * A method to parse each challenge and set their tiles.
    * @param challengeList the node list to get challenges from
    * @param tiles tiles in the room that can be set with challenges
    */
@@ -458,7 +468,8 @@ public class XmlParser {
     }
   }
 
-  /**A method to load the schema for XML files.
+  /**
+   * A method to load the schema for XML files.
    * @param fileName name xsd file to parse
    */
   private static void loadSchema(String fileName) throws SAXException {
@@ -467,7 +478,8 @@ public class XmlParser {
     schema = factory.newSchema(new File(fileName));
   }
 
-  /**A custom inner exception class to handle errors.
+  /**
+   * A custom inner exception class to handle errors.
    * @author Sam Ong 300363819
    */
   public static class ParseError extends Exception {

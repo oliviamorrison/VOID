@@ -389,9 +389,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    */
   private void startNewEasyGame(Stage stage) {
     try {
-      currentGame = XMLParser.parseGame(new File("data/easy.xml"));
+      currentGame = XmlParser.parseGame(new File("data/easy.xml"));
       window.setScene(createGameScene(stage));
-    } catch (XMLParser.ParseError parseError) {
+    } catch (XmlParser.ParseError parseError) {
       parseError.printStackTrace();
     }
   }
@@ -402,9 +402,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    */
   private void startNewMedGame(Stage stage) {
     try {
-      currentGame = XMLParser.parseGame(new File("data/medium.xml"));
+      currentGame = XmlParser.parseGame(new File("data/medium.xml"));
       window.setScene(createGameScene(stage));
-    } catch (XMLParser.ParseError parseError) {
+    } catch (XmlParser.ParseError parseError) {
       parseError.printStackTrace();
     }
   }
