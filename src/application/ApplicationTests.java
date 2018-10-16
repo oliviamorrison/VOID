@@ -9,9 +9,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-
 /**
  * Test cases for the Application package.
  *
@@ -385,7 +382,7 @@ public class ApplicationTests {
   }
 
   /**
-   * Tests that toggle buttons that can be clicked
+   * Tests that toggle buttons that can be clicked.
    * @throws InterruptedException thrown
    */
   @Test
@@ -403,10 +400,9 @@ public class ApplicationTests {
               gui.start(stage);
               gui.startNewEasyGame(stage); // start a new game
               gui.muteAudio();
-              for(ToggleButton btn : gui.inventoryButtons.values()) {
+              for (ToggleButton btn : gui.inventoryButtons.values()) {
                 btn.fireEvent(new ActionEvent());
               }
-
             }  catch (Exception e) {
               e.printStackTrace();
             }
