@@ -61,8 +61,6 @@ import org.xml.sax.SAXException;
  *
  */
 
-//TODO: UML Diagram
-
 public class XmlParser {
   private static Schema schema;
 
