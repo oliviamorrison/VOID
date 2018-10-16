@@ -243,6 +243,13 @@ public class GameworldTests {
     assertEquals(player.getTile().getRow(), item.getRow());
     assertEquals(player.getTile().getCol(), item.getCol());
 
+    Item nextItem = new Coin(-1, -1, "NORTH");
+    player.addItem(nextItem);
+
+    game.dropItem();
+
+    assertTrue(player.getItem() instanceof Coin);
+
   }
 
   /**
@@ -285,6 +292,9 @@ public class GameworldTests {
     game.diffuseBomb();
 
     assertTrue(bomb.isNavigable());
+
+    String notification = game.diffuseBomb();
+    assertNotNull(notification);
 
   }
 
