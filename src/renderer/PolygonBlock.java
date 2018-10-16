@@ -15,7 +15,7 @@ public class PolygonBlock {
 
   private double originX;
   private double originY;
-  private double z;
+  private double zval;
   private double center = 350;
   private List<Polygon> polygons;
 
@@ -31,7 +31,7 @@ public class PolygonBlock {
   public PolygonBlock(double x, double y, double z, Color c) {
     originX = ((x - y) * tileWidth / 2) + center;
     originY = (x + y) * tileHeight / 2;
-    this.z = z;
+    this.zval = z;
     this.topColor = c;
     this.leftColor = c.darker();
     this.rightColor = c.darker().darker();
@@ -47,17 +47,17 @@ public class PolygonBlock {
   }
 
   public void drawTop() {
-    double tpx1, tpy1, tpx2, tpy2, tpx3, tpy3, tpx4, tpy4;
+
     List<Double> topPoints = new ArrayList<>();
     // NORTH
-    tpx1 = (0) + originX;
-    tpy1 = (-z * tileHeight) + originY;
-    tpx2 = (tileWidth / 2) + originX;
-    tpy2 = (tileHeight / 2 - z * tileHeight) + originY;
-    tpx3 = (0) + originX;
-    tpy3 = (tileHeight - z * tileHeight) + originY;
-    tpx4 = (-tileWidth / 2) + originX;
-    tpy4 = (tileHeight / 2 - z * tileHeight) + originY;
+    double tpx1 = (0) + originX;
+    double tpy1 = (-zval * tileHeight) + originY;
+    double tpx2 = (tileWidth / 2) + originX;
+    double tpy2 = (tileHeight / 2 - zval * tileHeight) + originY;
+    double tpx3 = (0) + originX;
+    double tpy3 = (tileHeight - zval * tileHeight) + originY;
+    double tpx4 = (-tileWidth / 2) + originX;
+    double tpy4 = (tileHeight / 2 - zval * tileHeight) + originY;
     topPoints.add(tpx1);
     topPoints.add(tpy1);
     topPoints.add(tpx2);
@@ -76,16 +76,15 @@ public class PolygonBlock {
   }
 
   public void drawLeft() {
-    double lpx1, lpy1, lpx2, lpy2, lpx3, lpy3, lpx4, lpy4;
     List<Double> leftPoints = new ArrayList<>();
-    lpx1 = (-tileWidth / 2) + originX;
-    lpy1 = (tileHeight / 2 - z * tileHeight) + originY;
-    lpx2 = (0) + originX;
-    lpy2 = (tileHeight - z * tileHeight) + originY;
-    lpx3 = (0) + originX;
-    lpy3 = (tileHeight) + originY;
-    lpx4 = (-tileWidth / 2) + originX;
-    lpy4 = (tileHeight / 2) + originY;
+    double lpx1 = (-tileWidth / 2) + originX;
+    double lpy1 = (tileHeight / 2 - zval * tileHeight) + originY;
+    double lpx2 = (0) + originX;
+    double lpy2 = (tileHeight - zval * tileHeight) + originY;
+    double lpx3 = (0) + originX;
+    double lpy3 = (tileHeight) + originY;
+    double lpx4 = (-tileWidth / 2) + originX;
+    double lpy4 = (tileHeight / 2) + originY;
     leftPoints.add(lpx1);
     leftPoints.add(lpy1);
     leftPoints.add(lpx2);
@@ -104,16 +103,15 @@ public class PolygonBlock {
   }
 
   public void drawRight() {
-    double rpx1, rpy1, rpx2, rpy2, rpx3, rpy3, rpx4, rpy4;
     List<Double> rightPoints = new ArrayList<>();
-    rpx1 = (tileWidth / 2) + originX;
-    rpy1 = (tileHeight / 2 - z * tileHeight) + originY;
-    rpx2 = (0) + originX;
-    rpy2 = (tileHeight - z * tileHeight) + originY;
-    rpx3 = (0) + originX;
-    rpy3 = (tileHeight) + originY;
-    rpx4 = (tileWidth / 2) + originX;
-    rpy4 = (tileHeight / 2) + originY;
+    double rpx1 = (tileWidth / 2) + originX;
+    double rpy1 = (tileHeight / 2 - zval * tileHeight) + originY;
+    double rpx2 = (0) + originX;
+    double rpy2 = (tileHeight - zval * tileHeight) + originY;
+    double rpx3 = (0) + originX;
+    double rpy3 = (tileHeight) + originY;
+    double rpx4 = (tileWidth / 2) + originX;
+    double rpy4 = (tileHeight / 2) + originY;
     rightPoints.add(rpx1);
     rightPoints.add(rpy1);
     rightPoints.add(rpx2);

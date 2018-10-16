@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<game row="3" col="3" initDirection ="NORTH" direction="NORTH">
-    <player row="1" col="1" oxygen="100" direction="EAST">
-        <roomRow>0</roomRow>
-        <roomCol>0</roomCol>
-    </player>
+<game row="3" col="3" initDirection ="EAST" direction="NORTH">
     <room row="0" col="0">
         <portal>EAST</portal>
+        <portal>SOUTH</portal>
         <item row="4" col="3" direction ="NORTH">Diffuser</item>
     </room>
     <room row="0" col="1">
@@ -33,11 +30,15 @@
         <portal>NORTH</portal>
         <portal>WEST</portal>
         <portal>EAST</portal>
-        <challenge row="5" col="1" state="false" direction ="NORTH">Alien</challenge>
+        <challenge row="5" col="1" state="false" direction ="WEST">Alien</challenge>
     </room>
     <room row="2" col="2">
         <portal>NORTH</portal>
         <portal>WEST</portal>
         <item row="7" col="7" direction ="NORTH">Coin</item>
     </room>
+    <player row="5" col="5" oxygen="100" direction="EAST">
+        <roomRow>0</roomRow>
+        <roomCol>0</roomCol>
+    </player>
 </game>

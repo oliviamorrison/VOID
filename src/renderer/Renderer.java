@@ -39,14 +39,19 @@ public class Renderer {
   private static final Color INACCESSIBLE_COLOUR = Color.rgb(90, 90, 90);
   private static final Color DTColor = Color.rgb(161, 176, 201);
 
+  //Player Orientation
   private static final String NORTH = "images/north.png";
   private static final String SOUTH = "images/south.png";
   private static final String WEST = "images/west.png";
   private static final String EAST = "images/east.png";
 
+  //Portal
+  private static final String portalImage = "images/portal.png";
+
   //Challenges
   private static final String bombImage = "images/bomb";
   private static final String vendingMachineImage = "images/vending-machine";
+  private static final String chainedVendingMachineImage = "images/chained-vending-machine";
   private static final String alienImage = "images/alien";
 
   //Items
@@ -130,8 +135,21 @@ public class Renderer {
     }
     PolygonBlock poly = new PolygonBlock(col, row, height, color);
     tile.setTilePolygon(poly);
+    drawObjects(tile, poly);
+  }
+
+  public void drawObjects(Tile tile, PolygonBlock poly){
     ImageView gameObject = null;
-    if (tile instanceof AccessibleTile) {
+    if(tile instanceof Portal){
+      AccessibleTile at = (AccessibleTile) tile;
+      gameObject = getImage(portalImage);
+      Point2D c = at.getCenter();
+      gameObject.setPreserveRatio(false);
+      gameObject.setFitHeight(22);
+      gameObject.setFitWidth(45);
+      gameObject.setX(c.getX() - 20);
+      gameObject.setY(c.getY() - 13);
+    } else if (tile instanceof AccessibleTile) {
       AccessibleTile at = (AccessibleTile) tile;
       if (at.hasItem()) {
         gameObject = getItemImage(at);
@@ -204,7 +222,12 @@ public class Renderer {
       itemImage.setX(c.getX() - 20);
       itemImage.setY(c.getY() - 22);
     } else if (challenge instanceof VendingMachine) {
-      itemImage = getImage((vendingMachineImage + getObjectDirection(challenge.getDirection())));
+      if (((VendingMachine) challenge).isUnlocked()) {
+        itemImage = getImage((vendingMachineImage + getObjectDirection(challenge.getDirection())));
+      } else {
+        itemImage = getImage((chainedVendingMachineImage
+            + getObjectDirection(challenge.getDirection())));
+      }
       itemImage.setFitHeight(80);
       itemImage.setX(c.getX() - 30);
       itemImage.setY(c.getY() - 65);

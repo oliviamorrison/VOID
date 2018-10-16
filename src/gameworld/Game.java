@@ -13,6 +13,8 @@ public class Game {
   private Room[][] board;
   private Player player;
   private Room currentRoom;
+  Direction initialDirection;
+  Direction direction;
 
   /**
    * This constructor creates a new void game.
@@ -20,13 +22,38 @@ public class Game {
    * @param board  the 2D array of room objects that make up the game
    * @param player the current game player
    */
-  public Game(Room[][] board, Player player) {
+  public Game(Room[][] board, Player player, String initDir, String dir) {
 
     this.player = player;
     this.board = Arrays.copyOf(board, board.length);
     this.currentRoom = player.getRoom();
     connectPortals();
+    this.direction = Direction.directionFromString(dir);
+    this.initialDirection = direction;
+    initialRotate(initDir);
+  }
 
+  /**
+   * This method sets up the rooms and their rotations to the state from the XML file.
+   *
+   * @param initDir the initial direction tells the room when
+   *                to stop rotating to get back to its initial state
+   */
+  private void initialRotate(String initDir) {
+    for (int row = 0; row < board.length; row++) {
+      for (int col = 0; col < board[row].length; col++) {
+        Room room = board[row][col];
+
+        if (room == null) {
+          continue;
+        }
+
+        while (direction != Direction.directionFromString(initDir)) {
+          room.rotateRoomClockwise();
+          direction = direction.getClockwiseDirection();
+        }
+      }
+    }
   }
 
   /**
@@ -163,16 +190,23 @@ public class Game {
     }
   }
 
+  /**
+   * This method picks up an item from the tile.
+   *
+   * @return a notification message for the user
+   */
   public String pickUpItem() {
 
     AccessibleTile tile = player.getTile();
 
     if (tile.hasItem()) {
 
+      // player has a pack weight limit of one
       if (player.hasItem()) {
         return "You may only carry one item at a time";
       }
 
+      // add item to player, remove from tile
       Item item = tile.getItem();
       player.addItem(item);
       tile.setItem(null);
@@ -185,6 +219,11 @@ public class Game {
     }
   }
 
+  /**
+   * This method drops an item from a player to a tile.
+   *
+   * @return a notification message for the user
+   */
   public String dropItem() {
 
     AccessibleTile tile = player.getTile();
@@ -192,9 +231,10 @@ public class Game {
     if (tile instanceof Portal) {
       return "You can't drop an item on a portal!";
     }
+
+    // limit of one item per tile
     if (tile.hasItem()) {
       return "You can't drop an item on another item!";
-
     }
 
     if (!tile.hasItem() && !tile.hasChallenge() && player.hasItem()) {
@@ -210,11 +250,17 @@ public class Game {
 
   }
 
+  /**
+   * This method diffuses a bomb challenge.
+   *
+   * @return a notification message for the user
+   */
   public String diffuseBomb() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -225,6 +271,7 @@ public class Game {
 
       Bomb bomb = (Bomb) challenge;
 
+      // confirm bomb hasn't already been diffused
       if (!bomb.isNavigable()) {
 
         Item item = player.getItem();
@@ -234,19 +281,29 @@ public class Game {
           return "Bomb successfully diffused";
         }
 
-      } else {
+      }
+
+      if (bomb.isNavigable()) {
         return "You have already diffused the bomb, it is safe to walk over";
       }
+
     }
 
     return "You do not have a diffuser to diffuse the bomb!";
+
   }
 
+  /**
+   * This method unlocks a vending machine challenge.
+   *
+   * @return a notification message for the user
+   */
   public String unlockVendingMachine() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -258,6 +315,7 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
+      // vending machine must be facing towards the player to interact with it
       if (!direction.getOppositeDirection().equals(vmDirection)) {
         return "";
       }
@@ -270,19 +328,29 @@ public class Game {
           vendingMachine.setUnlocked(true);
           return "Vending machine successfully unlocked and ready to use";
         }
-      } else {
+      }
+
+      if (vendingMachine.isUnlocked()) {
         return "You have already unlocked the vending machine!";
       }
+
     }
 
     return "You do not have the bolt cutter to unlock the vending machine!";
+
   }
 
+  /**
+   * This method uses a vending machine challenge.
+   *
+   * @return a notification message for the user
+   */
   public String useVendingMachine() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -294,6 +362,7 @@ public class Game {
       VendingMachine vendingMachine = (VendingMachine) challenge;
       Direction vmDirection = vendingMachine.getDirection();
 
+      // vending machine must be facing towards the player to interact with it
       if (!direction.getOppositeDirection().equals(vmDirection)) {
         return "";
       }
@@ -314,11 +383,17 @@ public class Game {
     return "You do not have a coin to unlock the vending machine!";
   }
 
+  /**
+   * This method befriends an alien challenge.
+   *
+   * @return a notification message for the user
+   */
   public String befriendAlien() {
 
     AccessibleTile tile = player.getTile();
     Direction direction = player.getDirection();
 
+    // check there is a challenge directly opposite the player
     ChallengeItem challenge = this.currentRoom.getAdjacentChallenge(tile, direction);
 
     if (challenge == null) {
@@ -337,6 +412,8 @@ public class Game {
 
           player.dropItem();
           alien.setNavigable(true);
+
+          // update the alien direction so that it is facing the player
           Direction nextDirection =
               (direction == Direction.NORTH || direction == Direction.SOUTH)
                   ? direction.getOppositeDirection() : direction;
@@ -344,13 +421,21 @@ public class Game {
           return "Alien successfully befriended";
 
         }
-      } else {
+      }
+      if (alien.isNavigable()) {
         return "You have already made friends with the Alien, you may pass.";
       }
     }
+
     return "You do not have the magic potion to befriend the Alien!";
+
   }
 
+  /**
+   * This method checks for a oxygen tank where the player is located.
+   *
+   * @return a notification message for the user
+   */
   public String checkForOxygenTank() {
 
     AccessibleTile currentTile = player.getTile();
@@ -364,8 +449,8 @@ public class Game {
         currentTile.setItem(null);
         return "You replenished your oxygen supply";
       }
-
     }
+
     return "";
 
   }
@@ -422,6 +507,8 @@ public class Game {
           continue;
         }
         room.rotateRoomClockwise();
+        room.rotateObjects(true);
+        direction = direction.getClockwiseDirection();
       }
     }
 
@@ -443,6 +530,8 @@ public class Game {
           continue;
         }
         room.rotateRoomAnticlockwise();
+        room.rotateObjects(false);
+        direction = direction.getAnticlockwiseDirection();
       }
     }
 
@@ -473,6 +562,24 @@ public class Game {
    */
   public Room getCurrentRoom() {
     return currentRoom;
+  }
+
+  /**
+   * This method is a getter for the current direction of the game.
+   *
+   * @return the current direction of the game
+   */
+  public Direction getDirection() {
+    return direction;
+  }
+
+  /**
+   * This method is a getter for the initial rotation of the game.
+   *
+   * @return the initial rotation of the game
+   */
+  public Direction getInitialDirection() {
+    return initialDirection;
   }
 }
 

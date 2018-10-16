@@ -96,8 +96,6 @@ public class GameworldTests {
   @Test
   public void playerCanMove() {
 
-    AccessibleTile startTile = player.getTile();
-
     game.movePlayer(1, 0);
     game.movePlayer(1, 0);
 
@@ -106,6 +104,7 @@ public class GameworldTests {
     game.pickUpItem();
     game.dropItem();
 
+    AccessibleTile startTile = player.getTile();
     AccessibleTile nextTile = player.getTile();
 
     assertNotEquals(startTile, nextTile);
@@ -243,6 +242,13 @@ public class GameworldTests {
     assertEquals(player.getTile().getRow(), item.getRow());
     assertEquals(player.getTile().getCol(), item.getCol());
 
+    Item nextItem = new Coin(-1, -1, "NORTH");
+    player.addItem(nextItem);
+
+    game.dropItem();
+
+    assertTrue(player.getItem() instanceof Coin);
+
   }
 
   /**
@@ -286,6 +292,9 @@ public class GameworldTests {
 
     assertTrue(bomb.isNavigable());
 
+    String notification = game.diffuseBomb();
+    assertNotNull(notification);
+
   }
 
   /**
@@ -307,6 +316,8 @@ public class GameworldTests {
 
     game.unlockVendingMachine();
     assertTrue(vendingMachine.isUnlocked());
+
+    game.unlockVendingMachine();
 
     // challenge = null case
 
@@ -380,6 +391,9 @@ public class GameworldTests {
 
     assertTrue(alien.isNavigable());
     assertFalse(player.getItem() instanceof Potion);
+
+    alien.setNavigable(true);
+    game.befriendAlien();
 
     // challenge = null case
 
@@ -550,6 +564,8 @@ public class GameworldTests {
 
     assertFalse(player.getOxygen() < 0);
 
+    game.checkForOxygenTank();
+
   }
 
   /**
@@ -622,6 +638,21 @@ public class GameworldTests {
     }
 
     assertNotNull(new Portal(-1, -1, null, Direction.NORTH).toString());
+
+  }
+
+
+  /**
+   * This method tests that initial rotation works.
+   * @throws XmlParser.ParseError xml parser error
+   */
+  @Test
+  public void initialRotationWorks() throws XmlParser.ParseError {
+
+    game = XmlParser.parseGame(new File("test_data/gameworldTestRotation.xml"));
+
+    assertEquals(Direction.NORTH, game.getInitialDirection());
+    assertEquals(Direction.EAST, game.getDirection());
 
   }
 
