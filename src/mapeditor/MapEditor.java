@@ -91,18 +91,16 @@ public class MapEditor extends Application {
   }
 
   /**
-   * This method returns the current board grid. Used for testing purposes.
-   *
-   * @return GridPane of the boardGrid
+   * A method that returns the board.
+   * @return the boardGrid
    */
   public GridPane getBoardGrid() {
     return boardGrid;
   }
 
   /**
-   * This method returns the current item grid. Used for testing purposes.
-   *
-   * @return GridPane of the itemGrid
+   * A method that returns the item spaces.
+   * @return the item grid
    */
   public GridPane getItemGrid() {
     return itemGrid;
@@ -267,9 +265,8 @@ public class MapEditor extends Application {
   }
 
   /**
-   * This method returns whether the item spaces is empty or not.
-   *
-   * @return boolean of if there are items in the item grid
+   * A method check if there are not items in the item Grid.
+   * @return if there are no items in the item grid
    */
   public boolean noItemsInItemGrid() {
     for (int i = 0; i < 2; i++) {
@@ -529,7 +526,6 @@ public class MapEditor extends Application {
    *
    * @param row row of room to implement
    * @param col col of room to implement
-   *
    * @return GridPane the grid of all tiles in the room
    */
   private GridPane initRoom(int row, int col) {
@@ -658,12 +654,12 @@ public class MapEditor extends Application {
   }
 
   /**
-   * This method returns the node at the given row and column of the given gridPane.
+   * A method to return the node of the gridPane at the given row and column.
    *
-   * @param row      row which node will be at
-   * @param column   col which node will be at
-   * @param gridPane grid to find node in
-   * @return Node which is at row and col
+   * @param row given row to find
+   * @param column given column to find
+   * @param gridPane given GridPane to find node in
+   * @return the node at the row and col index
    */
   public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
     Node result = null;
@@ -786,11 +782,7 @@ public class MapEditor extends Application {
   }
 
   /**
-   * <<<<<<< HEAD
-   * Attempts to write a current game state to an XML file
-   * =======
    * Attempts to write a current game state to an XML file.
-   * >>>>>>> 5c12fef23e828ea3957e9d3ee6b1e601e44077f4
    *
    * @param game the game to save to a file
    * @return whether the game was successfully saved
