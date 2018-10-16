@@ -709,7 +709,8 @@ public class MapEditor extends Application {
               if (t instanceof TilePane) {
 
                 TilePane tilePane = (TilePane) t;
-                if (tilePane.isAccessible() || tilePane.hasMapItem() && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
+                if (tilePane.isAccessible() || tilePane.hasMapItem()
+                    && tilePane.getMapItem().getImageName().equals("spaceship.png")) {
                   AccessibleTile tile = new AccessibleTile(k, l);
                   MapItem mapItem = tilePane.getMapItem();
                   if (mapItem != null) {
