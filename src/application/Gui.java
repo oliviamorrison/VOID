@@ -128,7 +128,7 @@ public class Gui extends Application implements EventHandler<KeyEvent> {
   }
 
   /**
-   * Turns off the music
+   * Turns off the music.
    */
   public void muteAudio() {
     audio.stop();
@@ -637,7 +637,7 @@ public class Gui extends Application implements EventHandler<KeyEvent> {
     renderer.getRoot().setTranslateY(230);
 
     // construct a new progress bar to show decreasing oxygen level
-    progressBar = new ProgressBar( (double) currentGame.getPlayer().getOxygen() / 100);
+    progressBar = new ProgressBar((double) currentGame.getPlayer().getOxygen() / 100);
     Task task = oxygenCounter(100);
     progressBar.progressProperty().unbind();
     progressBar.progressProperty().bind(task.progressProperty());
