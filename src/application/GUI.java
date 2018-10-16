@@ -264,8 +264,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       confirmExit();
     });
 
-    ImageView titleIcon = new ImageView(titleImage);
-
     // buttons laid out in vertical column
     VBox buttons = new VBox(10);
     buttons.getChildren().addAll(titleIcon, newGame, load, editMap, quit);
@@ -316,8 +314,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox buttons = new HBox(10);
     buttons.getChildren().addAll(easy, med, hard);
     buttons.setAlignment(Pos.CENTER);
-
-    ImageView titleIcon = new ImageView(titleImage);
 
     VBox levels = new VBox(60);
     levels.getChildren().addAll(titleIcon, buttons);
@@ -463,8 +459,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox buttons = new HBox(10);
     buttons.getChildren().addAll(play, quit);
     buttons.setAlignment(Pos.CENTER);
-
-    ImageView titleIcon = new ImageView(titleImage);
 
     VBox options = new VBox(90);
     options.getChildren().addAll(titleIcon, buttons);
