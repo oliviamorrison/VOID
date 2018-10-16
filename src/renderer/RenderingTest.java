@@ -17,7 +17,12 @@ import org.junit.jupiter.api.Test;
 
 import persistence.XmlParser;
 
-
+/**
+ * This class tests all of the Rendering as well as the PolygonBlock logic.
+ * Note some test are done in gameworld test.
+ *
+ * @author James Del Puerto 300375073
+ */
 public class RenderingTest {
 
   private Game game;
@@ -41,6 +46,10 @@ public class RenderingTest {
 
   }
 
+  /**
+   * Test the getObjectDirection() method. Making sure that it returns the right directions
+   * when called.
+   */
   @Test void getObjectDirectionTest() {
     assertEquals("N.png", renderer.getObjectDirection(Direction.NORTH));
     assertEquals("S.png", renderer.getObjectDirection(Direction.SOUTH));
@@ -48,11 +57,18 @@ public class RenderingTest {
     assertEquals("W.png", renderer.getObjectDirection(Direction.EAST));
   }
 
+  /**
+   * Test the getRoot() method. Making sure it's not empty.
+   */
   @Test
   public void getRootTest() {
     assertNotNull(renderer.getRoot());
   }
 
+  /**
+   * Test the newRoom() method. Test that renderer knows
+   * the player is in a new room and not in the same room when player moves.
+   */
   @Test
   public void newRoomTest() {
     AccessibleTile startTile = (AccessibleTile) game.getCurrentRoom().getTile(5, 9);
@@ -64,6 +80,10 @@ public class RenderingTest {
     assertNotEquals(startRoom, player.getRoom());
   }
 
+  /**
+   * Test that the player rotates when player rotates board or character; checking for
+   * each direction.
+   */
   @Test
   public void rotationTest() {
     Direction startDirection = player.getDirection();
