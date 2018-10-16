@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -33,6 +34,7 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.*;
 
 //TODO win/lose dialog
@@ -72,6 +74,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.setResizable(false);
     window.setTitle("Void");
     window.show();
+
   }
 
   @Override
@@ -559,6 +562,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     new Thread(task).start();
     /////////////////////////////////////////////////////////
 
+    String path = "music/space.wav";
+    AudioClip audio = new AudioClip(Paths.get(path).toUri().toString());
+    audio.setCycleCount(10);
+    audio.play();
 
     return grid;
   }
