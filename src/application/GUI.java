@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -32,6 +33,7 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -58,6 +60,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Scene startScene, gameScene, levelsScene, winLoseScene;
   private ProgressBar pBar;
   private Boolean pause = false;
+  private AudioClip audio;
 
   // Game components
   private Renderer renderer;
@@ -148,7 +151,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     updateScreen(str);
 
   }
-
 
   /**
    * Constructs the initial start menu screen
@@ -642,6 +644,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     pBar.progressProperty().unbind();
     pBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
+
+    //Add music
+    if(audio!=null) audio.stop();
+    String path = "music/space.wav";
+    audio = new AudioClip(Paths.get(path).toUri().toString());
+    audio.setCycleCount(10);
+    audio.play();
 
     return grid;
   }

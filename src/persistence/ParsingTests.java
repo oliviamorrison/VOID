@@ -110,7 +110,7 @@ public class ParsingTests {
   }
 
   /**
-   * Test the parser throws an XmlParser error when a file with an item
+   * Test the parser throws an XmlParser error when a file with an item.
    * that is missing its position
    */
   @Test
@@ -131,7 +131,7 @@ public class ParsingTests {
 
   /**
    * Test the parser throws an XmlParser error when a file with a challenge
-   * that is missing the direction property
+   * that is missing the direction property.
    */
   @Test
   public void testIncorrectChallengeProperty() {
@@ -141,7 +141,7 @@ public class ParsingTests {
 
   /**
    * Test the parser throws an XmlParser error when a file with a challenge
-   * that is missing its position
+   * that is missing its position.
    */
   @Test
   public void testIncorrectChallengeProperty2() {
@@ -151,7 +151,7 @@ public class ParsingTests {
 
   /**
    * Test the parser throws an XmlParser error when a file with a player
-   * that is missing its position
+   * that is missing its position.
    */
   @Test
   public void testIncorrectPlayerProperty() {
@@ -161,7 +161,7 @@ public class ParsingTests {
 
   /**
    * Test the parser throws an XmlParser error when a file with a player
-   * that is missing its oxygen property
+   * that is missing its oxygen property.
    */
   @Test
   public void testIncorrectPlayerProperty2() {
@@ -171,7 +171,7 @@ public class ParsingTests {
 
   /**
    * Test the parser throws an XmlParser error when a file with a player
-   * that is missing its direction property
+   * that is missing its direction property.
    */
   @Test
   public void testIncorrectPlayerProperty3() {
