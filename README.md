@@ -3,7 +3,7 @@
 * Application   - Annisha Akosah (300399598)
 * Renderer      - James Del Puerto ([student_ID])
 * Gameworld     - Latrell Whata (300417220)
-* MapEditor     - Olivia Morrison ([student_ID])
+* MapEditor     - Olivia Morrison (300418831)
 * Persistence   - Sam Ong (300363819)
 
 ### The Game
