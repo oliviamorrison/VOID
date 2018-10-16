@@ -552,7 +552,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    */
   public static void configureFileChooser(final FileChooser fileChooser) {
     fileChooser.setTitle("Open XML file");
-    fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+    fileChooser.setInitialDirectory(new File("data/."));
 
     FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
     fileChooser.getExtensionFilters().add(extFilter);
