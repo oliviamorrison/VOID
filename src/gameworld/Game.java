@@ -192,6 +192,10 @@ public class Game {
     if (tile instanceof Portal) {
       return "You can't drop an item on a portal!";
     }
+    if (tile.hasItem()) {
+      return "You can't drop an item on another item!";
+
+    }
 
     if (!tile.hasItem() && !tile.hasChallenge() && player.hasItem()) {
 
@@ -341,7 +345,7 @@ public class Game {
     return "You do not have the magic potion to befriend the Alien!";
   }
 
-  public void checkForOxygenTank() {
+  public String checkForOxygenTank() {
 
     AccessibleTile currentTile = player.getTile();
 
@@ -352,9 +356,11 @@ public class Game {
       if (item instanceof OxygenTank) {
         player.boostOxygen();
         currentTile.setItem(null);
+        return "You replenished your oxygen supply";
       }
 
     }
+    return "";
 
   }
 
