@@ -7,7 +7,7 @@
         <item row="3" col="4" direction="NORTH">OxygenTank</item>
         <item row="3" col="5" direction="NORTH">Coin</item>
         <item row="3" col="6" direction="NORTH">SpaceShip</item>
-        <item row="3" col="7" direction="NORTH">Potion</item>
+        <item row="5" col="5" direction="NORTH">Potion</item>
         <challenge row="1" col="3" state="false" direction="SOUTH">VendingMachine</challenge>
         <challenge row="1" col="4" state="false" direction="SOUTH">Alien</challenge>
         <challenge row="1" col="5" state="false" direction="NORTH">Bomb</challenge>
