@@ -52,11 +52,11 @@ import org.xml.sax.SAXException;
 /**
  * This class saves and loads XML files using the javax.xml.parsers library and DOM parser.
  * The schema for the game's XML files is under "schema.xsd"
- *<p></p>
+ *<p>
  * This uses the Java DOM parser because:
  *  - The structure of the document is important
  *  - Elements in the document need to be sorted into specific places in collections
- *
+ *</p>
  * @author Sam Ong 300363819
  *
  */
@@ -424,6 +424,7 @@ public class XmlParser {
    * A method to parse each challenge and set their tiles.
    * @param challengeList the node list to get challenges from
    * @param tiles tiles in the room that can be set with challenges
+   * @throws ParseError throws parse error
    */
   private static void parseChallenges(NodeList challengeList, Tile[][] tiles) throws ParseError {
 
@@ -469,6 +470,7 @@ public class XmlParser {
   /**
    * A method to load the schema for XML files.
    * @param fileName name xsd file to parse
+   * @throws SAXException throws SAX exception
    */
   private static void loadSchema(String fileName) throws SAXException {
     String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
