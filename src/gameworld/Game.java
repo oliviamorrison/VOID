@@ -13,6 +13,7 @@ public class Game {
   private Room[][] board;
   private Player player;
   private Room currentRoom;
+  Direction initialDirection;
   Direction direction;
 
   /**
@@ -21,17 +22,18 @@ public class Game {
    * @param board  the 2D array of room objects that make up the game
    * @param player the current game player
    */
-  public Game(Room[][] board, Player player, String dir) {
+  public Game(Room[][] board, Player player, String initDir, String dir) {
 
     this.player = player;
     this.board = Arrays.copyOf(board, board.length);
     this.currentRoom = player.getRoom();
     connectPortals();
     this.direction = Direction.directionFromString(dir);
-    initialRotate();
+    this.initialDirection = direction;
+    initialRotate(initDir);
   }
 
-  private void initialRotate() {
+  private void initialRotate(String initDir) {
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         Room room = board[row][col];
@@ -40,7 +42,7 @@ public class Game {
           continue;
         }
 
-        while (direction != Direction.NORTH) {
+        while (direction != Direction.directionFromString(initDir)) {
           room.rotateRoomClockwise();
           direction = direction.getClockwiseDirection();
         }
@@ -558,6 +560,10 @@ public class Game {
 
   public Direction getDirection() {
     return direction;
+  }
+
+  public Direction getInitialDirection() {
+    return initialDirection;
   }
 }
 
