@@ -21,7 +21,6 @@ import persistence.XmlParser;
 public class RenderingTest {
 
   private Game game;
-  private Room[][] board;
   private Player player;
   private Renderer renderer;
 
@@ -36,7 +35,6 @@ public class RenderingTest {
     game = XmlParser.parseGame(new File("test_data/renderTesting2.xml"));
 
     if (game != null) {
-      board = game.getBoard();
       player = game.getPlayer();
       renderer = new Renderer(game);
     }

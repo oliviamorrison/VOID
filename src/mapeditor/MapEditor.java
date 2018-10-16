@@ -1,8 +1,8 @@
 package mapeditor;
 
-import static application.GUI.configureFileChooser;
+import static application.Gui.configureFileChooser;
 
-import application.GUI;
+import application.Gui;
 
 import gameworld.AccessibleTile;
 import gameworld.Alien;
@@ -133,8 +133,8 @@ public class MapEditor extends Application {
     int rows = 2;
     int cols = 4;
 
-    double itemWidth = this.itemWidth / rows;
-    double itemHeight = this.itemHeight / cols;
+    double itemWidth = (double) this.itemWidth / rows;
+    double itemHeight = (double) this.itemHeight / cols;
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
@@ -248,7 +248,7 @@ public class MapEditor extends Application {
 
     backToMain.setOnAction(e -> {
       try {
-        new GUI().start(stage);
+        new Gui().start(stage);
       } catch (Exception e1) {
         e1.printStackTrace();
       }
@@ -533,8 +533,8 @@ public class MapEditor extends Application {
 
 
     int roomNum = 3;
-    double roomWidth = boardSize / roomNum;
-    double roomHeight = boardSize / roomNum;
+    double roomWidth = (double) boardSize / roomNum;
+    double roomHeight = (double) boardSize / roomNum;
 
     int tileNum = 10;
     double tileWidth = roomWidth / tileNum;

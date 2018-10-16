@@ -75,7 +75,7 @@ import renderer.Renderer;
  * @author Annisha Akosah 300399598
  */
 
-public class GUI extends Application implements EventHandler<KeyEvent> {
+public class Gui extends Application implements EventHandler<KeyEvent> {
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 750;
   public static final String BUTTON_STYLE = "-fx-background-color: rgba(0,0,0,0);";
@@ -100,7 +100,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
   // Game components
   private Renderer renderer;
-  private static Game currentGame;
+  private Game currentGame;
 
   /**
    * Gets the current primary Stage.
@@ -118,13 +118,20 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
   public ImageView getImage(String imageName) {
     Image image = null;
     try {
-      image = new Image(new FileInputStream("images/"+ imageName));
+      image = new Image(new FileInputStream("images/" + imageName));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
     ImageView imageView = new ImageView(image);
     //imageView.setPreserveRatio(true);
     return imageView;
+  }
+
+  /**
+   * Turns off the music
+   */
+  public void muteAudio() {
+    audio.stop();
   }
 
   @Override
@@ -200,12 +207,11 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       if (currentGame.checkForSpaceship()) {
         window.setScene(createWinLoseScene("win"));
       }
-      currentGame.checkForSpaceship();
       str = currentGame.checkForOxygenTank();
     }
 
     // player loses when they run out of oxygen
-    if(currentGame.getPlayer().getOxygen() == 0) {
+    if (currentGame.getPlayer().getOxygen() == 0) {
       window.setScene(createWinLoseScene("lose"));
     }
     renderer.draw();
@@ -220,9 +226,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return the resulting start scene
    */
   public Scene createStartScene(Stage stage) {
-    // title
-    ImageView titleIcon = getImage("title.png");
-
     // new game
     Button newGame = new Button();
     newGame.setStyle(BUTTON_STYLE);
@@ -264,6 +267,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       confirmExit();
     });
 
+    // title
+    ImageView titleIcon = getImage("title.png");
+
     // buttons laid out in vertical column
     VBox buttons = new VBox(10);
     buttons.getChildren().addAll(titleIcon, newGame, load, editMap, quit);
@@ -286,9 +292,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return the resulting levels scene
    */
   public Scene createLevelsScreen(Stage stage) {
-    // title
-    ImageView titleIcon = getImage("selectTitle.png");
-
     // easy
     Button easy = new Button();
     easy.setStyle(BUTTON_STYLE);
@@ -314,6 +317,9 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox buttons = new HBox(10);
     buttons.getChildren().addAll(easy, med, hard);
     buttons.setAlignment(Pos.CENTER);
+
+    // title
+    ImageView titleIcon = getImage("selectTitle.png");
 
     VBox levels = new VBox(60);
     levels.getChildren().addAll(titleIcon, buttons);
@@ -355,6 +361,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
 
     editMap.setOnAction(e -> {
       try {
+        pause = true;
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Are you sure?");
         alert.setContentText("Proceed to edit map?");
@@ -362,6 +369,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
         if (result.isPresent() && result.get() == ButtonType.OK) {
           new MapEditor().start(stage);
         }
+        pause = false;
       } catch (Exception e1) {
         e1.printStackTrace();
       }
@@ -439,8 +447,6 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return the resulting win/lose scene
    */
   public Scene createWinLoseScene(String status) {
-    ImageView titleIcon = getImage(status + ".png");
-
     // play again
     Button play = new Button();
     play.setStyle(BUTTON_STYLE);
@@ -459,6 +465,8 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     HBox buttons = new HBox(10);
     buttons.getChildren().addAll(play, quit);
     buttons.setAlignment(Pos.CENTER);
+
+    ImageView titleIcon = getImage(status + ".png");
 
     VBox options = new VBox(90);
     options.getChildren().addAll(titleIcon, buttons);
@@ -479,12 +487,14 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @return true if a file was successfully loaded or false otherwise
    */
   public boolean loadFile(Stage stage) {
+    pause = true;
     FileChooser chooser = new FileChooser();
     configureFileChooser(chooser);
     chooser.setTitle("Open Game XML File");
     File file = chooser.showOpenDialog(stage);
 
     if (file == null) {
+      pause = false;
       return false; // file loading failed
     }
 
@@ -498,6 +508,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       System.out.println(parseError.getMessage());
     }
     setGame(stage);
+    pause = false;
     return true;
   }
 
@@ -506,6 +517,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    * @param stage the primary stage constructed by the platform
    */
   public void saveFile(Stage stage) {
+    pause = true;
     FileChooser fileChooser = new FileChooser();
     configureFileChooser(fileChooser);
 
@@ -526,6 +538,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
           + "Please save using a different file name");
       alert.showAndWait();
     }
+    pause = false;
   }
 
   /**
@@ -624,14 +637,16 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     renderer.getRoot().setTranslateY(230);
 
     // construct a new progress bar to show decreasing oxygen level
-    progressBar = new ProgressBar(currentGame.getPlayer().getOxygen() / 100);
+    progressBar = new ProgressBar( (double) currentGame.getPlayer().getOxygen() / 100);
     Task task = oxygenCounter(100);
     progressBar.progressProperty().unbind();
     progressBar.progressProperty().bind(task.progressProperty());
     new Thread(task).start();
 
     // add music
-    if(audio!=null) audio.stop();
+    if (audio != null) {
+      audio.stop();
+    }
     String path = "music/space.wav";
     audio = new AudioClip(Paths.get(path).toUri().toString());
     audio.setCycleCount(10);
@@ -667,7 +682,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       @Override
       protected Object call() throws Exception {
         int oxygen = currentGame.getPlayer().getOxygen();
-        for (int i = oxygen; i > 0; i = oxygen) {
+        while (currentGame.getPlayer().getOxygen() > 0) {
           Thread.sleep(1000); // CHANGE FOR DIFFERENT TIMERS
           updateProgress(currentGame.getPlayer().getOxygen(), oxygen);
           if (!pause) {
@@ -874,6 +889,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
    *
    */
   public void confirmExit() {
+    pause = true;
     Alert alert = new Alert(AlertType.CONFIRMATION);
     alert.setTitle("Quit Game");
     alert.setHeaderText("Are you sure?");
@@ -886,6 +902,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
     if (result.get() == ButtonType.OK) {
       System.exit(0); // exit application
     } else {
+      pause = false;
       //do nothing..
     }
   }
