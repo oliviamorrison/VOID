@@ -234,8 +234,7 @@ public class Game {
           return "Bomb successfully diffused";
         }
 
-      }
-      else {
+      } else {
         return "You have already diffused the bomb, it is safe to walk over";
       }
     }
@@ -271,6 +270,8 @@ public class Game {
           vendingMachine.setUnlocked(true);
           return "Vending machine successfully unlocked and ready to use";
         }
+      } else {
+        return "You have already unlocked the vending machine!";
       }
     }
 
@@ -343,6 +344,8 @@ public class Game {
           return "Alien successfully befriended";
 
         }
+      } else {
+        return "You have already made friends with the Alien, you may pass.";
       }
     }
     return "You do not have the magic potion to befriend the Alien!";
