@@ -37,24 +37,26 @@ import java.util.*;
 
 //TODO fix health bar with a longer length
 //TODO win/lose dialog
-//TODO print sensible messages to screen
-
 
 public class GUI extends Application implements EventHandler<KeyEvent>{
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 750;
-  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<>();
+
+  // GUI components
   private GridPane game;
   private FlowPane inventory;
   private GridPane healthBar;
   private GridPane options;
   private GridPane screen;
-  private Renderer renderer;
   private Text screenMessage;
-  private Game currentGame;
+  private HashMap<String, ToggleButton> inventoryButtons = new HashMap<>();
   private Stage window;
   private Scene startScene, gameScene, levelsScene;
   private ProgressBar pBar;
+
+  // Game components
+  private Renderer renderer;
+  private static Game currentGame;
 
   @Override
   public void start(Stage stage) {
@@ -70,6 +72,73 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.setResizable(false);
     window.setTitle("Void");
     window.show();
+  }
+
+  @Override
+  public void handle(KeyEvent event) {
+    int dx = 0;
+    int dy = 0;
+    String str = "";
+
+    switch (event.getCode()) {
+      case UP:
+        dx = -1;
+        break;
+      case LEFT:
+        dy = -1;
+        break;
+      case DOWN:
+        dx = 1;
+        break;
+      case RIGHT:
+        dy = 1;
+        break;
+      case A:
+        currentGame.rotateRoomAnticlockwise();
+        break;
+      case D:
+        currentGame.rotateRoomClockwise();
+        break;
+      case Z:
+        str = currentGame.pickUpItem();
+        break;
+      case X:
+        str = currentGame.dropItem();
+        break;
+      case N:
+        str = currentGame.diffuseBomb();
+        break;
+      case C:
+        str = currentGame.unlockVendingMachine();
+        break;
+      case V:
+        currentGame.useVendingMachine();
+        break;
+      case SPACE:
+        currentGame.teleport();
+        renderer.newRoom();
+        break;
+      case B:
+        currentGame.bribeGuard();
+        break;
+      default:
+
+    }
+    if (!(dx == 0 && dy == 0)) {
+
+      currentGame.movePlayer(dx, dy);
+
+      if (currentGame.checkForAntidote()) {
+        System.out.println("Winner winner");
+        System.exit(0);
+      }
+      currentGame.checkForHealthPack();
+    }
+
+    renderer.draw();
+    updateInventory();
+    updateScreen(str);
+
   }
 
   /**
@@ -166,17 +235,17 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   public Scene createLevelsScreen (Stage stage) {
-      // title
-      Image titleImage = null;
-      try {
-          titleImage = new Image(new FileInputStream("images/selectTitle.png"));
-      } catch (FileNotFoundException e) {
-          e.printStackTrace();
-      }
+    // title
+    Image titleImage = null;
+    try {
+      titleImage = new Image(new FileInputStream("images/selectTitle.png"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
 
-      ImageView titleIcon = new ImageView(titleImage);
+    ImageView titleIcon = new ImageView(titleImage);
 
-      // easy
+    // easy
     Button easy = new Button();
     easy.setStyle("-fx-background-color: rgba(0,0,0,0);");
     Image newImage = null;
@@ -256,13 +325,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     MenuItem saveGame = new MenuItem("Save Game");
     file.getItems().addAll(newGame, editMap, loadGame, saveGame);
 
-//    newGame.setOnAction(Event -> startNewGame(stage));
-//    loadGame.setOnAction(Event -> {
-//      if(loadFile(stage)) {
-//        window.setScene(createGameScene(stage));
-//      }
-//    });
-//
+    newGame.setOnAction(Event -> window.setScene(levelsScene));
+    loadGame.setOnAction(Event -> {
+      if(loadFile(stage)) {
+        window.setScene(createGameScene(stage));
+      }
+    });
+
     saveGame.setOnAction(Event -> saveFile(stage));
 
     // help
@@ -427,7 +496,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
   }
 
-
   /**
    * Configures the size of each game GUI pane
    *
@@ -495,25 +563,24 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * JAMES??????????
+   * Dec
    * @param health the players health
    * @return
    */
   private Task oxygenCounter(int health){
-  return new Task() {
-    @Override
-    protected Object call() throws Exception {
-      for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
-        Thread.sleep(1000);
-        updateProgress(currentGame.getPlayer().getHealth(), health);
-        currentGame.getPlayer().loseHealth();
+    return new Task() {
+      @Override
+      protected Object call() throws Exception {
+        for(int i = currentGame.getPlayer().getHealth(); i > 0; i = currentGame.getPlayer().getHealth()){
+          Thread.sleep(1000);
+          updateProgress(currentGame.getPlayer().getHealth(), health);
+          currentGame.getPlayer().loseHealth();
+        }
+       //END GAME
+        return true;
       }
-      System.out.println("Finish");
-      //TODO: game needs to end
-      return true;
-    }
-  };
-}
+    };
+  }
 
 
 
@@ -567,23 +634,27 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
 
     // enable button listeners
     inventoryButtons.get("GoldenCoin").setOnAction(Event -> {
-      currentGame.useVendingMachine();
+      String str = currentGame.useVendingMachine();
       updateInventory();
+      updateScreen(str);
       renderer.draw();
     });
     inventoryButtons.get("RedBoltCutter").setOnAction(Event -> {
-      currentGame.unlockVendingMachine();
+      String str = currentGame.unlockVendingMachine();
       updateInventory();
+      updateScreen(str);
       renderer.draw();
     });
     inventoryButtons.get("MagicPotion").setOnAction(Event -> {
-      currentGame.bribeGuard();
+      String str = currentGame.bribeGuard();
       updateInventory();
+      updateScreen(str);
       renderer.draw();
     });
     inventoryButtons.get("BombDiffuser").setOnAction(Event -> {
-      currentGame.diffuseBomb();
+      String str = currentGame.diffuseBomb();
       updateInventory();
+      updateScreen(str);
       renderer.draw();
     });
 
@@ -621,7 +692,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     ImageView pickupIcon = new ImageView(pickupImage);
     pickupButton.setGraphic(pickupIcon);
     pickupButton.setOnAction(Event -> {
-      currentGame.pickUpItem();
+      String str = currentGame.pickUpItem();
+      updateScreen(str);
       updateInventory();
       renderer.draw();
     });
@@ -636,7 +708,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     ImageView dropIcon = new ImageView(dropImage);
     dropButton.setGraphic(dropIcon);
     dropButton.setOnAction(Event -> {
-      currentGame.dropItem();
+      String str = currentGame.dropItem();
+      updateScreen(str);
       updateInventory();
       renderer.draw();
     });
@@ -675,73 +748,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     return screen;
   }
 
-
-  @Override
-  public void handle(KeyEvent event) {
-    int dx = 0;
-    int dy = 0;
-    String str = "";
-
-    switch (event.getCode()) {
-      case UP:
-        dx = -1;
-        break;
-      case LEFT:
-        dy = -1;
-        break;
-      case DOWN:
-        dx = 1;
-        break;
-      case RIGHT:
-        dy = 1;
-        break;
-      case A:
-        currentGame.rotateRoomAnticlockwise();
-        break;
-      case D:
-        currentGame.rotateRoomClockwise();
-        break;
-      case Z:
-        str = currentGame.pickUpItem();
-        break;
-      case X:
-        currentGame.dropItem();
-        break;
-      case N:
-        currentGame.diffuseBomb();
-        break;
-      case C:
-        currentGame.unlockVendingMachine();
-        break;
-      case V:
-        currentGame.useVendingMachine();
-        break;
-      case SPACE:
-        currentGame.teleport();
-        renderer.newRoom();
-        break;
-      case B:
-        currentGame.bribeGuard();
-        break;
-      default:
-
-    }
-    if (!(dx == 0 && dy == 0)) {
-
-      currentGame.movePlayer(dx, dy);
-
-      if (currentGame.checkForAntidote()) {
-        System.out.println("Winner winner");
-        System.exit(0);
-      }
-      currentGame.checkForHealthPack();
-    }
-
-    renderer.draw();
-    updateInventory();
-    updateScreen(str); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
-
-  }
 
   /**
    * Displays a popup control menu to assist the user with keyboard control
@@ -828,18 +834,18 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * Updates the Screen pane given the action take by the player
+   * Updates the Screen pane given the action taken by the player
    *
    * @param msg the message to be displayed on the Screen pane
    */
   public void updateScreen(String msg) {
 
-    // line break at every 20th letter
+    // line break at every 20th character
     String parsedStr = msg.replaceAll("(.{20})", "$1-\n");
 
     final Animation animation = new Transition() {
       {
-        setCycleDuration(Duration.millis(800));
+        setCycleDuration(Duration.millis(600));
       }
 
       protected void interpolate(double frac) {
@@ -850,6 +856,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     };
     animation.play();
   }
+
+
 
   public static void main(String[] args) {
     Application.launch(args);
