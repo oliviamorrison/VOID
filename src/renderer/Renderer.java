@@ -165,18 +165,18 @@ public class Renderer {
         } else if(item instanceof Potion){
             itemImage = getImage((potionImage));
             itemImage.setFitHeight(30);
-            itemImage.setX(c.getX() - 5);
+            itemImage.setX(c.getX() - 12);
             itemImage.setY(c.getY() - 25);
         } else if(item instanceof OxygenTank){
             itemImage = getImage((oxygenTankImage));
-            itemImage.setFitHeight(30);
+            itemImage.setFitHeight(50);
             itemImage.setX(c.getX() - 5);
-            itemImage.setY(c.getY() - 25);
+            itemImage.setY(c.getY() - 45);
         } else if(item instanceof SpaceShip){
             itemImage = getImage((spaceshipImage+ getObjectDirection(item.getDirection())));
-            itemImage.setFitHeight(30);
-            itemImage.setX(c.getX() - 5);
-            itemImage.setY(c.getY() - 25);
+            itemImage.setFitHeight(40);
+            itemImage.setX(c.getX() - 20);
+            itemImage.setY(c.getY() - 30);
         }
         return itemImage;
 
@@ -198,8 +198,8 @@ public class Renderer {
         } else if(challenge instanceof Alien){
             itemImage = getImage((alienImage+ getObjectDirection(challenge.getDirection())));
             itemImage.setFitHeight(80);
-            itemImage.setX(c.getX() - 30);
-            itemImage.setY(c.getY() - 65);
+            itemImage.setX(c.getX() - 20);
+            itemImage.setY(c.getY() - 70);
         }
         return itemImage;
 
