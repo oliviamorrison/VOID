@@ -642,4 +642,19 @@ public class GameworldTests {
 
   }
 
+
+  /**
+   * This method tests that initial rotation works.
+   * @throws XmlParser.ParseError xml parser error
+   */
+  @Test
+  public void initialRotationWorks() throws XmlParser.ParseError {
+
+    game = XmlParser.parseGame(new File("test_data/gameworldTestRotation.xml"));
+
+    assertEquals(Direction.NORTH, game.getInitialDirection());
+    assertEquals(Direction.EAST, game.getDirection());
+
+  }
+
 }
