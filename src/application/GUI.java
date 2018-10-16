@@ -24,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import mapeditor.MapEditor;
 import persistence.XmlParser;
 import renderer.Renderer;
 
@@ -119,7 +120,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     });
 
     // edit map
-    // TODO link up map editor gui
     Button editMap = new Button();
     editMap.setStyle("-fx-background-color: rgba(0,0,0,0);");
     Image editImage = null;
@@ -130,7 +130,13 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView editIcon = new ImageView(editImage);
     editMap.setGraphic(editIcon);
-    // editMap.setOnAction(e -> Application.launch(MapEditor.class);
+     editMap.setOnAction(e -> {
+       try {
+         new MapEditor().start(stage);
+       } catch (Exception e1) {
+         e1.printStackTrace();
+       }
+     });
 
     // quit
     Button quit = new Button();
@@ -219,7 +225,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     levels.setAlignment(Pos.CENTER);
 
     levelsScene = new Scene(levels, WINDOW_WIDTH, WINDOW_HEIGHT);
-      levels.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
+    levels.setBackground(new Background(new BackgroundFill(Color.rgb(38,38,38), CornerRadii.EMPTY, Insets.EMPTY)));
 
     return levelsScene;
 
@@ -283,8 +289,8 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     this.healthBar = setOxygenBar();
     this.inventory = setInventory();
     this.options = setOptions();
-    String startMsg = "> Navigate through this unit to the safety " +
-            "of your ship. Hurry Commander, time is of the essence!";
+    String startMsg = "> Navigate through this unit to the safety "
+        + "of your ship. Hurry Commander, time is of the essence!";
     this.screen = setScreen(startMsg);
 
     updateInventory();
@@ -359,8 +365,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
       }
-    }
-    else {
+    } else {
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("Unable to save over default game files");
       alert.setContentText("Unable to save over default game files. Please save using a different file name");
@@ -374,7 +379,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
    *
    * @param fileChooser
    */
-  private static void configureFileChooser(final FileChooser fileChooser) {
+  public static void configureFileChooser(final FileChooser fileChooser) {
     fileChooser.setTitle("Open XML file");
     fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 

@@ -1,5 +1,6 @@
 package mapeditor;
 
+import application.GUI;
 import gameworld.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -15,11 +16,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import persistence.XmlParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
+import static application.GUI.configureFileChooser;
 
 
 /**
@@ -49,10 +53,11 @@ public ItemSpace selectedItem;
   private GridPane boardGrid;
   private GridPane mainPane;
   private GridPane itemGrid;
+  private Stage stage;
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-
+    this.stage = primaryStage;
     setUp();
 
     itemGrid = initItemSpaces(false);
@@ -150,11 +155,12 @@ public GridPane initItemSpaces(boolean test) {
  * @param test boolean which represents if a test is calling the method
  * @return GridPane of the itemSpaces plus the buttons
  */
-public GridPane setOptions(GridPane items, boolean test ) {
+public GridPane setOptions(GridPane items, boolean test) {
 
     Button pickupButton = new Button("Pick Up");
     Button dropButton = new Button("Drop");
-    Button makeGame = new Button("Make Game");
+  Button makeGame = new Button("Make Game");
+  Button backToMain = new Button("Back to game");
 
     pickupButton.setOnAction(new EventHandler<ActionEvent>() {
       @Override public void handle(ActionEvent e) {
@@ -223,10 +229,19 @@ public GridPane setOptions(GridPane items, boolean test ) {
       }
     });
 
+  backToMain.setOnAction(e -> {
+    try {
+      new GUI().start(stage);
+    } catch (Exception e1) {
+      e1.printStackTrace();
+    }
+  });
+
     if(!test) {
     		items.add(pickupButton,0,4);
     		items.add(dropButton,1,4);
     		items.add(makeGame, 2,4);
+    		items.add(backToMain,3, 4);
     }
 
     return items;
@@ -742,13 +757,41 @@ public boolean createGame() {
 
     Game game = new Game(board, player);
 
-    try {
-      XmlParser.saveFile(new File("data/testMapEditor.xml"), game);
-      return true;
-    } catch (ParserConfigurationException | TransformerException e) {
-      e.printStackTrace();
+
+    return saveFile(game);
+  }
+
+  /**
+   * Attempts to write a current game state to an XML file
+   * @param game the game to save to a file
+   * @return whether the game was successfully saved
+   */
+  public boolean saveFile(Game game) {
+    FileChooser fileChooser = new FileChooser();
+    configureFileChooser(fileChooser);
+
+    //Show save file dialog
+    File file = fileChooser.showSaveDialog(stage);
+    if (file != null && !file.getName().equals("easy.xml") && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
+      try {
+        XmlParser.saveFile(file, game);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("File saved!");
+        alert.setContentText("File successfully saved");
+        alert.showAndWait();
+        return true;
+      } catch (ParserConfigurationException | TransformerException e) {
+        e.printStackTrace();
+        return false;
+      }
+    } else {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Unable to save over default game files");
+      alert.setContentText("Unable to save over default game files. Please save using a different file name");
+      alert.showAndWait();
       return false;
     }
   }
+
 
 }
