@@ -35,7 +35,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-//TODO fix health bar with a longer length
 //TODO win/lose dialog
 
 public class GUI extends Application implements EventHandler<KeyEvent>{
@@ -53,6 +52,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Stage window;
   private Scene startScene, gameScene, levelsScene;
   private ProgressBar pBar;
+  private Boolean pause = false;
 
   // Game components
   private Renderer renderer;
@@ -72,6 +72,73 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     window.setResizable(false);
     window.setTitle("Void");
     window.show();
+  }
+
+  @Override
+  public void handle(KeyEvent event) {
+    int dx = 0;
+    int dy = 0;
+    String str = "";
+
+    switch (event.getCode()) {
+      case UP:
+        dx = -1;
+        break;
+      case LEFT:
+        dy = -1;
+        break;
+      case DOWN:
+        dx = 1;
+        break;
+      case RIGHT:
+        dy = 1;
+        break;
+      case A:
+        currentGame.rotateRoomAnticlockwise();
+        break;
+      case D:
+        currentGame.rotateRoomClockwise();
+        break;
+      case Z:
+        str = currentGame.pickUpItem();
+        break;
+      case X:
+        str = currentGame.dropItem();
+        break;
+      case N:
+        str = currentGame.diffuseBomb();
+        break;
+      case C:
+        str = currentGame.unlockVendingMachine();
+        break;
+      case V:
+        str = currentGame.useVendingMachine();
+        break;
+      case SPACE:
+        currentGame.teleport();
+        renderer.newRoom();
+        break;
+      case B:
+        str = currentGame.befriendAlien();
+        break;
+      default:
+
+    }
+    if (!(dx == 0 && dy == 0)) {
+
+      currentGame.movePlayer(dx, dy);
+
+      if (currentGame.checkForSpaceship()) {
+        System.out.println("Winner winner");
+        System.exit(0);
+      }
+      currentGame.checkForOxygenTank();
+    }
+
+    renderer.draw();
+    updateInventory();
+    updateScreen(str);
+
   }
 
   /**
@@ -101,7 +168,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     }
     ImageView newGameIcon = new ImageView(newImage);
     newGame.setGraphic(newGameIcon);
-    newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
+      newGame.setOnAction(Event -> window.setScene(createLevelsScreen(stage)));
 
     // load
     Button load = new Button();
@@ -270,6 +337,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     // help
     Label help = new Label("Help");
     help.setOnMouseClicked(mouseEvent -> {
+      pause = true;
       displayHelp();
     });
     Menu helpMenu = new Menu("", help);
@@ -496,9 +564,10 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
   /**
-   * Dec
+   * Updates the length of the health bar based on time. Each second represents
+   * a drop in the health bar.
    * @param health the players health
-   * @return
+   * @return a new task to keep track of time passing
    */
   private Task oxygenCounter(int health){
     return new Task() {
@@ -507,7 +576,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
         for(int i = currentGame.getPlayer().getOxygen(); i > 0; i = currentGame.getPlayer().getOxygen()){
           Thread.sleep(1000);
           updateProgress(currentGame.getPlayer().getOxygen(), health);
-          currentGame.getPlayer().loseOxygen();
+          if (!pause) currentGame.getPlayer().loseOxygen();
         }
        //END GAME
         return true;
@@ -682,78 +751,6 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   }
 
 
-  @Override
-  public void handle(KeyEvent event) {
-    int dx = 0;
-    int dy = 0;
-
-    switch (event.getCode()) {
-      case UP:
-        dx = -1;
-        break;
-      case LEFT:
-        dy = -1;
-        break;
-      case DOWN:
-        dx = 1;
-        break;
-      case RIGHT:
-        dy = 1;
-        break;
-      case A:
-        currentGame.rotateRoomAnticlockwise();
-        break;
-      case D:
-        currentGame.rotateRoomClockwise();
-        break;
-      case Z:
-        currentGame.pickUpItem();
-        break;
-      case X:
-        currentGame.dropItem();
-        break;
-      case N:
-        currentGame.diffuseBomb();
-        break;
-      case C:
-        currentGame.unlockVendingMachine();
-        break;
-      case V:
-        currentGame.useVendingMachine();
-        break;
-      case SPACE:
-        currentGame.teleport();
-        renderer.newRoom();
-        break;
-      case B:
-        currentGame.befriendAlien();
-        break;
-      default:
-
-    }
-    if (!(dx == 0 && dy == 0)) {
-
-      currentGame.movePlayer(dx, dy);
-
-      if (currentGame.checkForSpaceship()) {
-        System.out.println("Winner winner");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success!");
-        alert.setContentText("You made it back to your space ship! Go and explore space");
-        alert.showAndWait();
-        window.setScene(startScene);
-        //TODO: Link back to home screen (with a message saying you won);
-        System.exit(0);
-      }
-      currentGame.checkForOxygenTank();
-    }
-
-    renderer.draw();
-    updateInventory();
-    updateScreen("hello"); //TESTING UNTIL I FIGURE OUT HOW TO PRINT USEFUL MESSAGES
-
-  }
-
   /**
    * Displays a popup control menu to assist the user with keyboard control
    */
@@ -796,6 +793,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
       options.setEffect(null);
       screen.setEffect(null);
       helpDialog.hide();
+      pause = false;
     });
 
     helpDialog.show();
