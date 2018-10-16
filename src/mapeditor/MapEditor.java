@@ -119,7 +119,7 @@ public GridPane initItemSpaces(boolean test) {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        ItemSpace tile = new ItemSpace(i, j,this);
+        ItemSpace tile = new ItemSpace(this);
 
         // Set each 'TilePane' the width and height
         tile.setPrefSize(itemWidth, itemHeight);
