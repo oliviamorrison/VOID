@@ -60,6 +60,7 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
   private Scene startScene, gameScene, levelsScene, winLoseScene;
   private ProgressBar pBar;
   private Boolean pause = false;
+  private AudioClip audio;
 
   // Game components
   private Renderer renderer;
@@ -645,8 +646,9 @@ public class GUI extends Application implements EventHandler<KeyEvent>{
     new Thread(task).start();
 
     //Add music
+    if(audio!=null) audio.stop();
     String path = "music/space.wav";
-    AudioClip audio = new AudioClip(Paths.get(path).toUri().toString());
+    audio = new AudioClip(Paths.get(path).toUri().toString());
     audio.setCycleCount(10);
     audio.play();
 
