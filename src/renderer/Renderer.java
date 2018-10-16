@@ -122,7 +122,7 @@ public class Renderer {
             } else if(AT.hasChallenge()){
                 gameObject = getChallengeImage(AT);
             }
-        }
+        }//Al I behind
 
         root.getChildren().addAll(poly.getPolygons());
         if(gameObject != null){
