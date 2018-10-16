@@ -316,11 +316,22 @@ public class XmlParser {
     Element playerElement = (Element) playerNode;
 
     //Get the player position from its row and col attributes
+    if (playerElement.getAttribute("row").equals("")
+        || playerElement.getAttribute("col").equals("")) {
+      throw new ParseError("Player needs position attributes (row and col)");
+    }
     int row = parseInt(playerElement.getAttribute("row"));
     int col = parseInt(playerElement.getAttribute("col"));
 
-    //Get the player's oxygen level and the direction they are facing
+    //Get the player's health and the direction they are facing
+    if (playerElement.getAttribute("oxygen").equals("")) {
+      throw new ParseError("Player needs oxygen attribute");
+    }
     int oxygen = parseInt(playerElement.getAttribute("oxygen"));
+
+    if (playerElement.getAttribute("direction").equals("")) {
+      throw new ParseError("Player needs direction attribute");
+    }
     String direction = playerElement.getAttribute("direction");
 
     //Get the room in the board that the player is in
@@ -362,6 +373,10 @@ public class XmlParser {
       String token = items.item(i).getTextContent().trim();
       if (!token.equals("")) {
         Element elem = (Element) items.item(i);
+        if (elem.getAttribute("row").equals("")
+            || elem.getAttribute("col").equals("")) {
+          throw new ParseError("Item needs position attributes (row and col)");
+        }
         int row = parseInt(elem.getAttribute("row"));
         int col = parseInt(elem.getAttribute("col"));
         String direction = elem.getAttribute("direction");

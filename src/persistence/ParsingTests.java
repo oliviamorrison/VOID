@@ -42,37 +42,9 @@ public class ParsingTests {
    * @throws XmlParser.ParseError if it is an invalid file
    */
   @Test
-  public void testReadGame() throws XmlParser.ParseError {
-    Game game = XmlParser.parseGame(new File("data/parserTestData.xml"));
+  public void testReadValidFile() throws XmlParser.ParseError {
+    Game game = XmlParser.parseGame(new File("test_data/parserTestData.xml"));
     assertNotNull(game);
-  }
-
-  /**
-   * Test the parser throws an XmlParser error when an invalid file is loaded.
-   */
-  @Test
-  public void testIncorrectSchema() {
-    assertThrows(XmlParser.ParseError.class,
-        () -> XmlParser.parseGame(new File("data/incorrectSchema.xml")));
-  }
-
-  /**
-   * Test the parser throws an XmlParser error when a file with incorrect item names are loaded.
-   */
-  @Test
-  public void testIncorrectItemName() {
-    assertThrows(XmlParser.ParseError.class,
-        () -> XmlParser.parseGame(new File("data/incorrectItemName.xml")));
-  }
-
-  /**
-   * Test the parser throws an XmlParser error when a file with incorrect challenge
-   * names are loaded.
-   */
-  @Test
-  public void testIncorrectChallengeName() {
-    assertThrows(XmlParser.ParseError.class,
-        () -> XmlParser.parseGame(new File("data/incorrectChallengeName.xml")));
   }
 
   /**
@@ -84,7 +56,7 @@ public class ParsingTests {
    * @throws SAXException exception thrown if simple API for XML fails
    */
   @Test
-  public void testSaveFile()
+  public void testValidSaveFile()
       throws TransformerException, ParserConfigurationException, IOException, SAXException {
     //Hard coding a room to test saving
     Room[][] board = new Room[3][3];
@@ -105,17 +77,106 @@ public class ParsingTests {
 
     Game game = new Game(board, player);
 
-    File testFile = new File("data/testSave.xml");
-    XmlParser.saveFile(new File("data/testSave.xml"), game);
+    File testFile = new File("test_data/testSave.xml");
+    XmlParser.saveFile(new File("test_data/testSave.xml"), game);
     //Check the file has been written
     assertTrue(testFile.length() > 0);
 
     //Check the first element in the file is
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dbBuilder = dbFactory.newDocumentBuilder();
-    Document doc = dbBuilder.parse("data/testSave.xml");
+    Document doc = dbBuilder.parse("test_data/testSave.xml");
     NodeList children = doc.getChildNodes();
     Element gameElement = (Element) children.item(0);
     assertEquals(gameElement.getTagName(), "game");
   }
+
+  /**
+   * Test the parser throws an XmlParser error when an invalid file is loaded.
+   */
+  @Test
+  public void testIncorrectSchema() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectSchema.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with incorrect item names are loaded.
+   */
+  @Test
+  public void testIncorrectItemName() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectItemName.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with an item
+   * that is missing its position
+   */
+  @Test
+  public void testIncorrectItemProperty() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectItemProperty.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with incorrect challenge
+   * names are loaded.
+   */
+  @Test
+  public void testIncorrectChallengeName() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectChallengeName.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with a challenge
+   * that is missing the direction property
+   */
+  @Test
+  public void testIncorrectChallengeProperty() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectChallengeProperty.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with a challenge
+   * that is missing its position
+   */
+  @Test
+  public void testIncorrectChallengeProperty2() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectChallengeProperty2.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with a player
+   * that is missing its position
+   */
+  @Test
+  public void testIncorrectPlayerProperty() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectPlayerProperty.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with a player
+   * that is missing its oxygen property
+   */
+  @Test
+  public void testIncorrectPlayerProperty2() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectPlayerProperty2.xml")));
+  }
+
+  /**
+   * Test the parser throws an XmlParser error when a file with a player
+   * that is missing its direction property
+   */
+  @Test
+  public void testIncorrectPlayerProperty3() {
+    assertThrows(XmlParser.ParseError.class,
+        () -> XmlParser.parseGame(new File("test_data/incorrectPlayerProperty3.xml")));
+  }
+
 }
