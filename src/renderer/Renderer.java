@@ -105,6 +105,8 @@ public class Renderer {
    */
   public void drawPlayer() {
     ImageView playerImage = null;
+    //Determines which images should be drawn in respect of what
+    //direction the player is facing.
     switch (player.getDirection()) {
       case NORTH:
         playerImage = getImage(NORTH);
@@ -120,11 +122,13 @@ public class Renderer {
         playerImage = getImage(EAST);
         break;
     }
+    //Calculates the position of where the image should be drawn.
     playerImage.setPreserveRatio(true);
     playerImage.setFitHeight(playerHeight);
     Point2D p = player.getTile().getCenter();
     playerImage.setX(p.getX() - 15);
     playerImage.setY(p.getY() - 55);
+    //Adds the image of player onto the root.
     root.getChildren().add(playerImage);
   }
 
@@ -133,9 +137,11 @@ public class Renderer {
    * the game and drawing the tiles as well objects on top of those tiles.
    */
   public void draw() {
+    //Clears the root to redraw.
     root.getChildren().clear();
     int w = 10;
     int h = 10;
+    //Iterates through each tile to draw tiles and objects on top of it.
     for (int k = 0; k <= w + h - 2; k++) {
       for (int col = 0; col <= k; col++) {
         int row = k - col;
@@ -159,7 +165,8 @@ public class Renderer {
     Tile tile = currentRoom.getTile(row, col);
     Color color = Color.BLACK;
     double height = 0;
-
+    /* Checks what type of tile the current tile is to determine
+    * how to draw the tile.*/
     if (tile instanceof AccessibleTile) {
       AccessibleTile a = (AccessibleTile) tile;
       color = ACCESSIBLE_COLOUR;
@@ -172,8 +179,12 @@ public class Renderer {
       height = doorHeight;
       color = DTColor;
     }
+    /* Adds the new drawn tile onto the root and sets the tile's PolygonBlock to
+    * the newly created PolygonBlock*/
     PolygonBlock poly = new PolygonBlock(col, row, height, color);
+    root.getChildren().addAll(poly.getPolygons());
     tile.setTilePolygon(poly);
+    //Draws the object on top of the tile
     drawObjects(tile, poly);
   }
 
@@ -183,10 +194,12 @@ public class Renderer {
    * @param tile The tile that an object is to be drawn on top of
    * @param poly The tile's PolygonBlock
    */
-  public void drawObjects(Tile tile, PolygonBlock poly){
+  public void drawObjects(Tile tile, PolygonBlock poly) {
     ImageView gameObject = null;
-    if(tile instanceof Portal){
+    //If tile is portal then draw the portal.
+    if (tile instanceof Portal) {
       AccessibleTile at = (AccessibleTile) tile;
+      //Draws and sets the position of portal on Portal tile.
       gameObject = getImage(portalImage);
       Point2D c = at.getCenter();
       gameObject.setPreserveRatio(false);
@@ -196,18 +209,21 @@ public class Renderer {
       gameObject.setY(c.getY() - 13);
     } else if (tile instanceof AccessibleTile) {
       AccessibleTile at = (AccessibleTile) tile;
+      //Draws item if tile has item.
       if (at.hasItem()) {
         gameObject = getItemImage(at);
 
       } else if (at.hasChallenge()) {
+        //Draws challenge if tile has challenge.
         gameObject = getChallengeImage(at);
       }
     }
 
-    root.getChildren().addAll(poly.getPolygons());
+    //Adds item or challenge to room if tile has either of those two.
     if (gameObject != null) {
       root.getChildren().add(gameObject);
     }
+    //Draws the player if player is on that tile.
     if (player.getTile().equals(tile)) {
       drawPlayer();
     }
@@ -223,12 +239,15 @@ public class Renderer {
     Item item = tile.getItem();
     ImageView itemImage = null;
     Point2D c = tile.getCenter();
+    //Determines what image to draw for the diffuser or coin as they only have two directions.
     String direction = "";
     if (item.getDirection() == Direction.NORTH || item.getDirection() == Direction.SOUTH) {
       direction = "1.png";
     } else {
       direction = "2.png";
     }
+    /* If statemets checks what type item is and returns the image in respect of it's type.
+     * This also determines the height and position of the items. */
     if (item instanceof Diffuser) {
       itemImage = getImage(diffuserImage + direction);
       itemImage.setFitHeight(30);
@@ -273,12 +292,15 @@ public class Renderer {
     Item challenge = tile.getChallenge();
     ImageView itemImage = null;
     Point2D c = tile.getCenter();
+    /* If statemets checks what type challenge is and returns the image in respect of it's type.
+     * This also determines the height and position of the challenges. */
     if (challenge instanceof Bomb) {
       itemImage = getImage((bombImage + getObjectDirection(challenge.getDirection())));
       itemImage.setFitHeight(35);
       itemImage.setX(c.getX() - 20);
       itemImage.setY(c.getY() - 22);
     } else if (challenge instanceof VendingMachine) {
+      //Checks if vending machine is unlocked or locked to know which version to draw.
       if (((VendingMachine) challenge).isUnlocked()) {
         itemImage = getImage((vendingMachineImage + getObjectDirection(challenge.getDirection())));
       } else {
@@ -323,6 +345,8 @@ public class Renderer {
    * @return The ImageView of the image to be drawn
    */
   public ImageView getImage(String imageName) {
+    /* Creates the ImageView by first creating image with the given image path
+    * and then turning it into ImageView.*/
     Image image = null;
     try {
       image = new Image(new FileInputStream(imageName));
