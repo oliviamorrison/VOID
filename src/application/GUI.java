@@ -673,7 +673,7 @@ public class GUI extends Application implements EventHandler<KeyEvent> {
       @Override
       protected Object call() throws Exception {
         int oxygen = currentGame.getPlayer().getOxygen();
-        for (int i = oxygen; i > 0; i = oxygen) {
+        while (currentGame.getPlayer().getOxygen() > 0) {
           Thread.sleep(1000); // CHANGE FOR DIFFERENT TIMERS
           updateProgress(currentGame.getPlayer().getOxygen(), oxygen);
           if (!pause) {
