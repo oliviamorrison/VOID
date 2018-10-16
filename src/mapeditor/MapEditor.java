@@ -235,7 +235,7 @@ public class MapEditor extends Application {
 
     makeGame.setOnAction(event -> {
       if (noItemsInItemGrid()) {
-        createGame(false);
+        createGame(null);
       } else {
         //if there are still items in the item spaces panel
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -302,7 +302,7 @@ public class MapEditor extends Application {
    * @param name a string which represents the name of the item which is being looked for.
    * @return TilePane the tile which the item is on.
    */
-  private TilePane findItemInBoard(String name) {
+  public TilePane findItemInBoard(String name) {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         Node n = getNodeByRowColumnIndex(i, j, boardGrid);
@@ -682,7 +682,7 @@ public class MapEditor extends Application {
    * @param test boolean to show if a test is calling this method.
    * @return boolean to check if create game was successfully loaded.
    */
-  public boolean createGame(boolean test) {
+  public boolean createGame(File test) {
     Room[][] board = new Room[3][3];
     Player player = null;
 
@@ -744,7 +744,6 @@ public class MapEditor extends Application {
                         player = new Player(room, tile, 100, "NORTH");
                         break;
                       default:
-                        continue;
                     }
 
                     if (mapItem.getImageName() != null) {
@@ -774,9 +773,6 @@ public class MapEditor extends Application {
     }
 
     Game game = new Game(board, player, "NORTH", "NORTH");
-    if (test) {
-      return true;
-    }
 
     return saveFile(game, test);
   }
@@ -785,39 +781,43 @@ public class MapEditor extends Application {
    * Attempts to write a current game state to an XML file.
    *
    * @param game the game to save to a file
+   * @param test for testing purposes
    * @return whether the game was successfully saved
    */
-  public boolean saveFile(Game game, boolean test) {
-	File file = null;
-	if(test) {
-		file = new File("test.xml");
-	} else {
-		FileChooser fileChooser = new FileChooser();
-		configureFileChooser(fileChooser);
-		//Show save file dialog
-	    file = fileChooser.showSaveDialog(stage);
-	}
+  public boolean saveFile(Game game, File test) {
+    File file = null;
+    if (test != null) {
+      file = test;
+    } else {
+      FileChooser fileChooser = new FileChooser();
+      configureFileChooser(fileChooser);
+      //Show save file dialog
+      file = fileChooser.showSaveDialog(stage);
+    }
 
-    
     if (file != null && !file.getName().equals("easy.xml")
         && !file.getName().equals("medium.xml") && !file.getName().equals("hard.xml")) {
       try {
         XmlParser.saveFile(file, game);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("File saved!");
-        alert.setContentText("File successfully saved");
-        alert.showAndWait();
+        if (file != test) {
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("File saved!");
+          alert.setContentText("File successfully saved");
+          alert.showAndWait();
+        }
         return true;
       } catch (ParserConfigurationException | TransformerException e) {
         e.printStackTrace();
         return false;
       }
     } else {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Unable to save over default game files");
-      alert.setContentText("Unable to save over default game files. "
-          + "Please save using a different file name");
-      alert.showAndWait();
+      if (file != test) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Unable to save over default game files");
+        alert.setContentText("Unable to save over default game files. "
+            + "Please save using a different file name");
+        alert.showAndWait();
+      }
       return false;
     }
   }
