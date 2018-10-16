@@ -30,13 +30,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-/**These tests use JUnit 5 to test the persistence package of the game.
+/**
+ * These tests use JUnit 5 to test the persistence package of the game.
  *
  * @author Sam Ong 300363819
  */
 public class ParsingTests {
 
-  /**Test reading a valid XML file into a game.
+  /**
+   * Test reading a valid XML file into a game.
    * @throws XmlParser.ParseError if it is an invalid file
    */
   @Test
@@ -45,7 +47,8 @@ public class ParsingTests {
     assertNotNull(game);
   }
 
-  /** Test the parser throws an XmlParser error when an invalid file is loaded.
+  /**
+   * Test the parser throws an XmlParser error when an invalid file is loaded.
    */
   @Test
   public void testIncorrectSchema() {
@@ -53,7 +56,8 @@ public class ParsingTests {
         () -> XmlParser.parseGame(new File("data/incorrectSchema.xml")));
   }
 
-  /**Test the parser throws an XmlParser error when a file with incorrect item names are loaded.
+  /**
+   * Test the parser throws an XmlParser error when a file with incorrect item names are loaded.
    */
   @Test
   public void testIncorrectItemName() {
@@ -61,7 +65,8 @@ public class ParsingTests {
         () -> XmlParser.parseGame(new File("data/incorrectItemName.xml")));
   }
 
-  /** Test the parser throws an XmlParser error when a file with incorrect challenge
+  /**
+   * Test the parser throws an XmlParser error when a file with incorrect challenge
    * names are loaded.
    */
   @Test
@@ -70,7 +75,13 @@ public class ParsingTests {
         () -> XmlParser.parseGame(new File("data/incorrectChallengeName.xml")));
   }
 
-  /** Test the parser saves an XML file from a game that starts with a root node <game></game>.
+  /**
+   * Test the parser saves an XML file from a game that starts with a root node <game></game>.
+   *
+   * @throws TransformerException exception thrown if transformer fails
+   * @throws ParserConfigurationException exception thrown if parser fails
+   * @throws IOException exception thrown if reading/writing files fails
+   * @throws SAXException exception thrown if simple API for XML fails
    */
   @Test
   public void testSaveFile()
