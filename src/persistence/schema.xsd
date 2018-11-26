@@ -1,0 +1,76 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="game">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="room" maxOccurs="9" minOccurs="3">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element name="portal" maxOccurs="4">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="col"/>
+                                            <xs:attribute type="xs:byte" name="row"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="challenge" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="col"/>
+                                            <xs:attribute type="xs:string" name="direction"/>
+                                            <xs:attribute type="xs:byte" name="row"/>
+                                            <xs:attribute type="xs:string" name="state"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="item" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="col"/>
+                                            <xs:attribute type="xs:string" name="direction"/>
+                                            <xs:attribute type="xs:byte" name="row"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        <xs:attribute type="xs:byte" name="col" use="required"/>
+                        <xs:attribute type="xs:byte" name="row" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="player">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:byte" name="roomRow"/>
+                            <xs:element type="xs:byte" name="roomCol"/>
+                            <xs:element name="item" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:byte" name="col"/>
+                                            <xs:attribute type="xs:string" name="direction"/>
+                                            <xs:attribute type="xs:byte" name="row"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:byte" name="col"/>
+                        <xs:attribute type="xs:string" name="direction"/>
+                        <xs:attribute type="xs:byte" name="oxygen"/>
+                        <xs:attribute type="xs:byte" name="row"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:byte" name="col"/>
+            <xs:attribute type="xs:byte" name="row"/>
+            <xs:attribute type="xs:string" name="direction"/>
+            <xs:attribute type="xs:string" name="initDirection"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
